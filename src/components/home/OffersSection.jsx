@@ -3,6 +3,10 @@ import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
 import { useState } from "react";
+import { CakeSection } from "./Cake";
+import { PersonalisedInstant } from "./PersonalisedInstant";
+import { TestimonialsSection } from "./TestimonialsSection";
+import { Artical } from "./Artical";
 
 const tabs = ["Pizza", "Cakes", "Danbro Special", "Others"];
 
@@ -100,6 +104,31 @@ const offers = [
   },
 ];
 
+const specialMoments = [
+  // 🔥 Pizza
+  {
+    title: "BBQ Chicken Pizza",
+    subtitle: "smokey & spicy",
+    discount: "-15%",
+    category: "Pizza",
+    img: offer1,
+  },
+  {
+    title: "Margherita Cheese Pizza",
+    subtitle: "classic italian delight",
+    discount: "-22%",
+    category: "Pizza",
+    img: offer2,
+  },
+  {
+    title: "Veg Loaded Pizza",
+    subtitle: "fresh & crunchy",
+    discount: "-18%",
+    category: "Pizza",
+    img: offer3,
+  },
+];
+
 
 export const OffersSection = () => {
   const [activeTab, setActiveTab] = useState("Danbro Special");
@@ -110,36 +139,39 @@ export const OffersSection = () => {
 
   return (
     <Box sx={{ px: { xs: 2, md: 6 }, py: 6 }}>
-      <Typography sx={{ fontSize: 38, fontWeight: 800, color: "var(--themeColor)", mb: 1, }}>
-        Offers
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: 'space-between', gap: 4, alignItems: "center" }}>
+        <Typography sx={{ fontSize: 38, fontWeight: 800, color: "var(--themeColor)", mb: 1, }}>
+          Offers
+        </Typography>
 
-      {/* Tabs */}
-      <Box sx={{ display: "flex", gap: 4, alignItems: "center", mb: 4 }}>
-        {tabs?.map((tab) => (
-          <Button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              color:
-                activeTab === tab ? "var(--themeColor)" : "rgba(0,0,0,0.7)",
-              border:
-                activeTab === tab
-                  ? "2px solid var(--themeColor)"
-                  : "2px solid transparent",
-              backgroundColor: activeTab === tab ? "#fff4f0" : "transparent",
-              borderRadius: 20,
-              px: activeTab === tab ? 3 : 0,
-              py: activeTab === tab ? 0.6 : 0,
-              transition: "0.25s",
-            }}
-          >
-            {tab}
-          </Button>
-        ))}
+        {/* Categories */}
+        <Box sx={{ display: "flex", justifyContent: 'end', gap: 4, alignItems: "center", mb: 4 }}>
+          {tabs?.map((tab) => (
+            <Button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              sx={{
+                textTransform: "none",
+                fontWeight: 600,
+                color:
+                  activeTab === tab ? "var(--themeColor)" : "rgba(0,0,0,0.7)",
+                border:
+                  activeTab === tab
+                    ? "2px solid var(--themeColor)"
+                    : "2px solid transparent",
+                backgroundColor: activeTab === tab ? "#fff4f0" : "transparent",
+                borderRadius: 20,
+                px: activeTab === tab ? 3 : 0,
+                py: activeTab === tab ? 0.6 : 0,
+                transition: "0.25s",
+              }}
+            >
+              {tab}
+            </Button>
+          ))}
+        </Box>
       </Box>
+      {/* Offer */}
       <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: 3, }}>
         {filteredItems?.map((offer, index) => (
           <Box key={index} sx={{ position: "relative", borderRadius: 3, overflow: "hidden", cursor: "pointer", }}>
@@ -155,11 +187,11 @@ export const OffersSection = () => {
                 color: "#fff",
               }}
             >
-              <Typography sx={{ fontSize: 14, opacity: 0.9 }}>
-                {offer.subtitle}
+              <Typography sx={{ fontSize: 14, opacity: 0.9, color: '#FFB5A1' }}>
+                {offer?.subtitle}
               </Typography>
               <Typography sx={{ fontSize: 22, fontWeight: 700 }}>
-                {offer.title}
+                {offer?.title}
               </Typography>
             </Box>
             <Box
@@ -176,16 +208,16 @@ export const OffersSection = () => {
                 color: "#fff",
               }}
             >
-              {offer.discount}
+              {offer?.discount}
             </Box>
           </Box>
         ))}
       </Box>
-
+      {/* Special title */}
       <Box sx={{ width: "100%", display: "flex", justifyContent: "center", my: 3 }}>
         <Typography
           sx={{
-            fontSize:'150px',
+            fontSize: '150px',
             fontWeight: 'bold',
             letterSpacing: 4,
             textAlign: "center",
@@ -199,6 +231,35 @@ export const OffersSection = () => {
           SPECIAL MOMENTS
         </Typography>
       </Box>
+      {/* Categories */}
+      <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: 4, }}>
+        {specialMoments?.map((offer, index) => (
+          <Box key={index} sx={{ position: "relative", borderRadius: 3, overflow: "hidden", cursor: "pointer", }}>
+            <img src={offer?.img} alt={offer?.title} style={{ width: "100%", height: 400, objectFit: "cover" }} />
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                width: "100%",
+                p: 2,
+                background:
+                  "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.85) 100%)",
+                color: "#fff",
+                textAlign: 'center'
+              }}
+            >
+              <Typography sx={{ fontSize: 22, fontWeight: 700 }}>
+                {offer?.title}
+              </Typography>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
+      <CakeSection />
+      <PersonalisedInstant />
+      <TestimonialsSection />
+      <Artical />
     </Box>
   );
 };
