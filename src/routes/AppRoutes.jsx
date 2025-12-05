@@ -6,6 +6,10 @@ import { Contact } from "../pages/home/Contact";
 import { PressandMedia } from "../pages/home/PressandMedia";
 import { Login } from "../pages/auth/Login";
 import { Register } from "../pages/auth/Register";
+import { UserProfile } from "../pages/user/UserProfile";
+import { TrackOrder } from "../pages/orders/TrackOrder";
+import { ProductList } from "../pages/products/ProductList";
+import { ProductDetails } from "../pages/products/ProductDetails";
 
 
 const AppRoutes = () => {
@@ -18,6 +22,10 @@ const AppRoutes = () => {
             <Route path="/press-media" element={<PressandMedia />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/user-profile" element={<UserProfile />} />
+            <Route path="/track-order" element={<TrackOrder />} />
+            <Route path="/products" element={<ProductList />} />
+            <Route path="/products/:id" element={<ProductDetails />} />
         </Routes>
     );
 };

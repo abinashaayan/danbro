@@ -3,7 +3,7 @@ import { NearMe } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png"
 
 
@@ -80,28 +80,29 @@ export const TopHeader = () => {
                 >
                     Business +
                 </Button>
-
-                <Button
-                    variant="outlined"
-                    size="small"
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 5,
-                        borderColor: "var(--themeColor)",
-                        color: "var(--themeColor)",
-                        fontWeight: 600,
-                        fontSize: { md: 13, lg: 14 },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        "&:hover": {
+                <Link to="/track-order">
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                            textTransform: "none",
+                            borderRadius: 5,
                             borderColor: "var(--themeColor)",
-                            backgroundColor: "#fbeeee",
-                            transform: "translateY(-2px)",
-                            boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                        },
-                    }}
-                >
-                    Track Order
-                </Button>
+                            color: "var(--themeColor)",
+                            fontWeight: 600,
+                            fontSize: { md: 13, lg: 14 },
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            "&:hover": {
+                                borderColor: "var(--themeColor)",
+                                backgroundColor: "#fbeeee",
+                                transform: "translateY(-2px)",
+                                boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
+                            },
+                        }}
+                    >
+                        Track Order
+                    </Button>
+                </Link>
             </Box>
 
             {/* Mobile Left Buttons - Compact */}
@@ -147,14 +148,16 @@ export const TopHeader = () => {
                     width: { xs: "100%", md: "auto" },
                 }}
             >
-                <img
-                    src={logo}
-                    alt="logo"
-                    style={{
-                        height: isMobile ? 30 : isTablet ? 35 : 40,
-                        maxWidth: "100%",
-                    }}
-                />
+                <Link to="/">
+                    <img
+                        src={logo}
+                        alt="logo"
+                        style={{
+                            height: isMobile ? 30 : isTablet ? 35 : 40,
+                            maxWidth: "100%",
+                        }}
+                    />
+                </Link>
             </Box>
 
             {/* Right Icons */}

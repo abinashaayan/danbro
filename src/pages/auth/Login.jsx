@@ -10,8 +10,8 @@ const RECAPTCHA_SITE_KEY = "6Lfr-iAsAAAAAIQsR8mfUxZO1qK3r_AXrTSLSb4g";
 // Set to false if you want to test reCAPTCHA even on localhost
 const FORCE_RECAPTCHA = false; // Set to true to force reCAPTCHA even in dev
 const isDevelopment = !FORCE_RECAPTCHA && (
-  window.location.hostname === 'localhost' || 
-  window.location.hostname === '127.0.0.1' || 
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1' ||
   window.location.hostname === ''
 );
 
@@ -21,8 +21,8 @@ export const Login = () => {
   const [recaptchaError, setRecaptchaError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    username: "aman@yopmail.com",
+    password: "Mohan@12",
     agreeTerms: true,
     newsletter: true,
   });
@@ -113,17 +113,6 @@ export const Login = () => {
               };
 
               console.log("Login data:", loginPayload);
-
-              // Here you would typically send the data to your backend
-              // The backend should verify the reCAPTCHA token using the SECRET_KEY
-              // Example:
-              // const response = await fetch('/api/login', {
-              //   method: 'POST',
-              //   headers: { 'Content-Type': 'application/json' },
-              //   body: JSON.stringify(loginPayload)
-              // });
-              // const result = await response.json();
-            } else {
               setRecaptchaError("reCAPTCHA verification failed. Please try again.");
             }
           } catch (error) {
@@ -166,7 +155,7 @@ export const Login = () => {
         alignItems: "center",
         justifyContent: "center",
         py: { xs: 4, md: 6 },
-        pb: { xs: 8, md: 12 },
+        pb: { xs: 12, md: 16 },
         overflow: "hidden",
       }}
     >
@@ -400,12 +389,21 @@ export const Login = () => {
             )}
 
             {/* Login Button */}
+            {/* <Link to="/user-profile"> */}
             <Button
               type="submit"
               fullWidth
               disabled={isSubmitting}
+              onClick={() => {
+                if (formData.username && formData.password) {
+                  navigate("/user-profile"); 
+                } else {
+                  alert("Please enter valid email and password");
+                }
+              }}
               sx={{
                 backgroundColor: "#FF9472",
+                borderRadius: "50px",
                 color: "#fff",
                 py: { xs: 1.2, md: 1.5 },
                 borderRadius: "12px",
@@ -435,6 +433,7 @@ export const Login = () => {
                 "Login"
               )}
             </Button>
+            {/* </Link> */}
 
             {/* Register Link */}
             <Typography sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, }}>

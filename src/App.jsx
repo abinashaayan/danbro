@@ -19,7 +19,9 @@ function App() {
       >
         <TopHeader />
         <Navbar />
-        <AppRoutes />
+        <Box sx={{ mb: { xs: 8, md: 12 } }}>
+          <AppRoutes />
+        </Box>
         <Footer />
       </Box>
     </BrowserRouter>

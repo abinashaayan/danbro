@@ -2,13 +2,15 @@ import { Box, Typography, IconButton, Drawer, useMediaQuery, useTheme } from "@m
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const categoryItems = [
-    "CAKES & DRY CAKES",
-    "MITHAI & COOKIES",
-    "BREAD & RUSK",
-    "GIFT HAMPERS & CHOCOLATES",
-    "ADDONS",
+    { label: "CAKES & DRY CAKES", path: "/cakes" },
+    { label: "MITHAI & COOKIES", path: "/mithai" },
+    { label: "BREAD & RUSK", path: "/bread-rusk" },
+    { label: "GIFT HAMPERS & CHOCOLATES", path: "/gift-hampers" },
+    { label: "ADDONS", path: "/addons" },
+    { label: "Products", path: "/products" },
 ];
 
 export const Navbar = () => {
@@ -17,13 +19,15 @@ export const Navbar = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
 
+    const navigate = useNavigate();
+
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
     const menuItems = (
         <>
-            {categoryItems.map((item) => (
+            {categoryItems?.map((item) => (
                 <Typography
                     key={item}
                     sx={{
@@ -77,17 +81,18 @@ export const Navbar = () => {
                     },
                 }}
             >
-                {categoryItems?.map((item) => (
+                {categoryItems.map(({ label, path }) => (
                     <Typography
-                        key={item}
-                        onMouseEnter={() => setHoveredItem(item)}
+                        key={label}
+                        onClick={() => navigate(path)}     // <--- routing added
+                        onMouseEnter={() => setHoveredItem(label)}
                         onMouseLeave={() => setHoveredItem(null)}
                         sx={{
                             fontWeight: 600,
                             fontSize: { xs: 12, sm: 13, md: 14 },
                             cursor: "pointer",
-                            color: item === "ADDONS" ? "#fff" : "var(--themeColor)",
-                            ...(item === "ADDONS" && {
+                            color: label === "ADDONS" ? "#fff" : "var(--themeColor)",
+                            ...(label === "ADDONS" && {
                                 backgroundColor: "#00b53d",
                                 borderRadius: 2,
                                 px: { xs: 1.5, md: 2 },
@@ -96,26 +101,25 @@ export const Navbar = () => {
                             whiteSpace: "nowrap",
                             position: "relative",
                             transition: "all 0.3s ease",
-                            transform: hoveredItem === item ? "translateY(-2px)" : "translateY(0)",
+                            transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
                             "&::after": {
                                 content: '""',
                                 position: "absolute",
                                 bottom: "-5px",
                                 left: "50%",
-                                transform: hoveredItem === item ? "translateX(-50%) scaleX(1)" : "translateX(-50%) scaleX(0)",
+                                transform: hoveredItem === label ? "translateX(-50%) scaleX(1)" : "translateX(-50%) scaleX(0)",
                                 width: "80%",
                                 height: "2px",
                                 backgroundColor: "var(--themeColor)",
                                 transition: "transform 0.3s ease",
                             },
-                            "&:hover": {
-                                opacity: 0.9,
-                            },
+                            "&:hover": { opacity: 0.9 },
                         }}
                     >
-                        {item}
+                        {label}
                     </Typography>
                 ))}
+
             </Box>
 
             {/* Mobile Navbar */}
@@ -187,16 +191,19 @@ export const Navbar = () => {
                         px: 3,
                     }}
                 >
-                    {categoryItems.map((item, index) => (
+                    {categoryItems.map(({ label, path }, index) => (
                         <Typography
-                            key={item}
-                            onClick={handleDrawerToggle}
+                            key={label}
+                            onClick={() => {
+                                navigate(path);
+                                handleDrawerToggle();  // close drawer after navigating
+                            }}
                             sx={{
                                 fontWeight: 600,
                                 fontSize: 14,
                                 cursor: "pointer",
-                                color: item === "ADDONS" ? "#fff" : "var(--themeColor)",
-                                ...(item === "ADDONS" && {
+                                color: label === "ADDONS" ? "#fff" : "var(--themeColor)",
+                                ...(label === "ADDONS" && {
                                     backgroundColor: "#00b53d",
                                     borderRadius: 2,
                                     px: 2,
@@ -215,9 +222,10 @@ export const Navbar = () => {
                                 },
                             }}
                         >
-                            {item}
+                            {label}
                         </Typography>
                     ))}
+
                 </Box>
             </Drawer>
         </>

@@ -1,10 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap');
+
 :root {
   --themeColor: #5F2930;
   --specialColor: #c32e06;
 }
 
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  /* font-family: 'Cormorant Garamond', serif !important; */
 }
 
 html {

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress } from "@mui/material";
+import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import banner from "../../assets/login.png";
@@ -10,8 +10,8 @@ const RECAPTCHA_SITE_KEY = "6Lfr-iAsAAAAAIQsR8mfUxZO1qK3r_AXrTSLSb4g";
 // Set to false if you want to test reCAPTCHA even on localhost
 const FORCE_RECAPTCHA = false; // Set to true to force reCAPTCHA even in dev
 const isDevelopment = !FORCE_RECAPTCHA && (
-  window.location.hostname === 'localhost' || 
-  window.location.hostname === '127.0.0.1' || 
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '127.0.0.1' ||
   window.location.hostname === ''
 );
 
@@ -81,7 +81,7 @@ export const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
@@ -124,16 +124,6 @@ export const Register = () => {
               };
 
               console.log("Registration data:", registerPayload);
-
-              // Here you would typically send the data to your backend
-              // The backend should verify the reCAPTCHA token using the SECRET_KEY
-              // Example:
-              // const response = await fetch('/api/register', {
-              //   method: 'POST',
-              //   headers: { 'Content-Type': 'application/json' },
-              //   body: JSON.stringify(registerPayload)
-              // });
-              // const result = await response.json();
             } else {
               setRecaptchaError("reCAPTCHA verification failed. Please try again.");
             }
@@ -177,7 +167,7 @@ export const Register = () => {
         alignItems: "center",
         justifyContent: "center",
         py: { xs: 4, md: 6 },
-        pb: { xs: 8, md: 12 },
+        pb: { xs: 12, md: 16 },
         overflow: "hidden",
       }}
     >
@@ -212,9 +202,11 @@ export const Register = () => {
           sx={{
             position: "relative",
             zIndex: 1,
-            backgroundColor: "transparent",
+            backgroundColor: "rgba(0,0,0,0.45)",
+            backdropFilter: "blur(25px) saturate(180%)",
+            border: "1px solid rgba(255,255,255,0.3)",
             borderRadius: { xs: "20px", md: "30px" },
-            p: { xs: 3, sm: 4, md: 5 },
+            p: { xs: 2, sm: 3, md: 4 },
             boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
             backdropFilter: "blur(10px)",
             opacity: 0,
@@ -229,7 +221,7 @@ export const Register = () => {
               fontWeight: 'bold',
               color: "#fff",
               textAlign: "center",
-              mb: { xs: 3, md: 4 },
+              mb: { xs: 1, md: 2 },
               animation: "fadeInDown 0.6s ease-out",
               "@keyframes fadeInDown": {
                 "0%": { opacity: 0, transform: "translateY(-20px)" },
@@ -237,11 +229,11 @@ export const Register = () => {
               },
             }}
           >
-            Create Account
+            Welcome Back
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit}>
-            {/* Full Name Field */}
+            <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Full Name</InputLabel>
             <TextField
               fullWidth
               name="fullName"
@@ -250,7 +242,7 @@ export const Register = () => {
               value={formData.fullName}
               onChange={handleChange}
               sx={{
-                mb: 3,
+                mb: 2,
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -271,6 +263,7 @@ export const Register = () => {
             />
 
             {/* Email Field */}
+            <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Email Address</InputLabel>
             <TextField
               fullWidth
               name="email"
@@ -280,7 +273,7 @@ export const Register = () => {
               value={formData.email}
               onChange={handleChange}
               sx={{
-                mb: 3,
+                mb: 2,
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -301,6 +294,7 @@ export const Register = () => {
             />
 
             {/* Mobile Field */}
+            <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Mobile Number</InputLabel>
             <TextField
               fullWidth
               name="mobile"
@@ -310,7 +304,7 @@ export const Register = () => {
               value={formData.mobile}
               onChange={handleChange}
               sx={{
-                mb: 3,
+                mb: 2,
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "#fff",
                   borderRadius: "12px",
@@ -331,6 +325,7 @@ export const Register = () => {
             />
 
             {/* Password Field */}
+            <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Password</InputLabel>
             <Box sx={{ position: "relative", mb: 2 }}>
               <TextField
                 fullWidth
@@ -389,11 +384,12 @@ export const Register = () => {
             </Box>
 
             {/* Confirm Password Field */}
+            <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Confirm Password</InputLabel>
             <Box sx={{ position: "relative", mb: 2 }}>
               <TextField
                 fullWidth
                 name="confirmPassword"
-                label="Confirm Password"
+                placeholder="Confirm Password"
                 type={showConfirmPassword ? "text" : "password"}
                 required
                 value={formData.confirmPassword}
@@ -447,12 +443,18 @@ export const Register = () => {
             </Box>
 
             {/* Password Requirements */}
-            <Typography sx={{ fontSize: 12, color: "#fff", mb: 3, ml: 1.5, }}>
+            <Typography sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
               Use 8 or more characters with a mix of letters, numbers & symbols
+            </Typography>
+            <Typography sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
+              Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described
+              in our <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
+                Privacy Policy
+              </Link>.
             </Typography>
 
             {/* Checkboxes */}
-            <Box sx={{ mb: 3 }}>
+            <Box>
               <FormControlLabel
                 control={
                   <Checkbox
@@ -511,7 +513,7 @@ export const Register = () => {
 
             {/* reCAPTCHA Error Display */}
             {recaptchaError && (
-              <Box sx={{ mb: 2 }}>
+              <Box>
                 <Alert
                   severity="error"
                   sx={{
@@ -542,7 +544,8 @@ export const Register = () => {
                 fontSize: { xs: 16, md: 18 },
                 fontWeight: 700,
                 textTransform: "none",
-                mb: 3,
+                borderRadius: "50px",
+                mb: 1,
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 boxShadow: "0 4px 15px rgba(255,148,114,0.3)",
                 "&:hover": {
@@ -567,7 +570,7 @@ export const Register = () => {
             </Button>
 
             {/* Login Link */}
-            <Typography sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, }}>
+            <Typography sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, mb: 2 }}>
               Already have an account?{" "}
               <Link
                 onClick={() => navigate("/login")}
@@ -586,7 +589,41 @@ export const Register = () => {
                 Login Now
               </Link>
             </Typography>
+
+            <Button
+              fullWidth
+              startIcon={
+                <img
+                  src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                  alt="Google"
+                  width="20"
+                  height="20"
+                />
+              }
+              sx={{
+                backgroundColor: "#fff",
+                color: "#000",
+                py: 1.3,
+                borderRadius: "50px",
+                fontSize: { xs: 15, md: 16 },
+                fontWeight: 600,
+                textTransform: "none",
+                mb: 2,
+                transition: "0.3s",
+                "&:hover": {
+                  backgroundColor: "#f1f1f1",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0px 6px 20px rgba(0,0,0,0.2)",
+                },
+              }}
+              onClick={() => console.log("Google Auth Clicked")} // later replace with auth logic
+            >
+              Continue with Google
+            </Button>
           </Box>
+          {/* Google Register Button */}
+
+
         </Box>
       </Container>
     </Box>

@@ -139,7 +139,7 @@ export const OffersSection = () => {
       : offers.filter((item) => item.category === activeTab);
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: { xs: 4, md: 6 } }}>
+    <Box sx={{ px: { xs: 2, sm: 3, md: 6 }}}>
       <Box
         sx={{
           display: "flex",
@@ -209,6 +209,7 @@ export const OffersSection = () => {
           display: "grid",
           gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
           gap: { xs: 2, md: 3 },
+          mb: { xs: 5, md: 6 },
         }}
       >
         {filteredItems?.map((offer, index) => (
@@ -313,7 +314,8 @@ export const OffersSection = () => {
           width: "100%",
           display: "flex",
           justifyContent: "center",
-          my: { xs: 2, md: 3 },
+          my: { xs: 4, md: 5 },
+          mb: { xs: 5, md: 6 },
           overflow: "hidden",
         }}
       >
@@ -325,6 +327,7 @@ export const OffersSection = () => {
           display: "grid",
           gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
           gap: { xs: 2, md: 4 },
+          my: { xs: 5, md: 6 },
         }}
       >
         {specialMoments?.map((offer, index) => (

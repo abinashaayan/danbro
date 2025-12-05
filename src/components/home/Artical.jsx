@@ -55,7 +55,6 @@ export const Artical = () => {
         <Box
             sx={{
                 py: 10,
-                mt: 8,
                 borderRadius: "30px",
                 position: "relative",
                 textAlign: "center",
