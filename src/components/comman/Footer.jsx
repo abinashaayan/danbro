@@ -56,7 +56,7 @@ export const Footer = () => {
   ];
 
   const ourStories = [
-    { label: "About Us", link: "/about" },
+    { label: "About Us", link: "/about-us" },
     { label: "Lucknow Stores", link: "/media" },
     { label: "Kanpur Stores", link: "/events" },
     { label: "Ghaziabad Stores", link: "/blogs" },
