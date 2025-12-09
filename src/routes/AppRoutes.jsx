@@ -14,7 +14,7 @@ import { TrackOrder } from "../pages/orders/TrackOrder";
 import { ProductList } from "../pages/products/ProductList";
 import { ProductDetails } from "../pages/products/ProductDetails";
 import BlogDetails from "../pages/home/BlogDetails";
-
+import { Store } from "../pages/home/Store";
 
 const AppRoutes = () => {
     return (
@@ -25,6 +25,7 @@ const AppRoutes = () => {
             <Route path="/blog-details" element={<BlogDetails />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/press-media" element={<PressandMedia />} />
+            <Route path="/store" element={<Store />} />
             <Route path="/career" element={<Career />} />
             <Route path="/offers" element={<Offers />} />
             <Route path="/events" element={<CateringEvents />} />

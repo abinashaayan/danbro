@@ -38,6 +38,7 @@ export const CateringEvents = () => {
       observers.forEach((observer) => observer.disconnect());
     };
   }, []);
+  
   const specialties = [
     {
       title: "Weddings",

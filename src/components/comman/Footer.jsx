@@ -10,8 +10,6 @@ import SendIcon from "@mui/icons-material/Send";
 import logo from "../../assets/logo.png";
 import postImg from "../../assets/cakeimg.png";
 import visa from "../../assets/payments.png";
-import mastercard from "../../assets/logo.png";
-import maestro from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 
 const FooterContainer = styled(Box)(({ theme }) => ({
@@ -50,14 +48,14 @@ export const Footer = () => {
     { label: "Press and Media", link: "/media" },
     { label: "Events & Catering", link: "/events" },
     { label: "Blogs", link: "/blog" },
-    { label: "Career", link: "/career" },
-    { label: "Career at Danbro", link: "/career-danbro" },
+    { label: "Contact", link: "/contact" },
+    { label: "Career at Danbro", link: "/career" },
     { label: "Danbro Institute", link: "/institute" },
   ];
 
   const ourStories = [
     { label: "About Us", link: "/about-us" },
-    { label: "Lucknow Stores", link: "/media" },
+    { label: "Lucknow Stores", link: "/store" },
     { label: "Kanpur Stores", link: "/events" },
     { label: "Ghaziabad Stores", link: "/blogs" },
     { label: "Noida Stores", link: "/career" },
