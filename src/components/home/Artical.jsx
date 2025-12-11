@@ -54,11 +54,22 @@ export const Artical = () => {
     return (
         <Box
             sx={{
-                py: 5,
+                py: { xs: 4, md: 6 },
                 borderRadius: "30px",
                 position: "relative",
                 textAlign: "center",
                 overflow: "hidden",
+                background: "linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(251,217,211,0.1) 100%)",
+                "&::before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "radial-gradient(circle at 10% 20%, rgba(255,181,161,0.08) 0%, transparent 50%), radial-gradient(circle at 90% 80%, rgba(251,199,181,0.06) 0%, transparent 50%)",
+                    pointerEvents: "none",
+                },
             }}
         >
             <img
@@ -84,11 +95,24 @@ export const Artical = () => {
 
             <Typography
                 sx={{
-                    fontSize: { xs: 22, sm: 26, md: 32 },
+                    fontSize: { xs: 24, sm: 28, md: 34 },
                     fontWeight: 800,
                     color: "var(--themeColor)",
-                    mb: { xs: 4, md: 6 },
+                    mb: { xs: 5, md: 7 },
                     px: { xs: 2, md: 0 },
+                    position: "relative",
+                    display: "inline-block",
+                    "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        bottom: "-8px",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        width: "60%",
+                        height: "4px",
+                        background: "linear-gradient(90deg, transparent, var(--themeColor), transparent)",
+                        borderRadius: "2px",
+                    },
                 }}
             >
                 Check it out, OUR NEW ARTICLES
@@ -100,21 +124,50 @@ export const Artical = () => {
                             <Box
                                 sx={{
                                     bgColor: "#fff",
-                                    borderRadius: "12px",
+                                    borderRadius: { xs: "15px", md: "18px" },
                                     textAlign: "left",
                                     position: "relative",
                                     cursor: "pointer",
-                                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                                    boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+                                    transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                                    boxShadow: "0 6px 20px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.05) inset",
                                     overflow: "hidden",
+                                    animation: `fadeInUp 0.6s ease-out ${i * 0.1}s both`,
+                                    "@keyframes fadeInUp": {
+                                        "0%": {
+                                            opacity: 0,
+                                            transform: "translateY(30px)",
+                                        },
+                                        "100%": {
+                                            opacity: 1,
+                                            transform: "translateY(0)",
+                                        },
+                                    },
+                                    "&::before": {
+                                        content: '""',
+                                        position: "absolute",
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        background: "linear-gradient(135deg, rgba(255,181,161,0.05) 0%, rgba(95,41,48,0.02) 100%)",
+                                        opacity: 0,
+                                        transition: "opacity 0.5s ease",
+                                        zIndex: 1,
+                                        pointerEvents: "none",
+                                    },
                                     "&:hover": {
-                                        transform: "translateY(-8px) scale(1.02)",
-                                        boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+                                        transform: "translateY(-12px) scale(1.03)",
+                                        boxShadow: "0 20px 50px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,181,161,0.3) inset",
+                                        "&::before": {
+                                            opacity: 1,
+                                        },
                                         "& .article-image": {
-                                            transform: "scale(1.1)",
+                                            transform: "scale(1.15)",
+                                            filter: "brightness(1.1)",
                                         },
                                         "& .article-title": {
                                             color: "var(--themeColor)",
+                                            transform: "translateX(5px)",
                                         },
                                     },
                                 }}
@@ -126,38 +179,41 @@ export const Artical = () => {
                                     src={item.image}
                                     sx={{
                                         width: "100%",
-                                        height: { xs: 180, sm: 200, md: 220 },
+                                        height: { xs: 200, sm: 220, md: 240 },
                                         objectFit: "cover",
-                                        borderRadius: "12px",
-                                        transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        borderRadius: { xs: "15px 15px 0 0", md: "18px 18px 0 0" },
+                                        transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease",
+                                        filter: "brightness(0.95)",
                                     }}
                                 />
 
                                 {/* Date */}
-                                <Typography
-                                    sx={{
-                                        mt: 2,
-                                        fontSize: 12,
-                                        fontWeight: 600,
-                                        color: "#6a6a6a",
-                                        letterSpacing: 0.5,
-                                    }}
-                                >
-                                    {item.date}
-                                </Typography>
-                                <Typography
-                                    className="article-title"
-                                    sx={{
-                                        mt: 1,
-                                        fontSize: { xs: 14, md: 16 },
-                                        fontWeight: 600,
-                                        lineHeight: 1.4,
-                                        color: "#333",
-                                        transition: "color 0.3s ease",
-                                    }}
-                                >
-                                    {item.title}
-                                </Typography>
+                                <Box sx={{ p: { xs: 2, md: 2.5 }, position: "relative", zIndex: 2 }}>
+                                    <Typography
+                                        sx={{
+                                            fontSize: { xs: 11, md: 12 },
+                                            fontWeight: 600,
+                                            color: "rgba(0,0,0,0.6)",
+                                            letterSpacing: 0.8,
+                                            textTransform: "uppercase",
+                                            mb: 1,
+                                        }}
+                                    >
+                                        {item.date}
+                                    </Typography>
+                                    <Typography
+                                        className="article-title"
+                                        sx={{
+                                            fontSize: { xs: 15, md: 17 },
+                                            fontWeight: 700,
+                                            lineHeight: 1.5,
+                                            color: "#333",
+                                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        }}
+                                    >
+                                        {item.title}
+                                    </Typography>
+                                </Box>
                             </Box>
                         </Grid>
                     ))}

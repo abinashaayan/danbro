@@ -34,13 +34,14 @@ export const PersonalisedInstant = () => {
             sx={{
                 width: "100%",
                 maxWidth: "100vw",
-                bgcolor: "#f7f7f7",
-                borderRadius: "0 0 30px 30px",
+                background: "linear-gradient(135deg, #f7f7f7 0%, #fef5f3 50%, #f7f7f7 100%)",
+                borderRadius: "0 0 40px 40px",
                 overflow: "hidden",
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
                 alignItems: "center",
                 position: "relative",
+                boxShadow: "0 -10px 40px rgba(0,0,0,0.05)",
                 "&::before": {
                     content: '""',
                     position: "absolute",
@@ -48,46 +49,46 @@ export const PersonalisedInstant = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: "linear-gradient(135deg, rgba(251,199,181,0.1) 0%, rgba(255,181,161,0.05) 100%)",
+                    background: "linear-gradient(135deg, rgba(251,199,181,0.15) 0%, rgba(255,181,161,0.08) 50%, rgba(251,199,181,0.15) 100%)",
+                    pointerEvents: "none",
+                },
+                "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "radial-gradient(circle at 20% 50%, rgba(255,181,161,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(251,199,181,0.08) 0%, transparent 50%)",
                     pointerEvents: "none",
                 },
             }}
         >
-            <Box
-                sx={{
-                    top: "-50px",
-                    right: "-50px",
-                    width: "200px",
-                    height: "200px",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(255,181,161,0.2) 0%, transparent 70%)",
-                    animation: "float 6s ease-in-out infinite",
-                    "@keyframes float": {
-                        "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
-                        "50%": { transform: "translateY(-20px) rotate(180deg)" },
-                    },
-                    zIndex: 0,
-                    pointerEvents: "none",
-                }}
-            />
-            <Box
-                sx={{
-                    position: "absolute",
-                    bottom: "-30px",
-                    left: "-30px",
-                    width: "150px",
-                    height: "150px",
-                    borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(251,199,181,0.15) 0%, transparent 70%)",
-                    animation: "float 8s ease-in-out infinite reverse",
-                    "@keyframes float": {
-                        "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
-                        "50%": { transform: "translateY(-15px) rotate(-180deg)" },
-                    },
-                    zIndex: 0,
-                    pointerEvents: "none",
-                }}
-            />
+            {/* Animated Background Elements */}
+            {[...Array(4)].map((_, i) => (
+                <Box
+                    key={i}
+                    sx={{
+                        position: "absolute",
+                        width: { xs: "120px", md: `${150 + i * 30}px` },
+                        height: { xs: "120px", md: `${150 + i * 30}px` },
+                        borderRadius: "50%",
+                        background: `radial-gradient(circle, rgba(255,181,161,${0.15 - i * 0.03}) 0%, transparent 70%)`,
+                        top: i % 2 === 0 ? "-60px" : "auto",
+                        bottom: i % 2 === 1 ? "-40px" : "auto",
+                        left: i % 2 === 0 ? "auto" : "-40px",
+                        right: i % 2 === 1 ? "auto" : "-60px",
+                        animation: `floatPersonalised ${8 + i * 2}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.5}s`,
+                        "@keyframes floatPersonalised": {
+                            "0%, 100%": { transform: "translateY(0px) rotate(0deg) scale(1)" },
+                            "50%": { transform: `translateY(${-20 - i * 5}px) rotate(${180 + i * 30}deg) scale(1.1)` },
+                        },
+                        zIndex: 0,
+                        pointerEvents: "none",
+                    }}
+                />
+            ))}
 
             <Box
                 ref={imageRef}
@@ -97,7 +98,11 @@ export const PersonalisedInstant = () => {
                     opacity: 0,
                     zIndex: 5,
                     transform: "translateX(-50px)",
-                    transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
+                    transition: "opacity 1s ease-out, transform 1s ease-out",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: { xs: "300px", md: "500px" },
                     "&::after": {
                         content: '""',
                         position: "absolute",
@@ -105,6 +110,25 @@ export const PersonalisedInstant = () => {
                         left: 0,
                         right: 0,
                         bottom: 0,
+                        background: "linear-gradient(135deg, rgba(255,181,161,0.1) 0%, transparent 50%)",
+                        pointerEvents: "none",
+                        zIndex: 1,
+                    },
+                    "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: "-20px",
+                        left: "-20px",
+                        right: "-20px",
+                        bottom: "-20px",
+                        background: "radial-gradient(circle, rgba(255,181,161,0.2) 0%, transparent 70%)",
+                        borderRadius: "50%",
+                        animation: "pulseImage 4s ease-in-out infinite",
+                        "@keyframes pulseImage": {
+                            "0%, 100%": { transform: "scale(1)", opacity: 0.3 },
+                            "50%": { transform: "scale(1.1)", opacity: 0.5 },
+                        },
+                        zIndex: -1,
                         pointerEvents: "none",
                     },
                 }}
@@ -115,10 +139,18 @@ export const PersonalisedInstant = () => {
                     alt="App Banner"
                     sx={{
                         width: "100%",
-                        height: { xs: "auto", md: "100%" },
-                        minHeight: { xs: "300px", md: "500px" },
+                        height: { xs: "300px", md: "500px" },
                         objectFit: "cover",
                         display: "block",
+                        borderRadius: { xs: "0", md: "0 0 0 40px" },
+                        boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+                        transition: "transform 0.3s ease",
+                        position: "relative",
+                        zIndex: 0,
+                        backgroundColor: "#f0f0f0",
+                        "&:hover": {
+                            transform: "scale(1.02)",
+                        },
                     }}
                 />
             </Box>
@@ -163,20 +195,35 @@ export const PersonalisedInstant = () => {
                     <Box
                         component="span"
                         sx={{
-                            backgroundColor: "#03081F",
+                            background: "linear-gradient(135deg, #03081F 0%, #1a1f3a 100%)",
                             color: "#fff",
-                            borderRadius: "40px",
-                            px: { xs: 2, sm: 2.5, md: 3 },
-                            py: { xs: "8px", md: "10px" },
+                            borderRadius: { xs: "30px", md: "50px" },
+                            px: { xs: 2.5, sm: 3, md: 4 },
+                            py: { xs: "10px", md: "12px" },
                             display: "block",
-                            marginLeft: "-170px",
+                            marginLeft: { xs: 0, md: "-170px" },
                             width: "100%",
                             textAlign: "center",
-                            boxShadow: "0 4px 15px rgba(15,27,64,0.3)",
-                            transition: "all 0.3s ease",
+                            boxShadow: "0 8px 25px rgba(15,27,64,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            position: "relative",
+                            overflow: "hidden",
+                            "&::before": {
+                                content: '""',
+                                position: "absolute",
+                                top: 0,
+                                left: "-100%",
+                                width: "100%",
+                                height: "100%",
+                                background: "linear-gradient(90deg, transparent, rgba(255,181,161,0.2), transparent)",
+                                transition: "left 0.6s ease",
+                            },
                             "&:hover": {
-                                transform: "translateY(-2px)",
-                                boxShadow: "0 6px 20px rgba(15,27,64,0.4)",
+                                transform: "translateY(-4px) scale(1.02)",
+                                boxShadow: "0 12px 35px rgba(15,27,64,0.5), 0 0 0 1px rgba(255,255,255,0.15) inset",
+                                "&::before": {
+                                    left: "100%",
+                                },
                             },
                         }}
                     >
@@ -185,8 +232,9 @@ export const PersonalisedInstant = () => {
                             sx={{
                                 color: "#FFB5A1",
                                 textDecoration: "underline",
-                                textDecorationThickness: "2px",
-                                textUnderlineOffset: "4px",
+                                textDecorationThickness: "3px",
+                                textUnderlineOffset: "5px",
+                                textDecorationColor: "rgba(255,181,161,0.6)",
                             }}
                         >
                             Personalised
@@ -198,10 +246,12 @@ export const PersonalisedInstant = () => {
                 <Typography
                     sx={{
                         mt: { xs: 1.5, md: 2 },
-                        fontSize: { xs: 14, sm: 16, md: 18 },
-                        color: "#444",
-                        mb: { xs: 2.5, md: 3 },
-                        fontWeight: 'bold',
+                        fontSize: { xs: 15, sm: 17, md: 19 },
+                        color: "#555",
+                        mb: { xs: 3, md: 4 },
+                        fontWeight: 600,
+                        lineHeight: 1.6,
+                        textShadow: "0 1px 2px rgba(0,0,0,0.05)",
                     }}
                 >
                     Download the DANBRO app for faster ordering
@@ -221,20 +271,38 @@ export const PersonalisedInstant = () => {
                             display: "flex",
                             alignItems: "center",
                             gap: 1.5,
-                            bgcolor: "#000",
+                            background: "linear-gradient(135deg, #000 0%, #1a1a1a 100%)",
                             color: "#fff",
                             px: { xs: 2.5, md: 3 },
-                            py: { xs: 1, md: 1.2 },
-                            borderRadius: "12px",
+                            py: { xs: 1.2, md: 1.4 },
+                            borderRadius: { xs: "14px", md: "16px" },
                             cursor: "pointer",
                             width: { xs: "100%", sm: 180 },
                             maxWidth: { xs: "280px", sm: "180px" },
-                            transition: "all 0.3s ease",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            boxShadow: "0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset",
+                            position: "relative",
+                            overflow: "hidden",
+                            "&::before": {
+                                content: '""',
+                                position: "absolute",
+                                top: 0,
+                                left: "-100%",
+                                width: "100%",
+                                height: "100%",
+                                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+                                transition: "left 0.5s ease",
+                            },
                             "&:hover": {
-                                transform: "translateY(-3px)",
-                                boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-                                bgcolor: "#1a1a1a",
+                                transform: "translateY(-4px) scale(1.03)",
+                                boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset",
+                                background: "linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)",
+                                "&::before": {
+                                    left: "100%",
+                                },
+                            },
+                            "&:active": {
+                                transform: "translateY(-2px) scale(1.01)",
                             },
                         }}
                     >
@@ -259,20 +327,38 @@ export const PersonalisedInstant = () => {
                             display: "flex",
                             alignItems: "center",
                             gap: 1.5,
-                            bgcolor: "#000",
+                            background: "linear-gradient(135deg, #000 0%, #1a1a1a 100%)",
                             color: "#fff",
                             px: { xs: 2.5, md: 3 },
-                            py: { xs: 1, md: 1.2 },
-                            borderRadius: "12px",
+                            py: { xs: 1.2, md: 1.4 },
+                            borderRadius: { xs: "14px", md: "16px" },
                             cursor: "pointer",
                             width: { xs: "100%", sm: 200 },
                             maxWidth: { xs: "280px", sm: "200px" },
-                            transition: "all 0.3s ease",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            boxShadow: "0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset",
+                            position: "relative",
+                            overflow: "hidden",
+                            "&::before": {
+                                content: '""',
+                                position: "absolute",
+                                top: 0,
+                                left: "-100%",
+                                width: "100%",
+                                height: "100%",
+                                background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)",
+                                transition: "left 0.5s ease",
+                            },
                             "&:hover": {
-                                transform: "translateY(-3px)",
-                                boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-                                bgcolor: "#1a1a1a",
+                                transform: "translateY(-4px) scale(1.03)",
+                                boxShadow: "0 10px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset",
+                                background: "linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)",
+                                "&::before": {
+                                    left: "100%",
+                                },
+                            },
+                            "&:active": {
+                                transform: "translateY(-2px) scale(1.01)",
                             },
                         }}
                     >

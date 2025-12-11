@@ -185,6 +185,18 @@ export const CakeSection = () => {
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
                         color: "var(--themeColor)",
+                        position: "relative",
+                        display: "inline-block",
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: "-5px",
+                            left: 0,
+                            width: "50%",
+                            height: "4px",
+                            background: "linear-gradient(90deg, var(--themeColor) 0%, rgba(255,181,161,0.5) 100%)",
+                            borderRadius: "2px",
+                        },
                     }}
                 >
                     Cakes
@@ -231,33 +243,61 @@ export const CakeSection = () => {
             </Box>
 
             {/* Cake Cards */}
-            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: 4, }}>
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: { xs: 3, md: 4 }, }}>
                 {filteredCategoryItems?.map((offer, index) => (
                     <Box
                         key={index}
                         sx={{
                             position: "relative",
-                            borderRadius: 3,
+                            borderRadius: { xs: 2.5, md: 3 },
                             overflow: "hidden",
                             bgcolor: "#fff",
-                            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            boxShadow: "0 8px 25px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05) inset",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                             cursor: "pointer",
+                            animation: `fadeInScale 0.6s ease-out ${index * 0.1}s both`,
+                            "@keyframes fadeInScale": {
+                                "0%": {
+                                    opacity: 0,
+                                    transform: "translateY(30px) scale(0.95)",
+                                },
+                                "100%": {
+                                    opacity: 1,
+                                    transform: "translateY(0) scale(1)",
+                                },
+                            },
+                            "&::before": {
+                                content: '""',
+                                position: "absolute",
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: 0,
+                                background: "linear-gradient(135deg, rgba(255,181,161,0.05) 0%, rgba(95,41,48,0.02) 100%)",
+                                opacity: 0,
+                                transition: "opacity 0.5s ease",
+                                zIndex: 1,
+                                pointerEvents: "none",
+                            },
                             "&:hover": {
-                                transform: "translateY(-10px) scale(1.02)",
-                                boxShadow: "0 12px 35px rgba(0,0,0,0.18)",
+                                transform: "translateY(-12px) scale(1.03)",
+                                boxShadow: "0 20px 50px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,181,161,0.3) inset",
+                                "&::before": {
+                                    opacity: 1,
+                                },
                                 "& .product-image": {
-                                    transform: "scale(1.15)",
+                                    transform: "scale(1.18)",
                                 },
                                 "& .heart-icon": {
-                                    transform: "scale(1.2) rotate(10deg)",
+                                    transform: "scale(1.3) rotate(15deg)",
                                     bgcolor: "#fff",
-                                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                                    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
                                 },
                                 "& .add-to-cart": {
                                     backgroundColor: "var(--themeColor)",
                                     color: "#fff",
-                                    transform: "scale(1.05)",
+                                    transform: "scale(1.08) translateY(-2px)",
+                                    boxShadow: "0 8px 25px rgba(95,41,48,0.4)",
                                 },
                             },
                         }}
@@ -267,24 +307,28 @@ export const CakeSection = () => {
                             className="heart-icon"
                             sx={{
                                 position: "absolute",
-                                right: 15,
-                                top: 15,
+                                right: { xs: 12, md: 18 },
+                                top: { xs: 12, md: 18 },
                                 zIndex: 10,
-                                bgcolor: "rgba(255,255,255,0.9)",
+                                bgcolor: "rgba(255,255,255,0.95)",
                                 borderRadius: "50%",
-                                width: 36,
-                                height: 36,
+                                width: { xs: 38, md: 42 },
+                                height: { xs: 38, md: 42 },
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 cursor: "pointer",
-                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                backdropFilter: "blur(10px)",
+                                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                backdropFilter: "blur(15px)",
+                                boxShadow: "0 4px 15px rgba(0,0,0,0.1), 0 0 0 1px rgba(255,255,255,0.3) inset",
+                                "&:active": {
+                                    transform: "scale(0.95)",
+                                },
                             }}
                         >
                             <FavoriteBorderIcon
                                 sx={{
-                                    fontSize: 22,
+                                    fontSize: { xs: 22, md: 24 },
                                     color: "var(--themeColor)",
                                     transition: "all 0.3s ease",
                                 }}
@@ -299,24 +343,33 @@ export const CakeSection = () => {
                             alt={offer?.title}
                             sx={{
                                 width: "100%",
-                                height: 260,
+                                height: { xs: 240, md: 280 },
                                 objectFit: "cover",
-                                transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                                transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease",
+                                filter: "brightness(0.95)",
                             }}
                         />
 
                         {/* Content */}
-                        <Box sx={{ p: 2 }}>
-                            <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                        <Box sx={{ p: { xs: 2, md: 2.5 }, position: "relative", zIndex: 2 }}>
+                            <Typography 
+                                sx={{ 
+                                    fontSize: { xs: 18, md: 22 }, 
+                                    fontWeight: 800, 
+                                    mb: 1,
+                                    color: "var(--themeColor)",
+                                    transition: "color 0.3s ease",
+                                }}
+                            >
                                 {offer?.title}
                             </Typography>
 
                             <Typography
                                 sx={{
-                                    fontSize: 14,
-                                    color: "gray",
-                                    mb: 2,
-                                    lineHeight: 1.4,
+                                    fontSize: { xs: 13, md: 14 },
+                                    color: "rgba(0,0,0,0.7)",
+                                    mb: 2.5,
+                                    lineHeight: 1.6,
                                 }}
                             >
                                 {offer?.description}
@@ -330,24 +383,48 @@ export const CakeSection = () => {
                                     justifyContent: "space-between",
                                 }}
                             >
-                                <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                <Typography 
+                                    sx={{ 
+                                        fontSize: { xs: 20, md: 22 }, 
+                                        fontWeight: 700,
+                                        color: "var(--themeColor)",
+                                    }}
+                                >
                                     {offer?.price}
                                 </Typography>
 
                                 <Box
                                     className="add-to-cart"
                                     sx={{
-                                        backgroundColor: "#fbc7b5",
+                                        background: "linear-gradient(135deg, #fbc7b5 0%, #ffb5a1 100%)",
                                         color: "var(--themeColor)",
-                                        px: 2.5,
-                                        py: 0.7,
-                                        borderRadius: 20,
+                                        px: { xs: 2.5, md: 3 },
+                                        py: { xs: 0.8, md: 1 },
+                                        borderRadius: { xs: 18, md: 22 },
                                         cursor: "pointer",
-                                        fontWeight: 600,
-                                        fontSize: 14,
+                                        fontWeight: 700,
+                                        fontSize: { xs: 13, md: 14 },
                                         textAlign: "center",
-                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                        boxShadow: "0 2px 8px rgba(251,199,181,0.3)",
+                                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                                        boxShadow: "0 4px 15px rgba(251,199,181,0.4)",
+                                        position: "relative",
+                                        overflow: "hidden",
+                                        "&::before": {
+                                            content: '""',
+                                            position: "absolute",
+                                            top: 0,
+                                            left: "-100%",
+                                            width: "100%",
+                                            height: "100%",
+                                            background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                                            transition: "left 0.5s ease",
+                                        },
+                                        "&:hover::before": {
+                                            left: "100%",
+                                        },
+                                        "&:active": {
+                                            transform: "scale(0.98)",
+                                        },
                                     }}
                                 >
                                     Add to Cart
@@ -369,7 +446,25 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography sx={{ fontSize: { xs: 28, sm: 32, md: 38 }, fontWeight: 800, color: "var(--themeColor)", }}>
+                <Typography 
+                    sx={{ 
+                        fontSize: { xs: 28, sm: 32, md: 38 }, 
+                        fontWeight: 800, 
+                        color: "var(--themeColor)",
+                        position: "relative",
+                        display: "inline-block",
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: "-5px",
+                            left: 0,
+                            width: "50%",
+                            height: "4px",
+                            background: "linear-gradient(90deg, var(--themeColor) 0%, rgba(255,181,161,0.5) 100%)",
+                            borderRadius: "2px",
+                        },
+                    }}
+                >
                     Pastries
                 </Typography>
 
@@ -545,7 +640,25 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography sx={{ fontSize: { xs: 28, sm: 32, md: 38 }, fontWeight: 800, color: "var(--themeColor)", }}>
+                <Typography 
+                    sx={{ 
+                        fontSize: { xs: 28, sm: 32, md: 38 }, 
+                        fontWeight: 800, 
+                        color: "var(--themeColor)",
+                        position: "relative",
+                        display: "inline-block",
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: "-5px",
+                            left: 0,
+                            width: "50%",
+                            height: "4px",
+                            background: "linear-gradient(90deg, var(--themeColor) 0%, rgba(255,181,161,0.5) 100%)",
+                            borderRadius: "2px",
+                        },
+                    }}
+                >
                     Cookies
                 </Typography>
 
@@ -704,6 +817,18 @@ export const CakeSection = () => {
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
                         color: "var(--themeColor)",
+                        position: "relative",
+                        display: "inline-block",
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: "-5px",
+                            left: 0,
+                            width: "50%",
+                            height: "4px",
+                            background: "linear-gradient(90deg, var(--themeColor) 0%, rgba(255,181,161,0.5) 100%)",
+                            borderRadius: "2px",
+                        },
                     }}
                 >
                     Breads
@@ -864,6 +989,18 @@ export const CakeSection = () => {
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
                         color: "var(--themeColor)",
+                        position: "relative",
+                        display: "inline-block",
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: "-5px",
+                            left: 0,
+                            width: "50%",
+                            height: "4px",
+                            background: "linear-gradient(90deg, var(--themeColor) 0%, rgba(255,181,161,0.5) 100%)",
+                            borderRadius: "2px",
+                        },
                     }}
                 >
                     Gift Combos
