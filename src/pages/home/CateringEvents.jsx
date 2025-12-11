@@ -38,7 +38,7 @@ export const CateringEvents = () => {
       observers.forEach((observer) => observer.disconnect());
     };
   }, []);
-  
+
   const specialties = [
     {
       title: "Weddings",
@@ -261,7 +261,7 @@ export const CateringEvents = () => {
         </Box>
       </Container>
 
-      <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 4 } }}>
+      <Container maxWidth="lg">
         <Box ref={sectionRefs.specialties}>
           <Typography
             variant="h2"
@@ -344,7 +344,7 @@ export const CateringEvents = () => {
       </Container>
 
       {/* Contact Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 6, md: 8 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 2, md: 3 } }}>
         <Box ref={sectionRefs.contact}>
           <Box
             sx={{
@@ -353,35 +353,16 @@ export const CateringEvents = () => {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography
-              variant="h2"
-              sx={{
-                fontSize: { xs: 20, sm: 24, md: 32 },
-                fontWeight: 700,
-                color: "#2c2c2c",
-                mb: 2,
-              }}
-            >
+            <Typography variant="h2" sx={{ fontSize: { xs: 20, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", mb: 2, }}>
               Get in Touch
             </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                fontSize: { xs: 13, sm: 14, md: 16 },
-                color: "#666",
-                lineHeight: 1.8,
-                mb: { xs: 3, md: 4 },
-              }}
-            >
+            <Typography variant="body1" sx={{ fontSize: { xs: 13, sm: 14, md: 16 }, color: "#666", lineHeight: 1.8, mb: { xs: 3, md: 4 }, }}>
               Planning an event? Contact us today to discuss your requirements and get a customized quote. Our team is ready to help make your celebration perfect!
             </Typography>
             <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
               <Grid item xs={12} sm={6} md={4}>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
                     p: { xs: 2, sm: 2.5, md: 3 },
                     borderRadius: 3,
                     backgroundColor: "#f9f9f9",
@@ -406,7 +387,6 @@ export const CateringEvents = () => {
                       fontWeight: 700,
                       color: "#2c2c2c",
                       fontSize: { xs: 15, sm: 16, md: 18 },
-                      textAlign: "center",
                     }}
                   >
                     Visit Us
@@ -416,7 +396,6 @@ export const CateringEvents = () => {
                     sx={{
                       color: "#666",
                       fontSize: { xs: 12, sm: 13, md: 14 },
-                      textAlign: "center",
                     }}
                   >
                     B-35, Sector-P, Aliganj, Lucknow 226024
@@ -426,9 +405,6 @@ export const CateringEvents = () => {
               <Grid item xs={12} sm={6} md={4}>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
                     p: { xs: 2, sm: 2.5, md: 3 },
                     borderRadius: 3,
                     backgroundColor: "#f9f9f9",
@@ -453,7 +429,6 @@ export const CateringEvents = () => {
                       fontWeight: 700,
                       color: "#2c2c2c",
                       fontSize: { xs: 15, sm: 16, md: 18 },
-                      textAlign: "center",
                     }}
                   >
                     Call Us
@@ -463,8 +438,6 @@ export const CateringEvents = () => {
                     sx={{
                       color: "#666",
                       fontSize: { xs: 12, sm: 13, md: 14 },
-                      lineHeight: 1.7,
-                      textAlign: "center",
                     }}
                   >
                     +91-7309010623
@@ -474,13 +447,9 @@ export const CateringEvents = () => {
               <Grid item xs={12} sm={6} md={4}>
                 <Box
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 2,
                     p: { xs: 2, sm: 2.5, md: 3 },
                     borderRadius: 3,
                     backgroundColor: "#f9f9f9",
-                    height: "100%",
                     transition: "all 0.3s ease",
                     animation: visibleSections.contact
                       ? `fadeInUp 0.6s ease-out 0.2s both`
@@ -495,25 +464,10 @@ export const CateringEvents = () => {
                     },
                   }}
                 >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      color: "#2c2c2c",
-                      fontSize: { xs: 15, sm: 16, md: 18 },
-                      textAlign: "center",
-                    }}
-                  >
+                  <Typography variant="h6" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 15, sm: 16, md: 18 }, }}>
                     Email Us
                   </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: { xs: 12, sm: 13, md: 14 },
-                      textAlign: "center",
-                    }}
-                  >
+                  <Typography variant="body2" sx={{ color: "#666", fontSize: { xs: 12, sm: 13, md: 14 }, }}>
                     hr@mrbrownbakery.com
                   </Typography>
                 </Box>

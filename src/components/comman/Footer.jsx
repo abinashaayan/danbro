@@ -10,17 +10,27 @@ import SendIcon from "@mui/icons-material/Send";
 import logo from "../../assets/logo.png";
 import postImg from "../../assets/cakeimg.png";
 import visa from "../../assets/payments.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FooterContainer = styled(Box)(({ theme }) => ({
   backgroundColor: "#FBEFE8",
   paddingTop: theme.spacing(6),
   position: "relative",
+  marginTop: "auto",
 }));
 
 export const Footer = () => {
   const bannerRef = useRef(null);
   const footerRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleLinkClick = (e, path) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => {
+      navigate(path);
+    }, 100);
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -285,9 +295,13 @@ export const Footer = () => {
                 OUR STORES
               </Typography>
               {ourStories.map((item, index) => (
-                <Link to={item.link} className="text-decoration-none">
+                <Link 
+                  key={index}
+                  to={item.link} 
+                  className="text-decoration-none"
+                  onClick={(e) => handleLinkClick(e, item.link)}
+                >
                   <Typography
-                    key={item}
                     sx={{
                       mb: 1,
                       color: "#555",
@@ -321,9 +335,13 @@ export const Footer = () => {
                 USEFUL LINKS
               </Typography>
               {knowMore?.map((item, index) => (
-                <Link to={item.link} className="text-decoration-none">
+                <Link 
+                  key={index}
+                  to={item.link} 
+                  className="text-decoration-none"
+                  onClick={(e) => handleLinkClick(e, item.link)}
+                >
                   <Typography
-                    key={item}
                     sx={{
                       mb: 1,
                       color: "#555",
@@ -357,9 +375,13 @@ export const Footer = () => {
                 KNOW MORE
               </Typography>
               {knowMoreLinks.map((item, index) => (
-                <Link to={item.link} className="text-decoration-none">
+                <Link 
+                  key={index}
+                  to={item.link} 
+                  className="text-decoration-none"
+                  onClick={(e) => handleLinkClick(e, item.link)}
+                >
                   <Typography
-                    key={index}
                     sx={{
                       mb: 1,
                       color: "#555",

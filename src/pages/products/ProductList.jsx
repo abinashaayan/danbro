@@ -12,10 +12,14 @@ import {
   InputAdornment,
   Tabs,
   Tab,
+  IconButton,
 } from "@mui/material";
 import {
   Search as SearchIcon,
   FavoriteBorder as FavoriteBorderIcon,
+  ShoppingCart,
+  FavoriteBorder,
+  ShareOutlined,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Rectangle45 from "../../assets/Rectangle45.png";
@@ -88,7 +92,7 @@ export const ProductList = () => {
   const getFilteredProducts = () => {
     const categoryName = categories[selectedCategory];
     let categoryProducts = allProducts[categoryName] || allProducts.Muffins;
-    
+
     // Apply search filter
     if (searchQuery) {
       categoryProducts = categoryProducts.filter(
@@ -97,7 +101,7 @@ export const ProductList = () => {
           product.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-    
+
     return categoryProducts;
   };
 
@@ -245,15 +249,7 @@ export const ProductList = () => {
             },
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              fontSize: { xs: 22, sm: 24, md: 32 },
-              fontWeight: 700,
-              color: "#2c2c2c",
-              transition: "color 0.3s ease",
-            }}
-          >
+          <Typography variant="h4" sx={{ fontSize: { xs: 22, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", transition: "color 0.3s ease", }}>
             Categories
           </Typography>
           <TextField
@@ -286,8 +282,6 @@ export const ProductList = () => {
             }}
           />
         </Box>
-
-        {/* Category Tabs */}
         <Box
           sx={{
             mb: 5,
@@ -370,7 +364,7 @@ export const ProductList = () => {
               },
             }}
           >
-            {categories.map((category, index) => (
+            {categories?.map((category, index) => (
               <Tab
                 key={index}
                 label={category}
@@ -393,7 +387,7 @@ export const ProductList = () => {
         </Box>
 
         {/* Product Grid */}
-        <Box
+        {/* <Box
           ref={productRef}
           sx={{
             display: "flex",
@@ -405,8 +399,8 @@ export const ProductList = () => {
             transition: "opacity 0.6s ease-in-out",
           }}
         >
-          {products.length > 0 ? (
-            products.map((product, index) => (
+          {products?.length > 0 ? (
+            products?.map((product, index) => (
               <Box
                 key={product.id}
                 sx={{
@@ -570,7 +564,246 @@ export const ProductList = () => {
               </Typography>
             </Box>
           )}
+        </Box> */}
+        <Box
+          ref={productRef}
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: { xs: "center", sm: "flex-start" },
+            gap: { xs: 2, sm: 2.5, md: 3 },
+            mb: 6,
+            opacity: isVisible ? 1 : 0,
+            transition: "opacity 0.6s ease-in-out",
+          }}
+        >
+          {products?.length > 0 ? (
+            products.map((product, index) => (
+              <Box
+                key={product.id}
+                sx={{
+                  width: {
+                    xs: "calc(50% - 8px)",
+                    sm: "calc(33.333% - 16px)",
+                    md: "calc(25% - 18px)",
+                    lg: "calc(20% - 19.2px)",
+                  },
+                  minWidth: { xs: "140px", sm: "180px", md: "200px" },
+                  maxWidth: { xs: "none", md: "280px" },
+                  animation: isVisible
+                    ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
+                    : "none",
+                  "@keyframes fadeInUp": {
+                    "0%": {
+                      opacity: 0,
+                      transform: "translateY(30px)",
+                    },
+                    "100%": {
+                      opacity: 1,
+                      transform: "translateY(0)",
+                    },
+                  },
+                }}
+              >
+                <Card
+                  elevation={0}
+                  onClick={() => navigate(`/products/${product.id}`)}
+                  sx={{
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    cursor: "pointer",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    position: "relative",
+
+                    /* GREEN DOT */
+                    "& .green-dot": {
+                      position: "absolute",
+                      top: 8,
+                      left: 8,
+                      width: 12,
+                      height: 12,
+                      backgroundColor: "#26d94c",
+                      borderRadius: "50%",
+                      border: "2px solid white",
+                      zIndex: 15,
+                    },
+
+                    /* Hover Icons visible on hover */
+                    "& .hover-icons": {
+                      opacity: 0,
+                      transition: "opacity 0.4s ease",
+                    },
+                    "&:hover .hover-icons": {
+                      opacity: 1,
+                    },
+
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: "rgba(255, 100, 58, 0)",
+                      transition: "background-color 0.3s ease",
+                      zIndex: 1,
+                      pointerEvents: "none",
+                    },
+
+                    "&:hover": {
+                      transform: "translateY(-8px) scale(1.02)",
+                      boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
+
+                      "&::before": {
+                        backgroundColor: "rgba(255, 100, 58, 0.05)",
+                      },
+                    },
+
+                    "&:active": {
+                      transform: "translateY(-4px) scale(1.01)",
+                    },
+                  }}
+                >
+                  {/* GREEN DOT */}
+                  <Box className="green-dot" />
+
+                  <Box
+                    sx={{
+                      position: "relative",
+                      overflow: "hidden",
+                      "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: "-100%",
+                        width: "100%",
+                        height: "100%",
+                        background:
+                          "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
+                        transition: "left 0.5s ease",
+                      },
+                      "&:hover::after": {
+                        left: "100%",
+                      },
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={product.image}
+                      alt={product.name}
+                      sx={{
+                        objectFit: "cover",
+                        transition: "transform 0.5s ease",
+                        "&:hover": {
+                          transform: "scale(1.1)",
+                        },
+                      }}
+                    />
+
+                    {/* HOVER BAR ICONS */}
+                    <Box
+                      className="hover-icons"
+                      sx={{
+                        position: "absolute",
+                        bottom: 12,
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        display: "flex",
+                        gap: 1.5,
+                        backgroundColor: "rgba(255,255,255,0.9)",
+                        padding: "6px 14px",
+                        borderRadius: "30px",
+                        zIndex: 12,
+                        boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
+                      }}
+                    >
+                      <IconButton size="small">
+                        <ShoppingCart sx={{ fontSize: 18 }} />
+                      </IconButton>
+                      <IconButton size="small">
+                        <ShareOutlined sx={{ fontSize: 18 }} />
+                      </IconButton>
+                      <IconButton size="small">
+                        <FavoriteBorder sx={{ fontSize: 18 }} />
+                      </IconButton>
+                    </Box>
+                  </Box>
+                  <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 600,
+                        color: "#2c2c2c",
+                        mb: 0.5,
+                        fontSize: { xs: 13, sm: 14, md: 16 },
+                        lineHeight: 1.3,
+                        transition: "color 0.3s ease",
+                        "&:hover": {
+                          color: "#FF643A",
+                        },
+                      }}
+                    >
+                      {product?.name}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "#666",
+                        mb: 1,
+                        fontSize: { xs: 11, sm: 12, md: 13 },
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {product?.description}
+                    </Typography>
+
+                    <Typography
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        color: "#000",
+                        fontSize: { xs: 14, sm: 16, md: 18 },
+                        textAlign: "right",
+                        transition: "transform 0.3s ease",
+                        "&:hover": {
+                          transform: "scale(1.05)",
+                        },
+                      }}
+                    >
+                      {product?.price}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))
+          ) : (
+            <Box
+              sx={{
+                width: "100%",
+                textAlign: "center",
+                py: 8,
+                animation: "fadeIn 0.6s ease-out",
+                "@keyframes fadeIn": {
+                  "0%": { opacity: 0 },
+                  "100%": { opacity: 1 },
+                },
+              }}
+            >
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "#999",
+                  fontSize: { xs: 16, md: 20 },
+                }}
+              >
+                No products found
+              </Typography>
+            </Box>
+          )}
         </Box>
+
       </Container>
 
       {/* Promotional Banner */}

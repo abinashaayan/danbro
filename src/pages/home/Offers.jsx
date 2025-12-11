@@ -221,13 +221,13 @@ export const Offers = () => {
               fontSize: { xs: 22, sm: 24, md: 32 },
               fontWeight: 700,
               color: "#2c2c2c",
-              mb: 4,
+              mb: 2,
             }}
           >
             Benefits
           </Typography>
           <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
-            {whyWorkWithUs.map((item, index) => (
+            {whyWorkWithUs?.map((item, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
                 <Box
                   onClick={() => setActiveIndex(index)}
@@ -254,7 +254,6 @@ export const Offers = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     textAlign: "center",
-                    minHeight: { xs: 70, sm: 80, md: 90 },
                     ...(activeIndex === index && {
                       backgroundColor: "#FFE5E5",
                       border: "2px solid #ff9800",
@@ -301,17 +300,16 @@ export const Offers = () => {
               fontSize: { xs: 22, sm: 24, md: 32 },
               fontWeight: 700,
               color: "#2c2c2c",
-              mb: { xs: 3, md: 4 },
             }}
           >
             Open Positions
           </Typography>
 
-          {schemes.map((scheme, index) => (
+          {schemes?.map((scheme, index) => (
             <Box
               key={index}
               sx={{
-                mt: { xs: 3, md: 4 },
+                mt: { xs: 2, md: 3 },
                 display: "flex",
                 flexDirection: { xs: "column", md: "row" },
                 justifyContent: "space-between",

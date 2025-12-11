@@ -15,6 +15,7 @@ import { ProductList } from "../pages/products/ProductList";
 import { ProductDetails } from "../pages/products/ProductDetails";
 import BlogDetails from "../pages/home/BlogDetails";
 import { Store } from "../pages/home/Store";
+import { NotFound } from "../pages/NotFound";
 
 const AppRoutes = () => {
     return (
@@ -35,6 +36,7 @@ const AppRoutes = () => {
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };

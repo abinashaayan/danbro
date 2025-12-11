@@ -19,7 +19,7 @@ const testimonialsList = [
         name: "Tom",
         title: "It was a very good experience",
         message:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cursus nibh mauris...",
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cursus nibh mauris, nec turpis orci lectus maecenas. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. Faucibus venenatis felis id augue sit cursus pellentesque enim arcu. Elementum felis magna pretium in tincidunt. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. urpis orci lectus maecenas. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. Faucibus venenatis felis id augue sit cursus pellentesque enim arcu",
         img: user1,
     },
     {
