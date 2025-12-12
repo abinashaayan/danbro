@@ -1,13 +1,16 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, Button, useMediaQuery, IconButton } from "@mui/material";
 import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import Slider from "react-slick";
 import { CakeSection } from "./Cake";
 import { PersonalisedInstant } from "./PersonalisedInstant";
 import { TestimonialsSection } from "./TestimonialsSection";
 import specialMomentslogo from "../../assets/SPECIALMOMENTS.png";
 import { Artical } from "./Artical";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const tabs = ["Pizza", "Cakes", "Danbro Special", "Others"];
 
@@ -133,10 +136,21 @@ const specialMoments = [
 
 export const OffersSection = () => {
   const [activeTab, setActiveTab] = useState("Danbro Special");
+  const isMobile = useMediaQuery("(max-width:899px)");
+  let sliderRef = useRef(null);
   const filteredItems =
     activeTab === "Others"
       ? offers
       : offers.filter((item) => item.category === activeTab);
+
+  const sliderSettings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: false,
+    dots: false,
+  };
 
   return (
     <Box>
@@ -248,15 +262,196 @@ export const OffersSection = () => {
           </Box>
         </Box>
         {/* Offer */}
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
-            gap: { xs: 2.5, md: 4 },
-            mb: { xs: 6, md: 8 },
-          }}
-        >
-          {filteredItems?.map((offer, index) => (
+        {isMobile ? (
+          <Box sx={{ position: "relative", mb: { xs: 6, md: 8 } }}>
+            <IconButton
+              onClick={() => sliderRef?.slickPrev()}
+              sx={{
+                position: "absolute",
+                left: { xs: -10, sm: -15 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 10,
+                bgcolor: "#fff",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                "&:hover": { bgcolor: "#fff4f0" },
+              }}
+            >
+              <ArrowBackIosNewIcon />
+            </IconButton>
+            <Slider ref={(slider) => (sliderRef = slider)} {...sliderSettings}>
+              {filteredItems?.map((offer, index) => (
+                <Box key={index} sx={{ px: 1 }}>
+                  {(() => {
+                    const OfferCard = (
+                      <Box
+                        sx={{
+                          position: "relative",
+                          borderRadius: { xs: 2, md: 3 },
+                          overflow: "hidden",
+                          cursor: "pointer",
+                          transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                          boxShadow: "0 8px 25px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05) inset",
+                          "&::before": {
+                            content: '""',
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: "linear-gradient(135deg, rgba(255,181,161,0.1) 0%, rgba(95,41,48,0.05) 100%)",
+                            opacity: 0,
+                            transition: "opacity 0.5s ease",
+                            zIndex: 1,
+                            pointerEvents: "none",
+                          },
+                          "&:hover": {
+                            transform: "translateY(-12px) scale(1.03)",
+                            boxShadow: "0 20px 50px rgba(0,0,0,0.25), 0 0 0 1px rgba(255,181,161,0.3) inset",
+                            "&::before": {
+                              opacity: 1,
+                            },
+                            "& img": {
+                              transform: "scale(1.15)",
+                            },
+                            "& .overlay-content": {
+                              opacity: 1,
+                              transform: "translateY(0)",
+                              background: "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.95) 100%)",
+                            },
+                            "& .discount-badge": {
+                              transform: "scale(1.15) rotate(5deg)",
+                              boxShadow: "0 8px 25px rgba(10,18,52,0.5)",
+                            },
+                          },
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={offer.img}
+                          alt={offer.title}
+                          sx={{
+                            width: "100%",
+                            height: { xs: 220, sm: 250, md: 280 },
+                            objectFit: "cover",
+                            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                            filter: "brightness(0.95)",
+                          }}
+                        />
+                        <Box
+                          className="overlay-content"
+                          sx={{
+                            position: "absolute",
+                            bottom: 0,
+                            width: "100%",
+                            p: { xs: 2, md: 2.5 },
+                            background:
+                              "linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.85) 100%)",
+                            color: "#fff",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            opacity: 1,
+                            transform: "translateY(0)",
+                            zIndex: 2,
+                          }}
+                        >
+                          <Typography 
+                            sx={{ 
+                              fontSize: { xs: 12, md: 14 }, 
+                              opacity: 0.95, 
+                              color: "#FFB5A1",
+                              fontWeight: 500,
+                              mb: 0.5,
+                              textTransform: "uppercase",
+                              letterSpacing: "0.5px",
+                            }}
+                          >
+                            {offer?.subtitle}
+                          </Typography>
+                          <Typography 
+                            sx={{ 
+                              fontSize: { xs: 18, sm: 20, md: 24 }, 
+                              fontWeight: 800,
+                              lineHeight: 1.2,
+                              textShadow: "0 2px 10px rgba(0,0,0,0.5)",
+                            }}
+                          >
+                            {offer?.title}
+                          </Typography>
+                        </Box>
+                        <Box
+                          className="discount-badge"
+                          sx={{
+                            position: "absolute",
+                            top: { xs: 12, md: 15 },
+                            right: { xs: 12, md: 18 },
+                            background: "linear-gradient(135deg, #0A1234 0%, #1a2a4a 100%)",
+                            px: { xs: 2, md: 2.5 },
+                            py: { xs: 1.5, md: 2 },
+                            borderRadius: { xs: 1.5, md: 2 },
+                            fontSize: { xs: 13, md: 16 },
+                            fontWeight: 800,
+                            color: "#fff",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            animation: "pulse 2.5s ease-in-out infinite",
+                            boxShadow: "0 4px 15px rgba(10,18,52,0.4), 0 0 0 2px rgba(255,255,255,0.1) inset",
+                            zIndex: 3,
+                            "@keyframes pulse": {
+                              "0%, 100%": { transform: "scale(1)" },
+                              "50%": { transform: "scale(1.08)" },
+                            },
+                            "&::before": {
+                              content: '""',
+                              position: "absolute",
+                              top: "-2px",
+                              left: "-2px",
+                              right: "-2px",
+                              bottom: "-2px",
+                              background: "linear-gradient(45deg, rgba(255,181,161,0.5), rgba(255,255,255,0.3))",
+                              borderRadius: "inherit",
+                              zIndex: -1,
+                              opacity: 0,
+                              transition: "opacity 0.3s ease",
+                            },
+                            "&:hover::before": {
+                              opacity: 1,
+                            },
+                          }}
+                        >
+                          {offer?.discount}
+                        </Box>
+                      </Box>
+                    );
+                    return OfferCard;
+                  })()}
+                </Box>
+              ))}
+            </Slider>
+            <IconButton
+              onClick={() => sliderRef?.slickNext()}
+              sx={{
+                position: "absolute",
+                right: { xs: -10, sm: -15 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 10,
+                bgcolor: "#fff",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                "&:hover": { bgcolor: "#fff4f0" },
+              }}
+            >
+              <ArrowForwardIosIcon />
+            </IconButton>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr" },
+              gap: { xs: 2.5, md: 4 },
+              mb: { xs: 6, md: 8 },
+            }}
+          >
+            {filteredItems?.map((offer, index) => (
             <Box
               key={index}
               sx={{
@@ -407,6 +602,7 @@ export const OffersSection = () => {
             </Box>
           ))}
         </Box>
+        )}
         <Box 
           sx={{ 
             width: "100%", 

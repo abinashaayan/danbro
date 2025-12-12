@@ -16,6 +16,9 @@ import { ProductDetails } from "../pages/products/ProductDetails";
 import BlogDetails from "../pages/home/BlogDetails";
 import { Store } from "../pages/home/Store";
 import { NotFound } from "../pages/NotFound";
+import { Cart } from "../pages/cart/Cart";
+import { PrivacyPolicy } from "../pages/home/PrivacyPolicy";
+import { TermsAndConditions } from "../pages/home/TermsAndConditions";
 
 const AppRoutes = () => {
     return (
@@ -25,7 +28,7 @@ const AppRoutes = () => {
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog-details" element={<BlogDetails />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/press-media" element={<PressandMedia />} />
+            <Route path="/media" element={<PressandMedia />} />
             <Route path="/store" element={<Store />} />
             <Route path="/career" element={<Career />} />
             <Route path="/offers" element={<Offers />} />
@@ -36,6 +39,9 @@ const AppRoutes = () => {
             <Route path="/track-order" element={<TrackOrder />} />
             <Route path="/products" element={<ProductList />} />
             <Route path="/products/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/terms-conditions" element={<TermsAndConditions />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     );

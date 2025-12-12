@@ -35,13 +35,15 @@ export const PersonalisedInstant = () => {
                 width: "100%",
                 maxWidth: "100vw",
                 background: "linear-gradient(180deg, #EEEEEE 0%, #E0E1DC 100%)",
-                borderRadius: "0 0 40px 40px",
+                borderRadius: { xs: "0 0 20px 20px", md: "0 0 40px 40px" },
                 overflow: "hidden",
                 display: "flex",
+                flexDirection: { xs: "column", md: "row" },
                 justifyContent: "center",
                 alignItems: "center",
                 position: "relative",
                 boxShadow: "0 -10px 40px rgba(0,0,0,0.05)",
+                px: { xs: 1.25, md: 0 },
                 "&::before": {
                     content: '""',
                     position: "absolute",
@@ -97,12 +99,12 @@ export const PersonalisedInstant = () => {
                     position: "relative",
                     opacity: 0,
                     zIndex: 5,
-                    transform: "translateX(-50px)",
+                    transform: { xs: "translateY(-30px)", md: "translateX(-50px)" },
                     transition: "opacity 1s ease-out, transform 1s ease-out",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    // minHeight: { xs: "500px", md: "700px" },
+                    minHeight: { xs: "300px", md: "700px" },
                     "&::after": {
                         content: '""',
                         position: "absolute",
@@ -139,7 +141,9 @@ export const PersonalisedInstant = () => {
                     alt="App Banner"
                     sx={{
                         width: "100%",
-                        height: "100%",
+                        height: { xs: "auto", md: "100%" },
+                        maxHeight: { xs: "400px", md: "none" },
+                        objectFit: "contain",
                         display: "block",
                         transition: "transform 0.3s ease",
                         position: "relative",
@@ -153,14 +157,15 @@ export const PersonalisedInstant = () => {
             <Box
                 ref={contentRef}
                 sx={{
-                    px: { xs: 3, md: 6 },
+                    px: { xs: 2, md: 6 },
                     py: { xs: 3, md: 5 },
                     textAlign: { xs: "center", md: "left" },
                     position: "relative",
                     zIndex: 2,
                     opacity: 0,
-                    transform: "translateX(50px)",
+                    transform: { xs: "translateY(30px)", md: "translateX(50px)" },
                     transition: "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
+                    width: { xs: "100%", md: "50%" },
                 }}
             >
                 <Box
@@ -192,12 +197,13 @@ export const PersonalisedInstant = () => {
                         sx={{
                             background: "linear-gradient(135deg, #03081F 0%, #1a1f3a 100%)",
                             color: "#fff",
-                            borderRadius: { xs: "30px", md: "50px" },
-                            px: { xs: 2.5, sm: 3, md: 4 },
-                            py: { xs: "10px", md: "12px" },
+                            borderRadius: { xs: "20px", md: "50px" },
+                            px: { xs: 2, sm: 3, md: 4 },
+                            py: { xs: "8px", md: "12px" },
                             display: "block",
                             marginLeft: { xs: 0, md: "-170px" },
-                            width: "625px",
+                            width: { xs: "100%", md: "625px" },
+                            maxWidth: { xs: "100%", md: "625px" },
                             textAlign: "center",
                             boxShadow: "0 8px 25px rgba(15,27,64,0.4), 0 0 0 1px rgba(255,255,255,0.1) inset",
                             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -241,12 +247,13 @@ export const PersonalisedInstant = () => {
                 <Typography
                     sx={{
                         mt: { xs: 1.5, md: 2 },
-                        fontSize: { xs: 15, sm: 17, md: 19 },
+                        fontSize: { xs: 14, sm: 17, md: 19 },
                         color: "#555",
                         mb: { xs: 3, md: 4 },
                         fontWeight: 600,
                         lineHeight: 1.6,
                         textShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                        px: { xs: 1, md: 0 },
                     }}
                 >
                     Download the DANBRO app for faster ordering

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress } from "@mui/material";
+import { Box, Typography, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import banner from "../../assets/login.png";
+import { CustomTextField } from "../../components/comman/CustomTextField";
+import { CustomButton } from "../../components/comman/CustomButton";
 
 const RECAPTCHA_SITE_KEY = "6Lfr-iAsAAAAAIQsR8mfUxZO1qK3r_AXrTSLSb4g";
 
@@ -209,37 +211,19 @@ export const Login = () => {
           </Typography>
 
           <Box component="form" onSubmit={handleSubmit}>
-            <TextField
+            <CustomTextField
               fullWidth
               name="username"
               placeholder="Username, Email or Mobile Number"
               required
               value={formData.username}
               onChange={handleChange}
-              sx={{
-                mb: 3,
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#fff",
-                  borderRadius: "12px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                  "&.Mui-focused": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  fontWeight: 500,
-                },
-              }}
+              sx={{ mb: 3 }}
             />
 
             {/* Password Field */}
             <Box sx={{ position: "relative", mb: 2 }}>
-              <TextField
+              <CustomTextField
                 fullWidth
                 name="password"
                 placeholder="Password"
@@ -247,24 +231,7 @@ export const Login = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "#fff",
-                    borderRadius: "12px",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    },
-                    "&.Mui-focused": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontWeight: 500,
-                  },
-                }}
+                sx={{ mb: 0 }}
               />
               <Button
                 onClick={() => setShowPassword(!showPassword)}
@@ -377,10 +344,7 @@ export const Login = () => {
                 </Alert>
               </Box>
             )}
-
-            {/* Login Button */}
-            {/* <Link to="/user-profile"> */}
-            <Button
+            <CustomButton
               type="submit"
               fullWidth
               disabled={isSubmitting}
@@ -391,28 +355,7 @@ export const Login = () => {
                   alert("Please enter valid email and password");
                 }
               }}
-              sx={{
-                backgroundColor: "#FF9472",
-                borderRadius: "50px",
-                color: "#fff",
-                py: { xs: 1.2, md: 1.5 },
-                borderRadius: "12px",
-                fontSize: { xs: 16, md: 18 },
-                fontWeight: 700,
-                textTransform: "none",
-                mb: 3,
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 15px rgba(255,148,114,0.3)",
-                "&:hover": {
-                  backgroundColor: "#F2709C",
-                  transform: "translateY(-3px)",
-                  boxShadow: "0 8px 25px rgba(255,148,114,0.5)",
-                },
-                "&:disabled": {
-                  backgroundColor: "#ccc",
-                  color: "#999",
-                },
-              }}
+              sx={{ mb: 3 }}
             >
               {isSubmitting ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -422,7 +365,7 @@ export const Login = () => {
               ) : (
                 "Login"
               )}
-            </Button>
+            </CustomButton>
             {/* </Link> */}
 
             {/* Register Link */}

@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Typography, TextField, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
+import { Box, Typography, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import banner from "../../assets/login.png";
+import { CustomTextField } from "../../components/comman/CustomTextField";
+import { CustomButton } from "../../components/comman/CustomButton";
 
 const RECAPTCHA_SITE_KEY = "6Lfr-iAsAAAAAIQsR8mfUxZO1qK3r_AXrTSLSb4g";
 
@@ -214,6 +216,7 @@ export const Register = () => {
             transform: "translateY(30px)",
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             border: "1px solid rgba(173, 216, 230, 0.3)",
+            my: 4,
           }}
         >
           <Typography
@@ -235,37 +238,18 @@ export const Register = () => {
 
           <Box component="form" onSubmit={handleSubmit}>
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Full Name</InputLabel>
-            <TextField
+            <CustomTextField
               fullWidth
               name="fullName"
               placeholder="Full Name"
               required
               value={formData.fullName}
               onChange={handleChange}
-              sx={{
-                mb: 2,
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#fff",
-                  borderRadius: "12px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                  "&.Mui-focused": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  fontWeight: 500,
-                },
-              }}
             />
 
             {/* Email Field */}
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Email Address</InputLabel>
-            <TextField
+            <CustomTextField
               fullWidth
               name="email"
               placeholder="Email Address"
@@ -273,30 +257,11 @@ export const Register = () => {
               required
               value={formData.email}
               onChange={handleChange}
-              sx={{
-                mb: 2,
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#fff",
-                  borderRadius: "12px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                  "&.Mui-focused": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  fontWeight: 500,
-                },
-              }}
             />
 
             {/* Mobile Field */}
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Mobile Number</InputLabel>
-            <TextField
+            <CustomTextField
               fullWidth
               name="mobile"
               placeholder="Mobile Number"
@@ -304,31 +269,12 @@ export const Register = () => {
               required
               value={formData.mobile}
               onChange={handleChange}
-              sx={{
-                mb: 2,
-                "& .MuiOutlinedInput-root": {
-                  backgroundColor: "#fff",
-                  borderRadius: "12px",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                  },
-                  "&.Mui-focused": {
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  fontWeight: 500,
-                },
-              }}
             />
 
             {/* Password Field */}
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Password</InputLabel>
             <Box sx={{ position: "relative", mb: 2 }}>
-              <TextField
+              <CustomTextField
                 fullWidth
                 name="password"
                 placeholder="Password"
@@ -336,24 +282,7 @@ export const Register = () => {
                 required
                 value={formData.password}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "#fff",
-                    borderRadius: "12px",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    },
-                    "&.Mui-focused": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontWeight: 500,
-                  },
-                }}
+                sx={{ mb: 0 }}
               />
               <Button
                 onClick={() => setShowPassword(!showPassword)}
@@ -387,7 +316,7 @@ export const Register = () => {
             {/* Confirm Password Field */}
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Confirm Password</InputLabel>
             <Box sx={{ position: "relative", mb: 2 }}>
-              <TextField
+              <CustomTextField
                 fullWidth
                 name="confirmPassword"
                 placeholder="Confirm Password"
@@ -395,24 +324,7 @@ export const Register = () => {
                 required
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    backgroundColor: "#fff",
-                    borderRadius: "12px",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                    },
-                    "&.Mui-focused": {
-                      transform: "translateY(-2px)",
-                      boxShadow: "0 4px 12px rgba(95,41,48,0.2)",
-                    },
-                  },
-                  "& .MuiInputLabel-root": {
-                    fontWeight: 500,
-                  },
-                }}
+                sx={{ mb: 0 }}
               />
               <Button
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -533,32 +445,11 @@ export const Register = () => {
             )}
 
             {/* Register Button */}
-            <Button
+            <CustomButton
               type="submit"
               fullWidth
               disabled={isSubmitting}
-              sx={{
-                backgroundColor: "#FF9472",
-                color: "#fff",
-                py: { xs: 1.2, md: 1.5 },
-                borderRadius: "12px",
-                fontSize: { xs: 16, md: 18 },
-                fontWeight: 700,
-                textTransform: "none",
-                borderRadius: "50px",
-                mb: 1,
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 15px rgba(255,148,114,0.3)",
-                "&:hover": {
-                  backgroundColor: "#F2709C",
-                  transform: "translateY(-3px)",
-                  boxShadow: "0 8px 25px rgba(255,148,114,0.5)",
-                },
-                "&:disabled": {
-                  backgroundColor: "#ccc",
-                  color: "#999",
-                },
-              }}
+              sx={{ mb: 1 }}
             >
               {isSubmitting ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -568,7 +459,7 @@ export const Register = () => {
               ) : (
                 "Register"
               )}
-            </Button>
+            </CustomButton>
 
             {/* Login Link */}
             <Typography sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, mb: 2 }}>
@@ -622,9 +513,6 @@ export const Register = () => {
               Continue with Google
             </Button>
           </Box>
-          {/* Google Register Button */}
-
-
         </Box>
       </Container>
     </Box>

@@ -78,10 +78,10 @@ export const Footer = () => {
   ];
 
   const knowMore = [
-    { label: "Privacy Policies", link: "/privacy-policies" },
+    { label: "Privacy Policies", link: "/privacy-policy" },
     { label: "Shipping Policies", link: "/shipping-policies" },
     { label: "Refund & Returns Policy", link: "/refund-returns-policy" },
-    { label: "Terms and Conditions", link: "/terms-and-conditions" },
+    { label: "Terms and Conditions", link: "/terms-conditions" },
     { label: "Corporate Queries", link: "/corporate-queries" },
     { label: "Contact Us", link: "/contact" },
   ];
@@ -114,7 +114,7 @@ export const Footer = () => {
               alignItems: { xs: "flex-start", sm: "center" },
               gap: { xs: 2, sm: 3 },
               position: "absolute",
-              bottom: { xs: "4%", md: "95%" },
+              bottom: { xs: "4%", md: "85%" },
               left: "50%",
               transform: "translateX(-50%)",
               opacity: 0,
@@ -211,7 +211,7 @@ export const Footer = () => {
               Contact
             </Box>
           </Box>
-          <Box sx={{ display: 'flex', flexDirection: { xs: "column", sm: "row" }, justifyContent: 'space-between', alignItems: { xs: "flex-start", sm: "center" }, gap: { xs: 2, sm: 0 }, mb: { xs: 6, sm: 10, md: 12 }, px: { xs: 1, md: 0 } }}>
+          <Box sx={{ mt: 10, display: 'flex', flexDirection: { xs: "column", sm: "row" }, justifyContent: 'space-between', alignItems: { xs: "flex-start", sm: "center" }, gap: { xs: 2, sm: 0 }, mb: { xs: 6, sm: 10, md: 12 }, px: { xs: 1, md: 0 } }}>
             <Box
               component="img"
               src={logo}

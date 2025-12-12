@@ -87,6 +87,7 @@ export const Blog = () => {
         overflowX: "hidden",
         backgroundColor: "#fff",
         pb: { xs: 8, md: 10 },
+        p: { xs: 1.25, md: 0 },
       }}
     >
       {/* ---------------- HERO HEADER ---------------- */}
@@ -131,7 +132,7 @@ export const Blog = () => {
 
 
       {/* ---------------- BLOG CONTENT WRAPPER ---------------- */}
-      <Container maxWidth="xl" sx={{ py: 4 }}>
+      <Container maxWidth="xl" sx={{ py: 4, px: { xs: 2, md: 3 } }}>
         <Box ref={sectionRefs.categories}>
           <Box
             sx={{
@@ -185,7 +186,7 @@ export const Blog = () => {
         </Box>
 
         <Grid container spacing={{ xs: 2, sm: 3, md: 3 }}>
-          <Grid size={8}>
+          <Grid size={{ xs: 12, md: 8 }}>
             {blogs.map((blog) => (
               <Box
                 key={blog.id}
@@ -291,7 +292,7 @@ export const Blog = () => {
           </Grid>
 
 
-          <Grid item xs={12} md={4} ref={sectionRefs.sidebar}>
+          <Grid size={{ xs: 12, md: 4 }} ref={sectionRefs.sidebar}>
             <Box
               sx={{
                 opacity: visibleSections.sidebar ? 1 : 0,

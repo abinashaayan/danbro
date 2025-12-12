@@ -62,7 +62,7 @@ function App() {
       >
         <TopHeader />
         <Navbar />
-        <Box sx={{ flex: 1, mb: { xs: 8, md: 12 } }}>
+        <Box sx={{ flex: 1 }}>
           <AppRoutes />
         </Box>
         <Footer />

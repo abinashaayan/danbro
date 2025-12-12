@@ -96,7 +96,7 @@ export const Career = () => {
 
   return (
     <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 }, px: { xs: 2, md: 3 } }}>
         <Box
           ref={sectionRefs.header}
           sx={{
@@ -130,7 +130,7 @@ export const Career = () => {
       </Container>
 
       {/* Why Work With Us Section */}
-      <Container maxWidth="xl" ref={sectionRefs.whyWork}>
+      <Container maxWidth="xl" ref={sectionRefs.whyWork} sx={{ px: { xs: 2, md: 3 } }}>
         <Box
           sx={{
             opacity: visibleSections.whyWork ? 1 : 0,
@@ -151,7 +151,7 @@ export const Career = () => {
           </Typography>
           <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
             {whyWorkWithUs.map((item, index) => (
-              <Grid size={3} key={index}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
                 <Card
                   onClick={() => setActiveIndex(index)}
                   sx={{
@@ -224,7 +224,7 @@ export const Career = () => {
       </Container>
 
       {/* Current Openings Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }} ref={sectionRefs.openings}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 }, px: { xs: 2, md: 3 } }} ref={sectionRefs.openings}>
         <Box
           sx={{
             opacity: visibleSections.openings ? 1 : 0,
@@ -355,7 +355,7 @@ export const Career = () => {
       </Container>
 
       {/* How to Apply Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }} ref={sectionRefs.apply}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 }, px: { xs: 2, md: 3 } }} ref={sectionRefs.apply}>
         <Box
           sx={{
             opacity: visibleSections.apply ? 1 : 0,
@@ -375,7 +375,7 @@ export const Career = () => {
             How to Apply
           </Typography>
           <Grid container spacing={{ xs: 2, sm: 3, md: 4 }}>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <Box
                 sx={{
                   display: "flex",
@@ -432,7 +432,7 @@ export const Career = () => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <Box
                 sx={{
                   display: "flex",
@@ -489,7 +489,7 @@ export const Career = () => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={12} sm={6} md={4}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <Box
                 sx={{
                   display: "flex",

@@ -1,5 +1,5 @@
 import { Box, Button, IconButton, useMediaQuery, useTheme } from "@mui/material";
-import { NearMe } from "@mui/icons-material";
+import { NearMe, ShoppingCart } from "@mui/icons-material";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
@@ -183,29 +183,31 @@ export const TopHeader = () => {
                 >
                     <PersonOutlineIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
                 </IconButton>
-                <IconButton
-                    sx={{
-                        color: "var(--themeColor)",
-                        padding: { xs: 0.5, md: 1 },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        position: "relative",
-                        "&:hover": {
-                            transform: "translateY(-3px) scale(1.1)",
-                            backgroundColor: "rgba(95,41,48,0.08)",
+                <Link to="/cart">
+                    <IconButton
+                        sx={{
                             color: "var(--themeColor)",
-                        },
-                    }}
-                >
-                    <ShoppingBagOutlinedIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
-                </IconButton>
+                            padding: { xs: 0.5, md: 1 },
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            position: "relative",
+                            "&:hover": {
+                                transform: "translateY(-3px) scale(1.1)",
+                                backgroundColor: "rgba(95,41,48,0.08)",
+                                color: "var(--themeColor)",
+                            },
+                        }}
+                    >
+                        <ShoppingCart sx={{ fontSize: { xs: 20, md: 24 } }} />
+                    </IconButton>
+                </Link>
             </Box>
-            <DeliveryCheckDialog 
-                open={openDeliveryDialog} 
-                onClose={() => setOpenDeliveryDialog(false)} 
+            <DeliveryCheckDialog
+                open={openDeliveryDialog}
+                onClose={() => setOpenDeliveryDialog(false)}
             />
-            <BusinessDialog 
-                open={openBusinessDialog} 
-                onClose={() => setOpenBusinessDialog(false)} 
+            <BusinessDialog
+                open={openBusinessDialog}
+                onClose={() => setOpenBusinessDialog(false)}
             />
         </Box>
     );
