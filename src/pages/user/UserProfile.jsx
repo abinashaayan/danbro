@@ -168,7 +168,7 @@ export const UserProfile = () => {
   );
 
   return (
-    <Box sx={{ minHeight: "100vh", py: { xs: 3, md: 0 }, pb: { xs: 0, md: 0 }, mb: 0 }}>
+    <Box sx={{ minHeight: "100vh", py:4, pb: { xs: 0, md: 0 }, mb: 0 }}>
       <Container maxWidth="xl" sx={{ display: "flex", justifyContent: "center", alignItems: "flex-start", mb: 0 }}>
         <Box
           sx={{
