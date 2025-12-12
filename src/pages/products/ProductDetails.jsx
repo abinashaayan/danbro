@@ -35,9 +35,12 @@ import {
   ThumbDownOffAlt,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useMediaQuery, useTheme } from "@mui/material";
 
 export const ProductDetails = () => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [selectedImage, setSelectedImage] = useState(0);
   const [tab, setTab] = useState("cake");
 
@@ -76,8 +79,8 @@ export const ProductDetails = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 4, md: 6 }, pb: { xs: 12, md: 16 } }}>
-      <Container maxWidth="xl">
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 4, md: 0 }, pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <Breadcrumbs sx={{ mb: 3 }}>
           <Link component="button" variant="body1" onClick={() => navigate("/products")} sx={{ color: "#666", textDecoration: "none", cursor: "pointer", "&:hover": { color: "#FF9472", }, }}>
             Products
@@ -85,9 +88,9 @@ export const ProductDetails = () => {
           <Typography color="text.primary">{product.name}</Typography>
         </Breadcrumbs>
 
-        <Grid container spacing={4}>
-          <Grid size={6}>
-            <Box sx={{ display: "flex", gap: 2 }}>
+        <Grid container spacing={{ xs: 2, md: 4 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ display: "flex", gap: { xs: 1, md: 2 } }}>
               <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", gap: 1 }}>
                 {product.images.map((image, index) => (
                   <Box
@@ -106,18 +109,18 @@ export const ProductDetails = () => {
                       },
                     }}
                   >
-                    <Box component="img" src={image} alt={`${product.name} ${index + 1}`} sx={{ width: "100%", height: "200px", objectFit: "cover", }} />
+                    <Box component="img" src={image} alt={`${product.name} ${index + 1}`} sx={{ width: "100%", height: "100%", objectFit: "cover", }} />
                   </Box>
                 ))}
               </Box>
               <Box sx={{ flex: 1 }}>
-                <Box sx={{ width: "100%", height: "450px", borderRadius: 2, overflow: "hidden", mb: 2 }}>
+                <Box sx={{ width: "100%", height: { xs: 300, sm: 350, md: 450 }, borderRadius: 2, overflow: "hidden", mb: 2 }}>
                   <Box component="img" src={product.images[selectedImage]} alt={product.name} sx={{ width: "100%", height: "100%", objectFit: "cover", }} />
                 </Box>
               </Box>
             </Box>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Box>
               <Typography variant="h3" sx={{ fontSize: { xs: 28, md: 36 }, fontWeight: 700, color: "#2c2c2c", mb: 2, }}>
                 {product.name}
@@ -140,12 +143,12 @@ export const ProductDetails = () => {
                 {product.description}
               </Typography>
               <Divider sx={{ my: 2, backgroundColor: "#F31400" }} />
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: { xs: "flex-start", md: "center" }, gap: { xs: 2, md: 0 } }}>
                 <Box>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                  <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
                     Weight
                   </Typography>
-                  <Select value={product.weight} size="small" onChange={(e) => setProductWeight(e.target.value)} sx={{ width: 250, mt: 1 }}>
+                  <Select value={product.weight} size="small" onChange={(e) => setProductWeight(e.target.value)} sx={{ width: { xs: "100%", md: 250 }, mt: 1 }}>
                     <MenuItem value="500g">Regular (500g)</MenuItem>
                     <MenuItem value="1000g">Medium (1kg)</MenuItem>
                     <MenuItem value="2000g">Large (2kg)</MenuItem>
@@ -153,44 +156,43 @@ export const ProductDetails = () => {
                     <MenuItem value="custom">Custom</MenuItem>
                   </Select>
                   {product.weight === "custom" && (
-                    <TextField type="number" label="Enter weight (g)" onBlur={(e) => setProductWeight(e.target.value + "g")} size="small" sx={{ mt: 1, width: 150 }} />
+                    <TextField type="number" label="Enter weight (g)" onBlur={(e) => setProductWeight(e.target.value + "g")} size="small" sx={{ mt: 1, width: { xs: "100%", md: 150 } }} />
                   )}
                 </Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, backgroundColor: "#9BFF82", borderRadius: 2, p: 1 }}>
-                  <CheckCircleIcon sx={{ color: "#4caf50", fontSize: 20 }} />
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, backgroundColor: "#9BFF82", borderRadius: 2, p: { xs: 0.8, md: 1 } }}>
+                  <CheckCircleIcon sx={{ color: "#4caf50", fontSize: { xs: 18, md: 20 } }} />
+                  <Typography variant="body1" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 16 } }}>
                     {product.stock} in stock
                   </Typography>
                 </Box>
               </Box>
 
-              <Grid container spacing={2} mt={4}>
-                <Grid size={3}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 2, borderRadius: 10, border: "1px solid #2c2c2c", p: 1, backgroundColor: "#gainsboro" }}>
+              <Grid container spacing={{ xs: 1.5, md: 2 }} mt={{ xs: 3, md: 4 }}>
+                <Grid size={{ xs: 4, md: 3 }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: { xs: 1, md: 2 }, borderRadius: 10, border: "1px solid #2c2c2c", p: { xs: 0.8, md: 1 }, backgroundColor: "#gainsboro" }}>
                     <Box>
-                      <Add sx={{ color: "#2c2c2c", fontSize: 20 }} />
+                      <Add sx={{ color: "#2c2c2c", fontSize: { xs: 18, md: 20 } }} />
                     </Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
                       1
                     </Typography>
                     <Box>
-                      <Remove sx={{ color: "#2c2c2c", fontSize: 20 }} />
+                      <Remove sx={{ color: "#2c2c2c", fontSize: { xs: 18, md: 20 } }} />
                     </Box>
                   </Box>
                 </Grid>
-                <Grid size={8} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                <Grid size={{ xs: 6, md: 8 }} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                   <Button
                     type="submit"
                     fullWidth
                     sx={{
                       backgroundColor: "#FF9472",
                       color: "#fff",
-                      p: 1,
-                      borderRadius: "12px",
-                      fontSize: { xs: 16, md: 18 },
+                      p: { xs: 0.8, md: 1 },
+                      borderRadius: "50px",
+                      fontSize: { xs: 14, md: 18 },
                       fontWeight: 700,
                       textTransform: "none",
-                      borderRadius: "50px",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                       boxShadow: "0 4px 15px rgba(255,148,114,0.3)",
                       "&:hover": {
@@ -207,16 +209,16 @@ export const ProductDetails = () => {
                     Add to Cart
                   </Button>
                 </Grid>
-                <Grid size={1} sx={{ display: "flex", justifyContent: "end", alignItems: "end" }}>
-                  <IconButton aria-label="delete" size="large" sx={{ backgroundColor: "#edecec", borderRadius: "50px" }}>
-                    <FavoriteBorder sx={{ color: "#2c2c2c", fontSize: 20 }} />
+                <Grid size={{ xs: 2, md: 1 }} sx={{ display: "flex", justifyContent: { xs: "center", md: "end" }, alignItems: { xs: "center", md: "end" } }}>
+                  <IconButton aria-label="delete" size={isMobile ? "medium" : "large"} sx={{ backgroundColor: "#edecec", borderRadius: "50px" }}>
+                    <FavoriteBorder sx={{ color: "#2c2c2c", fontSize: { xs: 18, md: 20 } }} />
                   </IconButton>
                 </Grid>
               </Grid>
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: 2, backgroundColor: "#F0FFF4", p: 1, borderRadius: 2, border: "1px solid #B5FFC9" }}>
-              <Typography variant="subtitle1" sx={{ fontSize: 14, fontWeight: 600, color: "#00A819" }}>
-                <LocalShipping /> Order within 2hrs for delivery today.
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: { xs: 2, md: 2 }, backgroundColor: "#F0FFF4", p: { xs: 1, md: 1 }, borderRadius: 2, border: "1px solid #B5FFC9" }}>
+              <Typography variant="subtitle1" sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#00A819", display: "flex", alignItems: "center", gap: 0.5, flexWrap: "wrap", justifyContent: "center" }}>
+                <LocalShipping sx={{ fontSize: { xs: 16, md: 18 } }} /> Order within 2hrs for delivery today.
               </Typography>
             </Box>
           </Grid>
@@ -224,15 +226,15 @@ export const ProductDetails = () => {
       </Container>
 
 
-      <Box sx={{ py: 6 }}>
-        <Grid container spacing={3} justifyContent="center" alignItems="center" sx={{ backgroundColor: "#FFEFEA", height: "200px", px: 2 }}>
+      <Box sx={{ py: { xs: 4, md: 0 } }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} justifyContent="center" alignItems="center" sx={{ backgroundColor: "#FFEFEA", height: { xs: "auto", md: "200px" }, px: { xs: 1, md: 2 }, py: { xs: 2, md: 0 } }}>
           {features?.map((text, i) => (
-            <Grid key={i} item xs={12} sm={6} md={3}>
-              <Box sx={{ backgroundColor: "#FFEFEA", p: 3, borderRadius: 3, textAlign: "start", display: "flex", justifyContent: "center", alignItems: "center", gap: 2 }}>
-                <Box sx={{ backgroundColor: "#fff", color: "#FF6F61", width: 60, height: 60, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22, }}>
+            <Grid key={i} size={{ xs: 12, sm: 6, md: 3 }}>
+              <Box sx={{ backgroundColor: "#FFEFEA", p: { xs: 2, md: 3 }, borderRadius: 3, textAlign: "start", display: "flex", justifyContent: "center", alignItems: "center", gap: { xs: 1.5, md: 2 } }}>
+                <Box sx={{ backgroundColor: "#fff", color: "#FF6F61", width: { xs: 50, md: 60 }, height: { xs: 50, md: 60 }, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: { xs: 18, md: 22 } }}>
                   {icons[i]}
                 </Box>
-                <Typography fontWeight={600} sx={{ whiteSpace: "pre-line", fontSize: 14, color: "#515151", fontWeight: 'bold' }}>
+                <Typography fontWeight={600} sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, md: 14 }, color: "#515151", fontWeight: 'bold' }}>
                   {text}
                 </Typography>
               </Box>
@@ -242,31 +244,31 @@ export const ProductDetails = () => {
       </Box>
 
       {/* 🔶 What's Inside + Nutrition Facts */}
-      <Container maxWidth="xl">
-        <Grid container spacing={2}>
-          <Grid size={6}>
-            <Box sx={{ p: 3, border: "1px solid #ddd", borderRadius: 2 }}>
-              <Typography fontWeight={600}>What's Inside</Typography>
-              <Typography mt={1} fontSize={14} color="text.secondary">
+      <Container maxWidth="xl" sx={{ py: 4 }}>
+        <Grid container spacing={{ xs: 2, md: 2 }}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #ddd", borderRadius: 2 }}>
+              <Typography fontWeight={600} fontSize={{ xs: 16, md: 18 }}>What's Inside</Typography>
+              <Typography mt={1} fontSize={{ xs: 13, md: 14 }} color="text.secondary">
                 We use only the finest ingredients sourced from trusted local farmers and premium importers.
                 Premium Type 55 French Wheat Flour, Normandy Butter (82% fat), Belgian Dark Chocolate (54.5%),
                 Free-range Eggs, Fresh Whole Milk, Cane Sugar, Sea Salt, Yeast.
               </Typography>
-              <Box mt={2} sx={{ p: 2, background: "#FFF1EE", borderRadius: 2, display: "flex", alignItems: "center", gap: 2, border: "1px solid #FF643A" }}>
-                <ThumbUpOffAlt sx={{ color: "#FF643A" }} />
+              <Box mt={2} sx={{ p: { xs: 1.5, md: 2 }, background: "#FFF1EE", borderRadius: 2, display: "flex", alignItems: "center", gap: { xs: 1.5, md: 2 }, border: "1px solid #FF643A" }}>
+                <ThumbUpOffAlt sx={{ color: "#FF643A", fontSize: { xs: 18, md: 20 } }} />
                 <Box>
-                  <Typography fontWeight={600}>Allergen Information</Typography>
-                  <Typography fontSize={13}>Contains: Wheat, Gluten, Milk, Eggs, Soy.</Typography>
+                  <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Allergen Information</Typography>
+                  <Typography fontSize={{ xs: 12, md: 13 }}>Contains: Wheat, Gluten, Milk, Eggs, Soy.</Typography>
                 </Box>
               </Box>
             </Box>
           </Grid>
-          <Grid size={6}>
-            <Box sx={{ p: 3, border: "1px solid #ddd", borderRadius: 2 }}>
-              <Typography fontWeight={600} fontSize={18} mb={1}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #ddd", borderRadius: 2 }}>
+              <Typography fontWeight={600} fontSize={{ xs: 16, md: 18 }} mb={1}>
                 Nutrition Facts
               </Typography>
-              <Box fontSize={14}>
+              <Box fontSize={{ xs: 13, md: 14 }}>
                 {[
                   { label: "Calories", value: "320 kcal" },
                   { label: "Fat", value: "19g" },
@@ -279,18 +281,18 @@ export const ProductDetails = () => {
                     sx={{
                       display: "flex",
                       justifyContent: "space-between",
-                      py: 1.2,
+                      py: { xs: 1, md: 1.2 },
                       borderBottom: index !== 4 ? "1px solid #eee" : "none"
                     }}
                   >
-                    <Typography>{item.label}</Typography>
-                    <Typography fontWeight={600}>{item.value}</Typography>
+                    <Typography fontSize={{ xs: 13, md: 14 }}>{item.label}</Typography>
+                    <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>{item.value}</Typography>
                   </Box>
                 ))}
               </Box>
-              <Box mt={2} sx={{ p: 2, background: "#F8F8F8", borderRadius: 2, border: "1px solid #D5D5D5" }}>
-                <Typography fontWeight={600}>Storage Instructions</Typography>
-                <Typography fontSize={13}>
+              <Box mt={2} sx={{ p: { xs: 1.5, md: 2 }, background: "#F8F8F8", borderRadius: 2, border: "1px solid #D5D5D5" }}>
+                <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Storage Instructions</Typography>
+                <Typography fontSize={{ xs: 12, md: 13 }}>
                   Keep in a cool dry place. Consume within 24 hours.
                   Can be rewarmed in an oven for 2 mins at 180°C.
                 </Typography>
@@ -300,15 +302,15 @@ export const ProductDetails = () => {
         </Grid>
 
         {/* Rating Section */}
-        <Box mt={6}>
-          <Typography fontSize={34} fontWeight={700}>4.5 ⭐</Typography>
-          <Typography fontSize={14} color="text.secondary">120 reviews</Typography>
+        <Box mt={{ xs: 4, md: 6 }}>
+          <Typography fontSize={{ xs: 24, md: 34 }} fontWeight={700}>4.5 ⭐</Typography>
+          <Typography fontSize={{ xs: 13, md: 14 }} color="text.secondary">120 reviews</Typography>
 
           {/* Rating Bars */}
           {[5, 4, 3, 2, 1].map((r, i) => (
-            <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 2, my: 0.5 }}>
-              <Typography width={20}>{r}</Typography>
-              <Box sx={{ flex: 1, height: 8, background: "#FFE1DA", borderRadius: 4, position: 'relative' }}>
+            <Box key={i} sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 }, my: 0.5 }}>
+              <Typography width={{ xs: 18, md: 20 }} fontSize={{ xs: 13, md: 14 }}>{r}</Typography>
+              <Box sx={{ flex: 1, height: { xs: 6, md: 8 }, background: "#FFE1DA", borderRadius: 4, position: 'relative' }}>
                 <Box sx={{
                   height: "100%",
                   width: `${[40, 20, 19, 10, 7][i]}%`,
@@ -316,13 +318,13 @@ export const ProductDetails = () => {
                   borderRadius: 4
                 }} />
               </Box>
-              <Typography>{[40, 20, 19, 10, 7][i]}%</Typography>
+              <Typography fontSize={{ xs: 12, md: 14 }}>{[40, 20, 19, 10, 7][i]}%</Typography>
             </Box>
           ))}
         </Box>
 
         {/* Reviews */}
-        <Box mt={4}>
+        <Box mt={{ xs: 3, md: 4 }}>
           {[{
             name: "Sophia Carter", time: "2 weeks ago",
             text: "These chocolate muffins are absolutely divine! Perfect balance of sweetness and rich chocolate flavor."
@@ -330,24 +332,24 @@ export const ProductDetails = () => {
             name: "Ethan Bennett", time: "1 month ago",
             text: "Good taste, a little too sweet for me. Texture is soft and moist overall decent treat."
           }].map((review, i) => (
-            <Box key={i} sx={{ p: 3, borderRadius: 2, backgroundColor: "#FCF7FA", mt: 2 }}>
-              <Box display="flex" gap={2} alignItems="center">
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+            <Box key={i} sx={{ p: { xs: 2, md: 3 }, borderRadius: 2, backgroundColor: "#FCF7FA", mt: 2 }}>
+              <Box display="flex" gap={{ xs: 1.5, md: 2 }} alignItems="center">
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: { xs: 36, md: 40 }, height: { xs: 36, md: 40 } }} />
                 <Box>
-                  <Typography fontWeight={600}>{review.name}</Typography>
-                  <Typography fontSize={12} color="text.secondary">{review.time}</Typography>
+                  <Typography fontWeight={600} fontSize={{ xs: 14, md: 16 }}>{review.name}</Typography>
+                  <Typography fontSize={{ xs: 11, md: 12 }} color="text.secondary">{review.time}</Typography>
                 </Box>
               </Box>
               <Rating value={5 - i} readOnly size="small" sx={{ mt: 1 }} />
-              <Typography mt={1} fontSize={14}>{review.text}</Typography>
-              <Box sx={{ display: "flex", gap: 3, mt: 2, color: "#707070" }}>
+              <Typography mt={1} fontSize={{ xs: 13, md: 14 }}>{review.text}</Typography>
+              <Box sx={{ display: "flex", gap: { xs: 2, md: 3 }, mt: 2, color: "#707070" }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: .5, cursor: "pointer" }}>
-                  <ThumbUpOffAlt />
-                  <Typography fontSize={13}>12</Typography>
+                  <ThumbUpOffAlt sx={{ fontSize: { xs: 16, md: 18 } }} />
+                  <Typography fontSize={{ xs: 12, md: 13 }}>12</Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: .5, cursor: "pointer" }}>
-                  <ThumbDownOffAlt />
-                  <Typography fontSize={13}>3</Typography>
+                  <ThumbDownOffAlt sx={{ fontSize: { xs: 16, md: 18 } }} />
+                  <Typography fontSize={{ xs: 12, md: 13 }}>3</Typography>
                 </Box>
               </Box>
             </Box>
@@ -355,12 +357,14 @@ export const ProductDetails = () => {
         </Box>
 
         {/* Explore More */}
-        <h1 className="title-style text-center mt-5 mb-4">Explore More</h1>
-        <Box sx={{ width: "100%", borderBottom: "1px solid #e5e5e5" }}>
+        <Typography className="title-style" sx={{ textAlign: "center", mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 4 }, fontSize: { xs: 20, md: 28 }, fontWeight: 700 }}>Explore More</Typography>
+        <Box sx={{ width: "100%", borderBottom: "1px solid #e5e5e5", overflowX: { xs: "auto", md: "visible" } }}>
           <Tabs
             value={tab}
             onChange={(_, v) => setTab(v)}
-            centered
+            centered={!isMobile}
+            variant={isMobile ? "scrollable" : "standard"}
+            scrollButtons="auto"
             TabIndicatorProps={{
               sx: {
                 backgroundColor: "#C22A00",
@@ -373,10 +377,12 @@ export const ProductDetails = () => {
             }}
             sx={{
               "& .MuiTab-root": {
-                fontSize: 18,
+                fontSize: { xs: 14, md: 18 },
                 textTransform: "capitalize",
                 fontWeight: 500,
-                mx: 2
+                mx: { xs: 1, md: 2 },
+                minWidth: { xs: "auto", md: "auto" },
+                px: { xs: 1.5, md: 2 }
               },
               "& .Mui-selected": { color: "#FF643A", fontWeight: 700 }
             }}
@@ -386,20 +392,20 @@ export const ProductDetails = () => {
             ))}
           </Tabs>
         </Box>
-        <Grid container spacing={3} mt={4}>
+        <Grid container spacing={{ xs: 2, md: 3 }} mt={{ xs: 3, md: 4 }}>
           {images.map((img, i) => (
-            <Grid item xs={6} sm={4} md={3} key={i}>
+            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={i}>
               <Box
                 component="img"
                 src={img}
                 sx={{
                   width: "100%",
-                  height: 230,
+                  height: { xs: 180, sm: 200, md: 230 },
                   objectFit: "cover",
                   borderRadius: 3,
                   transition: "0.3s",
                   cursor: "pointer",
-                  "&:hover": { transform: "scale(1.03)" } // subtle hover like premium UI
+                  "&:hover": { transform: "scale(1.03)" }
                 }}
               />
             </Grid>

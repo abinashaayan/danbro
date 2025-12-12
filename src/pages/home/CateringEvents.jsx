@@ -83,7 +83,7 @@ export const CateringEvents = () => {
   ];
 
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 16 } }}>
+    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
       <Box
         ref={sectionRefs.header}
         sx={{
@@ -116,7 +116,7 @@ export const CateringEvents = () => {
       </Box>
 
       {/* Event Types Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 5, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ py: 4 }}>
         <Box
           ref={sectionRefs.hero}
           sx={{
@@ -344,8 +344,8 @@ export const CateringEvents = () => {
       </Container>
 
       {/* Contact Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 2, md: 3 } }}>
-        <Box ref={sectionRefs.contact}>
+      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 2, md: 2 } }}>
+        <Box ref={sectionRefs.contact} sx={{ pb: 4 }}>
           <Box
             sx={{
               opacity: visibleSections.contact ? 1 : 0,
@@ -353,7 +353,7 @@ export const CateringEvents = () => {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography variant="h2" sx={{ fontSize: { xs: 20, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", mb: 2, }}>
+            <Typography variant="h2" sx={{ fontSize: { xs: 20, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", mb: 1, }}>
               Get in Touch
             </Typography>
             <Typography variant="body1" sx={{ fontSize: { xs: 13, sm: 14, md: 16 }, color: "#666", lineHeight: 1.8, mb: { xs: 3, md: 4 }, }}>
@@ -363,7 +363,7 @@ export const CateringEvents = () => {
               <Grid item xs={12} sm={6} md={4}>
                 <Box
                   sx={{
-                    p: { xs: 2, sm: 2.5, md: 3 },
+                    p: 1,
                     borderRadius: 3,
                     backgroundColor: "#f9f9f9",
                     height: "100%",

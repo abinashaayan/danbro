@@ -45,7 +45,7 @@ export const PressandMedia = () => {
   }, []);
 
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 16 } }}>
+    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
       <Box
         ref={sectionRefs.header}
         sx={{
@@ -79,7 +79,7 @@ export const PressandMedia = () => {
 
       {/* ================= PRESS & MEDIA UI SECTION ================= */}
 
-      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 4, md: 0 } }}>
 
         {/* Top Buttons Section */}
         <Box sx={{ textAlign: "center", mb: 4 }}>

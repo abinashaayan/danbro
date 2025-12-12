@@ -95,8 +95,8 @@ export const Career = () => {
   ];
 
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 16 } }}>
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
+    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }}>
         <Box
           ref={sectionRefs.header}
           sx={{
@@ -224,7 +224,7 @@ export const Career = () => {
       </Container>
 
       {/* Current Openings Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }} ref={sectionRefs.openings}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }} ref={sectionRefs.openings}>
         <Box
           sx={{
             opacity: visibleSections.openings ? 1 : 0,
@@ -355,7 +355,7 @@ export const Career = () => {
       </Container>
 
       {/* How to Apply Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }} ref={sectionRefs.apply}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }} ref={sectionRefs.apply}>
         <Box
           sx={{
             opacity: visibleSections.apply ? 1 : 0,

@@ -81,7 +81,6 @@ export const Login = () => {
     setRecaptchaError("");
 
     try {
-      // In development mode, skip reCAPTCHA or use a test token
       if (isDevelopment) {
         console.warn("Development mode: Skipping reCAPTCHA validation");
         const loginPayload = {
@@ -90,11 +89,8 @@ export const Login = () => {
         };
         console.log("Login data:", loginPayload);
         setIsSubmitting(false);
-        // Here you would typically send the data to your backend
         return;
       }
-
-      // Execute reCAPTCHA Enterprise
       if (window.grecaptcha && window.grecaptcha.enterprise) {
         const executeRecaptcha = async () => {
           try {
@@ -105,19 +101,15 @@ export const Login = () => {
             if (token) {
               setRecaptchaToken(token);
               setRecaptchaError("");
-
-              // Handle login logic here
               const loginPayload = {
                 ...formData,
                 recaptchaToken: token,
               };
-
               console.log("Login data:", loginPayload);
               setRecaptchaError("reCAPTCHA verification failed. Please try again.");
             }
           } catch (error) {
             console.error("reCAPTCHA error:", error);
-            // Check for specific domain error
             if (error.message && error.message.includes("not in the list of supported domains")) {
               setRecaptchaError("reCAPTCHA domain not configured. Please add localhost to your reCAPTCHA console settings or wait a few minutes for changes to propagate.");
             } else {
@@ -127,12 +119,9 @@ export const Login = () => {
             setIsSubmitting(false);
           }
         };
-
-        // Use ready callback to ensure grecaptcha is loaded
         if (typeof window.grecaptcha.enterprise.ready === 'function') {
           window.grecaptcha.enterprise.ready(executeRecaptcha);
         } else {
-          // If ready doesn't exist, try executing directly after a small delay
           setTimeout(executeRecaptcha, 100);
         }
       } else {
@@ -154,9 +143,10 @@ export const Login = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        py: { xs: 4, md: 6 },
-        pb: { xs: 12, md: 16 },
+        py: { xs: 4, md: 0 },
+        pb: { xs: 12, md: 0 },
         overflow: "hidden",
+        p: { xs: 1.25, md: 0 },
       }}
     >
       {/* Blurred Background */}

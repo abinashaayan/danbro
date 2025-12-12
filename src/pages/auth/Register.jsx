@@ -166,9 +166,10 @@ export const Register = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        py: { xs: 4, md: 6 },
-        pb: { xs: 12, md: 16 },
+        py: { xs: 4, md: 0 },
+        pb: { xs: 12, md: 0 },
         overflow: "hidden",
+        p: { xs: 1.25, md: 0 },
       }}
     >
       {/* Blurred Background */}

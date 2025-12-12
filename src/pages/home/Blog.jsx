@@ -131,7 +131,7 @@ export const Blog = () => {
 
 
       {/* ---------------- BLOG CONTENT WRAPPER ---------------- */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container maxWidth="xl" sx={{ py: 4 }}>
         <Box ref={sectionRefs.categories}>
           <Box
             sx={{

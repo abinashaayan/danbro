@@ -176,7 +176,7 @@ export const Contact = () => {
       </Container>
 
       {/* FAQ */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 8 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 6, md: 0 } }}>
         <Typography align="center" sx={{ fontWeight: 700, fontSize: { xs: 24, md: 32 }, mb: 4 }}>
           Frequently Asked Questions
         </Typography>

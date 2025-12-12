@@ -10,7 +10,9 @@ const categoryItems = [
     { label: "BREAD & RUSK", path: "/bread-rusk" },
     { label: "GIFT HAMPERS & CHOCOLATES", path: "/gift-hampers" },
     { label: "ADDONS", path: "/addons" },
-    { label: "Products", path: "/products" },
+    { label: "PRODUCTS", path: "/products" },
+    { label: "OFFERS & SCHEMES", path: "/offers" },
+    { label: "EVENTS", path: "/events" },
 ];
 
 export const Navbar = () => {

@@ -19,6 +19,7 @@ export const NotFound = () => {
         justifyContent: "center",
         background: "linear-gradient(135deg, #f7f7f7 0%, #fef5f3 50%, #f7f7f7 100%)",
         py: { xs: 6, md: 10 },
+        p: { xs: 1.25, md: 0 },
       }}
     >
       <Container maxWidth="md">

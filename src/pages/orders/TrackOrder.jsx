@@ -51,7 +51,7 @@ export const TrackOrder = () => {
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5", py: { xs: 4, md: 6 }, pb: { xs: 12, md: 16 } }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#f5f5f5", py: { xs: 4, md: 0 }, pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
       <Container maxWidth="lg">
         {/* Header Section */}
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>

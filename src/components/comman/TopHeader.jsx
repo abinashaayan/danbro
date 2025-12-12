@@ -4,7 +4,10 @@ import SearchIcon from "@mui/icons-material/Search";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/logo.png"
+import { useState } from "react";
+import logo from "../../assets/logo.png";
+import { DeliveryCheckDialog } from "./DeliveryCheckDialog";
+import { BusinessDialog } from "./BusinessDialog";
 
 
 export const TopHeader = () => {
@@ -12,6 +15,8 @@ export const TopHeader = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
     const navigate = useNavigate();
+    const [openDeliveryDialog, setOpenDeliveryDialog] = useState(false);
+    const [openBusinessDialog, setOpenBusinessDialog] = useState(false);
 
     return (
         <Box
@@ -40,6 +45,7 @@ export const TopHeader = () => {
                     variant="outlined"
                     size="small"
                     startIcon={<NearMe />}
+                    onClick={() => setOpenDeliveryDialog(true)}
                     sx={{
                         textTransform: "none",
                         borderRadius: 5,
@@ -62,6 +68,7 @@ export const TopHeader = () => {
                 <Button
                     variant="outlined"
                     size="small"
+                    onClick={() => setOpenBusinessDialog(true)}
                     sx={{
                         textTransform: "none",
                         borderRadius: 5,
@@ -80,75 +87,6 @@ export const TopHeader = () => {
                 >
                     Business +
                 </Button>
-                <Link to="/track-order">
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                            textTransform: "none",
-                            borderRadius: 5,
-                            borderColor: "var(--themeColor)",
-                            color: "var(--themeColor)",
-                            fontWeight: 600,
-                            fontSize: { md: 13, lg: 14 },
-                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            "&:hover": {
-                                borderColor: "var(--themeColor)",
-                                backgroundColor: "#fbeeee",
-                                transform: "translateY(-2px)",
-                                boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                            },
-                        }}
-                    >
-                        Track Order
-                    </Button>
-                </Link>
-                <Link to="/offers">
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                            textTransform: "none",
-                            borderRadius: 5,
-                            borderColor: "var(--themeColor)",
-                            color: "var(--themeColor)",
-                            fontWeight: 600,
-                            fontSize: { md: 13, lg: 14 },
-                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            "&:hover": {
-                                borderColor: "var(--themeColor)",
-                                backgroundColor: "#fbeeee",
-                                transform: "translateY(-2px)",
-                                boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                            },
-                        }}
-                    >
-                        Offers & Schemes
-                    </Button>
-                </Link>
-                <Link to="/events">
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                            textTransform: "none",
-                            borderRadius: 5,
-                            borderColor: "var(--themeColor)",
-                            color: "var(--themeColor)",
-                            fontWeight: 600,
-                            fontSize: { md: 13, lg: 14 },
-                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            "&:hover": {
-                                borderColor: "var(--themeColor)",
-                                backgroundColor: "#fbeeee",
-                                transform: "translateY(-2px)",
-                                boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                            },
-                        }}
-                    >
-                        Events
-                    </Button>
-                </Link>
             </Box>
 
             {/* Mobile Left Buttons - Compact */}
@@ -164,6 +102,7 @@ export const TopHeader = () => {
                     variant="outlined"
                     size="small"
                     startIcon={<NearMe />}
+                    onClick={() => setOpenDeliveryDialog(true)}
                     sx={{
                         textTransform: "none",
                         borderRadius: 5,
@@ -260,6 +199,14 @@ export const TopHeader = () => {
                     <ShoppingBagOutlinedIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
                 </IconButton>
             </Box>
+            <DeliveryCheckDialog 
+                open={openDeliveryDialog} 
+                onClose={() => setOpenDeliveryDialog(false)} 
+            />
+            <BusinessDialog 
+                open={openBusinessDialog} 
+                onClose={() => setOpenBusinessDialog(false)} 
+            />
         </Box>
     );
 };

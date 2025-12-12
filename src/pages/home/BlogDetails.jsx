@@ -387,7 +387,7 @@ export default function BlogDetails() {
       </Container>
 
       {/* Related Posts Section */}
-      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 } }}>
+      <Container maxWidth="xl" sx={{ py: { xs: 4, md: 0 } }}>
         <Box ref={sectionRefs.specialties}>
           <Box
             sx={{
