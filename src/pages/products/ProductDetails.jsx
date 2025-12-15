@@ -357,7 +357,7 @@ export const ProductDetails = () => {
         </Box>
 
         {/* Explore More */}
-        <Typography className="title-style" sx={{ textAlign: "center", mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 4 }, fontSize: { xs: 20, md: 28 }, fontWeight: 700 }}>Explore More</Typography>
+        <Typography className="title-style" sx={{ textAlign: "center", mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 4 }, fontSize: { xs: 20, md: 28 }, fontWeight: 'bold', fontFamily: "var(--fontFamily)" }}>Explore More</Typography>
         <Box sx={{ width: "100%", borderBottom: "1px solid #e5e5e5", overflowX: { xs: "auto", md: "visible" } }}>
           <Tabs
             value={tab}
