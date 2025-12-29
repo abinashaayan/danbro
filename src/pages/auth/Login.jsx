@@ -6,7 +6,7 @@ import banner from "../../assets/login.png";
 import { CustomTextField } from "../../components/comman/CustomTextField";
 import { CustomButton } from "../../components/comman/CustomButton";
 
-const RECAPTCHA_SITE_KEY = "6Lfr-iAsAAAAAIQsR8mfUxZO1qK3r_AXrTSLSb4g";
+const RECAPTCHA_SITE_KEY = "6LfBFCwsAAAAAIiTPg_1ZGCaKId4TwkCDcvBNBq0";
 
 // Check if we're in development mode (localhost)
 // Set to false if you want to test reCAPTCHA even on localhost
@@ -22,6 +22,8 @@ export const Login = () => {
   const [recaptchaToken, setRecaptchaToken] = useState(null);
   const [recaptchaError, setRecaptchaError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
+  const recaptchaWidgetRef = useRef(null);
   const [formData, setFormData] = useState({
     username: "aman@yopmail.com",
     password: "Mohan@12",
@@ -51,23 +53,75 @@ export const Login = () => {
     };
   }, []);
 
-  // Check if reCAPTCHA is loaded
+  // Check if reCAPTCHA Enterprise script is loaded
   useEffect(() => {
     const checkRecaptcha = () => {
       if (window.grecaptcha && window.grecaptcha.enterprise) {
+        setRecaptchaLoaded(true);
         console.log("reCAPTCHA Enterprise is loaded");
       } else {
-        console.warn("reCAPTCHA Enterprise is not loaded yet");
+        console.warn("reCAPTCHA Enterprise script is still loading...");
       }
     };
 
     // Check immediately
     checkRecaptcha();
 
-    // Also check after a short delay in case script is still loading
-    const timeout = setTimeout(checkRecaptcha, 1000);
-    return () => clearTimeout(timeout);
+    // Also check after a delay in case script is still loading
+    const interval = setInterval(() => {
+      if (window.grecaptcha && window.grecaptcha.enterprise) {
+        setRecaptchaLoaded(true);
+        clearInterval(interval);
+      }
+    }, 100);
+
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      checkRecaptcha();
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
   }, []);
+
+  // Render reCAPTCHA Enterprise checkbox widget
+  useEffect(() => {
+    if (!recaptchaLoaded) return;
+    if (!recaptchaWidgetRef.current) return;
+    if (!window.grecaptcha || !window.grecaptcha.enterprise) return;
+
+    try {
+      // Check if already rendered
+      if (recaptchaWidgetRef.current.dataset.rendered === "true") return;
+
+      // Render Enterprise checkbox widget
+      const widgetId = window.grecaptcha.enterprise.render(recaptchaWidgetRef.current, {
+        sitekey: RECAPTCHA_SITE_KEY,
+        callback: (token) => {
+          setRecaptchaToken(token);
+          setRecaptchaError("");
+          console.log("reCAPTCHA Enterprise verified successfully");
+        },
+        "expired-callback": () => {
+          setRecaptchaToken(null);
+          setRecaptchaError("reCAPTCHA expired. Please verify again.");
+        },
+        "error-callback": () => {
+          setRecaptchaToken(null);
+          setRecaptchaError("reCAPTCHA verification failed. Please try again.");
+        },
+      });
+
+      recaptchaWidgetRef.current.dataset.rendered = "true";
+      recaptchaWidgetRef.current.dataset.widgetId = widgetId;
+      console.log("reCAPTCHA Enterprise checkbox widget rendered");
+    } catch (error) {
+      console.error("reCAPTCHA Enterprise render error:", error);
+      setRecaptchaError("Unable to load reCAPTCHA. Please refresh the page.");
+    }
+  }, [recaptchaLoaded]);
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
@@ -81,7 +135,6 @@ export const Login = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setRecaptchaError("");
-
     try {
       if (isDevelopment) {
         console.warn("Development mode: Skipping reCAPTCHA validation");
@@ -93,43 +146,21 @@ export const Login = () => {
         setIsSubmitting(false);
         return;
       }
-      if (window.grecaptcha && window.grecaptcha.enterprise) {
-        const executeRecaptcha = async () => {
-          try {
-            const token = await window.grecaptcha.enterprise.execute(RECAPTCHA_SITE_KEY, {
-              action: "LOGIN",
-            });
 
-            if (token) {
-              setRecaptchaToken(token);
-              setRecaptchaError("");
-              const loginPayload = {
-                ...formData,
-                recaptchaToken: token,
-              };
-              console.log("Login data:", loginPayload);
-              setRecaptchaError("reCAPTCHA verification failed. Please try again.");
-            }
-          } catch (error) {
-            console.error("reCAPTCHA error:", error);
-            if (error.message && error.message.includes("not in the list of supported domains")) {
-              setRecaptchaError("reCAPTCHA domain not configured. Please add localhost to your reCAPTCHA console settings or wait a few minutes for changes to propagate.");
-            } else {
-              setRecaptchaError("reCAPTCHA verification failed. Please try again.");
-            }
-          } finally {
-            setIsSubmitting(false);
-          }
-        };
-        if (typeof window.grecaptcha.enterprise.ready === 'function') {
-          window.grecaptcha.enterprise.ready(executeRecaptcha);
-        } else {
-          setTimeout(executeRecaptcha, 100);
-        }
-      } else {
-        setRecaptchaError("reCAPTCHA is not loaded. Please refresh the page.");
+      // Validate reCAPTCHA token
+      if (!recaptchaToken) {
+        setRecaptchaError("Please verify you are not a robot.");
         setIsSubmitting(false);
+        return;
       }
+
+      // Proceed with login
+      const loginPayload = {
+        ...formData,
+        recaptchaToken: recaptchaToken,
+      };
+      console.log("Login data:", loginPayload);
+      setIsSubmitting(false);
     } catch (error) {
       console.error("Form submission error:", error);
       setRecaptchaError("An error occurred. Please try again.");
@@ -323,6 +354,7 @@ export const Login = () => {
                   </Typography>
                 }
               />
+
             </Box>
 
             {/* reCAPTCHA Error Display */}
@@ -344,13 +376,25 @@ export const Login = () => {
                 </Alert>
               </Box>
             )}
+
+            {/* reCAPTCHA Enterprise Checkbox - Above Login Button */}
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <Box
+                ref={recaptchaWidgetRef}
+                sx={{
+                  transform: { xs: "scale(0.92)", md: "scale(1)" },
+                  transformOrigin: "top left",
+                }}
+              />
+            </Box>
+
             <CustomButton
               type="submit"
               fullWidth
-              disabled={isSubmitting}
+              disabled={isSubmitting || !recaptchaToken}
               onClick={() => {
                 if (formData.username && formData.password) {
-                  navigate("/user-profile"); 
+                  navigate("/user-profile");
                 } else {
                   alert("Please enter valid email and password");
                 }

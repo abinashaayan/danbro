@@ -15,39 +15,39 @@ export const HeroBanner = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   const bannerSlides = [
-    { 
-      id: 1, 
-      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif", 
-      alt: "hero banner 1",
+    {
+      id: 1,
+      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif",
+      alt: "Fresh bread baking",
       title: "Fresh Baked Daily",
-      subtitle: "Experience the finest bakery delights",
+      subtitle: "Warm breads & pastries straight from the oven",
       animationType: "flipInX",
       captionPosition: "left"
     },
-    { 
-      id: 2, 
-      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif", 
-      alt: "hero banner 2",
-      title: "Premium Quality",
-      subtitle: "Made with love and finest ingredients",
+    {
+      id: 2,
+      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif",
+      alt: "Cake decoration",
+      title: "Handcrafted Cakes",
+      subtitle: "Beautifully designed cakes for every celebration",
       animationType: "flipInX",
       captionPosition: "right"
     },
-    { 
-      id: 3, 
-      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif", 
-      alt: "hero banner 3",
-      title: "Celebrate Every Moment",
-      subtitle: "Special cakes for special occasions",
+    {
+      id: 3,
+      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif",
+      alt: "Chocolate dessert",
+      title: "Chocolate Lovers",
+      subtitle: "Rich, smooth & irresistible chocolate desserts",
       animationType: "flipInX",
       captionPosition: "center"
     },
-    { 
-      id: 4, 
-      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif", 
-      alt: "hero banner 4",
-      title: "Style Grilled Chicken",
-      subtitle: "The Chik World's Original Skinless",
+    {
+      id: 4,
+      img: "https://media.newyorker.com/photos/693b059fdb6063d63c569f98/16:10/w_2560%2Cc_limit/ROSNER-BESTDISHES-2025.gif",
+      alt: "Bakery pastries",
+      title: "Premium Bakery Treats",
+      subtitle: "Croissants, pastries & cookies baked to perfection",
       animationType: "flipInX",
       captionPosition: "left"
     },
@@ -275,7 +275,7 @@ export const HeroBanner = () => {
           }
         `}
       </style>
-      
+
       <Box
         ref={bannerRef}
         onMouseEnter={() => setIsHovered(true)}
@@ -451,14 +451,14 @@ export const HeroBanner = () => {
               },
             }}
           >
-            <ArrowBackIosNewIcon 
+            <ArrowBackIosNewIcon
               className="kb-icons"
-              sx={{ 
-                color: "#000", 
+              sx={{
+                color: "#000",
                 fontSize: { xs: 24, md: 34 },
                 lineHeight: "50px",
                 fontWeight: "normal",
-              }} 
+              }}
             />
           </IconButton>
 
@@ -536,7 +536,7 @@ export const HeroBanner = () => {
                       transition: "opacity 0.7s ease-in-out",
                     }}
                   />
-                  
+
                   {/* Shimmer Effect Overlay */}
                   <Box
                     sx={{
@@ -558,16 +558,15 @@ export const HeroBanner = () => {
                       pointerEvents: "none",
                     }}
                   />
-                  
+
                   {/* Enhanced Slide Content Overlay */}
                   <Box
-                    className={`kb-caption ${
-                      slide.captionPosition === "right" 
-                        ? "kb-caption-right" 
-                        : slide.captionPosition === "center" 
-                        ? "kb-caption-center" 
-                        : ""
-                    }`}
+                    className={`kb-caption ${slide.captionPosition === "right"
+                        ? "kb-caption-right"
+                        : slide.captionPosition === "center"
+                          ? "kb-caption-center"
+                          : ""
+                      }`}
                     sx={{
                       position: "absolute",
                       bottom: { xs: "25%", md: "60%" },
@@ -592,7 +591,7 @@ export const HeroBanner = () => {
                         opacity: 0.7,
                       }}
                     />
-                    
+
                     <Typography
                       component="h1"
                       data-animation={`animated ${slide.animationType}`}
@@ -665,14 +664,14 @@ export const HeroBanner = () => {
               },
             }}
           >
-            <ArrowForwardIosIcon 
+            <ArrowForwardIosIcon
               className="kb-icons"
-              sx={{ 
-                color: "#000", 
+              sx={{
+                color: "#000",
                 fontSize: { xs: 24, md: 34 },
                 lineHeight: "50px",
                 fontWeight: "normal",
-              }} 
+              }}
             />
           </IconButton>
         </Box>

@@ -83,8 +83,8 @@ export const Offers = () => {
 
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 } }}>
+    <Container maxWidth="lg" sx={{ py: 4, px: { xs: "11px" } }}>
+      <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", p: "10px", pb: { xs: 12, md: "10px" } }}>
         <Box
           ref={sectionRefs.header}
           sx={{

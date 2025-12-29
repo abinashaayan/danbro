@@ -160,23 +160,23 @@ export const ProductList = () => {
       onClick={onClick}
       sx={{
         position: "absolute",
-        right: "-10px",
+        right: { xs: "5px", sm: "5px", md: "-10px" },
         top: "50%",
         transform: "translateY(-50%)",
         zIndex: 10,
         backgroundColor: "#fff",
-        width: 38,
-        height: 38,
+        width: { xs: 32, sm: 36, md: 38 },
+        height: { xs: 32, sm: 36, md: 38 },
         borderRadius: "50%",
         boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        display: "flex",
+        display: { xs: "flex", md: "flex" },
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
         "&:hover": { backgroundColor: "#FF643A", color: "#fff" },
       }}
     >
-      <ArrowForwardIos sx={{ fontSize: 18 }} />
+      <ArrowForwardIos sx={{ fontSize: { xs: 16, sm: 17, md: 18 } }} />
     </Box>
   );
 
@@ -185,23 +185,23 @@ export const ProductList = () => {
       onClick={onClick}
       sx={{
         position: "absolute",
-        left: "-10px",
+        left: { xs: "5px", sm: "5px", md: "-10px" },
         top: "50%",
         transform: "translateY(-50%)",
         zIndex: 10,
         backgroundColor: "#fff",
-        width: 38,
-        height: 38,
+        width: { xs: 32, sm: 36, md: 38 },
+        height: { xs: 32, sm: 36, md: 38 },
         borderRadius: "50%",
         boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
-        display: "flex",
+        display: { xs: "flex", md: "flex" },
         alignItems: "center",
         justifyContent: "center",
         cursor: "pointer",
         "&:hover": { backgroundColor: "#FF643A", color: "#fff" },
       }}
     >
-      <ArrowBackIosNew sx={{ fontSize: 18 }} />
+      <ArrowBackIosNew sx={{ fontSize: { xs: 16, sm: 17, md: 18 } }} />
     </Box>
   );
 
@@ -217,10 +217,10 @@ export const ProductList = () => {
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 4 } },
-      { breakpoint: 900, settings: { slidesToShow: 3 } },
-      { breakpoint: 600, settings: { slidesToShow: 2 } },
-      { breakpoint: 400, settings: { slidesToShow: 1 } },
+      { breakpoint: 1200, settings: { slidesToShow: 4, slidesToScroll: 2 } },
+      { breakpoint: 900, settings: { slidesToShow: 3, slidesToScroll: 1 } },
+      { breakpoint: 600, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 400, settings: { slidesToShow: 1, slidesToScroll: 1 } },
     ],
   };
 
@@ -723,7 +723,7 @@ export const ProductList = () => {
         </Box>
       </Container>
 
-      <Container maxWidth="xl" sx={{ px: { xs: 2, md: 3 } }}>
+      <Container maxWidth="xl" sx={{ px: { xs: "11px", md: 3 } }}>
         <Box
           sx={{
             mb: { xs: 4, md: 6 },
@@ -731,6 +731,13 @@ export const ProductList = () => {
             "@keyframes fadeIn": {
               "0%": { opacity: 0 },
               "100%": { opacity: 1 },
+            },
+            position: "relative",
+            "& .slick-slider": {
+              position: "relative",
+            },
+            "& .slick-list": {
+              padding: { xs: "0 20px", md: "0" },
             },
           }}
         >
@@ -757,7 +764,8 @@ export const ProductList = () => {
             Recommended Products
           </Typography>
 
-          <Slider {...settings}>
+          <Box sx={{ position: "relative" }}>
+            <Slider {...settings}>
             {recommendedProducts?.map((product) => (
               <Box key={product.id} sx={{ px: { xs: 1, md: 1.5 } }}>
                 <Card
@@ -810,6 +818,7 @@ export const ProductList = () => {
               </Box>
             ))}
           </Slider>
+          </Box>
         </Box>
       </Container>
     </Box>

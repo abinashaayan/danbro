@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Box, Container, Typography, Grid, Button, Divider } from "@mui/material";
 import lucknowlogo from "../../assets/lucknowlogo.png";
-import createevents1 from "../../assets/createevents1.png";
 import store from "../../assets/store.png";
 import store1 from "../../assets/store1.png";
 import contact from "../../assets/contact.jpg";
@@ -39,8 +38,6 @@ export const Store = () => {
 
     return (
         <Box sx={{ width: "100%", overflowX: "hidden", background: "#fff", pb: { xs: 8, md: 10 } }}>
-
-            {/* TOP HERO SECTION */}
             <Box
                 ref={sectionRefs.hero}
                 sx={{
@@ -69,8 +66,6 @@ export const Store = () => {
             <Box sx={{ textAlign: "center", py: { xs: 2, md: 3 } }}>
                 <img src={lucknowlogo} alt="logo" style={{ width: "auto"}} />
             </Box>
-
-            {/* SECOND HERO SECTION */}
             <Box
                 sx={{
                     height: { xs: 140, sm: 180, md: 240 },
@@ -112,19 +107,13 @@ export const Store = () => {
                         <Divider sx={{ borderColor: "#000", borderBottomWidth: 2, mt: 2 }} />
                     </Box>
                 </Box>
-
-                {/* STORE SECTION */}
-                <Grid container spacing={3} sx={{ mt: { xs: 4, md: 6 }, alignItems: "stretch" }}>
-
-                    {/* IMAGE */}
+                <Grid container spacing={3} sx={{ mt: { xs: 4, md: 6 }, alignItems: "stretch", p: { xs: "11px" } }}>
                     <Grid item size={{ xs: 12, md: 6 }}>
                         <Box sx={{ width: "100%", height: "100%", borderRadius: 3, overflow: "hidden" }}>
                             <img src={contact} alt="store"
                                 style={{ width: "100%", height: "400px", objectFit: "cover" }} />
                         </Box>
                     </Grid>
-
-                    {/* CONTENT */}
                     <Grid item size={{ xs: 12, md: 6 }}>
                         <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                             <Box>

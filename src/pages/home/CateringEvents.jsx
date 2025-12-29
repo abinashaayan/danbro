@@ -1,7 +1,4 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
-import PhoneIcon from "@mui/icons-material/Phone";
-import EmailIcon from "@mui/icons-material/Email";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { Box, Container, Typography, Grid, Button } from "@mui/material";
 import cateringEvents from "../../assets/createevents.png";
 import createevents1 from "../../assets/createevents1.png";
 import { useState, useEffect, useRef } from "react";
@@ -116,7 +113,7 @@ export const CateringEvents = () => {
       </Box>
 
       {/* Event Types Section */}
-      <Container maxWidth="lg" sx={{ py: 4 }}>
+      <Container maxWidth="lg" sx={{ py: 4, px: { xs: "11px" } }}>
         <Box
           ref={sectionRefs.hero}
           sx={{
@@ -261,7 +258,7 @@ export const CateringEvents = () => {
         </Box>
       </Container>
 
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ px: { xs: "11px" } }}>
         <Box ref={sectionRefs.specialties}>
           <Typography
             variant="h2"
@@ -277,7 +274,7 @@ export const CateringEvents = () => {
 
           <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
             {specialties.map((item, index) => (
-              <Grid size={3} key={index}>
+              <Grid item xs={12} sm={6} md={3} key={index}>
                 <Box
                   sx={{
                     cursor: "pointer",
@@ -344,7 +341,7 @@ export const CateringEvents = () => {
       </Container>
 
       {/* Contact Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 2, md: 2 } }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 1, sm: 2, md: 2 }, px: { xs: "11px" } }}>
         <Box ref={sectionRefs.contact} sx={{ pb: 4 }}>
           <Box
             sx={{
