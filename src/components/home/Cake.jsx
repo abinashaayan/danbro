@@ -39,7 +39,6 @@ const categoryData = [
     },
 ];
 
-// 🔥 Pastries data
 const pastryData = [
     {
         title: "Pastry 1",
@@ -90,7 +89,6 @@ const cookieData = [
     },
 ];
 
-// 🔥 Breads Data
 const breadData = [
     {
         title: "Fresh White Bread",
