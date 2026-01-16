@@ -18,7 +18,6 @@ const getCategoryImage = (categoryName, index) => {
 export const CategoryCarousel = () => {
   let sliderRef = null;
   const { categories, loading, error } = useItemCategories();
-  console.log(categories, 'categories');
 
   const navigate = useNavigate();
 
@@ -46,7 +45,6 @@ export const CategoryCarousel = () => {
   };
 
   const handleToProductList = (categoryId) => {
-    console.log(categoryId, 'categoryId')
     navigate(`/products?categoryId=${categoryId}`)
   }
 

@@ -1,4 +1,6 @@
 import { EXTERNAL_API_BASE_URL, EXTERNAL_API_ACCESS_KEY, API_BASE_URL } from './apiUrl';
+import axios from 'axios';
+
 
 /**
  * Sanitize JSON string by escaping control characters within string values
@@ -87,44 +89,30 @@ const getApiUrl = () => {
 export const fetchItemCategories = async () => {
   try {
     const url = getApiUrl();
-    
-    const response = await fetch(url, {
-      method: 'GET',
+
+    const response = await axios.get(url, {
       headers: {
         'Content-Type': 'application/json',
       },
-      credentials: 'omit',
+      withCredentials: false,
+      timeout: 10000,
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    // Always read as text first to avoid "body stream already read" error
-    const text = await response.text();
-    let data;
-    
-    try {
-      // First try parsing without sanitization
-      data = JSON.parse(text);
-    } catch (parseError) {
-      // If that fails, try sanitizing and parsing again
-      try {
-        const sanitizedText = sanitizeJsonString(text);
-        data = JSON.parse(sanitizedText);
-      } catch (sanitizeError) {
-        console.error('Failed to parse response as JSON:', sanitizeError);
-        console.error('Response text (first 500 chars):', text.substring(0, 500));
-        throw new Error(`Invalid response format from API: ${sanitizeError.message}`);
-      }
-    }
-    
-    return data;
+    return response.data;
+
   } catch (error) {
     console.error('Error fetching item categories:', error);
-    if (error.message === 'Failed to fetch') {
-      throw new Error('Network error: Unable to connect to the API. Please check your internet connection or try again later.');
+
+    if (!error.response) {
+      throw new Error(
+        'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+      );
     }
-    throw error;
+
+    throw new Error(
+      error.response?.data?.message ||
+      `HTTP error! status: ${error.response.status}`
+    );
   }
 };
 
@@ -166,74 +154,84 @@ const getExternalApiUrl = (level, params = {}) => {
 };
 
 /**
- * Fetch products from the external API
+ * Fetch products from the API
  * @param {number} categoryId - Category ID to filter products
- * @returns {Promise<Object>} Response object with status and records array
+ * @param {number} page - Page number (default: 1)
+ * @param {string} search - Search query (default: '')
+ * @returns {Promise<Object>} Response object with success, message, meta, and data array
  */
-export const fetchProducts = async (categoryId = null) => {
+export const fetchProducts = async (categoryId = null, page = 1, search = '') => {
   try {
-    const params = categoryId ? { categoryid: categoryId.toString() } : {};
-    const url = getExternalApiUrl('PRODUCTS', params);
+    const baseUrl = `${API_BASE_URL}/product/getAll`;
+    const params = new URLSearchParams();
     
-    console.log('Fetching products from URL:', url);
-    console.log('Category ID:', categoryId);
+    if (categoryId) {
+      params.append('category', categoryId.toString());
+    }
+    params.append('page', page.toString());
+    params.append('search', search);
     
-    const response = await fetch(url, {
-      method: 'GET',
+    const url = `${baseUrl}?${params.toString()}`;
+    
+    const response = await axios.get(url, {
       headers: {
-        'Authorization': `accesskey ${EXTERNAL_API_ACCESS_KEY}`,
+        'Content-Type': 'application/json',
       },
-      credentials: 'omit',
+      withCredentials: false,
+      timeout: 10000,
+      responseType: 'text', // Get as text first to handle potential JSON parsing issues
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // Always read as text first to avoid "body stream already read" error
-    const text = await response.text();
     let data;
     
     try {
       // First try parsing without sanitization
-      data = JSON.parse(text);
+      data = JSON.parse(response.data);
     } catch (parseError) {
       // If that fails, try sanitizing and parsing again
       try {
-        const sanitizedText = sanitizeJsonString(text);
+        const sanitizedText = sanitizeJsonString(response.data);
         data = JSON.parse(sanitizedText);
       } catch (sanitizeError) {
         console.error('Failed to parse response as JSON:', sanitizeError);
-        console.error('Response text (first 500 chars):', text.substring(0, 500));
+        console.error('Response text (first 500 chars):', response.data.substring(0, 500));
         throw new Error(`Invalid response format from API: ${sanitizeError.message}`);
       }
     }
     
-    console.log('Products API Response Data:', data);
     return data;
   } catch (error) {
     console.error('Error fetching products:', error);
-    if (error.message === 'Failed to fetch') {
-      throw new Error('Network error: Unable to connect to the API. Please check your internet connection or try again later.');
+    
+    if (!error.response) {
+      throw new Error(
+        'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+      );
     }
-    throw error;
+
+    throw new Error(
+      error.response?.data?.message ||
+      `HTTP error! status: ${error.response.status}`
+    );
   }
 };
 
 /**
  * Get products with error handling
  * @param {number} categoryId - Category ID to filter products
+ * @param {number} page - Page number (default: 1)
+ * @param {string} search - Search query (default: '')
  * @returns {Promise<Array>} Array of product records
  */
-export const getProducts = async (categoryId = null) => {
+export const getProducts = async (categoryId = null, page = 1, search = '') => {
   try {
-    const response = await fetchProducts(categoryId);
+    const response = await fetchProducts(categoryId, page, search);
     
-    if ((response.status === 'sucess' || response.status === 'success') && response.records) {
-      return response.records;
-    } else if (response.records && Array.isArray(response.records)) {
-      // If records exist but status is different, still use it
-      return response.records;
+    if (response.success && response.data && Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data && Array.isArray(response.data)) {
+      // If data exists but success is different, still use it
+      return response.data;
     }
     
     throw new Error(`Invalid response format: ${JSON.stringify(response)}`);
@@ -244,40 +242,35 @@ export const getProducts = async (categoryId = null) => {
 };
 
 /**
- * Fetch branches/POS from the external API
+ * Fetch branches/POS from the API
  * @returns {Promise<Object>} Response object with status and records array
  */
 export const fetchBranches = async () => {
   try {
-    const url = getExternalApiUrl('POS');
+    const url = `${API_BASE_URL}/branch/getAll`;
     
-    const response = await fetch(url, {
-      method: 'GET',
+    const response = await axios.get(url, {
       headers: {
-        'Authorization': `accesskey ${EXTERNAL_API_ACCESS_KEY}`,
+        'Content-Type': 'application/json',
       },
-      credentials: 'omit',
+      withCredentials: false,
+      timeout: 10000,
+      responseType: 'text', // Get as text first to handle potential JSON parsing issues
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    // Always read as text first to avoid "body stream already read" error
-    const text = await response.text();
     let data;
     
     try {
       // First try parsing without sanitization
-      data = JSON.parse(text);
+      data = JSON.parse(response.data);
     } catch (parseError) {
       // If that fails, try sanitizing and parsing again
       try {
-        const sanitizedText = sanitizeJsonString(text);
+        const sanitizedText = sanitizeJsonString(response.data);
         data = JSON.parse(sanitizedText);
       } catch (sanitizeError) {
         console.error('Failed to parse response as JSON:', sanitizeError);
-        console.error('Response text (first 500 chars):', text.substring(0, 500));
+        console.error('Response text (first 500 chars):', response.data.substring(0, 500));
         throw new Error(`Invalid response format from API: ${sanitizeError.message}`);
       }
     }
@@ -285,10 +278,17 @@ export const fetchBranches = async () => {
     return data;
   } catch (error) {
     console.error('Error fetching branches:', error);
-    if (error.message === 'Failed to fetch') {
-      throw new Error('Network error: Unable to connect to the API. Please check your internet connection or try again later.');
+    
+    if (!error.response) {
+      throw new Error(
+        'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+      );
     }
-    throw error;
+
+    throw new Error(
+      error.response?.data?.message ||
+      `HTTP error! status: ${error.response.status}`
+    );
   }
 };
 

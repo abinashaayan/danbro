@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import {
   Box,
   Container,
@@ -6,7 +6,6 @@ import {
   Grid,
   Button,
   TextField,
-  Chip,
   Breadcrumbs,
   Link,
   Rating,
@@ -53,11 +52,28 @@ export const ProductDetails = () => {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [productWeight, setProductWeight] = useState("500g");
+  const [selectOpen, setSelectOpen] = useState(false);
   
   // Fetch categories to get all products
   const { categories: apiCategories } = useItemCategories();
 
-  // Fetch product data
+  // Close select menu on scroll - optimized with passive listener
+  useEffect(() => {
+    if (!selectOpen) return;
+    
+    const handleScroll = () => {
+      setSelectOpen(false);
+    };
+    
+    // Use capture phase and passive for better performance
+    document.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    
+    return () => {
+      document.removeEventListener('scroll', handleScroll, { capture: true });
+    };
+  }, [selectOpen]);
+
+  // Fetch product data - OPTIMIZED: Fetch all categories in parallel instead of sequentially
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -72,13 +88,26 @@ export const ProductDetails = () => {
 
         const productId = parseInt(id);
         
-        // Try to find product by searching through categories
+        // Optimized: Fetch all categories in parallel instead of sequentially
         if (apiCategories && apiCategories.length > 0) {
-          for (const category of apiCategories) {
-            try {
-              const response = await fetchProducts(category.id);
-              if (response?.records && Array.isArray(response.records)) {
-                const foundProduct = response.records.find(p => p.prdcode === productId);
+          try {
+            // Fetch all categories in parallel using Promise.all
+            const productPromises = apiCategories.map(category => 
+              fetchProducts(category.id).catch(err => {
+                // Silently handle individual category errors
+                return null;
+              })
+            );
+            
+            const responses = await Promise.all(productPromises);
+            
+            // Search through all responses to find the product
+            for (const response of responses) {
+              if (!response) continue;
+              
+              const data = response?.data || response?.records;
+              if (Array.isArray(data)) {
+                const foundProduct = data.find(p => p.prdcode === productId);
                 if (foundProduct) {
                   setProduct(foundProduct);
                   setProductWeight(foundProduct.weight || "500g");
@@ -86,9 +115,25 @@ export const ProductDetails = () => {
                   return;
                 }
               }
-            } catch (err) {
-              console.error(`Error fetching products for category ${category.id}:`, err);
-              continue;
+            }
+          } catch (err) {
+            // Fallback to sequential search if parallel fails
+            for (const category of apiCategories) {
+              try {
+                const response = await fetchProducts(category.id);
+                const data = response?.data || response?.records;
+                if (Array.isArray(data)) {
+                  const foundProduct = data.find(p => p.prdcode === productId);
+                  if (foundProduct) {
+                    setProduct(foundProduct);
+                    setProductWeight(foundProduct.weight || "500g");
+                    setLoading(false);
+                    return;
+                  }
+                }
+              } catch (err) {
+                continue;
+              }
             }
           }
         }
@@ -96,13 +141,14 @@ export const ProductDetails = () => {
         setError("Product not found");
       } catch (err) {
         setError(err.message || "Failed to load product");
-        console.error("Error loading product:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadProduct();
+    if (apiCategories && apiCategories.length > 0) {
+      loadProduct();
+    }
   }, [id, apiCategories]);
 
   // Transform product data for display
@@ -123,11 +169,12 @@ export const ProductDetails = () => {
     }
     
     // Create images array (using placeholder since API doesn't provide images)
+    // Using optimized image URLs with proper sizing
     const images = [
-      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&h=600&fit=crop",
-      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&h=600&fit=crop",
+      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400&h=400&fit=crop&auto=format&q=80",
+      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400&h=400&fit=crop&auto=format&q=80",
+      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400&h=400&fit=crop&auto=format&q=80",
+      "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400&h=400&fit=crop&auto=format&q=80",
     ];
     
     return {
@@ -150,7 +197,7 @@ export const ProductDetails = () => {
     "Quality Guarantee\nTaste the difference"
   ];
 
-  const images = [
+  const images = useMemo(() => [
     "https://picsum.photos/id/1040/300/200",
     "https://picsum.photos/id/1060/300/200",
     "https://picsum.photos/id/1080/300/200",
@@ -159,7 +206,7 @@ export const ProductDetails = () => {
     "https://picsum.photos/id/121/300/200",
     "https://picsum.photos/id/122/300/200",
     "https://picsum.photos/id/123/300/200"
-  ];
+  ], []);
 
   if (loading) {
     return (
@@ -210,13 +257,25 @@ export const ProductDetails = () => {
                       },
                     }}
                   >
-                    <Box component="img" src={image} alt={`${productData.name} ${index + 1}`} sx={{ width: "100%", height: "100%", objectFit: "cover", }} />
+                    <Box 
+                      component="img" 
+                      src={image} 
+                      alt={`${productData.name} ${index + 1}`} 
+                      loading="lazy"
+                      sx={{ width: "100%", height: "100%", objectFit: "cover", }} 
+                    />
                   </Box>
                 ))}
               </Box>
               <Box sx={{ flex: 1 }}>
                 <Box sx={{ width: "100%", height: { xs: 300, sm: 350, md: 450 }, borderRadius: 2, overflow: "hidden", mb: 2 }}>
-                  <Box component="img" src={productData.images[selectedImage]} alt={productData.name} sx={{ width: "100%", height: "100%", objectFit: "cover", }} />
+                  <Box 
+                    component="img" 
+                    src={productData.images[selectedImage]} 
+                    alt={productData.name} 
+                    loading="lazy"
+                    sx={{ width: "100%", height: "100%", objectFit: "cover", }} 
+                  />
                 </Box>
               </Box>
             </Box>
@@ -249,7 +308,35 @@ export const ProductDetails = () => {
                   <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
                     Weight
                   </Typography>
-                  <Select value={productWeight} size="small" onChange={(e) => setProductWeight(e.target.value)} sx={{ width: { xs: "100%", md: 250 }, mt: 1 }}>
+                  <Select 
+                    value={productWeight} 
+                    size="small" 
+                    open={selectOpen}
+                    onOpen={() => setSelectOpen(true)}
+                    onClose={() => setSelectOpen(false)}
+                    onChange={(e) => {
+                      setProductWeight(e.target.value);
+                      setSelectOpen(false);
+                    }} 
+                    sx={{ width: { xs: "100%", md: 250 }, mt: 1 }}
+                    MenuProps={{
+                      disablePortal: false,
+                      disableScrollLock: true,
+                      anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                      },
+                      transformOrigin: {
+                        vertical: 'top',
+                        horizontal: 'left',
+                      },
+                      PaperProps: {
+                        sx: {
+                          maxHeight: 224,
+                        },
+                      },
+                    }}
+                  >
                     <MenuItem value={product.weight || "500g"}>{product.weight || "500g"}</MenuItem>
                     <MenuItem value="custom">Custom</MenuItem>
                   </Select>
@@ -497,6 +584,7 @@ export const ProductDetails = () => {
               <Box
                 component="img"
                 src={img}
+                loading="lazy"
                 sx={{
                   width: "100%",
                   height: { xs: 180, sm: 200, md: 230 },

@@ -26,34 +26,20 @@ export const useProducts = (categoryId = null) => {
         
         const response = await fetchProducts(categoryId);
         
-        // Log response for debugging
-        console.log('Products API Response:', response);
-        console.log('Response status:', response?.status);
-        console.log('Response records type:', typeof response?.records);
-        console.log('Response records is array:', Array.isArray(response?.records));
-        console.log('Response records length:', response?.records?.length);
-        
-        if (response?.status === 'Error') {
-          console.log('API returned error status:', response?.msg || 'Unknown error');
+        if (!response?.success) {
           setProducts([]);
           setError(null); 
           return;
         }
         
-        // Check for both 'sucess' (API typo) and 'success' (standard)
-        if ((response?.status === 'sucess' || response?.status === 'success') && response?.records && Array.isArray(response.records)) {
-          setProducts(response.records);
-        } else if (response?.records && Array.isArray(response.records)) {
-          setProducts(response.records);
+        // Check for success and data array
+        if (response?.success && response?.data && Array.isArray(response.data)) {
+          setProducts(response.data);
+        } else if (response?.data && Array.isArray(response.data)) {
+          setProducts(response.data);
         } else {
-          if (response?.status && response.status !== 'Error') {
-            console.log('No records found for status:', response.status);
-            setProducts([]);
-            setError(null);
-          } else {
-            console.error('Invalid response format - Full response:', JSON.stringify(response, null, 2));
-            throw new Error(`Invalid response format. Status: ${response?.status || 'undefined'}, Records: ${response?.records ? (Array.isArray(response.records) ? `array(${response.records.length})` : typeof response.records) : 'missing'}`);
-          }
+          setProducts([]);
+          setError(null);
         }
       } catch (err) {
         setError(err.message || 'Failed to fetch products');
