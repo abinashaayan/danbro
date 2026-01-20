@@ -188,7 +188,7 @@ export const CategoryCarousel = () => {
                     },
                   }}
                 >
-                  <Box className="category-card" onClick={() => handleToProductList(item.id)} sx={{ backgroundColor: "transparent", backdropFilter: "blur(10px)", borderRadius: { xs: "15px", md: "20px" }, transition: "all 0.4s ease", overflow: "visible", }}>
+                  <Box className="category-card" onClick={() => handleToProductList(item.id)} sx={{ backgroundColor: "transparent", backdropFilter: "blur(10px)", borderRadius: { xs: "15px", md: "20px" }, transition: "all 0.4s ease", overflow: "visible", display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
                     <Box
                       component="img"
                       src={item?.img}
@@ -196,10 +196,13 @@ export const CategoryCarousel = () => {
                       loading="lazy"
                       sx={{
                         height: { xs: 65, md: 95 },
-                        width: "100%",
-                        objectFit: "contain",
+                        width: { xs: 65, md: 95 },
+                        borderRadius: "50%",
+                        objectFit: "cover",
                         transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                         filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.15))",
+                        border: "3px solid rgba(255,255,255,0.8)",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
                       }}
                     />
                     <Typography
