@@ -1,4 +1,5 @@
-import { Box, Typography, Button, Container } from "@mui/material";
+import { Box,  Button, Container } from "@mui/material";
+import { CustomText } from "../components/comman/CustomText";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import { useEffect } from "react";
@@ -39,7 +40,7 @@ export const NotFound = () => {
             },
           }}
         >
-          <Typography
+          <CustomText
             sx={{
               fontSize: { xs: "120px", sm: "150px", md: "200px" },
               fontWeight: 900,
@@ -50,8 +51,8 @@ export const NotFound = () => {
             }}
           >
             404
-          </Typography>
-          <Typography
+          </CustomText>
+          <CustomText
             sx={{
               fontSize: { xs: 24, sm: 28, md: 32 },
               fontWeight: 700,
@@ -60,8 +61,8 @@ export const NotFound = () => {
             }}
           >
             Page Not Found
-          </Typography>
-          <Typography
+          </CustomText>
+          <CustomText
             sx={{
               fontSize: { xs: 14, md: 16 },
               color: "#666",
@@ -71,7 +72,7 @@ export const NotFound = () => {
             }}
           >
             Oops! The page you're looking for doesn't exist. It might have been moved, deleted, or you entered the wrong URL.
-          </Typography>
+          </CustomText>
           <Button
             onClick={() => navigate("/")}
             startIcon={<HomeIcon />}

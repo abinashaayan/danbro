@@ -1,4 +1,5 @@
-import { Box, Typography, Button, useMediaQuery, IconButton } from "@mui/material";
+import { Box,  Button, useMediaQuery, IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
@@ -155,7 +156,7 @@ export const OffersSection = () => {
 
   return (
     <Box>
-      <Box sx={{ px: { xs: 2, sm: 3, md: 6 } }}>
+      <Box sx={{ px: { xs: 2, sm: 3, md: 6, lg: 2 } }}>
         <Box
           sx={{
             display: "flex",
@@ -168,7 +169,7 @@ export const OffersSection = () => {
           }}
         >
           <Box sx={{ position: "relative" }}>
-            <Typography 
+            <CustomText 
               sx={{ 
                 fontSize: { xs: 28, sm: 32, md: 38 }, 
                 fontWeight: 800, 
@@ -193,7 +194,7 @@ export const OffersSection = () => {
               }}
             >
               Offers
-            </Typography>
+            </CustomText>
           </Box>
 
           <Box
@@ -309,7 +310,7 @@ export const OffersSection = () => {
                             zIndex: 2,
                           }}
                         >
-                          <Typography 
+                          <CustomText 
                             sx={{ 
                               fontSize: { xs: 12, md: 14 }, 
                               opacity: 0.95, 
@@ -321,8 +322,8 @@ export const OffersSection = () => {
                             }}
                           >
                             {offer?.subtitle}
-                          </Typography>
-                          <Typography 
+                          </CustomText>
+                          <CustomText 
                             sx={{ 
                               fontSize: { xs: 18, sm: 20, md: 24 }, 
                               fontWeight: 800,
@@ -331,7 +332,7 @@ export const OffersSection = () => {
                             }}
                           >
                             {offer?.title}
-                          </Typography>
+                          </CustomText>
                         </Box>
                         <Box
                           className="discount-badge"
@@ -490,7 +491,7 @@ export const OffersSection = () => {
                   zIndex: 2,
                 }}
               >
-                <Typography 
+                <CustomText 
                   sx={{ 
                     fontSize: { xs: 12, md: 14 }, 
                     opacity: 0.95, 
@@ -502,8 +503,8 @@ export const OffersSection = () => {
                   }}
                 >
                   {offer?.subtitle}
-                </Typography>
-                <Typography 
+                </CustomText>
+                <CustomText 
                   sx={{ 
                     fontSize: { xs: 18, sm: 20, md: 24 }, 
                     fontWeight: 800,
@@ -512,7 +513,7 @@ export const OffersSection = () => {
                   }}
                 >
                   {offer?.title}
-                </Typography>
+                </CustomText>
               </Box>
               <Box
                 className="discount-badge"
@@ -685,7 +686,7 @@ export const OffersSection = () => {
                   zIndex: 2,
                 }}
               >
-                <Typography 
+                <CustomText 
                   sx={{ 
                     fontSize: { xs: 12, md: 14 }, 
                     opacity: 0.95, 
@@ -697,8 +698,8 @@ export const OffersSection = () => {
                   }}
                 >
                   {offer?.subtitle}
-                </Typography>
-                <Typography 
+                </CustomText>
+                <CustomText 
                   sx={{ 
                     fontSize: { xs: 18, sm: 20, md: 24 }, 
                     fontWeight: 800,
@@ -707,7 +708,7 @@ export const OffersSection = () => {
                   }}
                 >
                   {offer?.title}
-                </Typography>
+                </CustomText>
               </Box>
               <Box
                 className="discount-badge"

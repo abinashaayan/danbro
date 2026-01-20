@@ -1,4 +1,5 @@
-import { Box, Typography, IconButton, Grid, Container, useMediaQuery } from "@mui/material";
+import { Box,  IconButton, Grid, Container, useMediaQuery } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState, useRef } from "react";
@@ -110,7 +111,7 @@ export const Artical = () => {
                 }}
             />
 
-            <Typography
+            <CustomText
                 sx={{
                     fontSize: { xs: 24, sm: 28, md: 32, lg: 34 },
                     fontWeight: 800,
@@ -133,7 +134,7 @@ export const Artical = () => {
                 }}
             >
                 Check it out, OUR NEW ARTICLES
-            </Typography>
+            </CustomText>
             <Container sx={{ px: { xs: 2, sm: 3, md: 4, lg: 3 } }}>
                 {isMobile ? (
                     <Box sx={{ position: "relative" }}>
@@ -211,7 +212,7 @@ export const Artical = () => {
                                                     }}
                                                 />
                                                 <Box sx={{ p: { xs: 2, sm: 2.5, md: 2.5, lg: 2.5 }, position: "relative", zIndex: 2 }}>
-                                                    <Typography
+                                                    <CustomText
                                                         sx={{
                                                             fontSize: { xs: 11, sm: 11.5, md: 12, lg: 12 },
                                                             fontWeight: 600,
@@ -222,8 +223,8 @@ export const Artical = () => {
                                                         }}
                                                     >
                                                         {item.date}
-                                                    </Typography>
-                                                    <Typography
+                                                    </CustomText>
+                                                    <CustomText
                                                         className="article-title"
                                                         sx={{
                                                             fontSize: { xs: 15, sm: 16, md: 16, lg: 17 },
@@ -234,7 +235,7 @@ export const Artical = () => {
                                                         }}
                                                     >
                                                         {item.title}
-                                                    </Typography>
+                                                    </CustomText>
                                                 </Box>
                                             </Box>
                                         );
@@ -332,7 +333,7 @@ export const Artical = () => {
 
                                 {/* Date */}
                                 <Box sx={{ p: { xs: 2, sm: 2.5, md: 2.5, lg: 2.5 }, position: "relative", zIndex: 2 }}>
-                                    <Typography
+                                    <CustomText
                                         sx={{
                                             fontSize: { xs: 11, sm: 11.5, md: 12, lg: 12 },
                                             fontWeight: 600,
@@ -343,8 +344,8 @@ export const Artical = () => {
                                         }}
                                     >
                                         {item.date}
-                                    </Typography>
-                                    <Typography
+                                    </CustomText>
+                                    <CustomText
                                         className="article-title"
                                         sx={{
                                             fontSize: { xs: 15, sm: 16, md: 16, lg: 17 },
@@ -355,7 +356,7 @@ export const Artical = () => {
                                         }}
                                     >
                                         {item.title}
-                                    </Typography>
+                                    </CustomText>
                                 </Box>
                             </Box>
                         </Grid>

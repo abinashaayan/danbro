@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Container, Typography, Grid, Button, Divider } from "@mui/material";
+import { Box, Container,  Grid, Button, Divider } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 
 // images – filhaal available images use kar liye,
 // tum apne hisaab se change kar sakta hai
@@ -107,7 +108,7 @@ export const Blog = () => {
           transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
         }}
       >
-        <Typography
+        <CustomText
           variant="h1"
           sx={{
             fontSize: { xs: 28, sm: 36, md: 42, lg: 52 },
@@ -117,8 +118,8 @@ export const Blog = () => {
           }}
         >
           Our Blogs
-        </Typography>
-        <Typography
+        </CustomText>
+        <CustomText
           sx={{
             fontSize: { xs: 12, sm: 14, md: 13, lg: 14 },
             color: "#f2f2f2",
@@ -127,7 +128,7 @@ export const Blog = () => {
           }}
         >
           Home • Our Blogs
-        </Typography>
+        </CustomText>
       </Box>
 
 
@@ -223,7 +224,7 @@ export const Blog = () => {
 
                 {/* Content */}
                 <Box sx={{ flex: 1 }}>
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 11, sm: 11, md: 11, lg: 11 },
                       textTransform: "uppercase",
@@ -233,9 +234,9 @@ export const Blog = () => {
                     }}
                   >
                     {blog.category}
-                  </Typography>
+                  </CustomText>
 
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 18, sm: 20, md: 20, lg: 22 },
                       fontWeight: 700,
@@ -244,9 +245,9 @@ export const Blog = () => {
                     }}
                   >
                     {blog.title}
-                  </Typography>
+                  </CustomText>
 
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 11, sm: 11, md: 11, lg: 11 },
                       color: "#8a8a8a",
@@ -254,9 +255,9 @@ export const Blog = () => {
                     }}
                   >
                     {blog.date} • Posted by {blog.author}
-                  </Typography>
+                  </CustomText>
 
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 14, sm: 14, md: 13.5, lg: 14 },
                       color: "#555",
@@ -267,7 +268,7 @@ export const Blog = () => {
                     {blog.description.length > 200
                       ? blog.description.slice(0, 200) + "..."
                       : blog.description}
-                  </Typography>
+                  </CustomText>
 
                   <Button
                     variant="outlined"
@@ -304,7 +305,7 @@ export const Blog = () => {
               }}
             >
               <Box sx={{ mb: { xs: 3, sm: 3.5, md: 4, lg: 4 } }}>
-                <Typography
+                <CustomText
                   sx={{
                     fontWeight: 700,
                     mb: 1,
@@ -312,7 +313,7 @@ export const Blog = () => {
                   }}
                 >
                   Search
-                </Typography>
+                </CustomText>
                 <Box sx={{ display: "flex", gap: 1 }}>
                   <input
                     placeholder="Search..."
@@ -344,7 +345,7 @@ export const Blog = () => {
               </Box>
 
               <Box>
-                <Typography
+                <CustomText
                   sx={{
                     fontWeight: 700,
                     mb: 2,
@@ -352,7 +353,7 @@ export const Blog = () => {
                   }}
                 >
                   Recent Posts
-                </Typography>
+                </CustomText>
 
                 {blogs.slice(0, 3).map((b, index) => (
                   <Box
@@ -388,7 +389,7 @@ export const Blog = () => {
                       }}
                     />
                     <Box>
-                      <Typography
+                      <CustomText
                         sx={{
                           fontSize: { xs: 12, sm: 13 },
                           fontWeight: 600,
@@ -399,15 +400,15 @@ export const Blog = () => {
                         {b.title.length > 45
                           ? b.title.slice(0, 45) + "..."
                           : b.title}
-                      </Typography>
-                      <Typography
+                      </CustomText>
+                      <CustomText
                         sx={{
                           fontSize: { xs: 10, sm: 11 },
                           color: "#777",
                         }}
                       >
                         {b.date}
-                      </Typography>
+                      </CustomText>
                     </Box>
                   </Box>
                 ))}

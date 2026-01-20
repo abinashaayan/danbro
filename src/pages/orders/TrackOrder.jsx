@@ -2,13 +2,14 @@ import { useState } from "react";
 import {
   Box,
   Container,
-  Typography,
+  
   Grid,
   Card,
   CardContent,
   Button,
   Divider,
 } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import {
   Assignment as AssignmentIcon,
   Restaurant as RestaurantIcon,
@@ -56,7 +57,7 @@ export const TrackOrder = () => {
         {/* Header Section */}
         <Box sx={{ mb: 4, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
-            <Typography
+            <CustomText
               variant="h3"
               sx={{
                 fontSize: { xs: 28, md: 36 },
@@ -66,8 +67,8 @@ export const TrackOrder = () => {
               }}
             >
               Track your Order
-            </Typography>
-            <Typography
+            </CustomText>
+            <CustomText
               variant="body1"
               sx={{
                 fontSize: { xs: 14, md: 16 },
@@ -75,7 +76,7 @@ export const TrackOrder = () => {
               }}
             >
               Here's a quick look at your recent activity and rewards.
-            </Typography>
+            </CustomText>
           </Box>
           <Button
             startIcon={<ArrowBackIcon />}
@@ -107,7 +108,7 @@ export const TrackOrder = () => {
             {/* Order Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 4, flexWrap: "wrap", gap: 2 }}>
               <Box>
-                <Typography
+                <CustomText
                   variant="h5"
                   sx={{
                     fontWeight: 700,
@@ -115,8 +116,8 @@ export const TrackOrder = () => {
                   }}
                 >
                   Your Order is on its way!
-                </Typography>
-                <Typography
+                </CustomText>
+                <CustomText
                   variant="body1"
                   sx={{
                     fontWeight: 600,
@@ -124,9 +125,9 @@ export const TrackOrder = () => {
                   }}
                 >
                   Order - #BAKERY-1234
-                </Typography>
+                </CustomText>
               </Box>
-              <Typography
+              <CustomText
                 variant="h5"
                 sx={{
                   fontWeight: 700,
@@ -134,7 +135,7 @@ export const TrackOrder = () => {
                 }}
               >
                 Total : $24
-              </Typography>
+              </CustomText>
             </Box>
 
             <Divider sx={{ borderColor: "#BEBEBE", my: 2 }} />
@@ -176,12 +177,12 @@ export const TrackOrder = () => {
                         {step?.icon}
                       </Box>
                       <Box sx={{ flex: 1, pt: 0.5 }}>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: step.completed ? "#2c2c2c" : "#999", fontSize: { xs: 16, md: 18 }, }}>
+                        <CustomText variant="h6" sx={{ fontWeight: 600, color: step.completed ? "#2c2c2c" : "#999", fontSize: { xs: 16, md: 18 }, }}>
                           {step?.label}
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: step.completed ? "#666" : "#999", fontSize: { xs: 13, md: 14 }, }}>
+                        </CustomText>
+                        <CustomText variant="body2" sx={{ color: step.completed ? "#666" : "#999", fontSize: { xs: 13, md: 14 }, }}>
                           {step.description}
-                        </Typography>
+                        </CustomText>
                       </Box>
                     </Box>
                   ))}
@@ -208,12 +209,12 @@ export const TrackOrder = () => {
                         <DescriptionIcon />
                       </Box>
                       <Box>
-                        <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 16, md: 18 }, }}>
+                        <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 16, md: 18 }, }}>
                           Estimated Delivery
-                        </Typography>
-                        <Typography variant="body2" sx={{ color: "#666", fontSize: { xs: 14, md: 16 } }}>
+                        </CustomText>
+                        <CustomText variant="body2" sx={{ color: "#666", fontSize: { xs: 14, md: 16 } }}>
                           Arriving between 3:30 - 4:00 PM today
-                        </Typography>
+                        </CustomText>
                       </Box>
                     </Box>
                   </Box>
@@ -233,12 +234,12 @@ export const TrackOrder = () => {
                       >
                         <DescriptionIcon />
                       </Box>
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 16, md: 18 }, }}>
+                      <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 16, md: 18 }, }}>
                         Shipping to{" "}
-                        <Typography component="span" sx={{ fontWeight: 400 }}>
+                        <CustomText component="span" sx={{ fontWeight: 400 }}>
                           123 sweet line, Lucknow, UP
-                        </Typography>
-                      </Typography>
+                        </CustomText>
+                      </CustomText>
                     </Box>
                   </Box>
                 </Box>

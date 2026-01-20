@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Box,
   Container,
-  Typography,
+  
   Grid,
   Card,
   CardContent,
@@ -123,9 +123,9 @@ export const UserProfile = () => {
           }}
           src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop"
         />
-        <Typography variant="h6" sx={{ fontWeight: 'bold', color: "#2c2c2c" }}>
+        <CustomText variant="h6" sx={{ fontWeight: 'bold', color: "#2c2c2c" }}>
           Aditya Kumar
-        </Typography>
+        </CustomText>
       </Box>
 
       {/* Menu Items */}
@@ -155,7 +155,7 @@ export const UserProfile = () => {
               </ListItemIcon>
               <ListItemText
                 primary={item.label}
-                primaryTypographyProps={{
+                primaryProps={{
                   fontSize: 14,
                   fontWeight: activeTab === item.id ? 600 : 400,
                 }}
@@ -230,7 +230,7 @@ export const UserProfile = () => {
               {activeTab === "dashboard" && (
                 <>
                   <Box sx={{ mb: 4 }}>
-                    <Typography
+                    <CustomText
                       variant="h3"
                       sx={{
                         fontSize: { xs: 28, md: 36 },
@@ -241,8 +241,8 @@ export const UserProfile = () => {
                       }}
                     >
                       Welcome back, Aditya.
-                    </Typography>
-                    <Typography
+                    </CustomText>
+                    <CustomText
                       variant="body1"
                       sx={{
                         fontSize: { xs: 14, md: 16 },
@@ -251,8 +251,8 @@ export const UserProfile = () => {
                       }}
                     >
                       Here's a quick look at your recent activity and rewards.
-                    </Typography>
-                    <Typography
+                    </CustomText>
+                    <CustomText
                       variant="body2"
                       sx={{
                         fontSize: { xs: 13, md: 14 },
@@ -287,7 +287,7 @@ export const UserProfile = () => {
                         shipping and billing addresses
                       </Box>
                       , and edit your password and account details.
-                    </Typography>
+                    </CustomText>
                   </Box>
 
                   <Grid container spacing={3} sx={{ mb: 5 }}>
@@ -307,15 +307,15 @@ export const UserProfile = () => {
                           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                             <LocalShippingIcon sx={{ fontSize: 32, color: "var(--themeColor)", mr: 1.5 }} />
                             <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                              <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
                                 Recent Order
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: "#666", mb: 1 }}>
+                              </CustomText>
+                              <CustomText variant="body2" sx={{ color: "#666", mb: 1 }}>
                                 Order ID: #ORD-001
-                              </Typography>
+                              </CustomText>
                             </Box>
                           </Box>
-                          <Typography
+                          <CustomText
                             variant="body2"
                             sx={{
                               color: "#4caf50",
@@ -324,7 +324,7 @@ export const UserProfile = () => {
                             }}
                           >
                             Order Status - Out for Delivery
-                          </Typography>
+                          </CustomText>
                           <Link to="/track-order">
                             <Button
                               variant="contained"
@@ -363,17 +363,17 @@ export const UserProfile = () => {
                           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                             <LocalOfferIcon sx={{ fontSize: 32, color: "var(--themeColor)", mr: 1.5 }} />
                             <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                              <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
                                 Loyalty Points
-                              </Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 700, color: "#2c2c2c", mb: 1 }}>
+                              </CustomText>
+                              <CustomText variant="body2" sx={{ fontWeight: 700, color: "#2c2c2c", mb: 1 }}>
                                 1250
-                              </Typography>
+                              </CustomText>
                             </Box>
                           </Box>
-                          <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                          <CustomText variant="body2" sx={{ color: "#666", mb: 2 }}>
                             You're 250 points away from a free pastry!
-                          </Typography>
+                          </CustomText>
                           <Button
                             variant="contained"
                             sx={{
@@ -410,17 +410,17 @@ export const UserProfile = () => {
                           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
                             <LocalOfferIcon sx={{ fontSize: 32, color: "var(--themeColor)", mr: 1.5 }} />
                             <Box>
-                              <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                              <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
                                 Available Coupons
-                              </Typography>
-                              <Typography variant="body2" sx={{ fontWeight: 700, color: "#2c2c2c", mb: 1 }}>
+                              </CustomText>
+                              <CustomText variant="body2" sx={{ fontWeight: 700, color: "#2c2c2c", mb: 1 }}>
                                 3
-                              </Typography>
+                              </CustomText>
                             </Box>
                           </Box>
-                          <Typography variant="body2" sx={{ color: "#666", mb: 2 }}>
+                          <CustomText variant="body2" sx={{ color: "#666", mb: 2 }}>
                             Including a 20% off your next purchase.
-                          </Typography>
+                          </CustomText>
                           <Button
                             onClick={() => setActiveTab("coupons")}
                             variant="contained"
@@ -444,9 +444,9 @@ export const UserProfile = () => {
                   </Grid>
 
                   <Box sx={{ mb: 4, border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 2, sm: 3, md: 5 } }}>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 3 }, fontSize: { xs: 18, md: 24 } }}>
+                    <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 3 }, fontSize: { xs: 18, md: 24 } }}>
                       Your Favorite Items
-                    </Typography>
+                    </CustomText>
                     <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
                       {favoriteItems.map((item) => (
                         <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item.id}>
@@ -475,12 +475,12 @@ export const UserProfile = () => {
                               }}
                             />
                             <Box textAlign="center" sx={{ p: { xs: 1, md: 2 } }}>
-                              <Typography variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 12, md: 14 } }}>
+                              <CustomText variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 12, md: 14 } }}>
                                 {item.name}
-                              </Typography>
-                              <Typography variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, fontSize: { xs: 13, md: 14 } }}>
+                              </CustomText>
+                              <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, fontSize: { xs: 13, md: 14 } }}>
                                 {item.price}
-                              </Typography>
+                              </CustomText>
                             </Box>
                           </Box>
                         </Grid>
@@ -493,7 +493,7 @@ export const UserProfile = () => {
               {/* Order History Section */}
               {activeTab === "order-history" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 24, md: 32 },
@@ -503,7 +503,7 @@ export const UserProfile = () => {
                     }}
                   >
                     Order History
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={3}>
                     {orders?.map((order) => (
                       <Grid size={{ xs: 12 }} key={order.id}>
@@ -521,18 +521,18 @@ export const UserProfile = () => {
                           <CardContent sx={{ p: 3 }}>
                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 2 }}>
                               <Box>
-                                <Typography variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: 1 }}>
+                                <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: 1 }}>
                                   {order.id}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: "#666", mb: 0.5 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
                                   Date: {order.date}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: "#666", mb: 0.5 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
                                   Items: {order.items}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: "#666", fontWeight: 600, mt: 1 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ color: "#666", fontWeight: 600, mt: 1 }}>
                                   Total: {order.total}
-                                </Typography>
+                                </CustomText>
                               </Box>
                               <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
                                 <Box
@@ -588,7 +588,7 @@ export const UserProfile = () => {
               {/* Downloads Section */}
               {activeTab === "downloads" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 24, md: 32 },
@@ -598,7 +598,7 @@ export const UserProfile = () => {
                     }}
                   >
                     Downloads
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={3}>
                     {downloads?.map((download) => (
                       <Grid size={{ xs: 12 }} key={download.id}>
@@ -618,12 +618,12 @@ export const UserProfile = () => {
                               <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                                 <DownloadIcon sx={{ fontSize: 40, color: "var(--themeColor)" }} />
                                 <Box>
-                                  <Typography variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
+                                  <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
                                     {download.name}
-                                  </Typography>
-                                  <Typography variant="body2" sx={{ color: "#666" }}>
+                                  </CustomText>
+                                  <CustomText variant="body2" sx={{ color: "#666" }}>
                                     Downloaded on {download.date} • {download.type}
-                                  </Typography>
+                                  </CustomText>
                                 </Box>
                               </Box>
                               <Button
@@ -656,7 +656,7 @@ export const UserProfile = () => {
               {activeTab === "addresses" && (
                 <Box>
                   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4, flexWrap: "wrap", gap: 2 }}>
-                    <Typography
+                    <CustomText
                       variant="h4"
                       sx={{
                         fontSize: { xs: 24, md: 32 },
@@ -665,7 +665,7 @@ export const UserProfile = () => {
                       }}
                     >
                       Saved Addresses
-                    </Typography>
+                    </CustomText>
                     <Button
                       startIcon={<AddIcon />}
                       variant="contained"
@@ -703,9 +703,9 @@ export const UserProfile = () => {
                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
                               <Box>
                                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                                  <Typography variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)" }}>
+                                  <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)" }}>
                                     {address.type}
-                                  </Typography>
+                                  </CustomText>
                                   {address.isDefault && (
                                     <Box
                                       sx={{
@@ -722,15 +722,15 @@ export const UserProfile = () => {
                                     </Box>
                                   )}
                                 </Box>
-                                <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
+                                <CustomText variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
                                   {address.name}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: "#666", mb: 0.5 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
                                   {address.phone}
-                                </Typography>
-                                <Typography variant="body2" sx={{ color: "#666", lineHeight: 1.6 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ color: "#666", lineHeight: 1.6 }}>
                                   {address.address}
-                                </Typography>
+                                </CustomText>
                               </Box>
                             </Box>
                             <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
@@ -778,7 +778,7 @@ export const UserProfile = () => {
               {/* Account Details Section */}
               {activeTab === "account" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 24, md: 32 },
@@ -788,7 +788,7 @@ export const UserProfile = () => {
                     }}
                   >
                     Account Details
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={3} gap={1}>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <CustomTextField
@@ -830,9 +830,9 @@ export const UserProfile = () => {
                       />
                     </Grid>
                     <Grid size={{ xs: 12 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 600, color: "var(--themeColor)", mb: 2 }}>
+                      <CustomText variant="h6" sx={{ fontWeight: 600, color: "var(--themeColor)", mb: 2 }}>
                         Change Password
-                      </Typography>
+                      </CustomText>
                     </Grid>
                     <Grid size={{ xs: 12, md: 6 }}>
                       <CustomTextField
@@ -898,7 +898,7 @@ export const UserProfile = () => {
               {/* My Coupons Section */}
               {activeTab === "coupons" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 24, md: 32 },
@@ -908,7 +908,7 @@ export const UserProfile = () => {
                     }}
                   >
                     My Coupons
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={3} gap={1}>
                     {coupons?.map((coupon) => (
                       <Grid size={{ xs: 12, md: 3 }} key={coupon.id}>
@@ -928,15 +928,15 @@ export const UserProfile = () => {
                           <CardContent sx={{ p: 3 }}>
                             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
                               <Box>
-                                <Typography variant="h5" sx={{ fontWeight: 800, mb: 1, fontSize: { xs: 24, md: 28 } }}>
+                                <CustomText variant="h5" sx={{ fontWeight: 800, mb: 1, fontSize: { xs: 24, md: 28 } }}>
                                   {coupon.discount} OFF
-                                </Typography>
-                                <Typography variant="body1" sx={{ mb: 1, opacity: 0.95 }}>
+                                </CustomText>
+                                <CustomText variant="body1" sx={{ mb: 1, opacity: 0.95 }}>
                                   {coupon.description}
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontSize: 12, opacity: 0.9 }}>
+                                </CustomText>
+                                <CustomText variant="body2" sx={{ fontSize: 12, opacity: 0.9 }}>
                                   Valid until: {coupon.validUntil}
-                                </Typography>
+                                </CustomText>
                               </Box>
                               <Box
                                 sx={{
@@ -947,9 +947,9 @@ export const UserProfile = () => {
                                   backdropFilter: "blur(10px)",
                                 }}
                               >
-                                <Typography variant="body2" sx={{ fontWeight: 700, fontSize: 12 }}>
+                                <CustomText variant="body2" sx={{ fontWeight: 700, fontSize: 12 }}>
                                   {coupon.code}
-                                </Typography>
+                                </CustomText>
                               </Box>
                             </Box>
                             <Button
@@ -981,7 +981,7 @@ export const UserProfile = () => {
               {/* Wishlist Section */}
               {activeTab === "wishlist" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 20, md: 32 },
@@ -991,7 +991,7 @@ export const UserProfile = () => {
                     }}
                   >
                     My Wishlist
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
                     {favoriteItems.map((item) => (
                       <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item.id}>
@@ -1038,12 +1038,12 @@ export const UserProfile = () => {
                             </IconButton>
                           </Box>
                           <CardContent sx={{ p: { xs: 1.5, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                            <Typography variant="body1" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 13, md: 16 } }}>
+                            <CustomText variant="body1" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 13, md: 16 } }}>
                               {item.name}
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: { xs: 1.5, md: 2 }, fontSize: { xs: 13, md: 14 } }}>
+                            </CustomText>
+                            <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: { xs: 1.5, md: 2 }, fontSize: { xs: 13, md: 14 } }}>
                               {item.price}
-                            </Typography>
+                            </CustomText>
                             <Button
                               fullWidth
                               variant="contained"
@@ -1074,7 +1074,7 @@ export const UserProfile = () => {
               {/* Settings Section */}
               {activeTab === "settings" && (
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h4"
                     sx={{
                       fontSize: { xs: 24, md: 32 },
@@ -1084,12 +1084,12 @@ export const UserProfile = () => {
                     }}
                   >
                     Settings
-                  </Typography>
+                  </CustomText>
                   <Grid container spacing={3}>
                     <Grid size={{ xs: 12 }}>
-                      <Typography variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: 2 }}>
+                      <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: 2 }}>
                         Account Actions
-                      </Typography>
+                      </CustomText>
                       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
                         <Button
                           variant="outlined"

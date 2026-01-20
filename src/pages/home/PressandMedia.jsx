@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
+import { Box, Container,  Grid, Card, CardContent, Button } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -63,17 +64,17 @@ export const PressandMedia = () => {
           transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
         }}
       >
-        <Typography variant="h1" sx={{ fontSize: { xs: 28, sm: 36, md: 56 }, fontWeight: 700, color: "#fff", mb: 2, }}>
+        <CustomText variant="h1" sx={{ fontSize: { xs: 28, sm: 36, md: 56 }, fontWeight: 700, color: "#fff", mb: 2, }}>
           PRESS AND MEDIA
-        </Typography>
+        </CustomText>
       </Box>
       <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 2.5 }, mt: { md: 3.125 }, mb: { md: 12 } }}>
         {/* ================= PRESS & MEDIA UI SECTION ================= */}
         <Container maxWidth="lg" sx={{ py: { xs: 4, md: 0 } }}>
           <Box sx={{ textAlign: "center", mb: 4 }}>
-            <Typography sx={{ fontSize: { xs: 14, md: 15 }, color: "#777", mb: 2 }}>
+            <CustomText sx={{ fontSize: { xs: 14, md: 15 }, color: "#777", mb: 2 }}>
               Official media resources from Mr Brown Bakery and Food Products Pvt Ltd
-            </Typography>
+            </CustomText>
 
             <Box sx={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
               <Button variant="contained" sx={{ background: "#FFB5A1", color: "#fff", textTransform: "none", px: { xs: 3, md: 4 }, py: 1.2, fontWeight: 600, "&:hover": { background: "#d66a1f" } }}>
@@ -102,18 +103,18 @@ export const PressandMedia = () => {
 
 
           {/* About Danbro */}
-          <Typography sx={{ fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 1 }}>About Danbro</Typography>
-          <Typography sx={{ fontSize: { xs: 13, md: 15 }, color: "#555", maxWidth: "800px", lineHeight: 1.7, mb: 4 }}>
+          <CustomText sx={{ fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 1 }}>About Danbro</CustomText>
+          <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#555", maxWidth: "800px", lineHeight: 1.7, mb: 4 }}>
             Danbro is a premium bakery brand dedicated to crafting exceptional baked goods.
             We collaborate with journalists, bloggers, and influencers to share our story and products with a wider audience.
-          </Typography>
+          </CustomText>
 
 
           {/* Media Inquiries Title */}
-          <Typography sx={{ fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 1 }}>Media Inquiries</Typography>
-          <Typography sx={{ fontSize: { xs: 13, md: 15 }, color: "#555", mb: 3 }}>
+          <CustomText sx={{ fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 1 }}>Media Inquiries</CustomText>
+          <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#555", mb: 3 }}>
             For press releases, interviews, media coverage, or collaboration requests, please contact our media relations team:
-          </Typography>
+          </CustomText>
 
 
           {/* Media Contact Cards */}
@@ -131,8 +132,8 @@ export const PressandMedia = () => {
                   "&:hover": { transform: "translateY(-5px)" }
                 }}>
                   {item.icon}
-                  <Typography sx={{ fontWeight: 700, mt: 1 }}>{item.title}</Typography>
-                  <Typography sx={{ fontSize: { xs: 12, md: 14 }, color: "#666", mt: 0.5 }}>{item.text}</Typography>
+                  <CustomText sx={{ fontWeight: 700, mt: 1 }}>{item.title}</CustomText>
+                  <CustomText sx={{ fontSize: { xs: 12, md: 14 }, color: "#666", mt: 0.5 }}>{item.text}</CustomText>
                 </Box>
               </Grid>
             ))}
@@ -140,7 +141,7 @@ export const PressandMedia = () => {
 
 
           {/* What We Offer Section */}
-          <Typography sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700 }}>What We Offer</Typography>
+          <CustomText sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700 }}>What We Offer</CustomText>
 
           <Grid container spacing={2} sx={{ mt: 2 }}>
             {[
@@ -153,16 +154,16 @@ export const PressandMedia = () => {
               <Grid item size={{ xs: 6, sm: 4, md: 2.4 }} key={i}>
                 <Box sx={{ textAlign: "center" }}>
                   <img src={item.img} style={{ width: "100%", height: 150, borderRadius: 10 }} />
-                  <Typography sx={{ mt: 1, fontWeight: 600, fontSize: 14 }}>{item.title}</Typography>
+                  <CustomText sx={{ mt: 1, fontWeight: 600, fontSize: 14 }}>{item.title}</CustomText>
                 </Box>
               </Grid>
             ))}
           </Grid>
 
           {/* Recent Highlights */}
-          <Typography sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 2 }}>
+          <CustomText sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 2 }}>
             Recent Highlights
-          </Typography>
+          </CustomText>
 
           <Box sx={{
             background: "#FCFAF7",
@@ -183,17 +184,17 @@ export const PressandMedia = () => {
                   <Redeem sx={{ fontSize: 20 }} />
                 </Box>
                 <Box>
-                  <Typography sx={{ fontWeight: 700, fontSize: 14 }}>{item.title}</Typography>
-                  <Typography sx={{ fontSize: 12, color: "#666" }}>{item.text}</Typography>
+                  <CustomText sx={{ fontWeight: 700, fontSize: 14 }}>{item.title}</CustomText>
+                  <CustomText sx={{ fontSize: 12, color: "#666" }}>{item.text}</CustomText>
                 </Box>
               </Box>
             ))}
           </Box>
 
           <Box sx={{ textAlign: "center" }}>
-            <Typography sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 2 }}>
+            <CustomText sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 2 }}>
               For press inquiries, interviews, or collaborations, feel free to reach out.
-            </Typography>
+            </CustomText>
             <Button variant="outlined"
               sx={{
                 background: "#FFB5A1",

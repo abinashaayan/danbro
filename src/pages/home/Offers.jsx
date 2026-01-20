@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Button, Chip } from "@mui/material";
+import { Box, Container,  Grid, Card, CardContent, Button, Chip } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import jointeams from "../../assets/jointeams.png";
 import ourculture from "../../assets/ourculture.png";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
@@ -106,7 +107,7 @@ export const Offers = () => {
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <Typography
+          <CustomText
             variant="h1"
             sx={{
               fontSize: { xs: 28, sm: 36, md: 56 },
@@ -117,8 +118,8 @@ export const Offers = () => {
             }}
           >
             Offers & Schemes
-          </Typography>
-          <Typography
+          </CustomText>
+          <CustomText
             variant="body1"
             sx={{
               fontSize: { xs: 13, sm: 14, md: 16 },
@@ -129,7 +130,7 @@ export const Offers = () => {
             }}
           >
             At Danbro Bakery, we're more than just a team; we're a family. We're passionate about crafting delicious baked goods and creating memorable experiences for our customers. If you share our love for baking and community, we'd love to hear from you.
-          </Typography>
+          </CustomText>
           <Button
             variant="contained"
             sx={{
@@ -162,7 +163,7 @@ export const Offers = () => {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography
+            <CustomText
               variant="h2"
               sx={{
                 fontSize: { xs: 22, sm: 24, md: 32 },
@@ -172,8 +173,8 @@ export const Offers = () => {
               }}
             >
               Our Culture
-            </Typography>
-            <Typography
+            </CustomText>
+            <CustomText
               variant="body1"
               sx={{
                 fontSize: { xs: 13, sm: 14, md: 16 },
@@ -184,7 +185,7 @@ export const Offers = () => {
               At Danbro Bakery, we foster a collaborative and supportive environment where every team member is valued.
               We believe in continuous learning, growth, and celebrating our successes together. Our commitment to quality
               and customer satisfaction drives everything we do.
-            </Typography>
+            </CustomText>
             <Box
               sx={{
                 width: "100%",
@@ -215,7 +216,7 @@ export const Offers = () => {
 
 
         <Box ref={sectionRefs.benefits} sx={{ mt: { xs: 4, md: 5 } }}>
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 22, sm: 24, md: 32 },
@@ -225,7 +226,7 @@ export const Offers = () => {
             }}
           >
             Benefits
-          </Typography>
+          </CustomText>
           <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
             {whyWorkWithUs?.map((item, index) => (
               <Grid item xs={12} sm={6} md={3} key={index}>
@@ -275,7 +276,7 @@ export const Offers = () => {
                         transition: "0.3s",
                       }}
                     />
-                    <Typography
+                    <CustomText
                       variant="body1"
                       sx={{
                         fontWeight: 700,
@@ -284,7 +285,7 @@ export const Offers = () => {
                       }}
                     >
                       {item.title}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 </Box>
               </Grid>
@@ -294,7 +295,7 @@ export const Offers = () => {
 
         {/* Schemes Section */}
         <Box ref={sectionRefs.positions} sx={{ py: { xs: 4, md: 5 }, mt: { xs: 4, md: 5 } }}>
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 22, sm: 24, md: 32 },
@@ -303,7 +304,7 @@ export const Offers = () => {
             }}
           >
             Open Positions
-          </Typography>
+          </CustomText>
 
           {schemes?.map((scheme, index) => (
             <Box
@@ -319,7 +320,7 @@ export const Offers = () => {
               }}
             >
               <Box sx={{ flex: 1, textAlign: { xs: "center", md: "start" }, width: "100%" }}>
-                <Typography
+                <CustomText
                   variant="h5"
                   sx={{
                     fontWeight: 700,
@@ -329,9 +330,9 @@ export const Offers = () => {
                   }}
                 >
                   {scheme.title}
-                </Typography>
+                </CustomText>
 
-                <Typography
+                <CustomText
                   sx={{
                     color: "#666",
                     mb: 2,
@@ -341,7 +342,7 @@ export const Offers = () => {
                   }}
                 >
                   {scheme.description}
-                </Typography>
+                </CustomText>
 
                 <Button
                   variant="contained"

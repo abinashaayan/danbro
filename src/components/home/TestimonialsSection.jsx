@@ -1,4 +1,5 @@
-import { Box, Typography, IconButton } from "@mui/material";
+import { Box,  IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState, useEffect, useRef } from "react";
@@ -162,7 +163,7 @@ export const TestimonialsSection = () => {
                 }}
             />
 
-            <Typography
+            <CustomText
                 sx={{
                     fontSize: { xs: 22, sm: 26, md: 32 },
                     fontWeight: 800,
@@ -172,7 +173,7 @@ export const TestimonialsSection = () => {
                 }}
             >
                 Here is what our Clients are saying About us
-            </Typography>
+            </CustomText>
             <IconButton
                 onClick={prevTestimonial}
                 sx={{
@@ -289,7 +290,7 @@ export const TestimonialsSection = () => {
                     }}
                 />
                 <Box sx={{ position: "relative", zIndex: 2 }}>
-                    <Typography
+                    <CustomText
                         sx={{
                             fontSize: { xs: 18, sm: 20, md: 24 },
                             fontWeight: 700,
@@ -298,9 +299,9 @@ export const TestimonialsSection = () => {
                         }}
                     >
                         {testimonialsList[active].title}
-                    </Typography>
+                    </CustomText>
 
-                    <Typography
+                    <CustomText
                         sx={{
                             fontSize: { xs: 14, md: 16 },
                             color: "#555",
@@ -309,7 +310,7 @@ export const TestimonialsSection = () => {
                         }}
                     >
                         {testimonialsList[active].message}
-                    </Typography>
+                    </CustomText>
                 </Box>
             </Box>
 
@@ -384,7 +385,7 @@ export const TestimonialsSection = () => {
             </Box>
 
             {/* ACTIVE USER NAME */}
-            <Typography
+            <CustomText
                 sx={{
                     mt: { xs: 2, md: 3 },
                     fontSize: { xs: 18, md: 22 },
@@ -393,7 +394,7 @@ export const TestimonialsSection = () => {
                 }}
             >
                 {testimonialsList[active].name}
-            </Typography>
+            </CustomText>
         </Box >
     );
 };

@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Button } from "@mui/material";
+import { Box, Container,  Grid, Button } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import cateringEvents from "../../assets/createevents.png";
 import createevents1 from "../../assets/createevents1.png";
 import { useState, useEffect, useRef } from "react";
@@ -99,7 +100,7 @@ export const CateringEvents = () => {
           transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
         }}
       >
-        <Typography
+        <CustomText
           variant="h1"
           sx={{
             fontSize: { xs: 28, sm: 36, md: 42, lg: 56 },
@@ -109,7 +110,7 @@ export const CateringEvents = () => {
           }}
         >
           Catering & Events
-        </Typography>
+        </CustomText>
       </Box>
 
       {/* Event Types Section */}
@@ -134,7 +135,7 @@ export const CateringEvents = () => {
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <Typography
+          <CustomText
             variant="h1"
             sx={{
               fontSize: { xs: 22, sm: 28, md: 36, lg: 50 },
@@ -146,8 +147,8 @@ export const CateringEvents = () => {
             }}
           >
             Make your celebrations sweeter with Danbro's premium catering services!
-          </Typography>
-          <Typography
+          </CustomText>
+          <CustomText
             variant="body1"
             sx={{
               fontSize: { xs: 11, sm: 12, md: 13, lg: 14 },
@@ -158,7 +159,7 @@ export const CateringEvents = () => {
             }}
           >
             Elevate your event with our exquisite baked goods and personalized service.
-          </Typography>
+          </CustomText>
           <Button
             variant="contained"
             sx={{
@@ -192,7 +193,7 @@ export const CateringEvents = () => {
               px: { xs: 0, sm: 0, md: 1, lg: 0 },
             }}
           >
-            <Typography
+            <CustomText
               variant="h2"
               sx={{
                 fontSize: { xs: 20, sm: 24, md: 26, lg: 30 },
@@ -203,9 +204,9 @@ export const CateringEvents = () => {
               }}
             >
               Why Choose Danbro for Catering?
-            </Typography>
+            </CustomText>
 
-            <Typography
+            <CustomText
               variant="body1"
               sx={{
                 color: "#555",
@@ -218,7 +219,7 @@ export const CateringEvents = () => {
             >
               Danbro Bakery brings a touch of elegance and deliciousness to every event.
               Our commitment to quality, customization, and exceptional service ensures your celebration is unforgettable. We offer:
-            </Typography>
+            </CustomText>
 
             <Box sx={{ mt: 2 }}>
               {[
@@ -251,9 +252,9 @@ export const CateringEvents = () => {
                       flexShrink: 0,
                     }}
                   />
-                  <Typography sx={{ color: "#444", fontSize: { xs: 13, sm: 14, md: 14, lg: 15 } }}>
+                  <CustomText sx={{ color: "#444", fontSize: { xs: 13, sm: 14, md: 14, lg: 15 } }}>
                     {item}
-                  </Typography>
+                  </CustomText>
                 </Box>
               ))}
             </Box>
@@ -263,7 +264,7 @@ export const CateringEvents = () => {
 
       <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4, lg: 4 }, py: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
         <Box ref={sectionRefs.specialties} sx={{ px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 20, sm: 24, md: 26, lg: 30 },
@@ -274,7 +275,7 @@ export const CateringEvents = () => {
             }}
           >
             Our Catering Specialties
-          </Typography>
+          </CustomText>
 
           <Grid container spacing={{ xs: 2, sm: 2, md: 2.5, lg: 3 }}>
             {specialties.map((item, index) => (
@@ -318,7 +319,7 @@ export const CateringEvents = () => {
                     />
                   </Box>
 
-                  <Typography
+                  <CustomText
                     sx={{
                       fontWeight: 700,
                       fontSize: { xs: 15, sm: 16, md: 15, lg: 16 },
@@ -326,8 +327,8 @@ export const CateringEvents = () => {
                     }}
                   >
                     {item.title}
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     sx={{
                       fontSize: { xs: 12, sm: 13, md: 12.5, lg: 13 },
                       color: "#666",
@@ -336,7 +337,7 @@ export const CateringEvents = () => {
                     }}
                   >
                     {item.description}
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Grid>
             ))}
@@ -354,12 +355,12 @@ export const CateringEvents = () => {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography variant="h2" sx={{ fontSize: { xs: 20, sm: 24, md: 28, lg: 32 }, fontWeight: 700, color: "#2c2c2c", mb: 1, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
+            <CustomText variant="h2" sx={{ fontSize: { xs: 20, sm: 24, md: 28, lg: 32 }, fontWeight: 700, color: "#2c2c2c", mb: 1, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
               Get in Touch
-            </Typography>
-            <Typography variant="body1" sx={{ fontSize: { xs: 13, sm: 14, md: 15, lg: 16 }, color: "#666", lineHeight: 1.8, mb: { xs: 3, sm: 3.5, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
+            </CustomText>
+            <CustomText variant="body1" sx={{ fontSize: { xs: 13, sm: 14, md: 15, lg: 16 }, color: "#666", lineHeight: 1.8, mb: { xs: 3, sm: 3.5, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
               Planning an event? Contact us today to discuss your requirements and get a customized quote. Our team is ready to help make your celebration perfect!
-            </Typography>
+            </CustomText>
             <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 4 }}>
               <Grid item xs={12} sm={6} md={4}>
                 <Box
@@ -382,7 +383,7 @@ export const CateringEvents = () => {
                     },
                   }}
                 >
-                  <Typography
+                  <CustomText
                     variant="h6"
                     sx={{
                       fontWeight: 700,
@@ -391,8 +392,8 @@ export const CateringEvents = () => {
                     }}
                   >
                     Visit Us
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     variant="body2"
                     sx={{
                       color: "#666",
@@ -400,7 +401,7 @@ export const CateringEvents = () => {
                     }}
                   >
                     B-35, Sector-P, Aliganj, Lucknow 226024
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -424,7 +425,7 @@ export const CateringEvents = () => {
                     },
                   }}
                 >
-                  <Typography
+                  <CustomText
                     variant="h6"
                     sx={{
                       fontWeight: 700,
@@ -433,8 +434,8 @@ export const CateringEvents = () => {
                     }}
                   >
                     Call Us
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     variant="body2"
                     sx={{
                       color: "#666",
@@ -442,7 +443,7 @@ export const CateringEvents = () => {
                     }}
                   >
                     +91-7309010623
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Grid>
               <Grid item xs={12} sm={6} md={4}>
@@ -465,12 +466,12 @@ export const CateringEvents = () => {
                     },
                   }}
                 >
-                  <Typography variant="h6" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 15, sm: 16, md: 17, lg: 18 }, }}>
+                  <CustomText variant="h6" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 15, sm: 16, md: 17, lg: 18 }, }}>
                     Email Us
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "#666", fontSize: { xs: 12, sm: 13, md: 13, lg: 14 }, }}>
+                  </CustomText>
+                  <CustomText variant="body2" sx={{ color: "#666", fontSize: { xs: 12, sm: 13, md: 13, lg: 14 }, }}>
                     hr@mrbrownbakery.com
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Grid>
             </Grid>

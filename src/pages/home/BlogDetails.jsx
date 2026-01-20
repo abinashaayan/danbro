@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Container, Typography, Grid, Button, Divider } from "@mui/material";
+import { Box, Container,  Grid, Button, Divider } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useNavigate, useLocation } from "react-router-dom";
 import createevents1 from "../../assets/createevents1.png";
@@ -68,7 +69,7 @@ export default function BlogDetails() {
 
   const blog = state;
   // fallback if no data (optional)
-  if (!blog) return <Typography>No Blog Data Found</Typography>;
+  if (!blog) return <CustomText>No Blog Data Found</CustomText>;
 
   return (
     <Box sx={{ backgroundColor: "#fff", pb: { xs: 8, md: 10 }, p: { xs: 1.25, md: 0 } }}>
@@ -146,7 +147,7 @@ export default function BlogDetails() {
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <Typography
+          <CustomText
             sx={{
               fontSize: { xs: 20, sm: 24, md: 26 },
               fontWeight: 700,
@@ -155,9 +156,9 @@ export default function BlogDetails() {
             }}
           >
             {blog.title}
-          </Typography>
+          </CustomText>
 
-          <Typography
+          <CustomText
             sx={{
               fontSize: { xs: 10, sm: 11, md: 11 },
               color: "#8a8a8a",
@@ -165,7 +166,7 @@ export default function BlogDetails() {
             }}
           >
             {blog.date} • POSTED BY {blog.author}
-          </Typography>
+          </CustomText>
         </Box>
       </Container>
 
@@ -200,11 +201,11 @@ export default function BlogDetails() {
             transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
           }}
         >
-          <Typography sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 3 }}>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 3 }}>
             {blog.description}
-          </Typography>
+          </CustomText>
 
-          <Typography
+          <CustomText
             sx={{
               fontWeight: 700,
               mb: 1,
@@ -212,11 +213,11 @@ export default function BlogDetails() {
             }}
           >
             The Charm of Handmade Goodness
-          </Typography>
+          </CustomText>
 
-          <Typography sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
             In a world full of factory-made snacks...
-          </Typography>
+          </CustomText>
 
           <Box
             component="ul"
@@ -232,7 +233,7 @@ export default function BlogDetails() {
             <li>Variety to Crave – From classic choco-chip to...</li>
           </Box>
 
-          <Typography
+          <CustomText
             sx={{
               fontWeight: 700,
               mb: 1,
@@ -240,10 +241,10 @@ export default function BlogDetails() {
             }}
           >
             Great for Gifting or Snacking
-          </Typography>
-          <Typography sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
+          </CustomText>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
             Whether you're filling a jar at home, packing a lunchbox, or choosing a thoughtful gift, Danbro handmade cookies are a perfect pick. They're ideal for:
-          </Typography>
+          </CustomText>
 
           <Box
             component="ul"
@@ -259,7 +260,7 @@ export default function BlogDetails() {
             <li>Little everyday indulgences</li>
           </Box>
 
-          <Typography
+          <CustomText
             sx={{
               fontWeight: 700,
               mb: 1,
@@ -267,12 +268,12 @@ export default function BlogDetails() {
             }}
           >
             Available Fresh In-Store & Online
-          </Typography>
-          <Typography sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
+          </CustomText>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
             Danbro cookies are available at all Mr Brown Bakery outlets and through our online store. Packaged with care, they stay fresh, crisp, and ready to enjoy anytime.
-          </Typography>
+          </CustomText>
 
-          <Typography
+          <CustomText
             sx={{
               fontWeight: 700,
               mb: 1,
@@ -280,10 +281,10 @@ export default function BlogDetails() {
             }}
           >
             Every Bite Tells a Story
-          </Typography>
-          <Typography sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
+          </CustomText>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 15, md: 15 }, mb: 2 }}>
             With Danbro handmade cookies, you're not just eating a snack — you're tasting tradition, craftsmanship, and a whole lot of love.
-          </Typography>
+          </CustomText>
 
           {/* Divider */}
           <Box sx={{ height: 1, width: "100%", background: "#ddd", my: { xs: 3, md: 4 } }} />
@@ -298,7 +299,7 @@ export default function BlogDetails() {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography
+            <CustomText
               sx={{
                 fontSize: { xs: 16, sm: 17, md: 18 },
                 fontWeight: 700,
@@ -306,8 +307,8 @@ export default function BlogDetails() {
               }}
             >
               Leave a Reply
-            </Typography>
-            <Typography
+            </CustomText>
+            <CustomText
               sx={{
                 fontSize: { xs: 11, sm: 12, md: 12 },
                 mb: 2,
@@ -315,7 +316,7 @@ export default function BlogDetails() {
               }}
             >
               Your email address will not be published. Required fields are marked *
-            </Typography>
+            </CustomText>
 
             <textarea
               placeholder="Comment*"
@@ -359,9 +360,9 @@ export default function BlogDetails() {
               }}
             >
               <input type="checkbox" />
-              <Typography sx={{ fontSize: { xs: 11, sm: 12, md: 12 } }}>
+              <CustomText sx={{ fontSize: { xs: 11, sm: 12, md: 12 } }}>
                 Save my name, email, and website for next time.
-              </Typography>
+              </CustomText>
             </Box>
 
             <Button
@@ -396,7 +397,7 @@ export default function BlogDetails() {
               transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
             }}
           >
-            <Typography
+            <CustomText
               variant="h2"
               sx={{
                 fontSize: { xs: 20, sm: 24, md: 30 },
@@ -406,7 +407,7 @@ export default function BlogDetails() {
               }}
             >
               Our Catering Specialties
-            </Typography>
+            </CustomText>
 
           <Grid container spacing={{ xs: 2, sm: 2, md: 2 }}>
             {specialties.map((item, index) => (
@@ -450,7 +451,7 @@ export default function BlogDetails() {
                     />
                   </Box>
 
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 12, sm: 13, md: 13 },
                       color: "#666",
@@ -459,8 +460,8 @@ export default function BlogDetails() {
                     }}
                   >
                     {item.description}
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     sx={{
                       fontSize: { xs: 12, sm: 13, md: 13 },
                       color: "#666",
@@ -469,7 +470,7 @@ export default function BlogDetails() {
                     }}
                   >
                     {item.title}
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Grid>
             ))}

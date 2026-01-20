@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
+import { Box, Container,  Grid, Card, CardContent, Button } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import EnergySavingsLeafIcon from "@mui/icons-material/EnergySavingsLeaf";
@@ -106,7 +107,7 @@ export const Career = () => {
             px: { xs: 0, sm: 0, md: 1, lg: 0 },
           }}
         >
-          <Typography
+          <CustomText
             variant="h4"
             sx={{
               fontWeight: 700,
@@ -116,8 +117,8 @@ export const Career = () => {
             }}
           >
             Join the Danbro Bakery Team
-          </Typography>
-          <Typography
+          </CustomText>
+          <CustomText
             variant="body1"
             sx={{
               fontSize: { xs: 13, sm: 14, md: 15, lg: 16 },
@@ -126,7 +127,7 @@ export const Career = () => {
             }}
           >
             At Danbro Bakery, we're more than just a team; we're a family. We're passionate about crafting delicious baked goods and creating a positive work environment where everyone can thrive. If you're looking for a rewarding career in the baking industry, we invite you to explore opportunities with us.
-          </Typography>
+          </CustomText>
         </Box>
       </Container>
 
@@ -140,7 +141,7 @@ export const Career = () => {
             px: { xs: 0, sm: 0, md: 1, lg: 0 },
           }}
         >
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
@@ -150,7 +151,7 @@ export const Career = () => {
             }}
           >
             Why Work With Us?
-          </Typography>
+          </CustomText>
           <Grid container spacing={{ xs: 2, sm: 2, md: 2.5, lg: 3 }}>
             {whyWorkWithUs.map((item, index) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
@@ -193,7 +194,7 @@ export const Career = () => {
                       />
                     </Box>
 
-                    <Typography
+                    <CustomText
                       variant="h6"
                       sx={{
                         fontWeight: 700,
@@ -204,9 +205,9 @@ export const Career = () => {
                       }}
                     >
                       {item.title}
-                    </Typography>
+                    </CustomText>
 
-                    <Typography
+                    <CustomText
                       variant="body2"
                       sx={{
                         color: "#666",
@@ -216,7 +217,7 @@ export const Career = () => {
                       }}
                     >
                       {item.description}
-                    </Typography>
+                    </CustomText>
                   </CardContent>
                 </Card>
               </Grid>
@@ -235,7 +236,7 @@ export const Career = () => {
             px: { xs: 0, sm: 0, md: 1, lg: 0 },
           }}
         >
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
@@ -245,7 +246,7 @@ export const Career = () => {
             }}
           >
             Current Openings
-          </Typography>
+          </CustomText>
           <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
             {currentOpenings.map((job, index) => {
               const IconComponent = job.icon;
@@ -305,7 +306,7 @@ export const Career = () => {
                           />
                         </Box>
                         <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography
+                          <CustomText
                             variant="h6"
                             sx={{
                               fontWeight: 700,
@@ -315,8 +316,8 @@ export const Career = () => {
                             }}
                           >
                             {job.title}
-                          </Typography>
-                          <Typography
+                          </CustomText>
+                          <CustomText
                             variant="body2"
                             sx={{
                               color: "#666",
@@ -324,7 +325,7 @@ export const Career = () => {
                             }}
                           >
                             {job.description}
-                          </Typography>
+                          </CustomText>
                         </Box>
                       </Box>
                       <Button
@@ -367,7 +368,7 @@ export const Career = () => {
             px: { xs: 0, sm: 0, md: 1, lg: 0 },
           }}
         >
-          <Typography
+          <CustomText
             variant="h2"
             sx={{
               fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
@@ -377,7 +378,7 @@ export const Career = () => {
             }}
           >
             How to Apply
-          </Typography>
+          </CustomText>
           <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 4 }}>
             <Grid size={{ xs: 12, sm: 6, md: 4 }}>
               <Box
@@ -412,7 +413,7 @@ export const Career = () => {
                   }}
                 />
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h6"
                     sx={{
                       fontWeight: 700,
@@ -422,8 +423,8 @@ export const Career = () => {
                     }}
                   >
                     Head Office
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     variant="body2"
                     sx={{
                       color: "#666",
@@ -432,7 +433,7 @@ export const Career = () => {
                     }}
                   >
                     B-35, Sector-P, Aliganj, Lucknow 226024
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Box>
             </Grid>
@@ -469,7 +470,7 @@ export const Career = () => {
                   }}
                 />
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h6"
                     sx={{
                       fontWeight: 700,
@@ -479,8 +480,8 @@ export const Career = () => {
                     }}
                   >
                     Email
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     variant="body2"
                     sx={{
                       color: "#666",
@@ -489,7 +490,7 @@ export const Career = () => {
                     }}
                   >
                     hr@mrbrownbakery.com
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Box>
             </Grid>
@@ -526,7 +527,7 @@ export const Career = () => {
                   }}
                 />
                 <Box>
-                  <Typography
+                  <CustomText
                     variant="h6"
                     sx={{
                       fontWeight: 700,
@@ -536,8 +537,8 @@ export const Career = () => {
                     }}
                   >
                     Phone
-                  </Typography>
-                  <Typography
+                  </CustomText>
+                  <CustomText
                     variant="body2"
                     sx={{
                       color: "#666",
@@ -546,7 +547,7 @@ export const Career = () => {
                     }}
                   >
                     +91-7309010623
-                  </Typography>
+                  </CustomText>
                 </Box>
               </Box>
             </Grid>

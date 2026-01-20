@@ -1,4 +1,5 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import Slider from "react-slick";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -439,7 +440,7 @@ export const HeroBanner = () => {
                       }}
                     />
 
-                    <Typography
+                    <CustomText
                       component="h1"
                       data-animation={`animated ${slide.animationType}`}
                       className={isActive ? `animated ${slide.animationType}` : ""}
@@ -460,8 +461,8 @@ export const HeroBanner = () => {
                       }}
                     >
                       {slide?.title}
-                    </Typography>
-                    <Typography
+                    </CustomText>
+                    <CustomText
                       component="h2"
                       data-animation={`animated ${slide.animationType}`}
                       className={isActive ? `animated ${slide.animationType}` : ""}
@@ -480,7 +481,7 @@ export const HeroBanner = () => {
                       }}
                     >
                       {slide?.subtitle}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 </Box>
               );

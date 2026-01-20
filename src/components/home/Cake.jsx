@@ -1,4 +1,5 @@
-import { Box, Typography, Button, useMediaQuery, IconButton } from "@mui/material";
+import { Box,  Button, useMediaQuery, IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -198,7 +199,7 @@ export const CakeSection = () => {
                     mb: { xs: 3, md: 4 },
                 }}
             >
-                <Typography
+                <CustomText
                     sx={{
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
@@ -218,7 +219,7 @@ export const CakeSection = () => {
                     }}
                 >
                     Cakes
-                </Typography>
+                </CustomText>
 
                 <Box
                     sx={{
@@ -355,7 +356,7 @@ export const CakeSection = () => {
                                                 }}
                                             />
                                             <Box sx={{ p: { xs: 2, md: 2.5 }, position: "relative", zIndex: 2 }}>
-                                                <Typography 
+                                                <CustomText 
                                                     sx={{ 
                                                         fontSize: { xs: 18, md: 22 }, 
                                                         fontWeight: 800, 
@@ -365,8 +366,8 @@ export const CakeSection = () => {
                                                     }}
                                                 >
                                                     {offer?.title}
-                                                </Typography>
-                                                <Typography
+                                                </CustomText>
+                                                <CustomText
                                                     sx={{
                                                         fontSize: { xs: 13, md: 14 },
                                                         color: "rgba(0,0,0,0.7)",
@@ -375,7 +376,7 @@ export const CakeSection = () => {
                                                     }}
                                                 >
                                                     {offer?.description}
-                                                </Typography>
+                                                </CustomText>
                                                 <Box
                                                     sx={{
                                                         display: "flex",
@@ -383,7 +384,7 @@ export const CakeSection = () => {
                                                         justifyContent: "space-between",
                                                     }}
                                                 >
-                                                    <Typography 
+                                                    <CustomText 
                                                         sx={{ 
                                                             fontSize: { xs: 20, md: 22 }, 
                                                             fontWeight: 700,
@@ -391,7 +392,7 @@ export const CakeSection = () => {
                                                         }}
                                                     >
                                                         {offer?.price}
-                                                    </Typography>
+                                                    </CustomText>
                                                     <Box
                                                         className="add-to-cart"
                                                         sx={{
@@ -564,7 +565,7 @@ export const CakeSection = () => {
 
                         {/* Content */}
                         <Box sx={{ p: { xs: 2, md: 2.5 }, position: "relative", zIndex: 2 }}>
-                            <Typography 
+                            <CustomText 
                                 sx={{ 
                                     fontSize: { xs: 18, md: 22 }, 
                                     fontWeight: 800, 
@@ -574,9 +575,9 @@ export const CakeSection = () => {
                                 }}
                             >
                                 {offer?.title}
-                            </Typography>
+                            </CustomText>
 
-                            <Typography
+                            <CustomText
                                 sx={{
                                     fontSize: { xs: 13, md: 14 },
                                     color: "rgba(0,0,0,0.7)",
@@ -585,7 +586,7 @@ export const CakeSection = () => {
                                 }}
                             >
                                 {offer?.description}
-                            </Typography>
+                            </CustomText>
 
                             {/* Price + Add to Cart */}
                             <Box
@@ -595,7 +596,7 @@ export const CakeSection = () => {
                                     justifyContent: "space-between",
                                 }}
                             >
-                                <Typography 
+                                <CustomText 
                                     sx={{ 
                                         fontSize: { xs: 20, md: 22 }, 
                                         fontWeight: 700,
@@ -603,7 +604,7 @@ export const CakeSection = () => {
                                     }}
                                 >
                                     {offer?.price}
-                                </Typography>
+                                </CustomText>
 
                                 <Box
                                     className="add-to-cart"
@@ -659,7 +660,7 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography 
+                <CustomText 
                     sx={{ 
                         fontSize: { xs: 28, sm: 32, md: 38 }, 
                         fontWeight: 800, 
@@ -679,7 +680,7 @@ export const CakeSection = () => {
                     }}
                 >
                     Pastries
-                </Typography>
+                </CustomText>
 
                 <Box
                     sx={{
@@ -787,10 +788,10 @@ export const CakeSection = () => {
                                                 }}
                                             />
                                             <Box sx={{ p: 2 }}>
-                                                <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                                                <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                                     {item?.title}
-                                                </Typography>
-                                                <Typography
+                                                </CustomText>
+                                                <CustomText
                                                     sx={{
                                                         fontSize: 14,
                                                         color: "gray",
@@ -799,7 +800,7 @@ export const CakeSection = () => {
                                                     }}
                                                 >
                                                     {item?.description}
-                                                </Typography>
+                                                </CustomText>
                                                 <Box
                                                     sx={{
                                                         display: "flex",
@@ -807,9 +808,9 @@ export const CakeSection = () => {
                                                         justifyContent: "space-between",
                                                     }}
                                                 >
-                                                    <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                                    <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                                         {item?.price}
-                                                    </Typography>
+                                                    </CustomText>
                                                     <Box
                                                         className="add-to-cart"
                                                         sx={{
@@ -927,11 +928,11 @@ export const CakeSection = () => {
 
                         {/* Content */}
                         <Box sx={{ p: 2 }}>
-                            <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                            <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                 {item?.title}
-                            </Typography>
+                            </CustomText>
 
-                            <Typography
+                            <CustomText
                                 sx={{
                                     fontSize: 14,
                                     color: "gray",
@@ -940,7 +941,7 @@ export const CakeSection = () => {
                                 }}
                             >
                                 {item?.description}
-                            </Typography>
+                            </CustomText>
 
                             {/* Price + Add to Cart */}
                             <Box
@@ -950,9 +951,9 @@ export const CakeSection = () => {
                                     justifyContent: "space-between",
                                 }}
                             >
-                                <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                     {item?.price}
-                                </Typography>
+                                </CustomText>
 
                                 <Box
                                     className="add-to-cart"
@@ -990,7 +991,7 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography 
+                <CustomText 
                     sx={{ 
                         fontSize: { xs: 28, sm: 32, md: 38 }, 
                         fontWeight: 800, 
@@ -1010,7 +1011,7 @@ export const CakeSection = () => {
                     }}
                 >
                     Cookies
-                </Typography>
+                </CustomText>
 
                 <Box
                     sx={{
@@ -1116,16 +1117,16 @@ export const CakeSection = () => {
                                                 }}
                                             />
                                             <Box sx={{ p: 2 }}>
-                                                <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                                                <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                                     {item?.title}
-                                                </Typography>
-                                                <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                                                </CustomText>
+                                                <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                                     {item?.description}
-                                                </Typography>
+                                                </CustomText>
                                                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                                    <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                                    <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                                         {item?.price}
-                                                    </Typography>
+                                                    </CustomText>
                                                     <Box
                                                         className="add-to-cart"
                                                         sx={{
@@ -1236,17 +1237,17 @@ export const CakeSection = () => {
                             }}
                         />
                         <Box sx={{ p: 2 }}>
-                            <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                            <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                 {item?.title}
-                            </Typography>
+                            </CustomText>
 
-                            <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                            <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                 {item?.description}
-                            </Typography>
+                            </CustomText>
                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                     {item?.price}
-                                </Typography>
+                                </CustomText>
 
                                 <Box
                                     className="add-to-cart"
@@ -1284,7 +1285,7 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography
+                <CustomText
                     sx={{
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
@@ -1304,7 +1305,7 @@ export const CakeSection = () => {
                     }}
                 >
                     Breads
-                </Typography>
+                </CustomText>
 
                 <Box
                     sx={{
@@ -1410,16 +1411,16 @@ export const CakeSection = () => {
                                                 }}
                                             />
                                             <Box sx={{ p: 2 }}>
-                                                <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                                                <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                                     {item?.title}
-                                                </Typography>
-                                                <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                                                </CustomText>
+                                                <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                                     {item?.description}
-                                                </Typography>
+                                                </CustomText>
                                                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                                    <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                                    <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                                         {item?.price}
-                                                    </Typography>
+                                                    </CustomText>
                                                     <Box
                                                         className="add-to-cart"
                                                         sx={{
@@ -1530,17 +1531,17 @@ export const CakeSection = () => {
                             }}
                         />
                         <Box sx={{ p: 2 }}>
-                            <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                            <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                 {item?.title}
-                            </Typography>
+                            </CustomText>
 
-                            <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                            <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                 {item?.description}
-                            </Typography>
+                            </CustomText>
                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                     {item?.price}
-                                </Typography>
+                                </CustomText>
 
                                 <Box
                                     className="add-to-cart"
@@ -1578,7 +1579,7 @@ export const CakeSection = () => {
                     my: { xs: 3, md: 4 },
                 }}
             >
-                <Typography
+                <CustomText
                     sx={{
                         fontSize: { xs: 28, sm: 32, md: 38 },
                         fontWeight: 800,
@@ -1598,7 +1599,7 @@ export const CakeSection = () => {
                     }}
                 >
                     Gift Combos
-                </Typography>
+                </CustomText>
 
                 <Box
                     sx={{
@@ -1704,16 +1705,16 @@ export const CakeSection = () => {
                                                 }}
                                             />
                                             <Box sx={{ p: 2 }}>
-                                                <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                                                <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                                     {item?.title}
-                                                </Typography>
-                                                <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                                                </CustomText>
+                                                <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                                     {item?.description}
-                                                </Typography>
+                                                </CustomText>
                                                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                                    <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                                    <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                                         {item?.price}
-                                                    </Typography>
+                                                    </CustomText>
                                                     <Box
                                                         className="add-to-cart"
                                                         sx={{
@@ -1824,16 +1825,16 @@ export const CakeSection = () => {
                             }}
                         />
                         <Box sx={{ p: 2 }}>
-                            <Typography sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
+                            <CustomText sx={{ fontSize: 20, fontWeight: 700, mb: 0.5 }}>
                                 {item?.title}
-                            </Typography>
-                            <Typography sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
+                            </CustomText>
+                            <CustomText sx={{ fontSize: 14, color: "gray", mb: 2, lineHeight: 1.4, }}>
                                 {item?.description}
-                            </Typography>
+                            </CustomText>
                             <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", }}>
-                                <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
+                                <CustomText sx={{ fontSize: 18, fontWeight: 600 }}>
                                     {item?.price}
-                                </Typography>
+                                </CustomText>
 
                                 <Box
                                     className="add-to-cart"

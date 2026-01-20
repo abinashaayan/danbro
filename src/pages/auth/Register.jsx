@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Typography, Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
+import { Box,  Button, Checkbox, FormControlLabel, Link, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import banner from "../../assets/login.png";
@@ -219,7 +219,7 @@ export const Register = () => {
             my: 4,
           }}
         >
-          <Typography
+          <CustomText
             sx={{
               fontSize: { xs: 28, sm: 32, md: 40 },
               fontWeight: 'bold',
@@ -234,7 +234,7 @@ export const Register = () => {
             }}
           >
             Welcome Back
-          </Typography>
+          </CustomText>
 
           <Box component="form" onSubmit={handleSubmit}>
             <InputLabel sx={{ fontSize: 14, color: "#fff", mb: 1 }}>Full Name</InputLabel>
@@ -356,15 +356,15 @@ export const Register = () => {
             </Box>
 
             {/* Password Requirements */}
-            <Typography sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
+            <CustomText sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
               Use 8 or more characters with a mix of letters, numbers & symbols
-            </Typography>
-            <Typography sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
+            </CustomText>
+            <CustomText sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
               Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described
               in our <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
                 Privacy Policy
               </Link>.
-            </Typography>
+            </CustomText>
 
             {/* Checkboxes */}
             <Box>
@@ -386,7 +386,7 @@ export const Register = () => {
                   />
                 }
                 label={
-                  <Typography sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
+                  <CustomText sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
                     Agree to our{" "}
                     <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
                       Terms of use
@@ -395,7 +395,7 @@ export const Register = () => {
                     <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
                       Privacy Policy
                     </Link>
-                  </Typography>
+                  </CustomText>
                 }
               />
 
@@ -417,9 +417,9 @@ export const Register = () => {
                   />
                 }
                 label={
-                  <Typography sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
+                  <CustomText sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
                     Subscribe to our monthly newsletter
-                  </Typography>
+                  </CustomText>
                 }
               />
             </Box>
@@ -454,7 +454,7 @@ export const Register = () => {
               {isSubmitting ? (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <CircularProgress size={20} sx={{ color: "#fff" }} />
-                  <Typography>Verifying...</Typography>
+                  <CustomText>Verifying...</CustomText>
                 </Box>
               ) : (
                 "Register"
@@ -462,7 +462,7 @@ export const Register = () => {
             </CustomButton>
 
             {/* Login Link */}
-            <Typography sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, mb: 2 }}>
+            <CustomText sx={{ textAlign: "center", color: "#fff", fontSize: { xs: 14, md: 16 }, mb: 2 }}>
               Already have an account?{" "}
               <Link
                 onClick={() => navigate("/login")}
@@ -480,7 +480,7 @@ export const Register = () => {
               >
                 Login Now
               </Link>
-            </Typography>
+            </CustomText>
 
             <Button
               fullWidth

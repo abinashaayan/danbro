@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Card, CardContent, Button } from "@mui/material";
+import { Box, Container,  Grid, Card, CardContent, Button } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import logo from "../../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
@@ -87,18 +88,18 @@ export const AboutUs = () => {
           transition: "0.8s",
         }}
       >
-        <Typography sx={{ fontSize: { xs: 28, sm: 36, md: 56 }, fontWeight: 700, color: "#fff" }}>
+        <CustomText sx={{ fontSize: { xs: 28, sm: 36, md: 56 }, fontWeight: 700, color: "#fff" }}>
           ABOUT US
-        </Typography>
-        <Typography sx={{ color: "#fff", fontSize: { xs: 12, sm: 14 }, mt: 1 }}>
+        </CustomText>
+        <CustomText sx={{ color: "#fff", fontSize: { xs: 12, sm: 14 }, mt: 1 }}>
           Home • About Us
-        </Typography>
+        </CustomText>
       </Box>
 
       <Container maxWidth="xl" sx={{ py: { xs: 5, md: 0 }, px: { xs: 3, sm: 3, md: 4 } }}>
-        <Typography align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 4, md: 5 }, fontSize: { xs: 20, sm: 24, md: 32 }, px: { xs: 0, md: 0 } }}>
+        <CustomText align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 4, md: 5 }, fontSize: { xs: 20, sm: 24, md: 32 }, px: { xs: 0, md: 0 } }}>
           SOME WORDS ABOUT US
-        </Typography>
+        </CustomText>
 
         <Grid container spacing={{ xs: 3, md: 3 }}>
           {cardData.map((item, index) => (
@@ -117,12 +118,12 @@ export const AboutUs = () => {
                 }}
               >
                 <CardContent sx={{ p: { xs: 3.5, md: 4 } }}>
-                  <Typography sx={{ fontWeight: 700, mb: 2, fontSize: { xs: 18, md: 22 }, color: active === index ? "#fff" : "#FF9472" }}>
+                  <CustomText sx={{ fontWeight: 700, mb: 2, fontSize: { xs: 18, md: 22 }, color: active === index ? "#fff" : "#FF9472" }}>
                     {item.title}
-                  </Typography>
-                  <Typography sx={{ fontSize: { xs: 14, md: 16 }, lineHeight: 1.8 }}>
+                  </CustomText>
+                  <CustomText sx={{ fontSize: { xs: 14, md: 16 }, lineHeight: 1.8 }}>
                     {item.description}
-                  </Typography>
+                  </CustomText>
                 </CardContent>
               </Card>
             </Grid>
@@ -151,23 +152,23 @@ export const AboutUs = () => {
             },
           }}
         >
-          <Typography sx={{ fontWeight: 700, fontSize: { xs: 26, md: 34 }, mb: 1 }}>
+          <CustomText sx={{ fontWeight: 700, fontSize: { xs: 26, md: 34 }, mb: 1 }}>
             Brand : Danbro
-          </Typography>
-          <Typography sx={{ color: "#797979", mb: 3 }}>
+          </CustomText>
+          <CustomText sx={{ color: "#797979", mb: 3 }}>
             Mr. Brown Bakery And Food Products Pvt Ltd
-          </Typography>
+          </CustomText>
 
-          <Typography sx={{ color: "#797979", fontSize: { xs: 14, md: 16 }, lineHeight: 2 }}>
+          <CustomText sx={{ color: "#797979", fontSize: { xs: 14, md: 16 }, lineHeight: 2 }}>
             A gourmet family-owned pastry shop in Lucknow now expanded to Kanpur & Delhi.
             <b> We blend Asian traditions with modern flavors </b> creating premium desserts,
             mousse cakes, artisan tarts and <b> baked mithai innovations.</b>
-          </Typography>
+          </CustomText>
 
-          <Typography sx={{ color: "#797979", fontSize: { xs: 14, md: 16 }, mt: 2, lineHeight: 2 }}>
+          <CustomText sx={{ color: "#797979", fontSize: { xs: 14, md: 16 }, mt: 2, lineHeight: 2 }}>
             We craft luxury <b>wedding dessert creations</b> using fresh fruits like strawberry & apple.
             Also offering <b>petit fours, cookies, chocolates, éclairs & signature pastry delicacies.</b>
-          </Typography>
+          </CustomText>
         </Box>
       </Container>
 
@@ -177,15 +178,15 @@ export const AboutUs = () => {
         <Container maxWidth="xl" sx={{ px: { xs: 3, md: 3 } }}>
           <Grid container spacing={{ xs: 4, md: 4 }} alignItems="center">
             <Grid size={{ xs: 12, md: 6 }}>
-              <Typography variant="h3" sx={{ fontWeight: 700, mb: { xs: 2, md: 2 }, fontSize: { xs: 20, sm: 24, md: 32 }, px: { xs: 0, md: 0 } }}>
+              <CustomText variant="h3" sx={{ fontWeight: 700, mb: { xs: 2, md: 2 }, fontSize: { xs: 20, sm: 24, md: 32 }, px: { xs: 0, md: 0 } }}>
                 We Work Through Every Aspect At The Planning
-              </Typography>
+              </CustomText>
 
-              <Typography sx={{ color: "#666", mb: { xs: 3.5, md: 4 }, lineHeight: 2, fontSize: { xs: 14, md: 16 }, px: { xs: 0, md: 0 } }}>
+              <CustomText sx={{ color: "#666", mb: { xs: 3.5, md: 4 }, lineHeight: 2, fontSize: { xs: 14, md: 16 }, px: { xs: 0, md: 0 } }}>
                 Blending Asian traditions with modern flavors, Danbro crafts exquisite, world-class
                 bakery delights, from wedding cakes to innovative baked mithai, ensuring every celebration
                 is unforgettable.
-              </Typography>
+              </CustomText>
 
               <Button
                 sx={{
@@ -261,12 +262,12 @@ export const AboutUs = () => {
                       boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <Typography sx={{ fontSize: { xs: 11, md: 13 }, fontWeight: 600 }}>
+                    <CustomText sx={{ fontSize: { xs: 11, md: 13 }, fontWeight: 600 }}>
                       {i.label}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 800, fontSize: { xs: 22, md: 28 } }}>
+                    </CustomText>
+                    <CustomText sx={{ fontWeight: 800, fontSize: { xs: 22, md: 28 } }}>
                       {i.num}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 ))}
               </Box>
@@ -303,12 +304,12 @@ export const AboutUs = () => {
                       boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <Typography sx={{ fontSize: 12, fontWeight: 600 }}>
+                    <CustomText sx={{ fontSize: 12, fontWeight: 600 }}>
                       {i.label}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 800, fontSize: 22 }}>
+                    </CustomText>
+                    <CustomText sx={{ fontWeight: 800, fontSize: 22 }}>
                       {i.num}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 ))}
               </Box>
@@ -341,12 +342,12 @@ export const AboutUs = () => {
                       boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
                     }}
                   >
-                    <Typography sx={{ fontSize: { xs: 10, sm: 11 }, fontWeight: 600, mb: 0.5 }}>
+                    <CustomText sx={{ fontSize: { xs: 10, sm: 11 }, fontWeight: 600, mb: 0.5 }}>
                       {i.label}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 800, fontSize: { xs: 20, sm: 24 } }}>
+                    </CustomText>
+                    <CustomText sx={{ fontWeight: 800, fontSize: { xs: 20, sm: 24 } }}>
                       {i.num}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 ))}
               </Box>

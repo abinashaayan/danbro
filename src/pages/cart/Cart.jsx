@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import {
   Box,
   Container,
-  Typography,
+  
   Grid,
   Button,
   IconButton,
@@ -13,6 +13,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import {
   DeleteOutline as DeleteOutlineIcon,
   Add as AddIcon,
@@ -79,7 +80,7 @@ export const Cart = () => {
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 4, md: 0 }, pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 }, mb: 4 }}>
       <Container maxWidth="xl" sx={{ py: 4, px: { xs: 2, md: 3 } }}>
         <Box sx={{ mb: { xs: 3, md: 4 } }}>
-          <Typography
+          <CustomText
             variant="h4"
             sx={{
               fontSize: { xs: 24, md: 32 },
@@ -89,10 +90,10 @@ export const Cart = () => {
             }}
           >
             Shopping Cart
-          </Typography>
-          <Typography sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+          </CustomText>
+          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
             {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
-          </Typography>
+          </CustomText>
         </Box>
 
         {cartItems.length === 0 ? (
@@ -107,9 +108,9 @@ export const Cart = () => {
             }}
           >
             <ShoppingCartIcon sx={{ fontSize: { xs: 64, md: 96 }, color: "#ddd" }} />
-            <Typography sx={{ fontSize: { xs: 18, md: 24 }, fontWeight: 600, color: "#666" }}>
+            <CustomText sx={{ fontSize: { xs: 18, md: 24 }, fontWeight: 600, color: "#666" }}>
               Your cart is empty
-            </Typography>
+            </CustomText>
             <Button
               variant="contained"
               onClick={() => navigate("/products")}
@@ -179,7 +180,7 @@ export const Cart = () => {
                         {/* Product Details */}
                         <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                           <Box>
-                            <Typography
+                            <CustomText
                               sx={{
                                 fontSize: { xs: 16, md: 18 },
                                 fontWeight: 600,
@@ -188,8 +189,8 @@ export const Cart = () => {
                               }}
                             >
                               {item.name}
-                            </Typography>
-                            <Typography
+                            </CustomText>
+                            <CustomText
                               sx={{
                                 fontSize: { xs: 12, md: 14 },
                                 color: "#666",
@@ -197,8 +198,8 @@ export const Cart = () => {
                               }}
                             >
                               Weight: {item.weight}
-                            </Typography>
-                            <Typography
+                            </CustomText>
+                            <CustomText
                               sx={{
                                 fontSize: { xs: 18, md: 20 },
                                 fontWeight: 700,
@@ -206,7 +207,7 @@ export const Cart = () => {
                               }}
                             >
                               ${item.price.toFixed(2)}
-                            </Typography>
+                            </CustomText>
                           </Box>
 
                           {/* Quantity Controls */}
@@ -238,7 +239,7 @@ export const Cart = () => {
                               >
                                 <RemoveIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
                               </IconButton>
-                              <Typography
+                              <CustomText
                                 sx={{
                                   minWidth: { xs: 30, md: 40 },
                                   textAlign: "center",
@@ -247,7 +248,7 @@ export const Cart = () => {
                                 }}
                               >
                                 {item.quantity}
-                              </Typography>
+                              </CustomText>
                               <IconButton
                                 size="small"
                                 onClick={() => updateQuantity(item.id, 1)}
@@ -313,7 +314,7 @@ export const Cart = () => {
                 }}
               >
                 <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                  <Typography
+                  <CustomText
                     sx={{
                       fontSize: { xs: 20, md: 24 },
                       fontWeight: 700,
@@ -322,23 +323,23 @@ export const Cart = () => {
                     }}
                   >
                     Order Summary
-                  </Typography>
+                  </CustomText>
 
                   <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: 2 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
                         Subtotal
-                      </Typography>
-                      <Typography sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
+                      </CustomText>
+                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
                         ${subtotal.toFixed(2)}
-                      </Typography>
+                      </CustomText>
                     </Box>
 
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
                         Shipping
-                      </Typography>
-                      <Typography sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
+                      </CustomText>
+                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
                         {shipping === 0 ? (
                           <Box component="span" sx={{ color: "#4caf50" }}>
                             Free
@@ -346,11 +347,11 @@ export const Cart = () => {
                         ) : (
                           `$${shipping.toFixed(2)}`
                         )}
-                      </Typography>
+                      </CustomText>
                     </Box>
 
                     {subtotal < 50 && (
-                      <Typography
+                      <CustomText
                         sx={{
                           fontSize: { xs: 12, md: 13 },
                           color: "#ED7D2B",
@@ -358,13 +359,13 @@ export const Cart = () => {
                         }}
                       >
                         Add ${(50 - subtotal).toFixed(2)} more for free shipping
-                      </Typography>
+                      </CustomText>
                     )}
 
                     <Divider sx={{ my: 1 }} />
 
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <Typography
+                      <CustomText
                         sx={{
                           fontSize: { xs: 18, md: 20 },
                           fontWeight: 700,
@@ -372,8 +373,8 @@ export const Cart = () => {
                         }}
                       >
                         Total
-                      </Typography>
-                      <Typography
+                      </CustomText>
+                      <CustomText
                         sx={{
                           fontSize: { xs: 18, md: 20 },
                           fontWeight: 700,
@@ -381,7 +382,7 @@ export const Cart = () => {
                         }}
                       >
                         ${total.toFixed(2)}
-                      </Typography>
+                      </CustomText>
                     </Box>
                   </Box>
 
@@ -417,15 +418,15 @@ export const Cart = () => {
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <LocalShippingIcon sx={{ fontSize: { xs: 18, md: 20 }, color: "#666" }} />
-                      <Typography sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
                         Free shipping on orders over $50
-                      </Typography>
+                      </CustomText>
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <PaymentIcon sx={{ fontSize: { xs: 18, md: 20 }, color: "#666" }} />
-                      <Typography sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
                         Secure payment
-                      </Typography>
+                      </CustomText>
                     </Box>
                   </Box>
                 </CardContent>

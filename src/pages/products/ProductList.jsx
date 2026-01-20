@@ -2,13 +2,12 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Box,
   Container,
-  Typography,
-  Button,
   TextField,
   InputAdornment,
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import {
   Search as SearchIcon,
 } from "@mui/icons-material";
@@ -19,6 +18,7 @@ import { useProducts } from "../../hooks/useProducts";
 import { CategoryTabs } from "../../components/comman/CategoryTabs";
 import { ProductGrid } from "../../components/products/ProductGrid";
 import { RecommendedProducts } from "../../components/products/RecommendedProducts";
+import { CustomButton } from "../../components/comman/CustomButton";
 
 export const ProductList = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,13 +30,13 @@ export const ProductList = () => {
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const productRef = useRef(null);
-  
+
   const ITEMS_PER_PAGE = 20; // Show 20 items per page
 
   const { categories: apiCategories, loading: categoriesLoading, error: categoriesError } = useItemCategories();
-  
+
   const categoryIdFromUrl = searchParams.get('categoryId');
-  
+
   useEffect(() => {
     if (categoryIdFromUrl && apiCategories && apiCategories.length > 0) {
       const categoryIndex = apiCategories.findIndex(cat => cat.id === parseInt(categoryIdFromUrl));
@@ -45,7 +45,7 @@ export const ProductList = () => {
       }
     }
   }, [categoryIdFromUrl, apiCategories]);
-  
+
   // Debounce search query to avoid excessive API calls - increased delay for better typing experience
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -91,16 +91,15 @@ export const ProductList = () => {
       }
       return;
     }
-    
+
     const transformed = apiProducts.map((product) => {
       const priceObj = product.price && product.price.length > 0 ? product.price[0] : { rate: 0, mrp: 0 };
       const displayPrice = priceObj.rate || priceObj.mrp || 0;
-      
-      // Get image from API - use first image if available, otherwise use placeholder
+
       const productImage = product.images && product.images.length > 0 && product.images[0].url
         ? product.images[0].url
         : "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=400&fit=crop&auto=format&q=80";
-      
+
       return {
         id: product.prdcode,
         name: product.name,
@@ -111,32 +110,22 @@ export const ProductList = () => {
     });
 
     if (currentPage === 1) {
-      // First page - replace all products
       setAllProducts(transformed);
       setDisplayedProducts(transformed);
     } else {
-      // Subsequent pages - append to existing products
       setAllProducts(prev => [...prev, ...transformed]);
       setDisplayedProducts(prev => [...prev, ...transformed]);
     }
   }, [apiProducts, currentPage]);
 
-  // Since API handles search, we don't need client-side filtering
-  // Only filter if search query exists but API hasn't filtered yet (fallback)
   const filteredProducts = useMemo(() => {
-    // If search is being sent to API, use API results directly
-    // Only do client-side filtering as fallback if needed
     if (!debouncedSearchQuery) return displayedProducts;
-    
-    // API should handle search, but if we have search query and products don't match,
-    // do a quick client-side filter as fallback
     const apiFiltered = displayedProducts.filter(
       (product) =>
         product.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
     );
-    
-    // Return API filtered results (API handles search, this is just for display)
+
     return apiFiltered.length > 0 ? apiFiltered : displayedProducts;
   }, [displayedProducts, debouncedSearchQuery]);
 
@@ -217,10 +206,11 @@ export const ProductList = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 0 }, pb: { xs: 8, md: 0 }, p: { xs: 1.25, md: 0 } }}>
-      <Container maxWidth="xl" sx={{ px: { xs: 2, md: 3 }, py: 4 }}>
+      <Container maxWidth="false" sx={{ px: { xs: 2, md: 3, lg: 2 }, py: 2 }}>
         <Box
           sx={{
             mb: { xs: 3, md: 4 },
+            px: { xs: 2, md: 3, lg: 2 },
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -239,9 +229,9 @@ export const ProductList = () => {
             },
           }}
         >
-          <Typography variant="h4" sx={{ fontSize: { xs: 22, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", transition: "color 0.3s ease", }}>
+          <CustomText variant="h4" sx={{ fontSize: { xs: 22, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", transition: "color 0.3s ease", }}>
             Categories
-          </Typography>
+          </CustomText>
           <TextField
             placeholder="Search for products"
             value={searchQuery}
@@ -272,31 +262,26 @@ export const ProductList = () => {
             }}
           />
         </Box>
-        <CategoryTabs
-          categories={categories}
-          selectedCategory={selectedCategory}
-          onChange={handleCategoryChange}
-        />
-        <Box ref={productRef}>
+        <CategoryTabs categories={categories} selectedCategory={selectedCategory} onChange={handleCategoryChange} />
+        <Box ref={productRef} sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
           <ProductGrid products={products} isVisible={isVisible} />
-          
+
           {/* Load More Button */}
-          {products.length > 0 && hasMore && !productsLoading && (
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 4, mb: 2 }}>
-              <Button
+          {products?.length > 0 && hasMore && !productsLoading && (
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <CustomButton
                 variant="outlined"
                 onClick={handleLoadMore}
                 disabled={productsLoading}
                 sx={{
                   px: 4,
-                  py: 1.5,
                   borderRadius: "30px",
+                  backgroundColor: "transparent",
                   borderColor: "#FF643A",
                   color: "#FF643A",
-                  textTransform: "none",
+                  boxShadow: "none",
                   fontSize: { xs: 14, md: 16 },
                   fontWeight: 600,
-                  transition: "all 0.3s ease",
                   "&:hover": {
                     backgroundColor: "#FF643A",
                     color: "#fff",
@@ -305,16 +290,17 @@ export const ProductList = () => {
                     boxShadow: "0 4px 12px rgba(255,100,58,0.3)",
                   },
                   "&:disabled": {
+                    backgroundColor: "transparent",
                     borderColor: "#ccc",
                     color: "#ccc",
                   },
                 }}
               >
                 {productsLoading ? "Loading..." : "Load More Products"}
-              </Button>
+              </CustomButton>
             </Box>
           )}
-          
+
           {/* Loading indicator for load more */}
           {productsLoading && currentPage > 1 && (
             <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
@@ -325,7 +311,7 @@ export const ProductList = () => {
       </Container>
 
       {/* Promotional Banner */}
-      <Container maxWidth="false" sx={{ px: { xs: 2, md: 3 } }}>
+      <Container maxWidth="false" sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
         <Box
           sx={{
             backgroundImage: `url(${Rectangle45})`,
@@ -340,117 +326,89 @@ export const ProductList = () => {
             mb: { xs: 4, md: 6 },
             position: "relative",
             overflow: "hidden",
-          animation: "fadeInScale 1s ease-out",
-          "@keyframes fadeInScale": {
-            "0%": {
-              opacity: 0,
-              transform: "scale(0.95)",
-            },
-            "100%": {
-              opacity: 1,
-              transform: "scale(1)",
-            },
-          },
-          "&::after": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            backdropFilter: "blur(1px)",
-            zIndex: 1,
-          },
-          "&:hover": {
-            "&::after": {
-              backdropFilter: "blur(2px)",
-            },
-          },
-        }}
-      >
-        <Box sx={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: "480px", px: 2, }}>
-          <Typography
-            sx={{
-              fontFamily: `'Playfair Display', serif`,
-              fontSize: { xs: 24, sm: 32, md: 42 },
-              fontWeight: 700,
-              color: "#8B3D22",
-              mb: 1,
-              lineHeight: 1.3,
-            }}
-          >
-            20% Off Your <br /> First Order
-          </Typography>
-
-          <Typography
-            sx={{
-              fontFamily: `'Inter', sans-serif`,
-              fontStyle: "italic",
-              fontSize: { xs: 14, sm: 16, md: 18 },
-              color: "#5D5D5D",
-              mb: 3,
-              maxWidth: 380,
-              mx: "auto",
-              lineHeight: 1.6,
-            }}
-          >
-            Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum justo.
-          </Typography>
-
-          <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "#FF643A",
-              color: "#fff",
-              textTransform: "none",
-              px: 5,
-              py: 1.4,
-              borderRadius: "30px",
-              fontSize: { xs: 14, sm: 15, md: 16 },
-              fontWeight: 600,
-              boxShadow: "0 6px 18px rgba(255,100,58,0.35)",
-              transition: "0.3s",
-              "&:hover": {
-                backgroundColor: "#ff5323",
-                boxShadow: "0 8px 22px rgba(255,100,58,0.45)",
-                transform: "translateY(-2px)",
-              },
-            }}
-          >
-            Learn More
-          </Button>
-        </Box>
-        </Box>
-      </Container>
-
-      {/* Recommended Products Section */}
-      {/* <Container maxWidth="xl" sx={{ px: { xs: 2, md: 3 }, py: 4 }}>
-        <Box
-          sx={{
-            mb: { xs: 3, md: 4 },
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: { xs: 1.5, md: 2 },
-            animation: "fadeInDown 0.8s ease-out",
-            "@keyframes fadeInDown": {
+            animation: "fadeInScale 1s ease-out",
+            "@keyframes fadeInScale": {
               "0%": {
                 opacity: 0,
-                transform: "translateY(-20px)",
+                transform: "scale(0.95)",
               },
               "100%": {
                 opacity: 1,
-                transform: "translateY(0)",
+                transform: "scale(1)",
+              },
+            },
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              inset: 0,
+              backdropFilter: "blur(1px)",
+              zIndex: 1,
+            },
+            "&:hover": {
+              "&::after": {
+                backdropFilter: "blur(2px)",
               },
             },
           }}
         >
-          <Typography variant="h4" sx={{ fontSize: { xs: 22, sm: 24, md: 32 }, fontWeight: 700, color: "#2c2c2c", transition: "color 0.3s ease", }}>
-            Recommended Products
-          </Typography>
-        </Box> */}
-        {recommendedProducts && recommendedProducts.length > 0 && (
-          <RecommendedProducts recommendedProducts={recommendedProducts} />
-        )}
-      {/* </Container> */}
+          <Box sx={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: "480px", px: 2, }}>
+            <CustomText
+              sx={{
+                fontFamily: `'Playfair Display', serif`,
+                fontSize: { xs: 24, sm: 32, md: 42 },
+                fontStyle: "italic",
+                fontWeight: 700,
+                color: "#8B3D22",
+                mb: 1,
+                lineHeight: 1,
+              }}
+            >
+              20% Off Your <br /> First Order
+            </CustomText>
+
+            <CustomText
+              sx={{
+                fontFamily: `'Inter', sans-serif`,
+                fontStyle: "italic",
+                fontSize: { xs: 14, sm: 16, md: 18 },
+                color: "#5D5D5D",
+                mb: 3,
+                maxWidth: 380,
+                mx: "auto",
+                lineHeight: 1.6,
+              }}
+            >
+              Suspendisse ac rhoncus nisl, eu tempor urna. Curabitur vel bibendum justo.
+            </CustomText>
+
+            <CustomButton
+              variant="contained"
+              sx={{
+                backgroundColor: "#FF643A",
+                color: "#fff",
+                textTransform: "none",
+                px: 5,
+                py: 1.4,
+                borderRadius: "30px",
+                fontSize: { xs: 14, sm: 15, md: 16 },
+                fontWeight: 600,
+                boxShadow: "0 6px 18px rgba(255,100,58,0.35)",
+                transition: "0.3s",
+                "&:hover": {
+                  backgroundColor: "#ff5323",
+                  boxShadow: "0 8px 22px rgba(255,100,58,0.45)",
+                  transform: "translateY(-2px)",
+                },
+              }}
+            >
+              Learn More
+            </CustomButton>
+          </Box>
+        </Box>
+      </Container>
+      {recommendedProducts && recommendedProducts.length > 0 && (
+        <RecommendedProducts recommendedProducts={recommendedProducts} />
+      )}
     </Box>
   );
 };

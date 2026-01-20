@@ -1,4 +1,5 @@
-import { Box, Container, Grid, Typography, IconButton } from "@mui/material";
+import { Box, Container, Grid,  IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -96,10 +97,11 @@ export const Footer = () => {
         ref={footerRef}
         sx={{
           minHeight: { xs: "400px", sm: "450px", md: "480px", lg: "500px" },
+          px: { xs: 2, md: 3, lg: 2 },
         }}
       >
         <Container 
-          maxWidth="xl"
+          maxWidth="false"
           sx={{
             px: { xs: 2, sm: 3, md: 4, lg: 4 },
             width: "100%",
@@ -112,13 +114,13 @@ export const Footer = () => {
               background: "linear-gradient(90deg, #FF9472 0%, #F2709C 100%)",
               width: { xs: "95%", sm: "92%", md: "92%", lg: "90%" },
               mx: "auto",
-              p: { xs: 2.5, sm: 3, md: 3, lg: 4 },
+              p: { xs: 1.5, sm: 2, md: 2.5, lg: 4 },
               borderRadius: "20px",
               display: { xs: "none", md: "flex" },
               flexDirection: { xs: "column", sm: "row" },
               justifyContent: "space-between",
               alignItems: { xs: "flex-start", sm: "center" },
-              gap: { xs: 2, sm: 2, md: 2.5, lg: 3 },
+              gap: { xs: 1.5, sm: 2, md: 2.5, lg: 3 },
               position: "absolute",
               bottom: { xs: "4%", md: "88%", lg: "85%" },
               left: "50%",
@@ -134,7 +136,7 @@ export const Footer = () => {
             }}
           >
             <Box sx={{ flex: 1 }}>
-              <Typography
+              <CustomText
                 sx={{
                   fontSize: { xs: 24, sm: 28, md: 32, lg: 36 },
                   fontWeight: 800,
@@ -148,7 +150,7 @@ export const Footer = () => {
                 }}
               >
                 Have a good cake Today.
-              </Typography>
+              </CustomText>
               <Box
                 sx={{
                   display: "flex",
@@ -182,7 +184,7 @@ export const Footer = () => {
                         },
                       }}
                     />
-                    <Typography
+                    <CustomText
                       sx={{
                         color: "#fff",
                         fontSize: { xs: 14, sm: 15, md: 15, lg: 16 },
@@ -190,7 +192,7 @@ export const Footer = () => {
                       }}
                     >
                       {text}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 ))}
               </Box>
@@ -241,7 +243,7 @@ export const Footer = () => {
                 },
               }}
             >
-              <Typography
+              <CustomText
                 sx={{
                   fontWeight: 700,
                   mb: 1,
@@ -249,7 +251,7 @@ export const Footer = () => {
                 }}
               >
                 Let's do it!
-              </Typography>
+              </CustomText>
               <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 1.5, md: 1.5, lg: 2 } }}>
                 {[
                   { icon: FacebookIcon, color: "#1877F2" },
@@ -260,11 +262,23 @@ export const Footer = () => {
                   <IconButton
                     key={index}
                     sx={{
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
                       color: color,
-                      transition: "all 0.3s ease",
+                      width: { xs: 40, sm: 44, md: 46, lg: 48 },
+                      height: { xs: 40, sm: 44, md: 46, lg: 48 },
+                      borderRadius: "50%",
+                      border: `2px solid ${color}`,
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                       "&:hover": {
-                        transform: "translateY(-5px) scale(1.1)",
-                        color: color,
+                        backgroundColor: color,
+                        color: "#fff",
+                        transform: "translateY(-8px) scale(1.15) rotate(5deg)",
+                        boxShadow: `0 8px 20px ${color}80`,
+                        borderColor: color,
+                      },
+                      "&:active": {
+                        transform: "translateY(-4px) scale(1.05)",
                       },
                       animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
                       "@keyframes fadeInUp": {
@@ -273,7 +287,7 @@ export const Footer = () => {
                       },
                     }}
                   >
-                    <Icon />
+                    <Icon sx={{ fontSize: { xs: 20, sm: 22, md: 22, lg: 24 } }} />
                   </IconButton>
                 ))}
               </Box>
@@ -285,7 +299,7 @@ export const Footer = () => {
             sx={{ my: { xs: 3, sm: 4, md: 4, lg: 5 }, px: { xs: 1, sm: 1, md: 1, lg: 0 } }}
           >
             <Grid item xs={12} sm={6} md={3} lg={2}>
-              <Typography
+              <CustomText
                 variant="body2"
                 sx={{
                   fontWeight: 700,
@@ -300,10 +314,10 @@ export const Footer = () => {
                 exquisite, world-class bakery delights, from wedding cakes to
                 innovative baked mithai, ensuring every celebration is
                 unforgettable.
-              </Typography>
+              </CustomText>
             </Grid>
             <Grid item xs={6} sm={3} md={2} lg={2}>
-              <Typography
+              <CustomText
                 sx={{
                   fontWeight: 700,
                   mb: 2,
@@ -311,7 +325,7 @@ export const Footer = () => {
                 }}
               >
                 OUR STORES
-              </Typography>
+              </CustomText>
               {ourStories.map((item, index) => (
                 <Link
                   key={index}
@@ -319,7 +333,7 @@ export const Footer = () => {
                   className="text-decoration-none"
                   onClick={(e) => handleLinkClick(e, item.link)}
                 >
-                  <Typography
+                  <CustomText
                     sx={{
                       mb: 1,
                       color: "#555",
@@ -338,12 +352,12 @@ export const Footer = () => {
                     }}
                   >
                     {item.label}
-                  </Typography>
+                  </CustomText>
                 </Link>
               ))}
             </Grid>
             <Grid item xs={6} sm={3} md={2} lg={2}>
-              <Typography
+              <CustomText
                 sx={{
                   fontWeight: 700,
                   mb: 2,
@@ -351,7 +365,7 @@ export const Footer = () => {
                 }}
               >
                 USEFUL LINKS
-              </Typography>
+              </CustomText>
               {knowMore?.map((item, index) => (
                 <Link
                   key={index}
@@ -359,7 +373,7 @@ export const Footer = () => {
                   className="text-decoration-none"
                   onClick={(e) => handleLinkClick(e, item.link)}
                 >
-                  <Typography
+                  <CustomText
                     sx={{
                       mb: 1,
                       color: "#555",
@@ -378,12 +392,12 @@ export const Footer = () => {
                     }}
                   >
                     {item?.label}
-                  </Typography>
+                  </CustomText>
                 </Link>
               ))}
             </Grid>
             <Grid item xs={6} sm={3} md={2} lg={2}>
-              <Typography
+              <CustomText
                 sx={{
                   fontWeight: 700,
                   mb: 2,
@@ -391,7 +405,7 @@ export const Footer = () => {
                 }}
               >
                 KNOW MORE
-              </Typography>
+              </CustomText>
               {knowMoreLinks.map((item, index) => (
                 <Link
                   key={index}
@@ -399,7 +413,7 @@ export const Footer = () => {
                   className="text-decoration-none"
                   onClick={(e) => handleLinkClick(e, item.link)}
                 >
-                  <Typography
+                  <CustomText
                     sx={{
                       mb: 1,
                       color: "#555",
@@ -418,12 +432,12 @@ export const Footer = () => {
                     }}
                   >
                     {item?.label}
-                  </Typography>
+                  </CustomText>
                 </Link>
               ))}
             </Grid>
             <Grid item xs={12} sm={6} md={3} lg={3.4}>
-              <Typography
+              <CustomText
                 sx={{
                   mb: 2,
                   fontWeight: 700,
@@ -431,7 +445,7 @@ export const Footer = () => {
                 }}
               >
                 RECENT POSTS
-              </Typography>
+              </CustomText>
 
               {[1, 2].map((i, index) => (
                 <Box
@@ -464,7 +478,7 @@ export const Footer = () => {
                     }}
                   />
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <Typography
+                    <CustomText
                       sx={{
                         fontSize: { xs: 12, sm: 12, md: 11.5, lg: 14 },
                         fontWeight: 600,
@@ -473,18 +487,17 @@ export const Footer = () => {
                         lineHeight: 1.4,
                       }}
                     >
-                      Handmade with Love – Discover Danbro Cookies by Mr Brown
-                      Bakery
-                    </Typography>
+                      Handmade with Love – Danbro Cookies
+                    </CustomText>
 
-                    <Typography
+                    <CustomText
                       sx={{
                         fontSize: { xs: 11, sm: 11, md: 10, lg: 12 },
                         color: "#777",
                       }}
                     >
                       May 3, 2025 — No Comments
-                    </Typography>
+                    </CustomText>
                   </Box>
                 </Box>
               ))}
@@ -506,13 +519,13 @@ export const Footer = () => {
               flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap", lg: "nowrap" },
             }}
           >
-            <Typography sx={{ color: "#000", fontSize: { xs: 12, sm: 12, md: 12, lg: 14 }, textAlign: { xs: "left", sm: "left", md: "left" }, flex: { md: "0 0 auto" }, whiteSpace: { md: "nowrap" } }}>
+            <CustomText sx={{ color: "#000", fontSize: { xs: 12, sm: 12, md: 12, lg: 14 }, textAlign: { xs: "left", sm: "left", md: "left" }, flex: { md: "0 0 auto" }, whiteSpace: { md: "nowrap" } }}>
               Mr. Brown Bakery and Food Products Pvt Ltd | 2025 |
-            </Typography>
+            </CustomText>
             <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 2, md: 1.5, lg: 2 }, alignItems: "center", flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" }, flex: { md: "0 0 auto" } }}>
-              <Typography sx={{ color: "#000", fontSize: { xs: 12, sm: 12, md: 12, lg: 14 }, textAlign: { xs: "left", sm: "left", md: "left" }, whiteSpace: "nowrap" }}>
+              <CustomText sx={{ color: "#000", fontSize: { xs: 12, sm: 12, md: 12, lg: 14 }, textAlign: { xs: "left", sm: "left", md: "left" }, whiteSpace: "nowrap" }}>
                 Design & Developed by 
-              </Typography>
+              </CustomText>
               <Box component="img" src={Maskgroup} alt="makeinindia" sx={{ height: { xs: 20, sm: 24, md: 24, lg: 32 }, width: "auto", flexShrink: 0 }} />
               <Box component="img" src={makeinindia} alt="makeinindia" sx={{ height: { xs: 20, sm: 24, md: 24, lg: 32 }, width: "auto", flexShrink: 0 }} />
             </Box>

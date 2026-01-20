@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, memo } from "react";
 import {
   Box,
   Container,
-  Typography,
   Grid,
   Button,
   TextField,
@@ -19,6 +18,7 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import {
   FavoriteBorder as FavoriteBorderIcon,
   Favorite as FavoriteIcon,
@@ -57,7 +57,6 @@ export const ProductDetails = () => {
   // Fetch categories to get all products
   const { categories: apiCategories } = useItemCategories();
 
-  // Close select menu on scroll - optimized with passive listener
   useEffect(() => {
     if (!selectOpen) return;
     
@@ -65,7 +64,6 @@ export const ProductDetails = () => {
       setSelectOpen(false);
     };
     
-    // Use capture phase and passive for better performance
     document.addEventListener('scroll', handleScroll, { capture: true, passive: true });
     
     return () => {
@@ -73,7 +71,6 @@ export const ProductDetails = () => {
     };
   }, [selectOpen]);
 
-  // Fetch product data - OPTIMIZED: Fetch all categories in parallel instead of sequentially
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -87,21 +84,15 @@ export const ProductDetails = () => {
         }
 
         const productId = parseInt(id);
-        
-        // Optimized: Fetch all categories in parallel instead of sequentially
         if (apiCategories && apiCategories.length > 0) {
           try {
-            // Fetch all categories in parallel using Promise.all
             const productPromises = apiCategories.map(category => 
               fetchProducts(category.id).catch(err => {
-                // Silently handle individual category errors
                 return null;
               })
             );
             
             const responses = await Promise.all(productPromises);
-            
-            // Search through all responses to find the product
             for (const response of responses) {
               if (!response) continue;
               
@@ -117,7 +108,6 @@ export const ProductDetails = () => {
               }
             }
           } catch (err) {
-            // Fallback to sequential search if parallel fails
             for (const category of apiCategories) {
               try {
                 const response = await fetchProducts(category.id);
@@ -168,15 +158,12 @@ export const ProductDetails = () => {
       });
     }
     
-    // Get images from API - use product images if available, otherwise use placeholder
     const placeholderImage = "https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=400&h=400&fit=crop&auto=format&q=80";
     let images = [];
     
     if (product.images && Array.isArray(product.images) && product.images.length > 0) {
-      // Use actual images from API
       images = product.images.map(img => img.url || placeholderImage);
     } else {
-      // Use placeholder if no images available
       images = [placeholderImage, placeholderImage, placeholderImage, placeholderImage];
     }
     
@@ -230,20 +217,20 @@ export const ProductDetails = () => {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 4, md: 0 }, pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Breadcrumbs sx={{ mb: 3 }}>
+    <Box >
+      <Container maxWidth="false" sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
+        <Breadcrumbs sx={{ mb: 3, px: { xs: 2, md: 3, lg: 2 } }}>
           <Link component="button" variant="body1" onClick={() => navigate("/products")} sx={{ color: "#666", textDecoration: "none", cursor: "pointer", "&:hover": { color: "#FF9472", }, }}>
             Products
           </Link>
-          <Typography color="text.primary">{productData.name}</Typography>
+          <CustomText color="text.primary" autoTitleCase={true}>{productData?.name}</CustomText>
         </Breadcrumbs>
 
-        <Grid container spacing={{ xs: 2, md: 4 }}>
-          <Grid size={{ xs: 12, md: 6 }}>
+          <Grid container spacing={{ xs: 2, md: 4, lg: 3 }} sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
+            <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: "flex", gap: { xs: 1, md: 2 } }}>
               <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", gap: 1 }}>
-                {productData.images.map((image, index) => (
+                {productData?.images?.map((image, index) => (
                   <Box
                     key={index}
                     onClick={() => setSelectedImage(index)}
@@ -263,7 +250,7 @@ export const ProductDetails = () => {
                     <Box 
                       component="img" 
                       src={image} 
-                      alt={`${productData.name} ${index + 1}`} 
+                      alt={`${productData?.name} ${index + 1}`} 
                       loading="lazy"
                       sx={{ width: "100%", height: "100%", objectFit: "cover", }} 
                     />
@@ -274,8 +261,8 @@ export const ProductDetails = () => {
                 <Box sx={{ width: "100%", height: { xs: 300, sm: 350, md: 450 }, borderRadius: 2, overflow: "hidden", mb: 2 }}>
                   <Box 
                     component="img" 
-                    src={productData.images[selectedImage]} 
-                    alt={productData.name} 
+                    src={productData?.images[selectedImage]} 
+                    alt={productData?.name} 
                     loading="lazy"
                     sx={{ width: "100%", height: "100%", objectFit: "cover", }} 
                   />
@@ -285,32 +272,32 @@ export const ProductDetails = () => {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box>
-              <Typography variant="h3" sx={{ fontSize: { xs: 28, md: 36 }, fontWeight: 700, color: "#2c2c2c", mb: 2, }}>
-                {productData.name}
-              </Typography>
-              <Typography variant="h4" sx={{ fontSize: { xs: 28, md: 36 }, fontWeight: 700, color: "#F31400", mb: 2, display: "flex", alignItems: "center" }}>
-                {productData.price} / <Typography variant="body1" sx={{ fontSize: '13px', fontWeight: 600, color: "#2c2c2c", }}>
-                  {productData.weight}
-                </Typography>
-              </Typography>
+              <CustomText variant="h3" autoTitleCase={true} sx={{ fontSize: { xs: 20, sm: 24, md: 30, lg: 36 }, fontWeight: 700, color: "#2c2c2c", mb: 2, }}>
+                {productData?.name}
+              </CustomText>
+              <CustomText variant="h4" sx={{ fontSize: { xs: 20, sm: 24, md: 30, lg: 36 }, fontWeight: 700, color: "#F31400", mb: 2, display: "flex", alignItems: "center" }}>
+                {productData?.price} / <CustomText variant="body1" sx={{ fontSize: '13px', fontWeight: 600, color: "#2c2c2c", }}>
+                  {productData?.weight}
+                </CustomText>
+              </CustomText>
               <Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Rating value={4.5} precision={0.5} readOnly sx={{ color: "#FF643A" }} />
-                  <Typography sx={{ fontSize: 16, fontWeight: 600, color: "#333" }}>
+                  <CustomText sx={{ fontSize: { xs: 13, sm: 14, md: 16 }, fontWeight: 600, color: "#333" }}>
                     4.5 <span style={{ fontWeight: 400, color: "#777" }}>/ 5</span>
-                  </Typography>
-                  <Typography sx={{ color: "#777" }}>(245 Reviews)</Typography>
+                  </CustomText>
+                  <CustomText sx={{ fontSize: { xs: 11, sm: 12, md: 14 }, color: "#777" }}>(245 Reviews)</CustomText>
                 </Box>
               </Box>
-              <Typography variant="body1" sx={{ color: "#666", lineHeight: 1.8, mb: 3, fontSize: { xs: 14, md: 16 }, }}>
-                {productData.description}
-              </Typography>
+              <CustomText variant="body1" autoTitleCase={true} sx={{ color: "#666", lineHeight: 1.8, mb: 3, fontSize: { xs: 12, sm: 13, md: 15, lg: 16 }, }}>
+                {productData?.description}
+              </CustomText>
               <Divider sx={{ my: 2, backgroundColor: "#F31400" }} />
               <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: { xs: "flex-start", md: "center" }, gap: { xs: 2, md: 0 } }}>
                 <Box>
-                  <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
+                  <CustomText variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
                     Weight
-                  </Typography>
+                  </CustomText>
                   <Select 
                     value={productWeight} 
                     size="small" 
@@ -349,9 +336,9 @@ export const ProductDetails = () => {
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, backgroundColor: "#9BFF82", borderRadius: 2, p: { xs: 0.8, md: 1 } }}>
                   <CheckCircleIcon sx={{ color: "#4caf50", fontSize: { xs: 18, md: 20 } }} />
-                  <Typography variant="body1" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 16 } }}>
-                    {productData.stock} in stock
-                  </Typography>
+                  <CustomText variant="body1" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 16 } }}>
+                    {productData?.stock} in stock
+                  </CustomText>
                 </Box>
               </Box>
 
@@ -361,9 +348,9 @@ export const ProductDetails = () => {
                     <Box onClick={() => setQuantity(Math.max(1, quantity - 1))} sx={{ cursor: "pointer" }}>
                       <Remove sx={{ color: "#2c2c2c", fontSize: { xs: 18, md: 20 } }} />
                     </Box>
-                    <Typography variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
+                    <CustomText variant="body2" sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
                       {quantity}
-                    </Typography>
+                    </CustomText>
                     <Box onClick={() => setQuantity(quantity + 1)} sx={{ cursor: "pointer" }}>
                       <Add sx={{ color: "#2c2c2c", fontSize: { xs: 18, md: 20 } }} />
                     </Box>
@@ -378,7 +365,7 @@ export const ProductDetails = () => {
                       color: "#fff",
                       p: { xs: 0.8, md: 1 },
                       borderRadius: "50px",
-                      fontSize: { xs: 14, md: 18 },
+                      fontSize: { xs: 12, sm: 14, md: 16, lg: 18 },
                       fontWeight: 700,
                       textTransform: "none",
                       transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -405,9 +392,9 @@ export const ProductDetails = () => {
               </Grid>
             </Box>
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, mt: { xs: 2, md: 2 }, backgroundColor: "#F0FFF4", p: { xs: 1, md: 1 }, borderRadius: 2, border: "1px solid #B5FFC9" }}>
-              <Typography variant="subtitle1" sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#00A819", display: "flex", alignItems: "center", gap: 0.5, flexWrap: "wrap", justifyContent: "center" }}>
+              <CustomText variant="subtitle1" sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#00A819", display: "flex", alignItems: "center", gap: 0.5, flexWrap: "wrap", justifyContent: "center" }}>
                 <LocalShipping sx={{ fontSize: { xs: 16, md: 18 } }} /> Order within 2hrs for delivery today.
-              </Typography>
+              </CustomText>
             </Box>
           </Grid>
         </Grid>
@@ -415,16 +402,16 @@ export const ProductDetails = () => {
 
 
       <Box sx={{ py: { xs: 4, md: 0 } }}>
-        <Grid container spacing={{ xs: 2, md: 3 }} justifyContent="center" alignItems="center" sx={{ backgroundColor: "#FFEFEA", height: { xs: "auto", md: "200px" }, px: { xs: 1, md: 2 }, py: { xs: 2, md: 0 } }}>
+        <Grid container spacing={{ xs: 2, md: 3, lg: 2.5 }} justifyContent="center" alignItems="center" sx={{ backgroundColor: "#FFEFEA", height: { xs: "auto", md: "200px" }, px: { xs: 1, md: 2, lg: 1.5 }, py: { xs: 2, md: 0 } }}>
           {features?.map((text, i) => (
             <Grid key={i} size={{ xs: 12, sm: 6, md: 3 }}>
               <Box sx={{ backgroundColor: "#FFEFEA", p: { xs: 2, md: 3 }, borderRadius: 3, textAlign: "start", display: "flex", justifyContent: "center", alignItems: "center", gap: { xs: 1.5, md: 2 } }}>
                 <Box sx={{ backgroundColor: "#fff", color: "#FF6F61", width: { xs: 50, md: 60 }, height: { xs: 50, md: 60 }, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: { xs: 18, md: 22 } }}>
                   {icons[i]}
                 </Box>
-                <Typography fontWeight={600} sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, md: 14 }, color: "#515151", fontWeight: 'bold' }}>
+                <CustomText fontWeight={600} sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, md: 14 }, color: "#515151", fontWeight: 'bold' }}>
                   {text}
-                </Typography>
+                </CustomText>
               </Box>
             </Grid>
           ))}
@@ -432,20 +419,20 @@ export const ProductDetails = () => {
       </Box>
 
       {/* 🔶 What's Inside + Nutrition Facts */}
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <Grid container spacing={{ xs: 2, md: 2 }}>
+      <Container maxWidth="xl" sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
+        <Grid container spacing={{ xs: 2, md: 2 }} sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #ddd", borderRadius: 2 }}>
-              <Typography fontWeight={600} fontSize={{ xs: 16, md: 18 }}>What's Inside</Typography>
-              <Typography mt={1} fontSize={{ xs: 13, md: 14 }} color="text.secondary">
-                {productData.ingredient || "Ingredients information not available."}
-              </Typography>
+              <CustomText fontWeight={600} fontSize={{ xs: 16, md: 18 }}>What's Inside</CustomText>
+              <CustomText mt={1} autoTitleCase={true} fontSize={{ xs: 13, md: 14 }} color="text.secondary">
+                {productData?.ingredient || "Ingredients information not available."}
+              </CustomText>
               {product.veg && (
                 <Box mt={2} sx={{ p: { xs: 1.5, md: 2 }, background: "#FFF1EE", borderRadius: 2, display: "flex", alignItems: "center", gap: { xs: 1.5, md: 2 }, border: "1px solid #FF643A" }}>
                   <ThumbUpOffAlt sx={{ color: "#FF643A", fontSize: { xs: 18, md: 20 } }} />
                   <Box>
-                    <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Vegetarian Product</Typography>
-                    <Typography fontSize={{ xs: 12, md: 13 }}>{product.veg === "Y" ? "This is a vegetarian product." : "Please check ingredients for allergen information."}</Typography>
+                    <CustomText fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Vegetarian Product</CustomText>
+                    <CustomText fontSize={{ xs: 12, md: 13 }}>{product.veg === "Y" ? "This is a vegetarian product." : "Please check ingredients for allergen information."}</CustomText>
                   </Box>
                 </Box>
               )}
@@ -453,12 +440,12 @@ export const ProductDetails = () => {
           </Grid>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #ddd", borderRadius: 2 }}>
-              <Typography fontWeight={600} fontSize={{ xs: 16, md: 18 }} mb={1}>
+              <CustomText fontWeight={600} fontSize={{ xs: 16, md: 18 }} mb={1}>
                 Nutrition Facts
-              </Typography>
+              </CustomText>
               <Box fontSize={{ xs: 13, md: 14 }}>
-                {productData.nutrition && Object.keys(productData.nutrition).length > 0 ? (
-                  Object.entries(productData.nutrition).map(([label, value], index, array) => (
+                {productData?.nutrition && Object.keys(productData?.nutrition).length > 0 ? (
+                  Object.entries(productData?.nutrition).map(([label, value], index, array) => (
                     <Box
                       key={index}
                       sx={{
@@ -468,22 +455,22 @@ export const ProductDetails = () => {
                         borderBottom: index !== array.length - 1 ? "1px solid #eee" : "none"
                       }}
                     >
-                      <Typography fontSize={{ xs: 13, md: 14 }}>{label}</Typography>
-                      <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>{value}</Typography>
+                      <CustomText fontSize={{ xs: 13, md: 14 }}>{label}</CustomText>
+                      <CustomText fontWeight={600} fontSize={{ xs: 13, md: 14 }}>{value}</CustomText>
                     </Box>
                   ))
                 ) : (
-                  <Typography fontSize={{ xs: 13, md: 14 }} color="text.secondary">
+                  <CustomText fontSize={{ xs: 13, md: 14 }} color="text.secondary">
                     Nutrition information not available.
-                  </Typography>
+                  </CustomText>
                 )}
               </Box>
               {product.expiryday && (
                 <Box mt={2} sx={{ p: { xs: 1.5, md: 2 }, background: "#F8F8F8", borderRadius: 2, border: "1px solid #D5D5D5" }}>
-                  <Typography fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Storage Instructions</Typography>
-                  <Typography fontSize={{ xs: 12, md: 13 }}>
+                  <CustomText fontWeight={600} fontSize={{ xs: 13, md: 14 }}>Storage Instructions</CustomText>
+                  <CustomText fontSize={{ xs: 12, md: 13 }}>
                     Best consumed within {product.expiryday} days. Keep in a cool dry place.
-                  </Typography>
+                  </CustomText>
                 </Box>
               )}
             </Box>
@@ -491,14 +478,14 @@ export const ProductDetails = () => {
         </Grid>
 
         {/* Rating Section */}
-        <Box mt={{ xs: 4, md: 6 }}>
-          <Typography fontSize={{ xs: 24, md: 34 }} fontWeight={700}>4.5 ⭐</Typography>
-          <Typography fontSize={{ xs: 13, md: 14 }} color="text.secondary">120 reviews</Typography>
+        <Box mt={{ xs: 4, md: 6 }} sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
+          <CustomText fontSize={{ xs: 20, sm: 24, md: 28, lg: 34 }} fontWeight={700}>4.5 ⭐</CustomText>
+          <CustomText fontSize={{ xs: 11, sm: 12, md: 13, lg: 14 }} color="text.secondary">120 reviews</CustomText>
 
           {/* Rating Bars */}
           {[5, 4, 3, 2, 1].map((r, i) => (
             <Box key={i} sx={{ display: "flex", alignItems: "center", gap: { xs: 1, md: 2 }, my: 0.5 }}>
-              <Typography width={{ xs: 18, md: 20 }} fontSize={{ xs: 13, md: 14 }}>{r}</Typography>
+              <CustomText width={{ xs: 18, md: 20 }} fontSize={{ xs: 13, md: 14 }}>{r}</CustomText>
               <Box sx={{ flex: 1, height: { xs: 6, md: 8 }, background: "#FFE1DA", borderRadius: 4, position: 'relative' }}>
                 <Box sx={{
                   height: "100%",
@@ -507,13 +494,13 @@ export const ProductDetails = () => {
                   borderRadius: 4
                 }} />
               </Box>
-              <Typography fontSize={{ xs: 12, md: 14 }}>{[40, 20, 19, 10, 7][i]}%</Typography>
+              <CustomText fontSize={{ xs: 12, md: 14 }}>{[40, 20, 19, 10, 7][i]}%</CustomText>
             </Box>
           ))}
         </Box>
 
         {/* Reviews */}
-        <Box mt={{ xs: 3, md: 4 }}>
+        <Box mt={{ xs: 3, md: 4 }} sx={{ mb: 5, px: { xs: 2, md: 3, lg: 2 } }}>
           {[{
             name: "Sophia Carter", time: "2 weeks ago",
             text: "These chocolate muffins are absolutely divine! Perfect balance of sweetness and rich chocolate flavor."
@@ -525,20 +512,20 @@ export const ProductDetails = () => {
               <Box display="flex" gap={{ xs: 1.5, md: 2 }} alignItems="center">
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: { xs: 36, md: 40 }, height: { xs: 36, md: 40 } }} />
                 <Box>
-                  <Typography fontWeight={600} fontSize={{ xs: 14, md: 16 }}>{review.name}</Typography>
-                  <Typography fontSize={{ xs: 11, md: 12 }} color="text.secondary">{review.time}</Typography>
+                  <CustomText fontWeight={600} fontSize={{ xs: 14, md: 16 }}>{review.name}</CustomText>
+                  <CustomText fontSize={{ xs: 11, md: 12 }} color="text.secondary">{review.time}</CustomText>
                 </Box>
               </Box>
               <Rating value={5 - i} readOnly size="small" sx={{ mt: 1 }} />
-              <Typography mt={1} fontSize={{ xs: 13, md: 14 }}>{review.text}</Typography>
+              <CustomText mt={1} fontSize={{ xs: 13, md: 14 }}>{review.text}</CustomText>
               <Box sx={{ display: "flex", gap: { xs: 2, md: 3 }, mt: 2, color: "#707070" }}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: .5, cursor: "pointer" }}>
                   <ThumbUpOffAlt sx={{ fontSize: { xs: 16, md: 18 } }} />
-                  <Typography fontSize={{ xs: 12, md: 13 }}>12</Typography>
+                  <CustomText fontSize={{ xs: 12, md: 13 }}>12</CustomText>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: .5, cursor: "pointer" }}>
                   <ThumbDownOffAlt sx={{ fontSize: { xs: 16, md: 18 } }} />
-                  <Typography fontSize={{ xs: 12, md: 13 }}>3</Typography>
+                  <CustomText fontSize={{ xs: 12, md: 13 }}>3</CustomText>
                 </Box>
               </Box>
             </Box>
@@ -546,7 +533,7 @@ export const ProductDetails = () => {
         </Box>
 
         {/* Explore More */}
-        <Typography className="title-style" sx={{ textAlign: "center", mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 4 }, fontSize: { xs: 20, md: 28 }, fontWeight: 'bold', fontFamily: "var(--fontFamily)" }}>Explore More</Typography>
+        <CustomText className="title-style" sx={{ textAlign: "center", mt: { xs: 3, md: 5 }, mb: { xs: 2, md: 4 }, fontSize: { xs: 18, sm: 22, md: 26, lg: 28 }, fontWeight: 'bold', fontFamily: "var(--fontFamily)" }}>Explore More</CustomText>
         <Box sx={{ width: "100%", borderBottom: "1px solid #e5e5e5", overflowX: { xs: "auto", md: "visible" } }}>
           <Tabs
             value={tab}
@@ -581,7 +568,7 @@ export const ProductDetails = () => {
             ))}
           </Tabs>
         </Box>
-        <Grid container spacing={{ xs: 2, md: 3 }} mt={{ xs: 3, md: 4 }} sx={{ mb: 5 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} mt={{ xs: 3, md: 4 }} sx={{ mb: 5, px: { xs: 2, md: 3, lg: 2 } }} >
           {images?.map((img, i) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={i}>
               <Box

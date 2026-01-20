@@ -1,7 +1,10 @@
 import { memo } from "react";
-import { Box, Card, CardContent, CardMedia, Typography, IconButton } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, IconButton } from "@mui/material";
 import { ShoppingCart, ShareOutlined, FavoriteBorder } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { CustomText } from "../comman/CustomText";
+import { ProductDescription } from "../comman/ProductDescription";
+import { ProductPrice } from "../comman/ProductPrice";
 
 export const ProductGrid = memo(({ products, isVisible }) => {
   const navigate = useNavigate();
@@ -12,8 +15,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
         display: "flex",
         flexWrap: "wrap",
         justifyContent: { xs: "center", sm: "flex-start" },
-        gap: { xs: 1.5, sm: 2, md: 3 },
-        mb: { xs: 4, md: 6 },
+        gap: { xs: 1.5, sm: 2, md: 3, lg: 2.5 },
         opacity: isVisible ? 1 : 0,
         transition: "opacity 0.6s ease-in-out",
       }}
@@ -27,10 +29,8 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 xs: "calc(50% - 6px)",
                 sm: "calc(33.333% - 13.33px)",
                 md: "calc(25% - 18px)",
-                lg: "calc(20% - 19.2px)",
+                lg: "calc(20% - 20px)",
               },
-              minWidth: { xs: "140px", sm: "160px", md: "200px" },
-              maxWidth: { xs: "none", md: "280px" },
               animation: isVisible
                 ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                 : "none",
@@ -86,7 +86,6 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   zIndex: 1,
                   pointerEvents: "none",
                 },
-
                 "&:hover": {
                   transform: "translateY(-8px) scale(1.02)",
                   boxShadow: "0 12px 30px rgba(0,0,0,0.15)",
@@ -154,25 +153,25 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                     boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
                   }}
                 >
-                  <IconButton size="small" onClick={(e) => {e.stopPropagation()}}>
+                  <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
                     <ShoppingCart sx={{ fontSize: 18 }} />
                   </IconButton>
-                  <IconButton size="small" onClick={(e) => {e.stopPropagation()}}>
+                  <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
                     <ShareOutlined sx={{ fontSize: 18 }} />
                   </IconButton>
-                  <IconButton size="small" onClick={(e) => {e.stopPropagation()}}>
+                  <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
                     <FavoriteBorder sx={{ fontSize: 18 }} />
                   </IconButton>
                 </Box>
               </Box>
               <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
-                <Typography
-                  variant="h6"
+                <CustomText
+                  autoTitleCase={true}
                   sx={{
                     fontWeight: 600,
                     color: "#2c2c2c",
                     mb: 0.5,
-                    fontSize: { xs: 13, sm: 14, md: 16 },
+                    fontSize: { xs: 11, sm: 12, md: 13 },
                     lineHeight: 1.3,
                     transition: "color 0.3s ease",
                     "&:hover": {
@@ -181,61 +180,20 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   }}
                 >
                   {product?.name}
-                </Typography>
+                </CustomText>
 
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#666",
-                    mb: 1,
-                    fontSize: { xs: 11, sm: 12, md: 13 },
-                    lineHeight: 1.4,
-                  }}
-                >
-                  {product?.description}
-                </Typography>
+                <ProductDescription>{product?.description}</ProductDescription>
 
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontWeight: 700,
-                    color: "#000",
-                    fontSize: { xs: 14, sm: 16, md: 18 },
-                    textAlign: "right",
-                    transition: "transform 0.3s ease",
-                    "&:hover": {
-                      transform: "scale(1.05)",
-                    },
-                  }}
-                >
-                  {product?.price}
-                </Typography>
+                <ProductPrice>{product?.price}</ProductPrice>
               </CardContent>
             </Card>
           </Box>
         ))
       ) : (
-        <Box
-          sx={{
-            width: "100%",
-            textAlign: "center",
-            py: 8,
-            animation: "fadeIn 0.6s ease-out",
-            "@keyframes fadeIn": {
-              "0%": { opacity: 0 },
-              "100%": { opacity: 1 },
-            },
-          }}
-        >
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#999",
-              fontSize: { xs: 16, md: 20 },
-            }}
-          >
+        <Box sx={{ width: "100%", textAlign: "center", py: 8, animation: "fadeIn 0.6s ease-out", "@keyframes fadeIn": { "0%": { opacity: 0 }, "100%": { opacity: 1 }, }, }}>
+          <CustomText variant="h6" sx={{ color: "#999", fontSize: { xs: 16, md: 20 }, }}>
             No products found
-          </Typography>
+          </CustomText>
         </Box>
       )}
     </Box>

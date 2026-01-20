@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Box, Container, Typography, Grid, Button, Divider, CircularProgress, Alert } from "@mui/material";
+import { Box, Container,  Grid, Button, Divider, CircularProgress, Alert } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import lucknowlogo from "../../assets/lucknowlogo.png";
 import store from "../../assets/store.png";
 import store1 from "../../assets/store1.png";
@@ -103,9 +104,9 @@ export const Store = () => {
                         <Link to="/" style={{ textDecoration: "none" }}>
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
                                 <ArrowBackIosNew sx={{ fontSize: 16, color: "#fff" }} />
-                                <Typography variant="body1" sx={{ fontWeight: "bold", color: "#fff" }}>
+                                <CustomText variant="body1" sx={{ fontWeight: "bold", color: "#fff" }}>
                                     Back
-                                </Typography>
+                                </CustomText>
                             </Box>
                         </Link>
                     </Box>
@@ -155,23 +156,23 @@ export const Store = () => {
                                     <Grid item size={{ xs: 12, md: 8 }}>
                                         <Box sx={{ height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                                             <Box>
-                                                <Typography sx={{ fontSize: { xs: 20, md: 26 }, fontWeight: 700, mb: 2 }}>
+                                                <CustomText sx={{ fontSize: { xs: 20, md: 26 }, fontWeight: 700, mb: 2 }}>
                                                     {branch?.name || `${branch?.city} – ${branch?.brandname || branch?.compname || "Danbro by Mr Brown Stores"}`}
-                                                </Typography>
+                                                </CustomText>
 
                                                 <Box sx={{ display: "flex", gap: 1, mb: 1.5 }}>
                                                     <span style={{ fontSize: 20 }}>📍</span>
-                                                    <Typography sx={{ fontSize: { xs: 14, md: 15 } }}>
+                                                    <CustomText sx={{ fontSize: { xs: 14, md: 15 } }}>
                                                         {branch?.address || "Address not available"}, {branch?.city}
-                                                    </Typography>
+                                                    </CustomText>
                                                 </Box>
 
                                                 {branch?.phone && (
                                                     <Box sx={{ display: "flex", gap: 1 }}>
                                                         <span style={{ fontSize: 18 }}>📞</span>
-                                                        <Typography sx={{ fontSize: { xs: 14, md: 15 } }}>
+                                                        <CustomText sx={{ fontSize: { xs: 14, md: 15 } }}>
                                                             {branch?.phone}
-                                                        </Typography>
+                                                        </CustomText>
                                                     </Box>
                                                 )}
                                             </Box>
@@ -194,9 +195,9 @@ export const Store = () => {
                             ))
                         ) : (
                             <Box sx={{ textAlign: "center", py: 8, mt: { xs: 4, md: 6 } }}>
-                                <Typography sx={{ fontSize: { xs: 16, md: 20 }, color: "#999" }}>
+                                <CustomText sx={{ fontSize: { xs: 16, md: 20 }, color: "#999" }}>
                                     No branches found
-                                </Typography>
+                                </CustomText>
                             </Box>
                         )}
                     </Container>

@@ -1,5 +1,5 @@
 import Slider from "react-slick";
-import { Box, IconButton, Typography, CircularProgress, Alert } from "@mui/material";
+import { Box, IconButton, CircularProgress, Alert } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import cat1 from "../../assets/09f1ee59e9d78cc206e6e867e1cda04c1887d8f8.png";
@@ -7,6 +7,7 @@ import cat2 from "../../assets/60be109ca830b1d8ab92f161cd0ca3083a16e4ca.png";
 import cat3 from "../../assets/43676d15934fc50bdda59d3e39fd8a4ceaadcb9e.png";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { useNavigate } from "react-router-dom";
+import { CustomText } from "../comman/CustomText";
 
 
 // Helper function to get image based on category name or index
@@ -55,13 +56,13 @@ export const CategoryCarousel = () => {
         <CircularProgress sx={{ color: "var(--themeColor)" }} />
       </Box>
     ) : error || !items || items.length === 0 ? (
-      <Box sx={{ px: { xs: 2, sm: 3, md: 6 } }}>
+      <Box sx={{ px: { xs: 2, sm: 3, md: 6, lg: 2 } }}>
         <Alert severity={error ? "error" : "info"} sx={{ borderRadius: 2 }}>
           {error ? `Failed to load categories: ${error}` : "No categories available at the moment."}
         </Alert>
       </Box>
     ) : (
-      <Box sx={{ px: { xs: 2, sm: 3, md: 6 } }}>
+      <Box sx={{ px: { xs: 2, sm: 3, md: 6, lg: 2 } }}>
         <Box
           sx={{
             width: "100%",
@@ -205,8 +206,9 @@ export const CategoryCarousel = () => {
                         boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
                       }}
                     />
-                    <Typography
+                    <CustomText
                       className="category-title"
+                      autoTitleCase={true}
                       sx={{
                         fontSize: { xs: 10, sm: 11, md: 13 },
                         fontWeight: 600,
@@ -217,7 +219,7 @@ export const CategoryCarousel = () => {
                       }}
                     >
                       {item?.title}
-                    </Typography>
+                    </CustomText>
                   </Box>
                 </Box>
               ))}

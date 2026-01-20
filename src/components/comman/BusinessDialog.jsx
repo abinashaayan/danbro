@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Box, Typography, Button, IconButton, Grid } from "@mui/material";
+import { Box,  Button, IconButton, Grid } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import CloseIcon from "@mui/icons-material/Close";
 import CampaignIcon from "@mui/icons-material/Campaign";
 
@@ -105,7 +106,7 @@ export const BusinessDialog = ({ open, onClose }) => {
               }}
             >
               <Box>
-                <Typography
+                <CustomText
                   sx={{
                     fontSize: { xs: 24, sm: 28, md: 32 },
                     fontWeight: 700,
@@ -115,8 +116,8 @@ export const BusinessDialog = ({ open, onClose }) => {
                   }}
                 >
                   Something About Us
-                </Typography>
-                <Typography
+                </CustomText>
+                <CustomText
                   sx={{
                     fontSize: { xs: 14, md: 16 },
                     color: "#fff",
@@ -125,7 +126,7 @@ export const BusinessDialog = ({ open, onClose }) => {
                   }}
                 >
                   Danbro by Mr. Brown Bakery brings you oven-fresh goodness inspired by tradition and baked with heart, We believe in slow baking, honest ingredients, and creating moments worth savoring.
-                </Typography>
+                </CustomText>
               </Box>
               <Button
                 onClick={handleClickHere}
@@ -151,9 +152,9 @@ export const BusinessDialog = ({ open, onClose }) => {
                 }}
               >
                 <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 20, md: 22 } }} />
-                <Typography sx={{ color: "#000", fontWeight: 600 }}>
+                <CustomText sx={{ color: "#000", fontWeight: 600 }}>
                   Click Here
-                </Typography>
+                </CustomText>
               </Button>
             </Box>
           </Grid>
@@ -179,7 +180,7 @@ export const BusinessDialog = ({ open, onClose }) => {
               }}
             >
               <Box>
-                <Typography
+                <CustomText
                   sx={{
                     fontSize: { xs: 24, sm: 28, md: 32 },
                     fontWeight: 700,
@@ -189,8 +190,8 @@ export const BusinessDialog = ({ open, onClose }) => {
                   }}
                 >
                   Danbro B2B
-                </Typography>
-                <Typography
+                </CustomText>
+                <CustomText
                   sx={{
                     fontSize: { xs: 14, md: 16 },
                     color: "#fff",
@@ -199,7 +200,7 @@ export const BusinessDialog = ({ open, onClose }) => {
                   }}
                 >
                   Danbro by Mr. Brown Bakery delivers fresh, high quality baked goods tailored for businesses, We're your reliable Business to Business partner, committed to consistency, taste and timely supply.
-                </Typography>
+                </CustomText>
               </Box>
               <Button
                 onClick={handleInquireNow}
@@ -225,9 +226,9 @@ export const BusinessDialog = ({ open, onClose }) => {
                 }}
               >
                 <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 20, md: 22 } }} />
-                <Typography sx={{ color: "#000", fontWeight: 600 }}>
+                <CustomText sx={{ color: "#000", fontWeight: 600 }}>
                   Inquire Now
-                </Typography>
+                </CustomText>
               </Button>
             </Box>
           </Grid>

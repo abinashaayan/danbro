@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button, IconButton } from "@mui/material";
+import { Box,  TextField, Button, IconButton } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import CloseIcon from "@mui/icons-material/Close";
 
 export const DeliveryCheckDialog = ({ open, onClose }) => {
@@ -82,7 +83,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
           <CloseIcon />
         </IconButton>
 
-        <Typography
+        <CustomText
           sx={{
             fontSize: { xs: 22, md: 24 },
             fontWeight: 700,
@@ -92,7 +93,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
           }}
         >
           Check Delivery First
-        </Typography>
+        </CustomText>
 
         <TextField
           fullWidth

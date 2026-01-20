@@ -1,4 +1,5 @@
-import { Box, Card, CardContent, CardMedia, Typography, Container } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Container } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import Slider from "react-slick";
 import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 
@@ -77,75 +78,51 @@ export const RecommendedProducts = ({ recommendedProducts = [] }) => {
   };
 
   return (
-    <Container maxWidth="xl" sx={{ px: { xs: 2, md: 3 }, py: 4 }}>
-    <Box
-      sx={{
-        position: "relative",
-        "& .slick-slider": {
+    <Container maxWidth="false" sx={{ py: 4, mb: 4, px: { xs: 2, md: 3, lg: 2 } }}>
+      <Box
+        sx={{
           position: "relative",
-        },
-        "& .slick-list": {
-          padding: { xs: "0 20px", md: "0" },
-        },
-      }}
-    >
-      <Box sx={{ position: "relative" }}>
-        <Slider {...settings}>
-          {recommendedProducts?.map((product) => (
-            <Box key={product?.id} sx={{ px: { xs: 1, md: 1.5 } }}>
-              <Card
-                elevation={0}
-                sx={{
-                  borderRadius: { xs: 1.5, md: 2 },
-                  transition: "all 0.3s ease",
-                  cursor: "pointer",
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                  },
-                }}
-              >
-                <CardMedia
-                  component="img"
-                  height="200"
-                  image={product?.image}
-                  alt={product?.name}
-                  loading="lazy"
-                  sx={{ 
-                    height: { xs: 160, sm: 180, md: 200 },
-                    objectFit: "cover" 
+          px: { xs: 2, md: 3, lg: 2 },
+          "& .slick-slider": {
+            position: "relative",
+          },
+          "& .slick-list": {
+            padding: { xs: "0 20px", md: "0" },
+          },
+        }}
+      >
+        <CustomText variant="h4" sx={{ fontWeight: 600, color: "#2c2c2c", mb: 2, fontSize: { xs: 18, md: 22 } }}>Recommended Products</CustomText>
+        <Box sx={{ position: "relative" }}>
+          <Slider {...settings}>
+            {recommendedProducts?.map((product) => (
+              <Box key={product?.id} sx={{ px: { xs: 1, md: 1.5 } }}>
+                <Card
+                  elevation={0}
+                  sx={{
+                    borderRadius: { xs: 1.5, md: 2 },
+                    transition: "all 0.3s ease",
+                    cursor: "pointer",
+                    "&:hover": {
+                      transform: "translateY(-5px)",
+                      boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                    },
                   }}
-                />
-
-                <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      fontWeight: 600,
-                      color: "#2c2c2c",
-                      mb: 0.5,
-                      fontSize: { xs: 13, md: 16 },
-                    }}
-                  >
-                    {product?.name}
-                  </Typography>
-
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      color: "#964F73",
-                      fontSize: { xs: 11, md: 13 },
-                    }}
-                  >
-                    {product?.description}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Box>
-          ))}
-        </Slider>
+                >
+                  <CardMedia component="img" height="100" image={product?.image} alt={product?.name} loading="lazy" sx={{ height: { xs: 100, sm: 120, md: 140 }, objectFit: "cover" }} />
+                  <CardContent sx={{ p: { xs: 1.5, md: 2 } }}>
+                    <CustomText variant="h6" autoTitleCase={true} sx={{ fontWeight: 600, color: "#2c2c2c", mb: 0.5, fontSize: { xs: 13, md: 16 }, }}>
+                      {product?.name}
+                    </CustomText>
+                    <CustomText variant="body2" sx={{ color: "#964F73", fontSize: { xs: 11, md: 13 }, }}>
+                      {product?.description}
+                    </CustomText>
+                  </CardContent>
+                </Card>
+              </Box>
+            ))}
+          </Slider>
+        </Box>
       </Box>
-    </Box>
     </Container>
   );
 };

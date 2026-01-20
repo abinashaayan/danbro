@@ -1,4 +1,5 @@
-import { Box, Typography, IconButton, Drawer, useMediaQuery, useTheme } from "@mui/material";
+import { Box,  IconButton, Drawer, useMediaQuery, useTheme } from "@mui/material";
+import { CustomText } from "../comman/CustomText";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
@@ -11,7 +12,6 @@ const categoryItems = [
     { label: "GIFT HAMPERS & CHOCOLATES", path: "/gift-hampers" },
     { label: "ADDONS", path: "/addons" },
     { label: "PRODUCTS", path: "/products" },
-    { label: "OFFERS & SCHEMES", path: "/offers" },
     { label: "EVENTS", path: "/events" },
 ];
 
@@ -30,7 +30,7 @@ export const Navbar = () => {
     const menuItems = (
         <>
             {categoryItems?.map((item) => (
-                <Typography
+                <CustomText
                     key={item}
                     sx={{
                         fontWeight: 600,
@@ -50,7 +50,7 @@ export const Navbar = () => {
                     }}
                 >
                     {item}
-                </Typography>
+                </CustomText>
             ))}
         </>
     );
@@ -84,7 +84,7 @@ export const Navbar = () => {
                 }}
             >
                 {categoryItems.map(({ label, path }) => (
-                    <Typography
+                    <CustomText
                         key={label}
                         onClick={() => navigate(path)}
                         onMouseEnter={() => setHoveredItem(label)}
@@ -119,7 +119,7 @@ export const Navbar = () => {
                         }}
                     >
                         {label}
-                    </Typography>
+                    </CustomText>
                 ))}
 
             </Box>
@@ -149,7 +149,7 @@ export const Navbar = () => {
                 >
                     <MenuIcon />
                 </IconButton>
-                {/* <Typography
+                {/* <CustomText
                     sx={{
                         fontWeight: 600,
                         fontSize: 14,
@@ -157,7 +157,7 @@ export const Navbar = () => {
                     }}
                 >
                     Menu
-                </Typography> */}
+                </CustomText> */}
             </Box>
 
             {/* Mobile Drawer */}
@@ -194,7 +194,7 @@ export const Navbar = () => {
                     }}
                 >
                     {categoryItems.map(({ label, path }, index) => (
-                        <Typography
+                        <CustomText
                             key={label}
                             onClick={() => {
                                 navigate(path);
@@ -225,7 +225,7 @@ export const Navbar = () => {
                             }}
                         >
                             {label}
-                        </Typography>
+                        </CustomText>
                     ))}
 
                 </Box>

@@ -1,11 +1,12 @@
 import React from "react";
-import { Box, Container, Typography, Divider } from "@mui/material";
+import { Box, Container,  Divider } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 
 export const TermsAndConditions = () => {
   return (
     <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 } }}>
       <Container maxWidth="xl" sx={{ py: { xs: 4, md: 6 }, px: { xs: 2, md: 3 } }}>
-        <Typography
+        <CustomText
           variant="h3"
           sx={{
             fontSize: { xs: 28, sm: 32, md: 40 },
@@ -16,8 +17,8 @@ export const TermsAndConditions = () => {
           }}
         >
           Terms & Conditions
-        </Typography>
-        <Typography
+        </CustomText>
+        <CustomText
           sx={{
             fontSize: { xs: 12, sm: 13, md: 14 },
             color: "#666",
@@ -26,7 +27,7 @@ export const TermsAndConditions = () => {
           }}
         >
           Last Updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </Typography>
+        </CustomText>
 
         <Box sx={{ maxWidth: "900px", mx: "auto" }}>
           <Section
@@ -158,18 +159,18 @@ export const TermsAndConditions = () => {
               <>
                 If you have any questions about these Terms & Conditions, please contact us:
                 <Box sx={{ mt: 2, p: 2, backgroundColor: "#f9f9f9", borderRadius: 2 }}>
-                  <Typography sx={{ fontSize: { xs: 13, md: 14 }, mb: 0.5, fontWeight: 600 }}>
+                  <CustomText sx={{ fontSize: { xs: 13, md: 14 }, mb: 0.5, fontWeight: 600 }}>
                     Danbro by Mr. Brown Bakery
-                  </Typography>
-                  <Typography sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                  </CustomText>
+                  <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
                     Email: info@mrbrownbakery.com
-                  </Typography>
-                  <Typography sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                  </CustomText>
+                  <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
                     Phone: +91-7309010623
-                  </Typography>
-                  <Typography sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                  </CustomText>
+                  <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
                     Address: B-35, Sector-P, Aliganj, Lucknow 226024
-                  </Typography>
+                  </CustomText>
                 </Box>
               </>
             }
@@ -183,7 +184,7 @@ export const TermsAndConditions = () => {
 const Section = ({ title, content }) => {
   return (
     <Box sx={{ mb: { xs: 4, md: 5 } }}>
-      <Typography
+      <CustomText
         variant="h5"
         sx={{
           fontSize: { xs: 18, sm: 20, md: 24 },
@@ -193,8 +194,8 @@ const Section = ({ title, content }) => {
         }}
       >
         {title}
-      </Typography>
-      <Typography
+      </CustomText>
+      <CustomText
         sx={{
           fontSize: { xs: 14, sm: 15, md: 16 },
           color: "#555",
@@ -202,7 +203,7 @@ const Section = ({ title, content }) => {
         }}
       >
         {content}
-      </Typography>
+      </CustomText>
       <Divider sx={{ mt: { xs: 3, md: 4 } }} />
     </Box>
   );

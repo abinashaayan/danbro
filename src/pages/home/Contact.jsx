@@ -1,4 +1,5 @@
-import { Box, Container, Typography, Grid, Button, Divider, IconButton } from "@mui/material";
+import { Box, Container,  Grid, Button, Divider, IconButton } from "@mui/material";
+import { CustomText } from "../../components/comman/CustomText";
 import { useEffect, useRef, useState } from "react";
 import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
 
@@ -68,19 +69,19 @@ export const Contact = () => {
           transition: "0.7s ease",
         }}
       >
-        <Typography sx={{ fontSize: { xs: 28, sm: 38, md: 42, lg: 56 }, fontWeight: 700, color: "#fff" }}>
+        <CustomText sx={{ fontSize: { xs: 28, sm: 38, md: 42, lg: 56 }, fontWeight: 700, color: "#fff" }}>
           CONTACT US
-        </Typography>
-        <Typography sx={{ color: "#fff", fontSize: { xs: 12, sm: 13, md: 13, lg: 14 }, mt: 1 }}>
+        </CustomText>
+        <CustomText sx={{ color: "#fff", fontSize: { xs: 12, sm: 13, md: 13, lg: 14 }, mt: 1 }}>
           Home • Contact Us
-        </Typography>
+        </CustomText>
       </Box>
 
       {/* STORES & CONTACT */}
-      <Container maxWidth="xl" sx={{ py: { xs: 5, sm: 5, md: 6, lg: 7 }, px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
-        <Typography align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 4, sm: 4, md: 4, lg: 4 }, fontSize: { xs: 22, sm: 24, md: 26, lg: 28 }, px: { xs: 0, sm: 0, md: 2, lg: 0 } }}>
+      <Container maxWidth="false" sx={{ py: { xs: 5, sm: 5, md: 6, lg: 7 } }}>
+        <CustomText align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 4, sm: 4, md: 4, lg: 4 }, fontSize: { xs: 22, sm: 24, md: 26, lg: 28 }, px: { xs: 0, sm: 0, md: 2, lg: 0 } }}>
           SOMETHING ABOUT US
-        </Typography>
+        </CustomText>
 
         <Box sx={{
           p: { xs: 3, sm: 3.5, md: 4.5, lg: 5 },
@@ -95,13 +96,13 @@ export const Contact = () => {
 
           {/* LEFT STORES */}
           <Box sx={{ flex: 1, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
-            <Typography sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>VISIT OUR STORES</Typography>
+            <CustomText sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>VISIT OUR STORES</CustomText>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 2, sm: 2, md: 1.5, lg: 2 } }}>
               {["Lucknow", "Kanpur", "Delhi", "Noida", "Ghazibad"].map((city, i) => (
                 <Box key={i} sx={{ textAlign: "center" }}>
                   <img src={visitors} style={{ width: 70, height: 70, borderRadius: 10 }} />
-                  <Typography sx={{ fontSize: { xs: 12, sm: 12, md: 12, lg: 12 }, fontWeight: 600, mt: 1 }}>{city}</Typography>
+                  <CustomText sx={{ fontSize: { xs: 12, sm: 12, md: 12, lg: 12 }, fontWeight: 600, mt: 1 }}>{city}</CustomText>
                 </Box>
               ))}
             </Box>
@@ -117,12 +118,12 @@ export const Contact = () => {
 
           {/* RIGHT CONTACT DETAILS */}
           <Box sx={{ flex: 1, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
-            <Typography sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>CONTACT DETAILS</Typography>
+            <CustomText sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>CONTACT DETAILS</CustomText>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Typography sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📞 +91 7309032618  |  0522-4113205</Typography>
-              <Typography sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>✉️ Info@Mrbrownbakery.Com</Typography>
-              <Typography sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📍 B-35, Sector-P, Aliganj, Lucknow, UP 220024</Typography>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📞 +91 7309032618  |  0522-4113205</CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>✉️ Info@Mrbrownbakery.Com</CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📍 B-35, Sector-P, Aliganj, Lucknow, UP 220024</CustomText>
             </Box>
           </Box>
         </Box>
@@ -130,10 +131,10 @@ export const Contact = () => {
 
       {/* GET IN TOUCH */}
       <Box sx={{ textAlign: "center", mb: 3, px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
-        <Typography sx={{ fontSize: { xs: 32, sm: 40, md: 48, lg: 60 }, fontWeight: 700, opacity: .15 }}>Get in touch</Typography>
-        <Typography sx={{ fontSize: { xs: 14, sm: 16, md: 17, lg: 18 }, maxWidth: { xs: "100%", sm: "90%", md: 600 }, mx: "auto", mt: -3, color: "#555" }}>
+        <CustomText sx={{ fontSize: { xs: 32, sm: 40, md: 48, lg: 60 }, fontWeight: 700, opacity: .15 }}>Get in touch</CustomText>
+        <CustomText sx={{ fontSize: { xs: 14, sm: 16, md: 17, lg: 18 }, maxWidth: { xs: "100%", sm: "90%", md: 600 }, mx: "auto", mt: -3, color: "#555" }}>
           Reach out, and let's create a universe of possibilities together!
-        </Typography>
+        </CustomText>
       </Box>
 
       <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
@@ -148,10 +149,10 @@ export const Contact = () => {
 
           {/* FORM */}
           <Box sx={{ flex: 1 }}>
-            <Typography sx={{ fontSize: { xs: 18, sm: 20, md: 22, lg: 24 }, fontWeight: 700, color: "#fff" }}>Let's connect constellations</Typography>
-            <Typography sx={{ fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#fff", mb: 3, mt: 1 }}>
+            <CustomText sx={{ fontSize: { xs: 18, sm: 20, md: 22, lg: 24 }, fontWeight: 700, color: "#fff" }}>Let's connect constellations</CustomText>
+            <CustomText sx={{ fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#fff", mb: 3, mt: 1 }}>
               Let's align our constellations! Reach out and let the magic of collaboration shine.
-            </Typography>
+            </CustomText>
 
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, md: 6 }}> <input placeholder="Last Name" style={inputStyle} /> </Grid>
@@ -178,9 +179,9 @@ export const Contact = () => {
 
       {/* FAQ */}
       <Container maxWidth="xl" sx={{ py: { xs: 6, sm: 6, md: 5, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 5 }, mb: 5 }}>
-        <Typography align="center" sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 26, md: 28, lg: 32 }, mb: { xs: 4, sm: 4, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
+        <CustomText align="center" sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 26, md: 28, lg: 32 }, mb: { xs: 4, sm: 4, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
           Frequently Asked Questions
-        </Typography>
+        </CustomText>
 
         <Box sx={{ px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
           {faqs.map((item, i) => (
@@ -190,14 +191,14 @@ export const Contact = () => {
             }} onClick={() => setOpen(open === i ? null : i)}>
 
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography sx={{ fontWeight: 600, fontSize: { xs: 14, sm: 15, md: 15, lg: 16 } }}>{item.q}</Typography>
+                <CustomText sx={{ fontWeight: 600, fontSize: { xs: 14, sm: 15, md: 15, lg: 16 } }}>{item.q}</CustomText>
                 <IconButton>{open === i ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}</IconButton>
               </Box>
 
               {open === i && (
-                <Typography sx={{ mt: 1.5, fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#444", lineHeight: 1.6 }}>
+                <CustomText sx={{ mt: 1.5, fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#444", lineHeight: 1.6 }}>
                   {item.a}
-                </Typography>
+                </CustomText>
               )}
             </Box>
           ))}
