@@ -78,7 +78,7 @@ export const Contact = () => {
       </Box>
 
       {/* STORES & CONTACT */}
-      <Container maxWidth="false" sx={{ py: { xs: 5, sm: 5, md: 6, lg: 7 } }}>
+      <Container sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
         <CustomText align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 4, sm: 4, md: 4, lg: 4 }, fontSize: { xs: 22, sm: 24, md: 26, lg: 28 }, px: { xs: 0, sm: 0, md: 2, lg: 0 } }}>
           SOMETHING ABOUT US
         </CustomText>
@@ -95,7 +95,7 @@ export const Contact = () => {
         }}>
 
           {/* LEFT STORES */}
-          <Box sx={{ flex: 1, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
+          <Box sx={{ flex: 1, px: { xs: 2, md: 3, lg: 2 } }}>
             <CustomText sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>VISIT OUR STORES</CustomText>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: { xs: 2, sm: 2, md: 1.5, lg: 2 } }}>
@@ -137,7 +137,7 @@ export const Contact = () => {
         </CustomText>
       </Box>
 
-      <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
+      <Container maxWidth="xl" sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
         <Box sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
@@ -178,7 +178,7 @@ export const Contact = () => {
       </Container>
 
       {/* FAQ */}
-      <Container maxWidth="xl" sx={{ py: { xs: 6, sm: 6, md: 5, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 5 }, mb: 5 }}>
+      <Container sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 }, mb: 5 }}>
         <CustomText align="center" sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 26, md: 28, lg: 32 }, mb: { xs: 4, sm: 4, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
           Frequently Asked Questions
         </CustomText>
@@ -186,7 +186,7 @@ export const Contact = () => {
         <Box sx={{ px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
           {faqs.map((item, i) => (
             <Box key={i} sx={{
-              background: "#FFEDE8", p: { xs: 2.5, sm: 2.5, md: 2.5, lg: 3 }, borderRadius: 3, mb: 2, cursor: "pointer",
+              background: "#FFEDE8", p: { xs: 1, sm: 1, md: 1, lg: 2 }, borderRadius: 3, mb: 2, cursor: "pointer",
               "&:hover": { background: "#FFE1D8" }
             }} onClick={() => setOpen(open === i ? null : i)}>
 
