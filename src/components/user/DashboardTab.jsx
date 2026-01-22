@@ -3,7 +3,21 @@ import { LocalShipping as LocalShippingIcon, LocalOffer as LocalOfferIcon } from
 import { Link } from "react-router-dom";
 import { CustomText } from "../comman/CustomText";
 
-export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile }) => {
+export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfile }) => {
+  // Get user's first name or fallback to "User"
+  const getUserName = () => {
+    if (userProfile?.name) {
+      // Get first name from full name
+      const firstName = userProfile.name.split(' ')[0];
+      return firstName;
+    }
+    if (userProfile?.email) {
+      // Get name from email (before @)
+      return userProfile.email.split('@')[0];
+    }
+    return "User";
+  };
+
   return (
     <>
       <Box sx={{ mb: 4 }}>
@@ -17,7 +31,7 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile }) => {
             mt: { xs: isMobile ? 0 : 0, md: 0 },
           }}
         >
-          Welcome back, Aditya.
+          Welcome back, {getUserName()}.
         </CustomText>
         <CustomText
           variant="body1"

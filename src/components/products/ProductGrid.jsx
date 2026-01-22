@@ -7,6 +7,7 @@ import { ProductDescription } from "../comman/ProductDescription";
 import { ProductPrice } from "../comman/ProductPrice";
 import { CustomToast } from "../comman/CustomToast";
 import { addToWishlist, removeFromWishlist, isInWishlist } from "../../utils/wishlist";
+import { addToCart } from "../../utils/cart";
 import { getStoredLocation } from "../../utils/location";
 import { getAccessToken } from "../../utils/cookies";
 
@@ -14,6 +15,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
   const navigate = useNavigate();
   const [wishlistItems, setWishlistItems] = useState(new Set());
   const [loadingWishlist, setLoadingWishlist] = useState(new Set());
+  const [loadingCart, setLoadingCart] = useState(new Set());
   const [toast, setToast] = useState({ 
     open: false, 
     message: "", 
@@ -122,6 +124,69 @@ export const ProductGrid = memo(({ products, isVisible }) => {
       });
     } finally {
       setLoadingWishlist((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleAddToCart = async (e, product) => {
+    e.stopPropagation();
+
+    if (!product?.productId) {
+      setToast({
+        open: true,
+        message: "Product ID is missing. Please try again.",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    if (!isLoggedIn) {
+      setToast({
+        open: true,
+        message: "Please login to add items to cart",
+        severity: "warning",
+        loading: false,
+      });
+      return;
+    }
+
+    const productId = product.productId;
+    setLoadingCart((prev) => new Set(prev).add(productId));
+    setToast({
+      open: true,
+      message: "Adding to cart...",
+      severity: "info",
+      loading: true,
+    });
+
+    try {
+      // Default quantity is 1, can be customized later
+      const quantity = 1;
+      await addToCart(productId, quantity);
+      
+      setToast({
+        open: true,
+        message: "Product added to cart successfully!",
+        severity: "success",
+        loading: false,
+      });
+      
+      // Dispatch event to update cart count in header
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setToast({
+        open: true,
+        message: error.response?.data?.message || "Failed to add product to cart",
+        severity: "error",
+        loading: false,
+      });
+    } finally {
+      setLoadingCart((prev) => {
         const newSet = new Set(prev);
         newSet.delete(productId);
         return newSet;
@@ -273,8 +338,39 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                     boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
                   }}
                 >
-                  <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
-                    <ShoppingCart sx={{ fontSize: 18 }} />
+                  <IconButton
+                    size="small"
+                    onClick={(e) => handleAddToCart(e, product)}
+                    disabled={loadingCart.has(product?.productId)}
+                    sx={{
+                      position: "relative",
+                      "&:disabled": {
+                        opacity: 0.8,
+                      },
+                      transition: "all 0.3s ease",
+                      "&:hover:not(:disabled)": {
+                        transform: "scale(1.15)",
+                        color: "var(--themeColor)",
+                      },
+                    }}
+                  >
+                    {loadingCart.has(product?.productId) ? (
+                      <CircularProgress
+                        size={18}
+                        thickness={4}
+                        sx={{
+                          color: "var(--themeColor)",
+                          position: "absolute",
+                        }}
+                      />
+                    ) : (
+                      <ShoppingCart
+                        sx={{
+                          fontSize: 18,
+                          transition: "all 0.3s ease",
+                        }}
+                      />
+                    )}
                   </IconButton>
                   <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
                     <ShareOutlined sx={{ fontSize: 18 }} />

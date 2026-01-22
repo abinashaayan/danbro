@@ -325,12 +325,16 @@ export const TopHeader = () => {
                     display: "flex",
                     gap: { xs: 0.5, md: 1 },
                     order: { xs: 2, md: 3 },
+                    alignItems: "center",
                 }}
             >
                 <IconButton
+                    size="small"
                     sx={{
                         color: "var(--themeColor)",
-                        padding: { xs: 0.5, md: 1 },
+                        padding: { xs: 0.5, md: 0.75 },
+                        width: { xs: 36, md: 40 },
+                        height: { xs: 36, md: 40 },
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         "&:hover": {
                             transform: "translateY(-3px) scale(1.1)",
@@ -339,13 +343,16 @@ export const TopHeader = () => {
                         },
                     }}
                 >
-                    <SearchIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
+                    <SearchIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
                 </IconButton>
                 <IconButton
+                    size="small"
                     onClick={handleWishlistClick}
                     sx={{
                         color: "var(--themeColor)",
-                        padding: { xs: 0.5, md: 1 },
+                        padding: { xs: 0.5, md: 0.75 },
+                        width: { xs: 36, md: 40 },
+                        height: { xs: 36, md: 40 },
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                         position: "relative",
                         "&:hover": {
@@ -358,15 +365,18 @@ export const TopHeader = () => {
                     <Badge
                         badgeContent={wishlistCount}
                         color="error" >
-                        <Favorite sx={{ fontSize: { xs: 20, md: 24 } }} />
+                        <Favorite sx={{ fontSize: { xs: 22, md: 24 } }} />
                     </Badge>
                 </IconButton>
 
                 {isLoggedIn && userProfile ? (
                     <IconButton
+                        size="small"
                         onClick={() => navigate("/profile")}
                         sx={{
-                            padding: { xs: 0.5, md: 1 },
+                            padding: { xs: 0.5, md: 0.75 },
+                            width: { xs: 36, md: 40 },
+                            height: { xs: 36, md: 40 },
                             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                             cursor: "pointer",
                             "&:hover": {
@@ -377,10 +387,10 @@ export const TopHeader = () => {
                     >
                         <Avatar
                             sx={{
-                                width: { xs: 28, md: 32 },
-                                height: { xs: 28, md: 32 },
+                                width: { xs: 24, md: 28 },
+                                height: { xs: 24, md: 28 },
                                 bgcolor: "var(--themeColor)",
-                                fontSize: { xs: 14, md: 16 },
+                                fontSize: { xs: 12, md: 14 },
                                 fontWeight: 600,
                                 border: "2px solid #fff",
                                 boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
@@ -396,10 +406,13 @@ export const TopHeader = () => {
                     </IconButton>
                 ) : (
                     <IconButton
+                        size="small"
                         onClick={() => navigate("/login")}
                         sx={{
                             color: "var(--themeColor)",
-                            padding: { xs: 0.5, md: 1 },
+                            padding: { xs: 0.5, md: 0.75 },
+                            width: { xs: 36, md: 40 },
+                            height: { xs: 36, md: 40 },
                             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                             cursor: "pointer",
                             "&:hover": {
@@ -409,14 +422,17 @@ export const TopHeader = () => {
                             },
                         }}
                     >
-                        <PersonOutlineIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
+                        <PersonOutlineIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
                     </IconButton>
                 )}
                 <Link to="/cart">
                     <IconButton
+                        size="small"
                         sx={{
                             color: "var(--themeColor)",
-                            padding: { xs: 0.5, md: 1 },
+                            padding: { xs: 0.5, md: 0.75 },
+                            width: { xs: 36, md: 40 },
+                            height: { xs: 36, md: 40 },
                             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                             position: "relative",
                             "&:hover": {
@@ -429,7 +445,7 @@ export const TopHeader = () => {
                         <Badge
                             badgeContent={cartCount}
                             color="error" >
-                            <ShoppingCart sx={{ fontSize: { xs: 20, md: 24 } }} />
+                            <ShoppingCart sx={{ fontSize: { xs: 22, md: 24 } }} />
                         </Badge>
                     </IconButton>
                 </Link>

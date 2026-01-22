@@ -362,6 +362,7 @@ export const UserProfile = () => {
                   favoriteItems={favoriteItems}
                   setActiveTab={setActiveTab}
                   isMobile={isMobile}
+                  userProfile={userProfile}
                 />
               )}
 
