@@ -2,18 +2,44 @@ import { Box,  IconButton, Drawer, useMediaQuery, useTheme } from "@mui/material
 import { CustomText } from "../comman/CustomText";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { categoryItems } from "../../utils/navigationItems";
 import { NavbarDropdown } from "./NavbarDropdown";
 
 export const Navbar = () => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isScrolled, setIsScrolled] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
+    const navbarRef = useRef(null);
 
-    const navigate = useNavigate();
+    // Sticky header with hide/show on scroll
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            // Add shadow when scrolled
+            setIsScrolled(currentScrollY > 50);
+            
+            // Hide/show navbar on scroll
+            if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+                setIsVisible(false); // Scrolling down - hide
+            } else {
+                setIsVisible(true); // Scrolling up - show
+            }
+            
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener("scroll", handleScroll, { passive: true });
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
@@ -22,9 +48,13 @@ export const Navbar = () => {
     return (
         <>
             <Box
+                ref={navbarRef}
                 sx={{
-                    position: "relative",
-                    zIndex: 100,
+                    position: "sticky",
+                    top: { xs: "50px", md: "60px" },
+                    zIndex: 999,
+                    transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease",
+                    transform: isVisible ? "translateY(0)" : "translateY(-100%)",
                 }}
                 onMouseLeave={() => setHoveredItem(null)}
             >
@@ -37,7 +67,10 @@ export const Navbar = () => {
                         py: 1.5,
                         backgroundColor: "#fbc7b5",
                         position: "relative",
-                        boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                        boxShadow: isScrolled 
+                            ? "0 4px 20px rgba(0,0,0,0.1)" 
+                            : "0 2px 10px rgba(0,0,0,0.05)",
+                        transition: "box-shadow 0.3s ease",
                         "&::before": {
                             content: '""',
                             position: "absolute",
@@ -85,7 +118,7 @@ export const Navbar = () => {
                                         fontWeight: 600,
                                         fontSize: { xs: 12, sm: 13, md: 14 },
                                         cursor: "pointer",
-                                        color: label === "ADDONS" ? "#fff" : "var(--themeColor)",
+                                        color: label === "ADDONS" ? "#fff" : location.pathname === path ? "var(--themeColor)" : "var(--themeColor)",
                                         ...(label === "ADDONS" && {
                                             backgroundColor: "#00b53d",
                                             borderRadius: 2,
@@ -94,7 +127,7 @@ export const Navbar = () => {
                                         }),
                                         whiteSpace: "nowrap",
                                         position: "relative",
-                                        transition: "all 0.3s ease",
+                                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                         transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
                                         "&::after": {
                                             content: '""',

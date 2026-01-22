@@ -92,8 +92,8 @@ export const HeroBanner = () => {
         onMouseLeave={() => setIsHovered(false)}
         sx={{
           width: "100%",
-          maxWidth: "100vw",
-          mb: 4,
+          maxWidth: "100%",
+          mb: { xs: 2, md: 3 },
           position: "relative",
           display: "flex",
           justifyContent: "center",
@@ -101,13 +101,15 @@ export const HeroBanner = () => {
           transform: "translateY(20px) scale(0.98)",
           transition: "opacity 1.2s ease-out, transform 1.2s ease-out",
           overflow: "hidden",
+          overflowX: "hidden",
+          overflowY: "hidden",
           "&::before": {
             content: '""',
             position: "absolute",
-            top: "-100px",
-            left: "-100px",
-            width: "500px",
-            height: "500px",
+            top: "-50px",
+            left: "-50px",
+            width: "300px",
+            height: "300px",
             borderRadius: "50%",
             background: "radial-gradient(circle, rgba(255,181,161,0.35) 0%, rgba(95,41,48,0.15) 50%, transparent 70%)",
             animation: "float 15s ease-in-out infinite",
@@ -118,10 +120,10 @@ export const HeroBanner = () => {
           "&::after": {
             content: '""',
             position: "absolute",
-            bottom: "-100px",
-            right: "-100px",
-            width: "450px",
-            height: "450px",
+            bottom: "-50px",
+            right: "-50px",
+            width: "300px",
+            height: "300px",
             borderRadius: "50%",
             background: "radial-gradient(circle, rgba(251,199,181,0.3) 0%, rgba(255,181,161,0.2) 50%, transparent 70%)",
             animation: "floatReverse 18s ease-in-out infinite",
@@ -186,26 +188,52 @@ export const HeroBanner = () => {
           className="hero-banner-wrapper"
           sx={{
             width: "100%",
+            maxWidth: "100%",
             position: "relative",
             zIndex: 1,
             overflow: "hidden",
+            overflowX: "hidden",
+            overflowY: "hidden",
             borderRadius: { xs: "0", md: "24px" },
+            "& .slick-slider": {
+              overflow: "hidden",
+              overflowX: "hidden",
+            },
+            "& .slick-list": {
+              overflow: "hidden",
+              overflowX: "hidden",
+            },
+            "& .slick-track": {
+              overflow: "hidden",
+              overflowX: "hidden",
+            },
             boxShadow: `
-              0 25px 80px rgba(0,0,0,0.2),
-              0 0 0 1px rgba(255,255,255,0.1) inset,
-              0 0 100px rgba(95, 41, 48, 0.1)
+              0 20px 60px rgba(0,0,0,0.12),
+              0 0 0 1px rgba(255,255,255,0.15) inset,
+              0 0 80px rgba(95, 41, 48, 0.1)
             `,
             animation: isHovered ? "glow 2s ease-in-out infinite" : "none",
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: "30px",
+              background: "linear-gradient(to top, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.8) 50%, transparent 100%)",
+              zIndex: 5,
+              pointerEvents: "none",
+            },
             "& .slick-dots": {
-              bottom: { xs: "20px", md: "40px" },
+              bottom: { xs: "10px", md: "15px" },
               zIndex: 10,
               display: "flex !important",
               justifyContent: "center",
               alignItems: "center",
               "& li": {
-                width: { xs: "35px", md: "50px" },
-                height: { xs: "6px", md: "8px" },
-                margin: "0 6px",
+                width: { xs: "28px", md: "35px" },
+                height: { xs: "4px", md: "5px" },
+                margin: "0 4px",
                 "& button": {
                   width: "100%",
                   height: "100%",
@@ -280,6 +308,7 @@ export const HeroBanner = () => {
                   key={slide.id}
                   sx={{
                     width: "100%",
+                    height: { xs: "25vh", sm: "28vh", md: "32vh", lg: "35vh" },
                     position: "relative",
                     overflow: "hidden",
                     "&::before": {
@@ -339,11 +368,16 @@ export const HeroBanner = () => {
                     className={isActive ? "kb-kenburns-img" : ""}
                     sx={{
                       width: "100%",
-                      height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
+                      height: "100%",
+                      minHeight: { xs: "25vh", sm: "28vh", md: "32vh", lg: "35vh" },
+                      maxHeight: { xs: "25vh", sm: "28vh", md: "32vh", lg: "35vh" },
                       objectFit: "cover",
+                      objectPosition: "center center",
                       display: "block",
-                      opacity: isActive ? 0.8 : 0.6,
-                      transition: "opacity 0.7s ease-in-out",
+                      opacity: isActive ? 0.9 : 0.7,
+                      transition: "opacity 0.7s ease-in-out, transform 8s ease-out",
+                      transform: isActive ? "scale(1.05)" : "scale(1)",
+                      clipPath: { xs: "polygon(0 0, 100% 0, 100% 85%, 0 100%)", md: "polygon(0 0, 100% 0, 100% 80%, 0 95%)" },
                     }}
                   />
 
@@ -353,7 +387,7 @@ export const HeroBanner = () => {
                       position: "absolute",
                       top: 0,
                       left: "-100%",
-                      width: "100%",
+                      width: "200%",
                       height: "100%",
                       background: `
                         linear-gradient(90deg, 
@@ -366,10 +400,11 @@ export const HeroBanner = () => {
                       animation: isActive ? "shimmer 3s ease-in-out infinite" : "none",
                       zIndex: 3,
                       pointerEvents: "none",
+                      overflow: "hidden",
                     }}
                   />
 
-                  {/* Enhanced Slide Content Overlay */}
+                  {/* Enhanced Slide Content Overlay - Positioned at Top */}
                   <Box
                     className={`kb-caption ${slide.captionPosition === "right"
                         ? "kb-caption-right"
@@ -379,26 +414,32 @@ export const HeroBanner = () => {
                       }`}
                     sx={{
                       position: "absolute",
-                      bottom: { xs: "25%", md: "60%" },
+                      top: { xs: "8%", sm: "10%", md: "12%", lg: "15%" },
+                      left: { xs: "50%", md: slide.captionPosition === "right" ? "auto" : slide.captionPosition === "center" ? "50%" : "8%" },
+                      right: { xs: "auto", md: slide.captionPosition === "right" ? "8%" : "auto" },
+                      transform: { xs: "translateX(-50%)", md: slide.captionPosition === "center" ? "translateX(-50%)" : "none" },
                       zIndex: 4,
                       opacity: isActive ? 1 : 0,
-                      transition: "opacity 0.7s ease-in-out",
+                      transition: "opacity 0.7s ease-in-out, transform 0.7s ease-in-out",
+                      width: { xs: "90%", md: slide.captionPosition === "center" ? "75%" : "50%" },
+                      textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
                     }}
                   >
                     {/* Glassmorphism Background for Text */}
                     <Box
                       sx={{
                         position: "absolute",
-                        top: "-20px",
-                        left: "-20px",
-                        right: "-20px",
-                        bottom: "-20px",
-                        background: "rgba(0, 0, 0, 0.2)",
-                        backdropFilter: "blur(20px)",
-                        borderRadius: "20px",
-                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                        top: { xs: "-15px", md: "-20px" },
+                        left: { xs: "-15px", md: "-20px" },
+                        right: { xs: "-15px", md: "-20px" },
+                        bottom: { xs: "-15px", md: "-20px" },
+                        background: "rgba(255, 255, 255, 0.95)",
+                        backdropFilter: "blur(10px)",
+                        borderRadius: { xs: "15px", md: "20px" },
+                        border: "1px solid rgba(255, 181, 161, 0.2)",
                         zIndex: -1,
-                        opacity: 0.7,
+                        opacity: 0.95,
+                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
                       }}
                     />
 
@@ -407,19 +448,17 @@ export const HeroBanner = () => {
                       data-animation={`animated ${slide.animationType}`}
                       className={isActive ? `animated ${slide.animationType}` : ""}
                       sx={{
-                        fontSize: { xs: "25px", sm: "35px", md: "55px" },
-                        fontWeight: 300,
+                        fontSize: { xs: "22px", sm: "28px", md: "38px", lg: "42px" },
+                        fontWeight: 700,
                         color: "var(--themeColor)",
                         fontFamily: "var(--fontFamily)",
-                        backgroundColor: "#fff",
-                        textAlign: "center",
+                        textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
                         textShadow: "none",
-                        padding: "5px 0 5px 15px",
-                        mb: 1,
+                        padding: { xs: "8px 12px", md: "10px 15px" },
+                        mb: { xs: 0.5, md: 1 },
                         lineHeight: 1.2,
-                        "@media (max-width: 480px)": {
-                          fontSize: "25px",
-                        },
+                        position: "relative",
+                        zIndex: 1,
                       }}
                     >
                       {slide?.title}
@@ -429,17 +468,16 @@ export const HeroBanner = () => {
                       data-animation={`animated ${slide.animationType}`}
                       className={isActive ? `animated ${slide.animationType}` : ""}
                       sx={{
-                        fontSize: { xs: "20px", sm: "25px", md: "30px" },
-                        fontWeight: "normal",
+                        fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
+                        fontWeight: 500,
                         fontFamily: "var(--fontFamily)",
-                        color: "#fff",
-                        textAlign: "center",
+                        color: "#666",
+                        textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
                         textShadow: "none",
-                        paddingLeft: "15px",
-                        lineHeight: 1.3,
-                        "@media (max-width: 480px)": {
-                          fontSize: "20px",
-                        },
+                        padding: { xs: "0 12px 8px", md: "0 15px 10px" },
+                        lineHeight: 1.4,
+                        position: "relative",
+                        zIndex: 1,
                       }}
                     >
                       {slide?.subtitle}
@@ -485,6 +523,47 @@ export const HeroBanner = () => {
             />
           </IconButton>
         </Box>
+      </Box>
+
+      {/* Zigzag Shape Divider at Bottom */}
+      <Box
+        className="elementor-shape elementor-shape-bottom"
+        data-negative="false"
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          width: "100%",
+          maxWidth: "100%",
+          height: { xs: "30px", md: "40px" },
+          zIndex: 2,
+          overflow: "hidden",
+          overflowX: "hidden",
+          overflowY: "hidden",
+          transform: "rotate(180deg)",
+          pointerEvents: "none",
+          "& svg": {
+            width: "100%",
+            maxWidth: "100%",
+            height: "100%",
+            display: "block",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1800 40"
+          preserveAspectRatio="none"
+          style={{ width: "100%", height: "100%" }}
+        >
+          <path
+            className="elementor-shape-fill"
+            d="M5.4 0.4l5.4 5.3L16.5 0.4l5.4 5.3L27.5 0.4 33 5.7 38.6 0.4l5.5 5.4h.1L49.9 0.4l5.4 5.3L60.9 0.4l5.5 5.3L72 0.4l5.5 5.3L83.1 0.4l5.4 5.3L94.1 0.4l5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.4 5.3L161 0.4l5.4 5.3L172 0.4l5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3L261 0.4l5.4 5.3L272 0.4l5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3L361 0.4l5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.6-5.4 5.5 5.3L461 0.4l5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1L550 0.4l5.4 5.3L561 0.4l5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2L650 0.4l5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2L750 0.4l5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.4h.2L850 0.4l5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.4h.2l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.7-5.4 5.4 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.5 5.4h.1l5.6-5.4 5.5 5.3 5.6-5.3 5.5 5.3 5.6-5.3 5.4 5.3 5.7-5.3 5.4 5.3 5.6-5.3 5.5 5.4V0H-.2v40z"
+            fill="#fff"
+          />
+        </svg>
       </Box>
     </>
   );

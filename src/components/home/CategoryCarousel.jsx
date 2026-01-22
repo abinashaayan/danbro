@@ -8,7 +8,7 @@ import cat3 from "../../assets/43676d15934fc50bdda59d3e39fd8a4ceaadcb9e.png";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { useNavigate } from "react-router-dom";
 import { CustomText } from "../comman/CustomText";
-
+import { useEffect, useRef, useState } from "react";
 
 const getCategoryImage = (categoryName, index) => {
   const images = [cat1, cat2, cat3];
@@ -18,8 +18,43 @@ const getCategoryImage = (categoryName, index) => {
 export const CategoryCarousel = () => {
   let sliderRef = null;
   const { categories, loading, error } = useItemCategories();
-
   const navigate = useNavigate();
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    // Set visible immediately if component is already in viewport
+    if (sectionRef.current) {
+      const rect = sectionRef.current.getBoundingClientRect();
+      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      if (isInViewport) {
+        setVisible(true);
+      }
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+          }
+        });
+      },
+      { threshold: 0.01, rootMargin: "50px" }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    
+    // Fallback: make visible after 500ms if observer doesn't trigger
+    const fallbackTimer = setTimeout(() => {
+      setVisible(true);
+    }, 500);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(fallbackTimer);
+    };
+  }, []);
 
   const items = categories?.map((category, index) => ({
     id: category?.id,
@@ -31,10 +66,14 @@ export const CategoryCarousel = () => {
 
   const settings = {
     infinite: true,
-    speed: 500,
+    speed: 600,
     slidesToShow: 6,
     slidesToScroll: 2,
     arrows: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
+    cssEase: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
     responsive: [
       { breakpoint: 1200, settings: { slidesToShow: 5 } },
       { breakpoint: 992, settings: { slidesToShow: 4 } },
@@ -59,189 +98,323 @@ export const CategoryCarousel = () => {
         </Alert>
       </Box>
     ) : (
-      <Box sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
-        <Box
-          sx={{
-            width: "100%",
-            background: "linear-gradient(135deg, #fbd9d3 0%, #ffe5e1 50%, #fbd9d3 100%)",
-            borderRadius: { xs: "30px", md: "100px" },
-            py: { xs: 1, sm: 1.5, md: 2, lg: 2.5 },
-            px: { xs: 0.5, sm: 1, md: 2, lg: 2.5 },
-            mb: { xs: 1.5, md: 3 },
-            minHeight: { xs: "100px", sm: "120px", md: "140px", lg: "160px" },
-            position: "relative",
-            overflow: "hidden",
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: "-50%",
-              left: "-50%",
-              width: "200%",
-              height: "200%",
-              background: "radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)",
-              animation: "rotate 20s linear infinite",
-              "@keyframes rotate": {
-                "0%": { transform: "rotate(0deg)" },
-                "100%": { transform: "rotate(360deg)" },
+      <Box 
+        ref={sectionRef}
+        sx={{ 
+          mb: { xs: 6, md: 8 },
+          opacity: visible ? 1 : 0.3,
+          transform: visible ? "translateY(0)" : "translateY(20px)",
+          transition: "opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          visibility: "visible",
+          minHeight: "200px",
+        }}
+      >
+        {/* Section Header */}
+        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
+          <CustomText
+            sx={{
+              fontSize: { xs: 12, md: 14 },
+              fontWeight: 600,
+              color: "#FF9472",
+              textTransform: "uppercase",
+              letterSpacing: 2,
+              mb: 1,
+            }}
+          >
+            Browse Categories
+          </CustomText>
+          <CustomText
+            sx={{
+              fontSize: { xs: 28, sm: 34, md: 42 },
+              fontWeight: 800,
+              color: "var(--themeColor)",
+              mb: 2,
+            }}
+          >
+            Shop by Category
+          </CustomText>
+          <CustomText
+            sx={{
+              fontSize: { xs: 14, md: 16 },
+              color: "#666",
+              maxWidth: 600,
+              mx: "auto",
+            }}
+          >
+            Discover our wide range of delicious bakery products
+          </CustomText>
+        </Box>
+
+        <Box sx={{ px: { xs: 2, md: 3, lg: 2 }, position: "relative" }}>
+          <Box
+            sx={{
+              width: "100%",
+              background: `
+                linear-gradient(135deg, 
+                  rgba(255,181,161,0.15) 0%, 
+                  rgba(251,199,181,0.2) 25%,
+                  rgba(255,181,161,0.15) 50%,
+                  rgba(251,199,181,0.2) 75%,
+                  rgba(255,181,161,0.15) 100%
+                )
+              `,
+              backgroundSize: "200% 200%",
+              borderRadius: { xs: "30px", md: "50px" },
+              py: { xs: 2, sm: 2.5, md: 3, lg: 3.5 },
+              px: { xs: 1, sm: 1.5, md: 2, lg: 2.5 },
+              position: "relative",
+              overflow: "hidden",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
+              animation: visible ? "gradientShift 8s ease infinite" : "none",
+              "@keyframes gradientShift": {
+                "0%, 100%": { backgroundPosition: "0% 50%" },
+                "50%": { backgroundPosition: "100% 50%" },
               },
-              zIndex: 0,
-              pointerEvents: "none",
-            },
-            "&::after": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%)",
-              animation: "shimmer 3s ease-in-out infinite",
-              "@keyframes shimmer": {
-                "0%, 100%": { transform: "translateX(-100%)" },
-                "50%": { transform: "translateX(100%)" },
-              },
-              zIndex: 0,
-              pointerEvents: "none",
-            },
-          }}
-        >
-          {[...Array(3)].map((_, i) => (
-            <Box
-              key={i}
-              sx={{
+              "&::before": {
+                content: '""',
                 position: "absolute",
-                width: { xs: "40px", md: "80px" },
-                height: { xs: "40px", md: "80px" },
-                borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(255,181,161,0.2) 0%, transparent 70%)",
-                top: `${20 + i * 30}%`,
-                left: i % 2 === 0 ? "5%" : "auto",
-                right: i % 2 === 1 ? "5%" : "auto",
-                animation: `floatCategory ${6 + i * 2}s ease-in-out infinite`,
-                animationDelay: `${i * 0.5}s`,
+                top: "-50%",
+                left: "-50%",
+                width: "200%",
+                height: "200%",
+                background: "radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)",
+                animation: "rotate 20s linear infinite",
+                "@keyframes rotate": {
+                  "0%": { transform: "rotate(0deg)" },
+                  "100%": { transform: "rotate(360deg)" },
+                },
                 zIndex: 0,
                 pointerEvents: "none",
-                "@keyframes floatCategory": {
-                  "0%, 100%": { transform: "translateY(0px) scale(1)" },
-                  "50%": { transform: `translateY(${-15 - i * 5}px) scale(1.1)` },
+              },
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
+                animation: "shimmer 4s ease-in-out infinite",
+                "@keyframes shimmer": {
+                  "0%, 100%": { transform: "translateX(-100%)" },
+                  "50%": { transform: "translateX(100%)" },
+                },
+                zIndex: 0,
+                pointerEvents: "none",
+              },
+            }}
+          >
+            {/* Floating Particles */}
+            {[...Array(5)].map((_, i) => (
+              <Box
+                key={i}
+                sx={{
+                  position: "absolute",
+                  width: { xs: "30px", md: "50px" },
+                  height: { xs: "30px", md: "50px" },
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, rgba(255,181,161,0.3) 0%, transparent 70%)",
+                  top: `${15 + i * 20}%`,
+                  left: i % 2 === 0 ? "8%" : "auto",
+                  right: i % 2 === 1 ? "8%" : "auto",
+                  animation: `floatCategory ${8 + i * 2}s ease-in-out infinite`,
+                  animationDelay: `${i * 0.8}s`,
+                  zIndex: 0,
+                  pointerEvents: "none",
+                  filter: "blur(15px)",
+                  "@keyframes floatCategory": {
+                    "0%, 100%": { transform: "translateY(0px) scale(1)" },
+                    "50%": { transform: `translateY(${-20 - i * 5}px) scale(1.2)` },
+                  },
+                }}
+              />
+            ))}
+
+            {/* Left Arrow */}
+            <IconButton
+              onClick={() => sliderRef?.slickPrev()}
+              sx={{
+                position: "absolute",
+                left: { xs: 5, md: 10 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 10,
+                backgroundColor: "#fff",
+                border: "2px solid rgba(255,181,161,0.3)",
+                width: { xs: 40, md: 50 },
+                height: { xs: 40, md: 50 },
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                "&:hover": {
+                  backgroundColor: "var(--themeColor)",
+                  borderColor: "var(--themeColor)",
+                  transform: "translateY(-50%) scale(1.1)",
+                  "& svg": {
+                    color: "#fff",
+                  },
                 },
               }}
-            />
-          ))}
+            >
+              <ArrowBackIosNewIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 24 } }} />
+            </IconButton>
 
-          <IconButton
-            onClick={() => sliderRef.slickPrev()}
-            sx={{
-              position: "absolute",
-              left: { xs: 8, md: 15 },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              backgroundColor: "transparent",
-              backdropFilter: "none",
-              width: { xs: 36, md: 48 },
-              height: { xs: 36, md: 48 },
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            <ArrowBackIosNewIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 28 } }} />
-          </IconButton>
-
-          {/* Carousel */}
-          <Box sx={{ position: "relative", zIndex: 1 }}>
-            <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
-              {items?.map((item, i) => (
-                <Box
-                  key={item.id || i}
-                  sx={{
-                    cursor: "pointer",
-                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                    position: "relative",
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      width: "0",
-                      height: "0",
-                      borderRadius: "50%",
-                      transition: "all 0.4s ease",
-                      zIndex: -1,
-                    },
-                    "&:hover": {
-                      transform: "translateY(-12px) scale(1.05)",
-                      "&::before": {
-                        width: "120%",
-                        height: "120%",
+            {/* Carousel */}
+            <Box sx={{ position: "relative", zIndex: 1 }}>
+              <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
+                {items?.map((item, i) => (
+                  <Box
+                    key={item.id || i}
+                    sx={{
+                      cursor: "pointer",
+                      transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                      position: "relative",
+                      px: { xs: 0.5, md: 1 },
+                      opacity: visible ? 1 : 0,
+                      transform: visible ? "translateY(0)" : "translateY(30px)",
+                      animation: visible ? `fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) ${i * 0.1}s both` : "none",
+                      "@keyframes fadeInUp": {
+                        "0%": { opacity: 0, transform: "translateY(30px)" },
+                        "100%": { opacity: 1, transform: "translateY(0)" },
                       },
-                      "& img": {
-                        transform: "scale(1.15) rotate(180deg)",
-                        filter: "drop-shadow(0 8px 16px rgba(0,0,0,0.2))",
-                      },
-                      "& .category-title": {
-                        color: "var(--specialColor)",
-                        transform: "scale(1.08)",
-                        fontWeight: 700,
-                      },
-                    },
-                  }}
-                >
-                  <Box className="category-card" onClick={() => handleToProductList(item.id)} sx={{ backgroundColor: "transparent", backdropFilter: "blur(10px)", borderRadius: { xs: "15px", md: "20px" }, transition: "all 0.4s ease", overflow: "visible", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
+                    }}
+                  >
                     <Box
-                      component="img"
-                      src={item?.img}
-                      alt=""
-                      loading="lazy"
+                      className="category-card"
+                      onClick={() => handleToProductList(item.id)}
                       sx={{
-                        height: { xs: 55, sm: 65, md: 80, lg: 95 },
-                        width: { xs: 55, sm: 65, md: 80, lg: 95 },
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                        filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.15))",
-                        border: { xs: "2px solid rgba(255,255,255,0.8)", md: "3px solid rgba(255,255,255,0.8)" },
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      }}
-                    />
-                    <CustomText
-                      className="category-title"
-                      autoTitleCase={true}
-                      sx={{
-                        fontSize: { xs: 10, sm: 11, md: 13 },
-                        fontWeight: 600,
-                        color: "var(--themeColor)",
-                        textAlign: "center",
-                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                        textShadow: "0 1px 2px rgba(255,255,255,0.8)",
+                        backgroundColor: "rgba(255,255,255,0.95)",
+                        backdropFilter: "blur(10px)",
+                        borderRadius: { xs: "20px", md: "25px" },
+                        transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                        overflow: "visible",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: { xs: 1, md: 1.5 },
+                        p: { xs: 1.5, md: 2 },
+                        boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                        border: "2px solid rgba(255,181,161,0.2)",
+                        position: "relative",
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          width: "0",
+                          height: "0",
+                          borderRadius: "50%",
+                          background: "radial-gradient(circle, rgba(255,181,161,0.2) 0%, transparent 70%)",
+                          transition: "all 0.5s ease",
+                          zIndex: -1,
+                        },
+                        "&:hover": {
+                          transform: "translateY(-15px) scale(1.08)",
+                          boxShadow: "0 12px 40px rgba(255,181,161,0.3)",
+                          borderColor: "rgba(255,181,161,0.5)",
+                          backgroundColor: "#fff",
+                          "&::before": {
+                            width: "150%",
+                            height: "150%",
+                          },
+                          "& img": {
+                            transform: "scale(1.2) rotate(5deg)",
+                            filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.25)) brightness(1.1)",
+                          },
+                          "& .category-title": {
+                            color: "var(--themeColor)",
+                            transform: "scale(1.1)",
+                            fontWeight: 700,
+                          },
+                        },
                       }}
                     >
-                      {item?.title}
-                    </CustomText>
+                      <Box
+                        sx={{
+                          position: "relative",
+                          "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            top: "-5px",
+                            left: "-5px",
+                            right: "-5px",
+                            bottom: "-5px",
+                            borderRadius: "50%",
+                            background: "linear-gradient(135deg, rgba(255,181,161,0.3), rgba(95,41,48,0.2))",
+                            opacity: 0,
+                            transition: "opacity 0.5s ease",
+                            zIndex: -1,
+                          },
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={item?.img}
+                          alt={item?.title}
+                          loading="lazy"
+                          sx={{
+                            height: { xs: 70, sm: 80, md: 100, lg: 120 },
+                            width: { xs: 70, sm: 80, md: 100, lg: 120 },
+                            borderRadius: "50%",
+                            objectFit: "cover",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            filter: "drop-shadow(0 6px 16px rgba(0,0,0,0.15))",
+                            border: { xs: "3px solid #fff", md: "4px solid #fff" },
+                            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
+                            position: "relative",
+                            zIndex: 1,
+                          }}
+                        />
+                      </Box>
+                      <CustomText
+                        className="category-title"
+                        autoTitleCase={true}
+                        sx={{
+                          fontSize: { xs: 11, sm: 12, md: 14 },
+                          fontWeight: 600,
+                          color: "var(--themeColor)",
+                          textAlign: "center",
+                          transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                          lineHeight: 1.3,
+                          px: 1,
+                        }}
+                      >
+                        {item?.title}
+                      </CustomText>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
-            </Slider>
-          </Box>
+                ))}
+              </Slider>
+            </Box>
 
-          {/* Right Arrow */}
-          <IconButton
-            onClick={() => sliderRef.slickNext()}
-            sx={{
-              position: "absolute",
-              right: { xs: 8, md: 15 },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              backgroundColor: "transparent",
-              backdropFilter: "none",
-              width: { xs: 36, md: 48 },
-              height: { xs: 36, md: 48 },
-              transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}
-          >
-            <ArrowForwardIosIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 28 } }} />
-          </IconButton>
+            {/* Right Arrow */}
+            <IconButton
+              onClick={() => sliderRef?.slickNext()}
+              sx={{
+                position: "absolute",
+                right: { xs: 5, md: 10 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 10,
+                backgroundColor: "#fff",
+                border: "2px solid rgba(255,181,161,0.3)",
+                width: { xs: 40, md: 50 },
+                height: { xs: 40, md: 50 },
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                "&:hover": {
+                  backgroundColor: "var(--themeColor)",
+                  borderColor: "var(--themeColor)",
+                  transform: "translateY(-50%) scale(1.1)",
+                  "& svg": {
+                    color: "#fff",
+                  },
+                },
+              }}
+            >
+              <ArrowForwardIosIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 24 } }} />
+            </IconButton>
+          </Box>
         </Box>
       </Box>
     )

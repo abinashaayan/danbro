@@ -28,6 +28,7 @@ export const TopHeader = () => {
     const [userProfile, setUserProfile] = useState(null);
     const [wishlistCount, setWishlistCount] = useState(0);
     const [cartCount, setCartCount] = useState(0);
+    const [isScrolled, setIsScrolled] = useState(false);
 
     // Check if on profile page to add bottom border
     const isProfilePage = location.pathname === "/profile" || location.pathname === "/user-profile";
@@ -183,6 +184,19 @@ export const TopHeader = () => {
         };
     }, [isLoggedIn]);
 
+    // Handle scroll detection for sticky header
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            setIsScrolled(scrollTop > 10);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const handleWishlistClick = () => {
         if (isLoggedIn) {
             navigate("/profile", { state: { activeTab: "wishlist" } });
@@ -200,11 +214,51 @@ export const TopHeader = () => {
                 alignItems: "center",
                 px: { xs: 1, sm: 2, md: 3 },
                 py: { xs: 1, md: 0 },
-                backgroundColor: "#fff",
+                backgroundColor: isScrolled 
+                    ? "rgba(255, 255, 255, 0.98)" 
+                    : "#fff",
+                background: isScrolled
+                    ? "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(251,199,181,0.05) 50%, rgba(255,255,255,0.98) 100%)"
+                    : "#fff",
                 flexWrap: { xs: "wrap", md: "nowrap" },
                 gap: { xs: 1, md: 0 },
-                borderBottom: isProfilePage ? "2px solid #fbc7b5" : "none",
-                boxShadow: isProfilePage ? "0 2px 8px rgba(0,0,0,0.05)" : "none",
+                borderBottom: isProfilePage 
+                    ? "2px solid #fbc7b5" 
+                    : isScrolled 
+                        ? "1px solid rgba(255,181,161,0.2)" 
+                        : "none",
+                boxShadow: isProfilePage 
+                    ? "0 2px 8px rgba(0,0,0,0.05)" 
+                    : isScrolled 
+                        ? "0 8px 30px rgba(255,181,161,0.15)" 
+                        : "none",
+                position: "fixed",
+                top: 0,
+                left: 0,
+                right: 0,
+                width: "100%",
+                zIndex: 1000,
+                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                backdropFilter: isScrolled ? "blur(15px) saturate(180%)" : "none",
+                "&::before": isScrolled ? {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: "linear-gradient(180deg, rgba(255,181,161,0.08) 0%, transparent 100%)",
+                    pointerEvents: "none",
+                    zIndex: -1,
+                } : {},
+                "&:hover": {
+                    boxShadow: isScrolled 
+                        ? "0 12px 40px rgba(255,181,161,0.2)" 
+                        : "0 2px 12px rgba(0,0,0,0.08)",
+                    backgroundColor: isScrolled 
+                        ? "rgba(255, 255, 255, 1)" 
+                        : "#fff",
+                },
             }}
         >
             {/* Left Buttons - Hidden on mobile */}
@@ -239,7 +293,7 @@ export const TopHeader = () => {
             </Box>
 
             {/* Logo - Centered */}
-            <Box sx={{ py: { xs: 0.5, md: 1 }, bgcolor: "#fff", display: "flex", justifyContent: "center", order: { xs: 3, md: 2 }, width: { xs: "100%", md: "auto" }, }}>
+            <Box sx={{ py: { xs: 0.5, md: 1 }, bgcolor: "transparent", display: "flex", justifyContent: "center", order: { xs: 3, md: 2 }, width: { xs: "100%", md: "auto" }, }}>
                 <Link to="/">
                     <Box
                         component="img"

@@ -5,6 +5,7 @@ import logo from "../../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
 import blogHero from "../../assets/blog.png";
 import planning from "../../assets/2f1c127d9f6293a74bd052f2c516c77a6713fa7f.jpg";
+import { YouTubeVideosSection } from "../../components/home/YouTubeVideosSection";
 
 export const AboutUs = () => {
   const [visibleSections, setVisibleSections] = useState({});
@@ -64,10 +65,6 @@ export const AboutUs = () => {
     { number: "200000", label: "HAPPY CUSTOMERS", gold: true },
   ];
 
-  const videos = [
-    "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-    "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-  ];
 
   return (
     <Box sx={{ width: "100%", overflowX: "hidden", pb: { xs: 4, md: 0 }, p: { xs: 1.25, md: 0 } }}>
@@ -359,29 +356,10 @@ export const AboutUs = () => {
       </Box>
 
 
-      {/*================ VIDEO SECTION (DYNAMIC) =================*/}
-
-      <Container  sx={{ py: { xs: 5, md: 0 }, pb: { xs: 10, md: 0 }, px: { xs: 3, sm: 3, md: 4 } }}>
-        <Grid container spacing={{ xs: 3, md: 3 }}>
-          {videos.map((v, i) => (
-            <Grid size={{ xs: 12, md: 6 }} key={i}>
-              <Box sx={{
-                height: { xs: 200, sm: 250, md: 350 },
-                backgroundColor: "#000",
-                borderRadius: { xs: 2, md: 3 },
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                cursor: "pointer",
-                transition: "0.3s",
-                "&:hover": { transform: "scale(1.02)" },
-              }}>
-                <PlayArrowIcon sx={{ fontSize: { xs: 40, md: 60 }, color: "#fff" }} />
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+      {/*================ YouTube Videos Section =================*/}
+      <Box sx={{ py: { xs: 5, md: 8 } }}>
+        <YouTubeVideosSection />
+      </Box>
     </Box>
   );
 };
