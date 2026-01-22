@@ -5,8 +5,7 @@ import { useEffect, useRef } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import SendIcon from "@mui/icons-material/Send";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import makeinindia from "../../assets/makeinindia.png";
 import Maskgroup from "../../assets/Maskgroup.png";
 import logo from "../../assets/logo.png";
@@ -254,13 +253,25 @@ export const Footer = () => {
               </CustomText>
               <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 1.5, md: 1.5, lg: 2 } }}>
                 {[
-                  { icon: FacebookIcon, color: "#1877F2" },
-                  { icon: InstagramIcon, color: "#E4405F" },
-                  { icon: TwitterIcon, color: "#1DA1F2" },
-                  { icon: SendIcon, color: "#0088cc" },
-                ].map(({ icon: Icon, color }, index) => (
+                  { 
+                    icon: FacebookIcon, 
+                    color: "#1877F2", 
+                    url: "https://www.facebook.com/mrbrownbakery" 
+                  },
+                  { 
+                    icon: InstagramIcon, 
+                    color: "#E4405F", 
+                    url: "https://www.instagram.com/danbrobymrbrown/" 
+                  },
+                  { 
+                    icon: YouTubeIcon, 
+                    color: "#FF0000", 
+                    url: "https://www.youtube.com/channel/UCW4Y_rfg2IscDvrrdiJhSWQ" 
+                  },
+                ].map(({ icon: Icon, color, url }, index) => (
                   <IconButton
                     key={index}
+                    onClick={() => window.open(url, "_blank", "noopener,noreferrer")}
                     sx={{
                       backgroundColor: "rgba(255, 255, 255, 0.9)",
                       color: color,
@@ -270,6 +281,7 @@ export const Footer = () => {
                       border: `2px solid ${color}`,
                       boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
                       transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                      cursor: "pointer",
                       "&:hover": {
                         backgroundColor: color,
                         color: "#fff",

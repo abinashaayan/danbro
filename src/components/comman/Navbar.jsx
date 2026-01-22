@@ -5,11 +5,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { categoryItems } from "../../utils/navigationItems";
+import { NavbarDropdown } from "./NavbarDropdown";
 
 export const Navbar = () => {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [hoveredItem, setHoveredItem] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const navigate = useNavigate();
 
@@ -20,70 +22,111 @@ export const Navbar = () => {
     return (
         <>
             <Box
-                className="d-none d-md-flex"
                 sx={{
-                    display: { xs: "none", md: "flex" },
-                    justifyContent: "center",
-                    gap: { md: 3, lg: 4 },
-                    py: 1.5,
-                    backgroundColor: "#fbc7b5",
                     position: "relative",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                    "&::before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: "3px",
-                        background: "linear-gradient(90deg, transparent, var(--themeColor), transparent)",
-                        animation: "shimmer 3s ease-in-out infinite",
-                        "@keyframes shimmer": {
-                            "0%": { transform: "translateX(-100%)" },
-                            "100%": { transform: "translateX(100%)" },
-                        },
-                    },
+                    zIndex: 100,
                 }}
+                onMouseLeave={() => setHoveredItem(null)}
             >
-                {categoryItems?.map(({ label, path }) => (
-                    <CustomText
-                        key={label}
-                        autoTitleCase={true}
-                        onClick={() => navigate(path)}
-                        onMouseEnter={() => setHoveredItem(label)}
-                        onMouseLeave={() => setHoveredItem(null)}
-                        sx={{
-                            fontWeight: 600,
-                            fontSize: { xs: 12, sm: 13, md: 14 },
-                            cursor: "pointer",
-                            color: label === "ADDONS" ? "#fff" : "var(--themeColor)",
-                            ...(label === "ADDONS" && {
-                                backgroundColor: "#00b53d",
-                                borderRadius: 2,
-                                px: { xs: 1.5, md: 2 },
-                                py: 0.5,
-                            }),
-                            whiteSpace: "nowrap",
-                            position: "relative",
-                            transition: "all 0.3s ease",
-                            transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
-                            "&::after": {
-                                content: '""',
-                                position: "absolute",
-                                bottom: "-5px",
-                                left: "50%",
-                                transform: hoveredItem === label ? "translateX(-50%) scaleX(1)" : "translateX(-50%) scaleX(0)",
-                                width: "80%",
-                                height: "2px",
-                                backgroundColor: "var(--themeColor)",
-                                transition: "transform 0.3s ease",
+                <Box
+                    className="d-none d-md-flex"
+                    sx={{
+                        display: { xs: "none", md: "flex" },
+                        justifyContent: "center",
+                        gap: { md: 3, lg: 4 },
+                        py: 1.5,
+                        backgroundColor: "#fbc7b5",
+                        position: "relative",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                        "&::before": {
+                            content: '""',
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            height: "3px",
+                            background: "linear-gradient(90deg, transparent, var(--themeColor), transparent)",
+                            animation: "shimmer 3s ease-in-out infinite",
+                            "@keyframes shimmer": {
+                                "0%": { transform: "translateX(-100%)" },
+                                "100%": { transform: "translateX(100%)" },
                             },
-                            "&:hover": { opacity: 0.9 },
-                        }}
-                    >
-                        {label}
-                    </CustomText>
-                ))}
+                        },
+                    }}
+                >
+                    {categoryItems?.map(({ label, path }) => {
+                        // Don't show dropdown for PRODUCTS and EVENTS
+                        const showDropdown = label !== "PRODUCTS" && label !== "EVENTS";
+                        
+                        return (
+                            <Box
+                                key={label}
+                                sx={{
+                                    position: "relative",
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (showDropdown) {
+                                        setHoveredItem(label);
+                                        setAnchorEl(e.currentTarget);
+                                    }
+                                }}
+                                onMouseLeave={() => {
+                                    if (showDropdown) {
+                                        // Close immediately when cursor leaves the label
+                                        setHoveredItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }}
+                            >
+                                <CustomText
+                                    autoTitleCase={true}
+                                    onClick={() => navigate(path)}
+                                    sx={{
+                                        fontWeight: 600,
+                                        fontSize: { xs: 12, sm: 13, md: 14 },
+                                        cursor: "pointer",
+                                        color: label === "ADDONS" ? "#fff" : "var(--themeColor)",
+                                        ...(label === "ADDONS" && {
+                                            backgroundColor: "#00b53d",
+                                            borderRadius: 2,
+                                            px: { xs: 1.5, md: 2 },
+                                            py: 0.5,
+                                        }),
+                                        whiteSpace: "nowrap",
+                                        position: "relative",
+                                        transition: "all 0.3s ease",
+                                        transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
+                                        "&::after": {
+                                            content: '""',
+                                            position: "absolute",
+                                            bottom: "-5px",
+                                            left: "50%",
+                                            transform: hoveredItem === label ? "translateX(-50%) scaleX(1)" : "translateX(-50%) scaleX(0)",
+                                            width: "80%",
+                                            height: "2px",
+                                            backgroundColor: "var(--themeColor)",
+                                            transition: "transform 0.3s ease",
+                                        },
+                                        "&:hover": { opacity: 0.9 },
+                                    }}
+                                >
+                                    {label}
+                                </CustomText>
+                                {showDropdown && hoveredItem === label && (
+                                    <NavbarDropdown
+                                        category={label}
+                                        isOpen={hoveredItem === label}
+                                        onClose={() => {
+                                            setHoveredItem(null);
+                                            setAnchorEl(null);
+                                        }}
+                                        anchorEl={anchorEl}
+                                    />
+                                )}
+                            </Box>
+                        );
+                    })}
+                </Box>
 
             </Box>
 

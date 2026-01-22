@@ -81,7 +81,7 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfil
         </CustomText>
       </Box>
 
-      <Grid container spacing={{ xs: 2, md: 3 }} sx={{ mb: { xs: 3, md: 5 } }}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Card
             sx={{
@@ -234,10 +234,10 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfil
         </Grid>
       </Grid>
 
-      <Box sx={{ mb: 4, border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 2, sm: 3, md: 5 } }}>
-        <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 3 }, fontSize: { xs: 18, md: 24 } }}>
-          Your Favorite Items
-        </CustomText>
+      <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 18, md: 24 } }}>
+        Your Favorite Items
+      </CustomText>
+      <Box sx={{ border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 0.5, sm: 1, md: 3 } }}>
         <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
           {favoriteItems.map((item) => (
             <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>

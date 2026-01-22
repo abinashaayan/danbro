@@ -131,6 +131,25 @@ export const Register = () => {
           setApiSuccess("Registration successful! Please verify your email with OTP.");
           setApiError("");
           
+          // Subscribe to newsletter if checked
+          if (formData.newsletter) {
+            try {
+              const location = getStoredLocation();
+              await axios.post(`${API_BASE_URL}/newsletter/subscribe`, {
+                email: formData.email,
+              }, {
+                headers: {
+                  'Content-Type': 'application/json',
+                  'lat': location.lat.toString(),
+                  'long': location.long.toString(),
+                },
+              });
+            } catch (error) {
+              // Newsletter subscription is optional, don't block registration if it fails
+              console.error("Newsletter subscription error:", error);
+            }
+          }
+          
           // Store registered email for OTP verification
           setRegisteredEmail(formData.email);
           
@@ -561,7 +580,20 @@ export const Register = () => {
             </CustomText>
             <CustomText sx={{ fontSize: 12, color: "#fff", mb: 2, ml: 1.5, }}>
               Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described
-              in our <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
+              in our <Link 
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.open("/privacy-policy", "_blank");
+                }}
+                sx={{ 
+                  color: "#4A90E2", 
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  "&:hover": {
+                    color: "#6BA3E8",
+                  },
+                }}
+              >
                 Privacy Policy
               </Link>.
             </CustomText>
@@ -588,11 +620,37 @@ export const Register = () => {
                 label={
                   <CustomText sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
                     Agree to our{" "}
-                    <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
+                    <Link 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open("/terms-conditions", "_blank");
+                      }}
+                      sx={{ 
+                        color: "#4A90E2", 
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        "&:hover": {
+                          color: "#6BA3E8",
+                        },
+                      }}
+                    >
                       Terms of use
                     </Link>{" "}
                     and{" "}
-                    <Link href="#" sx={{ color: "#4A90E2", textDecoration: "underline" }}>
+                    <Link 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open("/privacy-policy", "_blank");
+                      }}
+                      sx={{ 
+                        color: "#4A90E2", 
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        "&:hover": {
+                          color: "#6BA3E8",
+                        },
+                      }}
+                    >
                       Privacy Policy
                     </Link>
                   </CustomText>

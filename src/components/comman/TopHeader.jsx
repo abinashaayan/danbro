@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
 import { DeliveryCheckDialog } from "./DeliveryCheckDialog";
 import { BusinessDialog } from "./BusinessDialog";
+import { AnimatedButton } from "./AnimatedButton";
 import { getAccessToken } from "../../utils/cookies";
 import api from "../../utils/api";
 import { getWishlist } from "../../utils/wishlist";
@@ -100,7 +101,7 @@ export const TopHeader = () => {
                 } else if (Array.isArray(cartData)) {
                     items = cartData;
                 }
-                
+
                 // Calculate total quantity
                 const totalQuantity = items.reduce((sum, item) => {
                     return sum + (item.quantity || 0);
@@ -136,7 +137,7 @@ export const TopHeader = () => {
                 } else if (Array.isArray(cartData)) {
                     items = cartData;
                 }
-                
+
                 // Calculate total quantity
                 const totalQuantity = items.reduce((sum, item) => {
                     return sum + (item.quantity || 0);
@@ -207,113 +208,99 @@ export const TopHeader = () => {
             }}
         >
             {/* Left Buttons - Hidden on mobile */}
-            <Box
-                className="d-none d-md-flex"
-                sx={{
-                    display: { xs: "none", md: "flex" },
-                    gap: 1,
-                    flexWrap: "wrap",
-                }}
-            >
-                <Button
-                    variant="outlined"
-                    size="small"
+            <Box className="d-none d-md-flex" sx={{ display: { xs: "none", md: "flex" }, gap: 1, flexWrap: "wrap", }}>
+                <AnimatedButton
                     startIcon={<NearMe />}
                     onClick={() => setOpenDeliveryDialog(true)}
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 5,
-                        borderColor: "var(--themeColor)",
-                        color: "var(--themeColor)",
-                        fontWeight: 600,
-                        fontSize: { md: 13, lg: 14 },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        "&:hover": {
-                            borderColor: "var(--themeColor)",
-                            backgroundColor: "#fbeeee",
-                            transform: "translateY(-2px)",
-                            boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                        },
-                    }}
                 >
-                    Location
-                </Button>
+                    Location...?
+                </AnimatedButton>
 
-                <Button
-                    variant="outlined"
-                    size="small"
+                <AnimatedButton
                     onClick={() => setOpenBusinessDialog(true)}
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 5,
-                        borderColor: "var(--themeColor)",
-                        color: "var(--themeColor)",
-                        fontWeight: 600,
-                        fontSize: { md: 13, lg: 14 },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        "&:hover": {
-                            borderColor: "var(--themeColor)",
-                            backgroundColor: "#fbeeee",
-                            transform: "translateY(-2px)",
-                            boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-                        },
-                    }}
                 >
                     Business +
-                </Button>
+                </AnimatedButton>
             </Box>
 
             {/* Mobile Left Buttons - Compact */}
-            <Box
-                className="d-flex d-md-none"
-                sx={{
-                    display: { xs: "flex", md: "none" },
-                    gap: 0.5,
-                    order: 1,
-                }}
-            >
-                <Button
-                    variant="outlined"
-                    size="small"
+            <Box className="d-flex d-md-none" sx={{ display: { xs: "flex", md: "none" }, gap: 0.5, order: 1, }}>
+                <AnimatedButton
                     startIcon={<NearMe />}
                     onClick={() => setOpenDeliveryDialog(true)}
                     sx={{
-                        textTransform: "none",
-                        borderRadius: 5,
-                        borderColor: "var(--themeColor)",
-                        color: "var(--themeColor)",
-                        fontWeight: 600,
                         fontSize: 10,
                         px: 1,
                         minWidth: "auto",
-                        "&:hover": {
-                            borderColor: "var(--themeColor)",
-                            backgroundColor: "#fbeeee",
-                        },
                     }}
                 >
                     {isMobile ? "" : "Location"}
-                </Button>
+                </AnimatedButton>
             </Box>
 
             {/* Logo - Centered */}
-            <Box
-                sx={{
-                    py: { xs: 0.5, md: 1 },
-                    bgcolor: "#fff",
-                    display: "flex",
-                    justifyContent: "center",
-                    order: { xs: 3, md: 2 },
-                    width: { xs: "100%", md: "auto" },
-                }}
-            >
+            <Box sx={{ py: { xs: 0.5, md: 1 }, bgcolor: "#fff", display: "flex", justifyContent: "center", order: { xs: 3, md: 2 }, width: { xs: "100%", md: "auto" }, }}>
                 <Link to="/">
-                    <img
+                    <Box
+                        component="img"
                         src={logo}
                         alt="logo"
-                        style={{
+                        sx={{
                             height: isMobile ? 30 : isTablet ? 35 : 40,
                             maxWidth: "100%",
+                            cursor: "pointer",
+                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                            position: "relative",
+                            animation: "logoBounce 2s ease-in-out infinite, logoRotate 4s ease-in-out infinite, logoGlow 2.5s ease-in-out infinite",
+                            "@keyframes logoBounce": {
+                                "0%, 100%": {
+                                    transform: "translateY(0) rotate(0deg) scale(1)",
+                                },
+                                "25%": {
+                                    transform: "translateY(-6px) rotate(-2deg) scale(1.02)",
+                                },
+                                "50%": {
+                                    transform: "translateY(-3px) rotate(0deg) scale(1.05)",
+                                },
+                                "75%": {
+                                    transform: "translateY(-6px) rotate(2deg) scale(1.02)",
+                                },
+                            },
+                            "@keyframes logoRotate": {
+                                "0%, 100%": {
+                                    filter: "hue-rotate(0deg) brightness(1)",
+                                },
+                                "50%": {
+                                    filter: "hue-rotate(5deg) brightness(1.1)",
+                                },
+                            },
+                            "@keyframes logoGlow": {
+                                "0%, 100%": {
+                                    filter: "drop-shadow(0 0 0 rgba(255, 148, 114, 0)) drop-shadow(0 0 0 rgba(242, 112, 156, 0))",
+                                },
+                                "25%": {
+                                    filter: "drop-shadow(0 0 10px rgba(255, 148, 114, 0.5)) drop-shadow(0 0 5px rgba(242, 112, 156, 0.3))",
+                                },
+                                "50%": {
+                                    filter: "drop-shadow(0 0 15px rgba(242, 112, 156, 0.6)) drop-shadow(0 0 8px rgba(255, 148, 114, 0.4))",
+                                },
+                                "75%": {
+                                    filter: "drop-shadow(0 0 10px rgba(255, 148, 114, 0.5)) drop-shadow(0 0 5px rgba(242, 112, 156, 0.3))",
+                                },
+                            },
+                            "&:hover": {
+                                transform: "translateY(-4px) rotate(5deg) scale(1.1)",
+                                filter: "drop-shadow(0 8px 20px rgba(255, 148, 114, 0.6)) drop-shadow(0 0 15px rgba(242, 112, 156, 0.5)) brightness(1.15)",
+                                animation: "logoHoverPulse 0.6s ease-in-out infinite",
+                                "@keyframes logoHoverPulse": {
+                                    "0%, 100%": {
+                                        transform: "translateY(-4px) rotate(5deg) scale(1.1)",
+                                    },
+                                    "50%": {
+                                        transform: "translateY(-6px) rotate(5deg) scale(1.12)",
+                                    },
+                                },
+                            },
                         }}
                     />
                 </Link>

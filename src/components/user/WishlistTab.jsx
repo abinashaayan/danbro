@@ -25,25 +25,25 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
           // Product data is directly in item (new API structure)
           // Support both old structure (item.product) and new structure (item directly)
           const product = item.product || item;
-          
+
           // Extract price - price is an array
-          const price = product.price && Array.isArray(product.price) && product.price.length > 0 
-            ? product.price[0] 
+          const price = product.price && Array.isArray(product.price) && product.price.length > 0
+            ? product.price[0]
             : null;
-          
+
           // Extract image - images is an array of objects with url
           const image = product.images && Array.isArray(product.images) && product.images.length > 0
             ? product.images[0].url
             : "https://via.placeholder.com/300";
-          
+
           return {
             id: item._id || item.id || product.productId || product._id,
             productId: product.productId || product._id || item.productId,
             prdcode: product.prdcode || null,
             name: product.name || "Unknown Product",
             image: image,
-            price: price 
-              ? `₹${price.rate || price.mrp || "N/A"}` 
+            price: price
+              ? `₹${price.rate || price.mrp || "N/A"}`
               : "Price not available",
             mrp: price?.mrp || null,
             rate: price?.rate || null,
@@ -76,12 +76,12 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
       if (response.data) {
         // Remove from local state
         setWishlistItems((prev) => prev.filter((item) => item.productId !== productId));
-        
+
         // Call parent callback if provided
         if (onRemoveFromWishlist) {
           onRemoveFromWishlist(productId);
         }
-        
+
         // Dispatch event to update wishlist count in TopHeader
         window.dispatchEvent(new CustomEvent('wishlistUpdated'));
       }
@@ -115,6 +115,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
             fontWeight: 700,
             color: "var(--themeColor)",
             mb: { xs: 2, md: 2 },
+            textTransform: "none",
           }}
         >
           My Wishlist
@@ -157,55 +158,56 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
           }}
         >
           <FavoriteIcon sx={{ fontSize: 64, color: "#ccc", mb: 2 }} />
-          <CustomText variant="h6" sx={{ color: "#666", mb: 1, fontWeight: 600 }}>
+          <CustomText variant="h6" sx={{ color: "#666", mb: 1, fontWeight: 600, textTransform: "none" }}>
             Your wishlist is empty
           </CustomText>
-          <CustomText variant="body2" sx={{ color: "#999" }}>
+          <CustomText variant="body2" sx={{ color: "#999", textTransform: "none" }}>
             Start adding products to your wishlist to see them here!
           </CustomText>
         </Box>
       ) : (
-        <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
-          {wishlistItems.map((item) => (
-            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item.id}>
+        <Grid container spacing={{ xs: 2, md: 3 }}>
+          {wishlistItems?.map((item, index) => (
+            <Grid size={{ xs: 6, sm: 4 }} key={item.id}>
               <Card
                 sx={{
-                  borderRadius: { xs: 2, md: 3 },
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+                  borderRadius: { xs: 2, md: 2.5 },
+                  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
                   overflow: "hidden",
                   transition: "all 0.3s ease",
                   position: "relative",
                   height: "100%",
                   display: "flex",
                   flexDirection: "column",
+                  backgroundColor: "#fff",
+                  border: "1px solid #f0f0f0",
                   "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 8px 30px rgba(0,0,0,0.15)",
+                    transform: "translateY(-6px)",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+                    borderColor: "#e0e0e0",
+                    "& .product-image": {
+                      transform: "scale(1.05)",
+                    },
                   },
                 }}
               >
-                <Box sx={{ position: "relative" }}>
-                  <Box
-                    component="img"
-                    src={item?.image}
-                    alt={item?.name}
-                    sx={{
-                      width: "100%",
-                      height: { xs: 140, sm: 160, md: 200 },
-                      objectFit: "cover",
-                    }}
-                  />
+                <Box sx={{ position: "relative", overflow: "hidden", backgroundColor: "#f8f8f8", }}>
+                  <Box className="product-image" component="img" src={item?.image} alt={item?.name} sx={{ width: "100%", height: { xs: 180, sm: 200, md: 240 }, objectFit: "cover", transition: "transform 0.4s ease", }} />
                   <IconButton
                     onClick={() => handleRemoveFromWishlist(item.productId)}
                     disabled={removingId === item.productId}
                     sx={{
                       position: "absolute",
-                      top: { xs: 4, md: 8 },
-                      right: { xs: 4, md: 8 },
-                      backgroundColor: "rgba(255,255,255,0.9)",
-                      padding: { xs: 0.5, md: 1 },
+                      top: { xs: 8, md: 10 },
+                      right: { xs: 8, md: 10 },
+                      backgroundColor: "rgba(255,255,255,0.95)",
+                      padding: { xs: 0.75, md: 0.875 },
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      transition: "all 0.3s ease",
                       "&:hover": {
                         backgroundColor: "#fff",
+                        transform: "scale(1.1)",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
                       },
                       "&:disabled": {
                         opacity: 0.6,
@@ -213,51 +215,70 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                     }}
                   >
                     {removingId === item.productId ? (
-                      <CircularProgress size={20} sx={{ color: "#f44336" }} />
+                      <CircularProgress size={18} sx={{ color: "#f44336" }} />
                     ) : (
-                      <FavoriteIcon sx={{ color: "#f44336", fontSize: { xs: 18, md: 24 } }} />
+                      <FavoriteIcon sx={{ color: "#f44336", fontSize: { xs: 18, md: 22 } }} />
                     )}
                   </IconButton>
                 </Box>
-                <CardContent sx={{ p: { xs: 1.5, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column" }}>
-                  <CustomText variant="body1" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 13, md: 16 }, lineHeight: 1.3 }}>
+                <CardContent sx={{ p: { xs: 1.75, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column", backgroundColor: "#fff", }}>
+                  <CustomText
+                    variant="body1"
+                    sx={{
+                      fontWeight: 600,
+                      mb: 0.5,
+                      fontSize: { xs: 14, md: 15 },
+                      lineHeight: 1.4,
+                      color: "#2c2c2c",
+                      minHeight: { xs: "2.6em", md: "3em" },
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      textTransform: "none",
+                    }}
+                  >
                     {item?.name}
                   </CustomText>
                   {item?.weight && (
-                    <CustomText variant="body2" sx={{ color: "#666", mb: 0.5, fontSize: { xs: 11, md: 12 } }}>
+                    <CustomText variant="body2" sx={{ color: "#666", mb: 1, fontSize: { xs: 12, md: 13 }, fontWeight: 400, textTransform: "capitalize", }}>
                       {item.weight}
                     </CustomText>
                   )}
-                  <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: { xs: 1.5, md: 2 }, fontSize: { xs: 13, md: 14 } }}>
-                    {item?.price}
-                  </CustomText>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={() => {
-                      // Navigate to product details using prdcode (product code)
-                      if (item?.prdcode) {
-                        window.location.href = `/products/${item.prdcode}`;
-                      } else if (item?.productId) {
-                        window.location.href = `/products/${item.productId}`;
-                      }
-                    }}
-                    sx={{
-                      backgroundColor: "#FFB5A1",
-                      color: "black",
-                      textTransform: "none",
-                      borderRadius: { xs: 1.5, md: 2 },
-                      fontWeight: 600,
-                      fontSize: { xs: 12, md: 14 },
-                      py: { xs: 0.8, md: 1 },
-                      mt: "auto",
-                      "&:hover": {
-                        backgroundColor: "#F2709C",
-                      },
-                    }}
-                  >
-                    View Product
-                  </Button>
+                  <Box sx={{ mt: "auto" }}>
+                    <CustomText variant="h6" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: 1.5, fontSize: { xs: 16, md: 18 }, textTransform: "none", }}>
+                      {item?.price}
+                    </CustomText>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => {
+                        if (item?.prdcode) {
+                          window.location.href = `/products/${item.prdcode}`;
+                        } else if (item?.productId) {
+                          window.location.href = `/products/${item.productId}`;
+                        }
+                      }}
+                      sx={{
+                        backgroundColor: "#FFB5A1",
+                        color: "#000",
+                        textTransform: "none",
+                        borderRadius: 2,
+                        fontWeight: 600,
+                        fontSize: { xs: 13, md: 14 },
+                        py: 1,
+                        boxShadow: "0 2px 8px rgba(255,181,161,0.25)",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: "#F2709C",
+                          transform: "translateY(-2px)",
+                          boxShadow: "0 4px 12px rgba(242,112,156,0.35)",
+                        },
+                      }}
+                    >
+                      View Product
+                    </Button>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

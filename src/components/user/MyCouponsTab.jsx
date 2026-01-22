@@ -37,210 +37,116 @@ export const MyCouponsTab = ({ coupons, couponsLoading, couponsError }) => {
             <Grid size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={coupon.id}>
               <Card
                 sx={{
-                  borderRadius: { xs: 3, md: 4 },
+                  borderRadius: { xs: 2.5, md: 3 },
                   boxShadow: coupon.isValid
-                    ? "0 8px 32px rgba(255,148,114,0.2), 0 0 0 1px rgba(255,255,255,0.1) inset"
-                    : "0 4px 16px rgba(0,0,0,0.1)",
+                    ? "0 4px 20px rgba(255,148,114,0.2)"
+                    : "0 2px 8px rgba(0,0,0,0.1)",
                   background: coupon.isValid
-                    ? "linear-gradient(145deg, #FF9472 0%, #F2709C 50%, #FF9472 100%)"
-                    : "linear-gradient(145deg, #e0e0e0 0%, #bdbdbd 100%)",
-                  color: "#fff",
-                  transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                    ? "linear-gradient(135deg, #FF9472 0%, #F2709C 100%)"
+                    : "#f5f5f5",
+                  color: coupon.isValid ? "#fff" : "#999",
+                  transition: "all 0.3s ease",
                   position: "relative",
                   overflow: "hidden",
-                  animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
-                  "@keyframes fadeInUp": {
-                    "0%": {
-                      opacity: 0,
-                      transform: "translateY(30px) scale(0.9)",
-                    },
-                    "100%": {
-                      opacity: 1,
-                      transform: "translateY(0) scale(1)",
-                    },
-                  },
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: "-50%",
-                    left: "-50%",
-                    width: "200%",
-                    height: "200%",
-                    background: coupon.isValid
-                      ? "radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%)"
-                      : "radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)",
-                    animation: coupon.isValid ? "rotate 20s linear infinite" : "none",
-                    "@keyframes rotate": {
-                      "0%": { transform: "rotate(0deg)" },
-                      "100%": { transform: "rotate(360deg)" },
-                    },
-                    zIndex: 0,
-                    pointerEvents: "none",
-                  },
-                  "&::after": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: "-100%",
-                    width: "100%",
-                    height: "100%",
-                    background: coupon.isValid
-                      ? "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)"
-                      : "none",
-                    animation: coupon.isValid ? "shimmer 3s ease-in-out infinite" : "none",
-                    "@keyframes shimmer": {
-                      "0%": { left: "-100%" },
-                      "100%": { left: "100%" },
-                    },
-                    zIndex: 1,
-                    pointerEvents: "none",
-                  },
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  border: coupon.isValid ? "none" : "1px solid #e0e0e0",
                   "&:hover": {
-                    transform: coupon.isValid ? "translateY(-12px) scale(1.02)" : "translateY(-5px)",
+                    transform: "translateY(-6px)",
                     boxShadow: coupon.isValid
-                      ? "0 20px 60px rgba(255,148,114,0.4), 0 0 0 1px rgba(255,255,255,0.2) inset"
-                      : "0 12px 40px rgba(0,0,0,0.15)",
-                    "& .coupon-discount": {
-                      transform: "scale(1.1)",
-                    },
-                    "& .coupon-code": {
-                      transform: "scale(1.05) rotate(2deg)",
-                    },
+                      ? "0 8px 30px rgba(255,148,114,0.35)"
+                      : "0 4px 15px rgba(0,0,0,0.15)",
                   },
                 }}
               >
-                {/* Decorative Elements */}
-                {coupon.isValid && (
-                  <>
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: -20,
-                        right: -20,
-                        width: 100,
-                        height: 100,
-                        borderRadius: "50%",
-                        background: "rgba(255,255,255,0.1)",
-                        zIndex: 1,
-                      }}
-                    />
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        bottom: -30,
-                        left: -30,
-                        width: 120,
-                        height: 120,
-                        borderRadius: "50%",
-                        background: "rgba(255,255,255,0.08)",
-                        zIndex: 1,
-                      }}
-                    />
-                  </>
-                )}
-
                 {!coupon.isValid && (
                   <Box
                     sx={{
                       position: "absolute",
                       top: 12,
                       right: 12,
-                      px: 2,
-                      py: 0.75,
-                      borderRadius: 2,
-                      background: "rgba(0,0,0,0.3)",
-                      backdropFilter: "blur(10px)",
+                      px: 1.5,
+                      py: 0.5,
+                      borderRadius: 1.5,
+                      background: "rgba(0,0,0,0.5)",
                       zIndex: 2,
-                      border: "1px solid rgba(255,255,255,0.2)",
                     }}
                   >
-                    <CustomText variant="caption" sx={{ fontWeight: 700, fontSize: 11, letterSpacing: 0.5 }}>
+                    <CustomText variant="caption" sx={{ fontWeight: 700, fontSize: 10, color: "#fff" }}>
                       EXPIRED
                     </CustomText>
                   </Box>
                 )}
 
-                <CardContent sx={{ p: { xs: 2.5, md: 3.5 }, position: "relative", zIndex: 2 }}>
+                <CardContent sx={{ p: { xs: 2.5, md: 3 }, position: "relative", zIndex: 2, flexGrow: 1, display: "flex", flexDirection: "column" }}>
                   {/* Discount Badge */}
-                  <Box sx={{ mb: 2.5, position: "relative" }}>
-                    <Box
-                      className="coupon-discount"
+                  <Box sx={{ mb: 2, textAlign: "center" }}>
+                    <CustomText
+                      variant="h3"
                       sx={{
-                        display: "inline-block",
-                        transition: "transform 0.3s ease",
+                        fontWeight: 800,
+                        fontSize: { xs: 36, md: 44 },
+                        lineHeight: 1,
+                        mb: 0.5,
+                        color: coupon.isValid ? "#fff" : "#999",
                       }}
                     >
-                      <CustomText
-                        variant="h3"
-                        sx={{
-                          fontWeight: 900,
-                          fontSize: { xs: 36, md: 48 },
-                          lineHeight: 1,
-                          mb: 0.5,
-                          textShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                          background: "linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.9) 100%)",
-                          WebkitBackgroundClip: "text",
-                          WebkitTextFillColor: "transparent",
-                          backgroundClip: "text",
-                        }}
-                      >
-                        {coupon.discount}
-                      </CustomText>
-                      <CustomText
-                        variant="h6"
-                        sx={{
-                          fontWeight: 700,
-                          fontSize: { xs: 14, md: 16 },
-                          opacity: 0.95,
-                          textShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                        }}
-                      >
-                        OFF
-                      </CustomText>
-                    </Box>
+                      {coupon.discount}
+                    </CustomText>
+                    <CustomText
+                      variant="h6"
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: { xs: 14, md: 16 },
+                        color: coupon.isValid ? "#fff" : "#999",
+                        letterSpacing: 1,
+                      }}
+                    >
+                      OFF
+                    </CustomText>
                   </Box>
 
                   {/* Coupon Code */}
                   <Box
-                    className="coupon-code"
                     sx={{
-                      mb: 2.5,
-                      px: 2.5,
-                      py: 1.5,
-                      borderRadius: 3,
-                      background: "rgba(255,255,255,0.25)",
-                      backdropFilter: "blur(15px)",
-                      border: "2px dashed rgba(255,255,255,0.5)",
+                      mb: 2,
+                      px: 2,
+                      py: 1.25,
+                      borderRadius: 2,
+                      background: coupon.isValid ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.05)",
+                      border: coupon.isValid ? "2px dashed rgba(255,255,255,0.4)" : "2px dashed #ddd",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "space-between",
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.1) inset",
+                      justifyContent: "center",
+                      gap: 1,
                     }}
                   >
                     <CustomText
                       variant="h6"
                       sx={{
-                        fontWeight: 800,
-                        fontSize: { xs: 16, md: 18 },
-                        letterSpacing: 1.5,
+                        fontWeight: 700,
+                        fontSize: { xs: 15, md: 17 },
+                        letterSpacing: 1.2,
                         fontFamily: "monospace",
+                        color: coupon.isValid ? "#fff" : "#666",
                       }}
                     >
                       {coupon.code}
                     </CustomText>
-                    <OfferIcon sx={{ fontSize: { xs: 20, md: 24 }, opacity: 0.8 }} />
+                    <OfferIcon sx={{ fontSize: { xs: 18, md: 20 }, opacity: coupon.isValid ? 0.9 : 0.5 }} />
                   </Box>
 
                   {/* Description */}
                   <CustomText
-                    variant="body1"
+                    variant="body2"
                     sx={{
                       mb: 2,
-                      opacity: 0.95,
-                      fontSize: { xs: 13, md: 14 },
-                      lineHeight: 1.6,
+                      fontSize: { xs: 12, md: 13 },
+                      lineHeight: 1.5,
                       fontWeight: 500,
+                      color: coupon.isValid ? "rgba(255,255,255,0.95)" : "#666",
+                      textAlign: "center",
                     }}
                   >
                     {coupon.description}
@@ -249,54 +155,51 @@ export const MyCouponsTab = ({ coupons, couponsLoading, couponsError }) => {
                   {/* Validity Dates */}
                   <Box
                     sx={{
-                      mb: 2.5,
-                      p: 1.5,
-                      borderRadius: 2,
-                      background: "rgba(255,255,255,0.15)",
-                      backdropFilter: "blur(10px)",
+                      mb: 2,
+                      p: 1.25,
+                      borderRadius: 1.5,
+                      background: coupon.isValid ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.03)",
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 0.75 }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}>
                       <CustomText
                         variant="caption"
                         sx={{
                           fontSize: { xs: 10, md: 11 },
-                          opacity: 0.9,
                           fontWeight: 600,
-                          mr: 1,
+                          color: coupon.isValid ? "rgba(255,255,255,0.9)" : "#999",
                         }}
                       >
-                        From:
+                        Valid From:
                       </CustomText>
                       <CustomText
                         variant="body2"
                         sx={{
-                          fontSize: { xs: 11, md: 12 },
-                          opacity: 0.95,
+                          fontSize: { xs: 10, md: 11 },
                           fontWeight: 500,
+                          color: coupon.isValid ? "#fff" : "#666",
                         }}
                       >
                         {coupon.validFrom}
                       </CustomText>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                       <CustomText
                         variant="caption"
                         sx={{
                           fontSize: { xs: 10, md: 11 },
-                          opacity: 0.9,
                           fontWeight: 600,
-                          mr: 1,
+                          color: coupon.isValid ? "rgba(255,255,255,0.9)" : "#999",
                         }}
                       >
-                        Until:
+                        Valid Until:
                       </CustomText>
                       <CustomText
                         variant="body2"
                         sx={{
-                          fontSize: { xs: 11, md: 12 },
-                          opacity: 0.95,
+                          fontSize: { xs: 10, md: 11 },
                           fontWeight: 500,
+                          color: coupon.isValid ? "#fff" : "#666",
                         }}
                       >
                         {coupon.validTo}
@@ -305,41 +208,40 @@ export const MyCouponsTab = ({ coupons, couponsLoading, couponsError }) => {
                   </Box>
 
                   {/* Copy Button */}
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    disabled={!coupon.isValid}
-                    onClick={() => {
-                      navigator.clipboard.writeText(coupon.code);
-                    }}
-                    startIcon={coupon.isValid ? <ContentCopyIcon /> : null}
-                    sx={{
-                      backgroundColor: "#fff",
-                      color: "var(--themeColor)",
-                      textTransform: "none",
-                      borderRadius: 2.5,
-                      fontWeight: 700,
-                      py: 1.75,
-                      fontSize: { xs: 14, md: 15 },
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: "#fff",
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
-                      },
-                      "&:active": {
-                        transform: "translateY(0)",
-                      },
-                      "&:disabled": {
-                        backgroundColor: "rgba(255,255,255,0.4)",
-                        color: "rgba(0,0,0,0.3)",
-                        boxShadow: "none",
-                      },
-                    }}
-                  >
-                    {coupon.isValid ? "Copy Code" : "Expired"}
-                  </Button>
+                  <Box sx={{ mt: "auto" }}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      disabled={!coupon.isValid}
+                      onClick={() => {
+                        navigator.clipboard.writeText(coupon.code);
+                      }}
+                      startIcon={coupon.isValid ? <ContentCopyIcon /> : null}
+                      sx={{
+                        backgroundColor: coupon.isValid ? "#fff" : "#e0e0e0",
+                        color: coupon.isValid ? "var(--themeColor)" : "#999",
+                        textTransform: "none",
+                        borderRadius: 2,
+                        fontWeight: 700,
+                        py: 1.25,
+                        fontSize: { xs: 13, md: 14 },
+                        boxShadow: coupon.isValid ? "0 2px 8px rgba(0,0,0,0.15)" : "none",
+                        transition: "all 0.3s ease",
+                        "&:hover": {
+                          backgroundColor: coupon.isValid ? "#fff" : "#e0e0e0",
+                          transform: coupon.isValid ? "translateY(-2px)" : "none",
+                          boxShadow: coupon.isValid ? "0 4px 12px rgba(0,0,0,0.2)" : "none",
+                        },
+                        "&:disabled": {
+                          backgroundColor: "#e0e0e0",
+                          color: "#999",
+                          cursor: "not-allowed",
+                        },
+                      }}
+                    >
+                      {coupon.isValid ? "Copy Code" : "Expired"}
+                    </Button>
+                  </Box>
                 </CardContent>
               </Card>
             </Grid>

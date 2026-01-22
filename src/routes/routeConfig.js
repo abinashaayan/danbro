@@ -27,6 +27,8 @@ const NotFound = createLazyComponent(() => import("../pages/NotFound"), "NotFoun
 const Cart = createLazyComponent(() => import("../pages/cart/Cart"), "Cart");
 const PrivacyPolicy = createLazyComponent(() => import("../pages/home/PrivacyPolicy"), "PrivacyPolicy");
 const TermsAndConditions = createLazyComponent(() => import("../pages/home/TermsAndConditions"), "TermsAndConditions");
+const RefundReturnsPolicy = createLazyComponent(() => import("../pages/home/RefundReturnsPolicy"), "RefundReturnsPolicy");
+const CorporateQueries = createLazyComponent(() => import("../pages/home/CorporateQueries"), "CorporateQueries");
 
 /**
  * Public Routes - Accessible without authentication
@@ -87,6 +89,14 @@ export const publicRoutes = [
   {
     path: "/terms-conditions",
     component: TermsAndConditions,
+  },
+  {
+    path: "/refund-returns-policy",
+    component: RefundReturnsPolicy,
+  },
+  {
+    path: "/corporate-queries",
+    component: CorporateQueries,
   },
 ];
 

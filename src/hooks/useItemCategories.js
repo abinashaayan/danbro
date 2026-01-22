@@ -27,16 +27,44 @@ export const useItemCategories = () => {
         setLoading(true);
         setError(null);
         const response = await fetchItemCategories();
-        if (response.status === 'sucess' && response.records) {
-          categoriesCache = response.records;
+        
+        // Handle different response formats
+        let categoriesData = null;
+        
+        // Check for response.records (expected format)
+        if (response && response.records && Array.isArray(response.records)) {
+          categoriesData = response.records;
+        }
+        // Check for response.data.records
+        else if (response && response.data && response.data.records && Array.isArray(response.data.records)) {
+          categoriesData = response.data.records;
+        }
+        // Check if response is directly an array
+        else if (response && Array.isArray(response)) {
+          categoriesData = response;
+        }
+        // Check for response.data as array
+        else if (response && response.data && Array.isArray(response.data)) {
+          categoriesData = response.data;
+        }
+        // Check for success response with data array
+        else if (response && (response.status === 'success' || response.status === 'sucess' || response.success === true) && response.data && Array.isArray(response.data)) {
+          categoriesData = response.data;
+        }
+        
+        if (categoriesData && categoriesData.length > 0) {
+          categoriesCache = categoriesData;
           cacheTimestamp = Date.now();
-          setCategories(response.records);
+          setCategories(categoriesData);
         } else {
-          throw new Error('Invalid response format');
+          console.warn('Invalid response format or empty categories:', response);
+          throw new Error('Invalid response format: Categories data not found or empty');
         }
       } catch (err) {
         setError(err.message || 'Failed to fetch item categories');
         console.error('Error loading item categories:', err);
+        // Set empty array on error to prevent crashes
+        setCategories([]);
       } finally {
         setLoading(false);
       }
