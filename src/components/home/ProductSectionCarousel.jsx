@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, CircularProgress } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import Slider from "react-slick";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { addToCart } from "../../utils/cart";
+import { getAccessToken } from "../../utils/cookies";
+import { CustomToast } from "../comman/CustomToast";
 
 export const ProductSectionCarousel = ({
   title,
@@ -22,6 +25,20 @@ export const ProductSectionCarousel = ({
   const [visible, setVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const sectionRef = useRef(null);
+  const [loadingCart, setLoadingCart] = useState(new Set());
+  const [toast, setToast] = useState({ 
+    open: false, 
+    message: "", 
+    severity: "success", 
+    loading: false 
+  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const token = getAccessToken();
+    setIsLoggedIn(!!token);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,6 +55,72 @@ export const ProductSectionCarousel = ({
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  const handleAddToCart = async (e, product) => {
+    e.stopPropagation();
+
+    if (!product?.productId && !product?.id) {
+      setToast({
+        open: true,
+        message: "Product ID is missing. Please try again.",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    if (!isLoggedIn) {
+      setToast({
+        open: true,
+        message: "Please login to add items to cart",
+        severity: "warning",
+        loading: false,
+      });
+      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+      return;
+    }
+
+    const productId = product.productId || product.id || product._id;
+    setLoadingCart((prev) => new Set(prev).add(productId));
+    setToast({
+      open: true,
+      message: "Adding to cart...",
+      severity: "info",
+      loading: true,
+    });
+
+    try {
+      const quantity = 1;
+      await addToCart(productId, quantity);
+      
+      setToast({
+        open: true,
+        message: "Product added to cart successfully!",
+        severity: "success",
+        loading: false,
+      });
+      
+      // Dispatch event to update cart count in header
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+      
+      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      setToast({
+        open: true,
+        message: error.response?.data?.message || "Failed to add product to cart",
+        severity: "error",
+        loading: false,
+      });
+      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+    } finally {
+      setLoadingCart((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
+  };
 
   const settings = {
     infinite: true,
@@ -357,7 +440,7 @@ export const ProductSectionCarousel = ({
                     style={{ textTransform: "none" }}
                   >
                     {(() => {
-                      const text = product?.title || product?.name || " ";
+                      const text = product?.title || product?.name || "";
                       if (text && text === text.toUpperCase() && text !== text.toLowerCase()) {
                         return text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
                       }
@@ -392,8 +475,10 @@ export const ProductSectionCarousel = ({
                     </Box>
                     <IconButton
                       className="add-cart-btn"
+                      onClick={(e) => handleAddToCart(e, product)}
+                      disabled={loadingCart.has(product?.productId || product?.id || product?._id)}
                       sx={{
-                        bgcolor: "var(--themeColor)",
+                        bgcolor: "var(--themeColor)",                       
                         color: "#fff",
                         width: { xs: 36, md: 40 },
                         height: { xs: 36, md: 40 },
@@ -404,9 +489,21 @@ export const ProductSectionCarousel = ({
                           bgcolor: "#7a2d3a",
                           transform: "scale(1.1)",
                         },
+                        "&:disabled": {
+                          opacity: 0.7,
+                        },
                       }}
                     >
-                      <ShoppingCartIcon sx={{ fontSize: { xs: 16, md: 18 } }} />
+                      {loadingCart.has(product?.productId || product?.id || product?._id) ? (
+                        <CircularProgress
+                          size={16}
+                          sx={{
+                            color: "#fff",
+                          }}
+                        />
+                      ) : (
+                        <ShoppingCartIcon sx={{ fontSize: { xs: 16, md: 18 } }} />
+                      )}
                     </IconButton>
                   </Box>
                 </Box>
@@ -482,6 +579,15 @@ export const ProductSectionCarousel = ({
           }}
         />
       </Box>
+
+      {/* Toast Notification */}
+      <CustomToast
+        open={toast.open}
+        onClose={() => setToast({ ...toast, open: false })}
+        message={toast.message}
+        severity={toast.severity}
+        loading={toast.loading}
+      />
     </Box>
   );
 };

@@ -9,6 +9,7 @@ import { TestimonialsCarousel } from "../components/home/TestimonialsCarousel";
 import { NewsletterSection } from "../components/home/NewsletterSection";
 import { YouTubeVideosSection } from "../components/home/YouTubeVideosSection";
 import { CategoryProductSection } from "../components/home/CategoryProductSection";
+import { BackgroundDecorations } from "../components/home/BackgroundDecorations";
 import { useHomePageData } from "../hooks/useHomePageData";
 import CakeIcon from "@mui/icons-material/Cake";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
@@ -76,11 +77,16 @@ const Home = () => {
   }
 
   return (
-    <Box sx={{ width: "100%", maxWidth: "100%" }}>
+    <Box sx={{ width: "100%", maxWidth: "100%", position: "relative" }}>
+      {/* Background Decorations */}
+      <BackgroundDecorations />
+      
       {/* Hero Banner Carousel */}
-      <HeroBanner />
+      <Box sx={{ position: "relative", zIndex: 1 }}>
+        <HeroBanner />
+      </Box>
 
-      <Container maxWidth={false} sx={{ px: { xs: 2, md: 3 }, py: { xs: 4, md: 6 } }}>
+      <Container maxWidth={false} sx={{ px: { xs: 2, md: 3 }, py: { xs: 4, md: 6 }, position: "relative", zIndex: 1 }}>
         {/* Category Carousel */}
         <CategoryCarousel />
 

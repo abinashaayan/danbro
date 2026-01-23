@@ -1,4 +1,4 @@
-import { Box, IconButton, Button } from "@mui/material";
+import { Box, IconButton, Button, CircularProgress } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import Slider from "react-slick";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -8,6 +8,9 @@ import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { addToCart } from "../../utils/cart";
+import { getAccessToken } from "../../utils/cookies";
+import { CustomToast } from "../comman/CustomToast";
 import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
@@ -80,6 +83,20 @@ export const FeaturedProductsCarousel = () => {
   let sliderRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
+  const [loadingCart, setLoadingCart] = useState(new Set());
+  const [toast, setToast] = useState({ 
+    open: false, 
+    message: "", 
+    severity: "success", 
+    loading: false 
+  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const token = getAccessToken();
+    setIsLoggedIn(!!token);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -354,7 +371,15 @@ export const FeaturedProductsCarousel = () => {
                       </Box>
                       <Button
                         className="add-cart-btn"
-                        startIcon={<ShoppingCartIcon />}
+                        onClick={(e) => handleAddToCart(e, product)}
+                        disabled={loadingCart.has(product?.id || product?.productId || product?._id)}
+                        startIcon={
+                          loadingCart.has(product?.id || product?.productId || product?._id) ? (
+                            <CircularProgress size={16} sx={{ color: "#fff" }} />
+                          ) : (
+                            <ShoppingCartIcon />
+                          )
+                        }
                         sx={{
                           bgcolor: "var(--themeColor)",
                           color: "#fff",
@@ -367,6 +392,9 @@ export const FeaturedProductsCarousel = () => {
                           position: "relative",
                           overflow: "hidden",
                           transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                          "&:disabled": {
+                            opacity: 0.7,
+                          },
                           "&::before": {
                             content: '""',
                             position: "absolute",
@@ -421,6 +449,15 @@ export const FeaturedProductsCarousel = () => {
             <ArrowForwardIosIcon />
           </IconButton>
         </Box>
+
+      {/* Toast Notification */}
+      <CustomToast
+        open={toast.open}
+        onClose={() => setToast({ ...toast, open: false })}
+        message={toast.message}
+        severity={toast.severity}
+        loading={toast.loading}
+      />
     </Box>
   );
 };
