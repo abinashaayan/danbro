@@ -82,7 +82,7 @@ const Home = () => {
       <BackgroundDecorations />
       
       {/* Hero Banner Carousel */}
-      <Box sx={{ position: "relative", zIndex: 1, mt: 0 }}>
+      <Box sx={{ position: "relative", zIndex: 1, mt: "-54px" }}>
       <HeroBanner />
       </Box>
       
@@ -104,19 +104,17 @@ const Home = () => {
           preloadedProducts={productsData["COOKIES"]?.products || []}
         />
         
-        {/* All Cakes - Merged Section (Birthday Cakes + Beautiful Cakes + Creamless Cakes + Dry Cakes and Muffins) */}
+        {/* Cakes - Merged Section (Birthday Cakes + Beautiful Cakes) */}
         <CategoryProductSection
           categoryGroupname="CAKES"
           title="Cakes"
-          subtitle="Birthday Cakes, Beautiful Cakes, Creamless Cakes & Dry Cakes and Muffins"
+          subtitle="Birthday Cakes, Beautiful Cakes"
           icon={CakeIcon}
           bgColor="rgba(255,248,245,0.5)"
           limit={40}
           preloadedProducts={[
             ...(productsData["CAKES WEB AND APP"]?.products || []),
-            ...(productsData["CAKES"]?.products || []),
-            ...(productsData["SNB CREAMLESS CAKES"]?.products || []),
-            ...(productsData["DRY CAKES AND MUFFINS"]?.products || [])
+            ...(productsData["CAKES"]?.products || [])
           ]}
         />
         

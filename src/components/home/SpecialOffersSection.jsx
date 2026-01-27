@@ -62,8 +62,6 @@ export const SpecialOffersSection = () => {
     <Box
       ref={sectionRef}
       sx={{
-        py: { xs: 6, md: 10 },
-        bgcolor: "#fef9f7",
         borderRadius: { xs: 0, md: 4 },
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(50px)",
@@ -75,36 +73,14 @@ export const SpecialOffersSection = () => {
         <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
           <Box sx={{ display: "inline-flex", alignItems: "center", gap: 1, mb: 1 }}>
             <LocalOfferIcon sx={{ fontSize: 32, color: "#FF9472" }} />
-            <CustomText
-              sx={{
-                fontSize: { xs: 12, md: 14 },
-                fontWeight: 600,
-                color: "#FF9472",
-                textTransform: "uppercase",
-                letterSpacing: 2,
-              }}
-            >
+            <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, }}>
               Special Offers
             </CustomText>
           </Box>
-          <CustomText
-            sx={{
-              fontSize: { xs: 32, sm: 38, md: 48 },
-              fontWeight: 800,
-              color: "var(--themeColor)",
-              mb: 2,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 32, sm: 38, md: 48 }, fontWeight: 800, color: "var(--themeColor)", mb: 2, }}>
             Limited Time Deals
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 14, md: 16 },
-              color: "#666",
-              maxWidth: 600,
-              mx: "auto",
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", maxWidth: 600, mx: "auto", }}>
             Don't miss out on these amazing deals and special offers
           </CustomText>
         </Box>
@@ -158,27 +134,20 @@ export const SpecialOffersSection = () => {
                 onClick={() => navigate("/offers")}
               >
                 {/* Image */}
-                <Box
-                  sx={{
-                    position: "relative",
-                    height: { xs: 200, md: 250 },
-                    overflow: "hidden",
-                    bgcolor: offer.bgColor,
-                  }}
-                >
-                    <Box
-                      className="offer-image"
-                      component="img"
-                      src={offer.image}
-                      alt={offer.title}
-                      sx={{
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                        transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-                        willChange: "transform",
-                      }}
-                    />
+                <Box sx={{ position: "relative", height: { xs: 200, md: 250 }, overflow: "hidden", bgcolor: offer.bgColor, }}>
+                  <Box
+                    className="offer-image"
+                    component="img"
+                    src={offer.image}
+                    alt={offer.title}
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+                      willChange: "transform",
+                    }}
+                  />
                   {/* Discount Badge with Pulse Animation */}
                   <Box
                     className="pulse-badge"
@@ -213,48 +182,16 @@ export const SpecialOffersSection = () => {
 
                 {/* Content */}
                 <Box sx={{ p: 3, bgcolor: "#fff" }}>
-                  <CustomText
-                    sx={{
-                      fontSize: { xs: 20, md: 24 },
-                      fontWeight: 800,
-                      color: "var(--themeColor)",
-                      mb: 0.5,
-                    }}
-                  >
+                  <CustomText sx={{ fontSize: { xs: 20, md: 24 }, fontWeight: 800, color: "var(--themeColor)", mb: 0.5, }}>
                     {offer.title}
                   </CustomText>
-                  <CustomText
-                    sx={{
-                      fontSize: { xs: 16, md: 18 },
-                      fontWeight: 600,
-                      color: "#333",
-                      mb: 1,
-                    }}
-                  >
+                  <CustomText sx={{ fontSize: { xs: 16, md: 18 }, fontWeight: 600, color: "#333", mb: 1, }}>
                     {offer.subtitle}
                   </CustomText>
-                  <CustomText
-                    sx={{
-                      fontSize: 14,
-                      color: "#666",
-                      mb: 2.5,
-                    }}
-                  >
+                  <CustomText sx={{ fontSize: 14, color: "#666", mb: 2.5, }}>
                     {offer.description}
                   </CustomText>
-                  <Button
-                    fullWidth
-                    sx={{
-                      bgcolor: "var(--themeColor)",
-                      color: "#fff",
-                      py: 1.2,
-                      borderRadius: 2,
-                      fontWeight: 700,
-                      fontSize: 15,
-                      textTransform: "none",
-                      "&:hover": { bgcolor: "#7a2d3a" },
-                    }}
-                  >
+                  <Button fullWidth sx={{ bgcolor: "var(--themeColor)", color: "#fff", py: 1.2, borderRadius: 2, fontWeight: 700, fontSize: 15, textTransform: "none", "&:hover": { bgcolor: "#7a2d3a" }, }}>
                     Shop Now
                   </Button>
                 </Box>

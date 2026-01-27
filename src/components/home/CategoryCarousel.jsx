@@ -44,7 +44,7 @@ export const CategoryCarousel = () => {
     );
 
     if (sectionRef.current) observer.observe(sectionRef.current);
-    
+
     // Fallback: make visible after 500ms if observer doesn't trigger
     const fallbackTimer = setTimeout(() => {
       setVisible(true);
@@ -98,9 +98,9 @@ export const CategoryCarousel = () => {
         </Alert>
       </Box>
     ) : (
-      <Box 
+      <Box
         ref={sectionRef}
-        sx={{ 
+        sx={{
           mb: { xs: 6, md: 8 },
           opacity: visible ? 1 : 0.3,
           transform: visible ? "translateY(0)" : "translateY(20px)",
@@ -111,100 +111,19 @@ export const CategoryCarousel = () => {
       >
         {/* Section Header */}
         <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
-          <CustomText
-            sx={{
-              fontSize: { xs: 12, md: 14 },
-              fontWeight: 600,
-              color: "#FF9472",
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              mb: 1,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, mb: 1, }}>
             Browse Categories
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 28, sm: 34, md: 42 },
-              fontWeight: 800,
-              color: "var(--themeColor)",
-              mb: 2,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 28, sm: 34, md: 42 }, fontWeight: 800, color: "var(--themeColor)", mb: 2, }}>
             Shop by Category
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 14, md: 16 },
-              color: "#666",
-              maxWidth: 600,
-              mx: "auto",
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", maxWidth: 600, mx: "auto", }}>
             Discover our wide range of delicious bakery products
           </CustomText>
         </Box>
 
         <Box sx={{ px: { xs: 2, md: 3, lg: 2 }, position: "relative" }}>
-          <Box
-            sx={{
-              width: "100%",
-              background: `
-                linear-gradient(135deg, 
-                  rgba(255,181,161,0.15) 0%, 
-                  rgba(251,199,181,0.2) 25%,
-                  rgba(255,181,161,0.15) 50%,
-                  rgba(251,199,181,0.2) 75%,
-                  rgba(255,181,161,0.15) 100%
-                )
-              `,
-              backgroundSize: "200% 200%",
-              borderRadius: { xs: "30px", md: "50px" },
-              py: { xs: 2, sm: 2.5, md: 3, lg: 3.5 },
-              px: { xs: 1, sm: 1.5, md: 2, lg: 2.5 },
-              position: "relative",
-              overflow: "hidden",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.08)",
-              animation: visible ? "gradientShift 8s ease infinite" : "none",
-              "@keyframes gradientShift": {
-                "0%, 100%": { backgroundPosition: "0% 50%" },
-                "50%": { backgroundPosition: "100% 50%" },
-              },
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                top: "-50%",
-                left: "-50%",
-                width: "200%",
-                height: "200%",
-                background: "radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%)",
-                animation: "rotate 20s linear infinite",
-                "@keyframes rotate": {
-                  "0%": { transform: "rotate(0deg)" },
-                  "100%": { transform: "rotate(360deg)" },
-                },
-                zIndex: 0,
-                pointerEvents: "none",
-              },
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%)",
-                animation: "shimmer 4s ease-in-out infinite",
-                "@keyframes shimmer": {
-                  "0%, 100%": { transform: "translateX(-100%)" },
-                  "50%": { transform: "translateX(100%)" },
-                },
-                zIndex: 0,
-                pointerEvents: "none",
-              },
-            }}
-          >
-            {/* Floating Particles */}
+          <Box>
             {[...Array(5)].map((_, i) => (
               <Box
                 key={i}
