@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, memo } from "react";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { fetchProducts } from "../../utils/apiService";
 import { ProductSectionCarousel } from "./ProductSectionCarousel";
@@ -15,7 +15,7 @@ import { Box, CircularProgress, Alert } from "@mui/material";
  * @param {number} limit - Number of products to fetch (default: 10)
  * @param {Array} preloadedProducts - Pre-loaded products array (optional, if provided, skips API call)
  */
-export const CategoryProductSection = ({
+export const CategoryProductSection = memo(({
   categoryGroupname,
   title,
   subtitle,
@@ -108,7 +108,7 @@ export const CategoryProductSection = ({
               image: productImage,
               discount: discount,
               rating: product.rating || 4.5,
-              reviews: product.reviews || Math.floor(Math.random() * 100) + 50,
+              reviews: product.reviews || 75, // Fixed value instead of random to prevent re-renders
               sku: product.prdcode,
               badge: product.badge || "New",
               badgeColor: product.badgeColor || "#FF9472",
@@ -184,5 +184,17 @@ export const CategoryProductSection = ({
       showBadge={showBadge}
     />
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for memo
+  return (
+    prevProps.categoryGroupname === nextProps.categoryGroupname &&
+    prevProps.title === nextProps.title &&
+    prevProps.subtitle === nextProps.subtitle &&
+    prevProps.bgColor === nextProps.bgColor &&
+    prevProps.showBadge === nextProps.showBadge &&
+    prevProps.limit === nextProps.limit &&
+    prevProps.preloadedProducts?.length === nextProps.preloadedProducts?.length &&
+    JSON.stringify(prevProps.preloadedProducts) === JSON.stringify(nextProps.preloadedProducts)
+  );
+});
 

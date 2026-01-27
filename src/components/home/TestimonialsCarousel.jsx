@@ -60,7 +60,7 @@ const testimonials = [
 ];
 
 export const TestimonialsCarousel = () => {
-  let sliderRef = useRef(null);
+  let sliderRef = null;
   const [visible, setVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sectionRef = useRef(null);
@@ -101,54 +101,7 @@ export const TestimonialsCarousel = () => {
   };
 
   return (
-    <Box
-      ref={sectionRef}
-      sx={{
-        py: { xs: 8, md: 12 },
-        background: `
-          linear-gradient(135deg, 
-            rgba(255,181,161,0.05) 0%, 
-            rgba(251,199,181,0.08) 50%,
-            rgba(255,181,161,0.05) 100%
-          )
-        `,
-        position: "relative",
-        overflow: "hidden",
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(50px)",
-        transition: "opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: "-100px",
-          right: "-100px",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,181,161,0.1) 0%, transparent 70%)",
-          animation: "float 15s ease-in-out infinite",
-          "@keyframes float": {
-            "0%, 100%": { transform: "translate(0, 0)" },
-            "50%": { transform: "translate(-30px, -30px)" },
-          },
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          bottom: "-100px",
-          left: "-100px",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(251,199,181,0.1) 0%, transparent 70%)",
-          animation: "floatReverse 18s ease-in-out infinite",
-          "@keyframes floatReverse": {
-            "0%, 100%": { transform: "translate(0, 0)" },
-            "50%": { transform: "translate(30px, 30px)" },
-          },
-        },
-      }}
-    >
+    <Box ref={sectionRef} sx={{ py: { xs: 6, md: 10 }, }}>
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 }, position: "relative", zIndex: 1 }}>
         {/* Section Header */}
         <Box sx={{ textAlign: "center", mb: { xs: 6, md: 8 } }}>
@@ -171,36 +124,13 @@ export const TestimonialsCarousel = () => {
           >
             <FormatQuoteIcon sx={{ fontSize: 40, color: "#FF9472" }} />
           </Box>
-          <CustomText
-            sx={{
-              fontSize: { xs: 12, md: 14 },
-              fontWeight: 600,
-              color: "#FF9472",
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              mb: 1,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, mb: 1, }}>
             Testimonials
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 32, sm: 38, md: 48 },
-              fontWeight: 800,
-              color: "var(--themeColor)",
-              mb: 2,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 32, sm: 38, md: 48 }, fontWeight: 800, color: "var(--themeColor)", mb: 2, }}>
             What Our Customers Say
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 14, md: 16 },
-              color: "#666",
-              maxWidth: 600,
-              mx: "auto",
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", maxWidth: 600, mx: "auto", }}>
             Don't just take our word for it - hear from our satisfied customers
           </CustomText>
         </Box>
@@ -337,32 +267,12 @@ export const TestimonialsCarousel = () => {
                     </Box>
 
                     {/* Comment */}
-                    <CustomText
-                      sx={{
-                        fontSize: { xs: 15, md: 16 },
-                        color: "#555",
-                        lineHeight: 1.9,
-                        mb: 3.5,
-                        position: "relative",
-                        zIndex: 1,
-                        fontStyle: "italic",
-                      }}
-                    >
+                    <CustomText sx={{ fontSize: { xs: 15, md: 16 }, color: "#555", lineHeight: 1.9, mb: 3.5, position: "relative", zIndex: 1, fontStyle: "italic", }}>
                       "{testimonial.comment}"
                     </CustomText>
 
                     {/* Author Section */}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
-                        position: "relative",
-                        zIndex: 1,
-                        pt: 2,
-                        borderTop: "1px solid rgba(255,181,161,0.15)",
-                      }}
-                    >
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2, position: "relative", zIndex: 1, pt: 2, borderTop: "1px solid rgba(255,181,161,0.15)", }}>
                       <Box
                         sx={{
                           position: "relative",
@@ -386,6 +296,7 @@ export const TestimonialsCarousel = () => {
                           component="img"
                           src={testimonial.image}
                           alt={testimonial.name}
+                          loading="lazy"
                           sx={{
                             width: { xs: 65, md: 75 },
                             height: { xs: 65, md: 75 },
@@ -398,23 +309,10 @@ export const TestimonialsCarousel = () => {
                         />
                       </Box>
                       <Box>
-                        <CustomText
-                          sx={{
-                            fontSize: { xs: 17, md: 18 },
-                            fontWeight: 700,
-                            color: "var(--themeColor)",
-                            mb: 0.5,
-                          }}
-                        >
+                        <CustomText sx={{ fontSize: { xs: 17, md: 18 }, fontWeight: 700, color: "var(--themeColor)", mb: 0.5, }}>
                           {testimonial.name}
                         </CustomText>
-                        <CustomText
-                          sx={{
-                            fontSize: { xs: 13, md: 14 },
-                            color: "#999",
-                            fontWeight: 500,
-                          }}
-                        >
+                        <CustomText sx={{ fontSize: { xs: 13, md: 14 }, color: "#999", fontWeight: 500, }}>
                           {testimonial.role}
                         </CustomText>
                       </Box>

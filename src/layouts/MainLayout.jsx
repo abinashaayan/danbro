@@ -11,6 +11,7 @@ import { YouTubeVideosSection } from "../components/home/YouTubeVideosSection";
 import { CategoryProductSection } from "../components/home/CategoryProductSection";
 import { BackgroundDecorations } from "../components/home/BackgroundDecorations";
 import { useHomePageData } from "../hooks/useHomePageData";
+import { useMemo } from "react";
 import CakeIcon from "@mui/icons-material/Cake";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalCafeIcon from "@mui/icons-material/LocalCafe";
@@ -26,7 +27,7 @@ import AcUnitIcon from "@mui/icons-material/AcUnit";
 import StoreIcon from "@mui/icons-material/Store";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 
-// Define all category configurations for home page
+// Define all category configurations for home page - moved outside component to prevent re-creation on every render
 const categoryConfigs = [
   { categoryGroupname: "COOKIES", limit: 10 },
   { categoryGroupname: "CAKES WEB AND APP", limit: 10 },
@@ -52,6 +53,21 @@ const categoryConfigs = [
 const Home = () => {
   // Fetch all category products in parallel
   const { productsData, loading, error } = useHomePageData(categoryConfigs);
+
+  // Memoize merged products arrays to prevent unnecessary re-renders
+  const cakesProducts = useMemo(() => {
+    return [
+      ...(productsData["CAKES WEB AND APP"]?.products || []),
+      ...(productsData["CAKES"]?.products || [])
+    ];
+  }, [productsData]);
+
+  const namkeenProducts = useMemo(() => {
+    return [
+      ...(productsData["NAMKEEN"]?.products || []),
+      ...(productsData["NAMKEEN SHYAM"]?.products || [])
+    ];
+  }, [productsData]);
 
   // Show loading screen while all data is being fetched
   if (loading) {
@@ -112,10 +128,7 @@ const Home = () => {
           icon={CakeIcon}
           bgColor="rgba(255,248,245,0.5)"
           limit={40}
-          preloadedProducts={[
-            ...(productsData["CAKES WEB AND APP"]?.products || []),
-            ...(productsData["CAKES"]?.products || [])
-          ]}
+          preloadedProducts={cakesProducts}
         />
         
         {/* Special Offers / Deals */}
@@ -235,10 +248,7 @@ const Home = () => {
           icon={RestaurantIcon}
           bgColor="rgba(255,248,245,0.5)"
           limit={20}
-          preloadedProducts={[
-            ...(productsData["NAMKEEN"]?.products || []),
-            ...(productsData["NAMKEEN SHYAM"]?.products || [])
-          ]}
+          preloadedProducts={namkeenProducts}
         />
         
         {/* New Sapru Marg EJ - From API */}

@@ -3,7 +3,7 @@ import { CustomText } from "../comman/CustomText";
 import Slider from "react-slick";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, memo, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -12,7 +12,7 @@ import { addToCart } from "../../utils/cart";
 import { getAccessToken } from "../../utils/cookies";
 import { CustomToast } from "../comman/CustomToast";
 
-export const ProductSectionCarousel = ({
+export const ProductSectionCarousel = memo(({
   title,
   subtitle,
   products,
@@ -56,7 +56,7 @@ export const ProductSectionCarousel = ({
     return () => observer.disconnect();
   }, []);
 
-  const handleAddToCart = async (e, product) => {
+  const handleAddToCart = useCallback(async (e, product) => {
     e.stopPropagation();
 
     if (!product?.productId && !product?.id) {
@@ -76,7 +76,7 @@ export const ProductSectionCarousel = ({
         severity: "warning",
         loading: false,
       });
-      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+      setTimeout(() => setToast((prev) => ({ ...prev, open: false })), 3000);
       return;
     }
 
@@ -103,7 +103,7 @@ export const ProductSectionCarousel = ({
       // Dispatch event to update cart count in header
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       
-      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+      setTimeout(() => setToast((prev) => ({ ...prev, open: false })), 3000);
     } catch (error) {
       console.error("Error adding to cart:", error);
       setToast({
@@ -112,7 +112,7 @@ export const ProductSectionCarousel = ({
         severity: "error",
         loading: false,
       });
-      setTimeout(() => setToast({ ...toast, open: false }), 3000);
+      setTimeout(() => setToast((prev) => ({ ...prev, open: false })), 3000);
     } finally {
       setLoadingCart((prev) => {
         const newSet = new Set(prev);
@@ -120,7 +120,7 @@ export const ProductSectionCarousel = ({
         return newSet;
       });
     }
-  };
+  }, [isLoggedIn]);
 
   const settings = {
     infinite: true,
@@ -145,7 +145,6 @@ export const ProductSectionCarousel = ({
       ref={sectionRef}
       sx={{
         mb: { xs: 6, md: 8 },
-        py: { xs: 4, md: 5 },
         position: "relative",
         background: bgColor,
         borderRadius: { xs: 0, md: 3 },
@@ -327,6 +326,7 @@ export const ProductSectionCarousel = ({
                     component="img"
                     src={product?.image}
                     alt={product?.title || product?.name}
+                    loading="lazy"
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -590,4 +590,14 @@ export const ProductSectionCarousel = ({
       />
     </Box>
   );
-};
+}, (prevProps, nextProps) => {
+  // Custom comparison function for memo
+  return (
+    prevProps.title === nextProps.title &&
+    prevProps.subtitle === nextProps.subtitle &&
+    prevProps.bgColor === nextProps.bgColor &&
+    prevProps.showBadge === nextProps.showBadge &&
+    prevProps.products?.length === nextProps.products?.length &&
+    JSON.stringify(prevProps.products) === JSON.stringify(nextProps.products)
+  );
+});

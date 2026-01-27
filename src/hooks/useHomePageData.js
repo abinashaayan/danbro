@@ -25,6 +25,14 @@ export const useHomePageData = (categoryConfigs = []) => {
     return map;
   }, [categories]);
 
+  // Create a stable reference for categoryConfigs to prevent infinite loops
+  const stableCategoryConfigs = useMemo(() => {
+    if (!categoryConfigs || categoryConfigs.length === 0) return [];
+    // Create a hash based on configs content to detect actual changes
+    const configHash = categoryConfigs.map(c => `${c.categoryGroupname}-${c.limit}`).join('|');
+    return configHash;
+  }, [categoryConfigs]);
+
   useEffect(() => {
     const loadAllProducts = async () => {
       // Wait for categories to load first
@@ -34,6 +42,12 @@ export const useHomePageData = (categoryConfigs = []) => {
 
       // If no categories available, set loading to false
       if (!categories || categories.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      // Skip if no configs provided
+      if (!categoryConfigs || categoryConfigs.length === 0) {
         setLoading(false);
         return;
       }
@@ -102,7 +116,7 @@ export const useHomePageData = (categoryConfigs = []) => {
                   image: productImage,
                   discount: discount,
                   rating: product.rating || 4.5,
-                  reviews: product.reviews || Math.floor(Math.random() * 100) + 50,
+                  reviews: product.reviews || 75, // Fixed value instead of random to prevent re-renders
                   sku: product.prdcode,
                   badge: product.badge || 'New',
                   badgeColor: product.badgeColor || '#FF9472',
@@ -148,7 +162,8 @@ export const useHomePageData = (categoryConfigs = []) => {
     };
 
     loadAllProducts();
-  }, [categories, categoriesLoading, categoryConfigs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [categories, categoriesLoading, stableCategoryConfigs]);
 
   return {
     productsData,

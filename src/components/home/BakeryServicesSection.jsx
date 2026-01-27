@@ -69,64 +69,12 @@ export const BakeryServicesSection = () => {
   }, []);
 
   return (
-    <Box
-      ref={sectionRef}
-      sx={{
-        py: { xs: 8, md: 12 },
-        position: "relative",
-        overflow: "hidden",
-        background: `
-          linear-gradient(135deg, 
-            rgba(255,248,245,1) 0%, 
-            rgba(254,249,247,1) 50%,
-            rgba(255,251,250,1) 100%
-          )
-        `,
-        borderRadius: { xs: 0, md: 4 },
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(50px)",
-        transition: "opacity 0.8s ease, transform 0.8s ease",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: "-200px",
-          right: "-200px",
-          width: "600px",
-          height: "600px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,181,161,0.15) 0%, transparent 70%)",
-          animation: "float 20s ease-in-out infinite",
-          "@keyframes float": {
-            "0%, 100%": { transform: "translate(0, 0) rotate(0deg)" },
-            "50%": { transform: "translate(-50px, -50px) rotate(180deg)" },
-          },
-          zIndex: 0,
-          pointerEvents: "none",
-        },
-        "&::after": {
-          content: '""',
-          position: "absolute",
-          bottom: "-150px",
-          left: "-150px",
-          width: "500px",
-          height: "500px",
-          borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(251,199,181,0.12) 0%, transparent 70%)",
-          animation: "floatReverse 25s ease-in-out infinite",
-          "@keyframes floatReverse": {
-            "0%, 100%": { transform: "translate(0, 0) rotate(0deg)" },
-            "50%": { transform: "translate(50px, 50px) rotate(-180deg)" },
-          },
-          zIndex: 0,
-          pointerEvents: "none",
-        },
-      }}
-    >
+    <Box ref={sectionRef}>
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 }, position: "relative", zIndex: 1 }}>
         {/* Section Header */}
-        <Box 
-          sx={{ 
-            textAlign: "center", 
+        <Box
+          sx={{
+            textAlign: "center",
             mb: { xs: 6, md: 10 },
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(30px)",
@@ -152,16 +100,7 @@ export const BakeryServicesSection = () => {
           >
             <CakeIcon sx={{ fontSize: 40, color: "#FF9472" }} />
           </Box>
-          <CustomText
-            sx={{
-              fontSize: { xs: 12, md: 14 },
-              fontWeight: 600,
-              color: "#FF9472",
-              textTransform: "uppercase",
-              letterSpacing: 2,
-              mb: 1,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, mb: 1, }}>
             Our Services
           </CustomText>
           <CustomText
@@ -192,15 +131,7 @@ export const BakeryServicesSection = () => {
           >
             What We Offer
           </CustomText>
-          <CustomText
-            sx={{
-              fontSize: { xs: 14, md: 16 },
-              color: "#666",
-              maxWidth: 600,
-              mx: "auto",
-              lineHeight: 1.8,
-            }}
-          >
+          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", maxWidth: 600, mx: "auto", lineHeight: 1.8, }}>
             Comprehensive bakery services to meet all your needs and make every occasion special
           </CustomText>
         </Box>
@@ -226,13 +157,13 @@ export const BakeryServicesSection = () => {
                   transform: visible ? "translateY(0) scale(1)" : "translateY(50px) scale(0.9)",
                   animation: visible ? `cardFadeIn 0.8s ease-out ${index * 0.15}s both` : "none",
                   "@keyframes cardFadeIn": {
-                    "0%": { 
-                      opacity: 0, 
-                      transform: "translateY(50px) scale(0.9) rotateY(-10deg)" 
+                    "0%": {
+                      opacity: 0,
+                      transform: "translateY(50px) scale(0.9) rotateY(-10deg)"
                     },
-                    "100%": { 
-                      opacity: 1, 
-                      transform: "translateY(0) scale(1) rotateY(0deg)" 
+                    "100%": {
+                      opacity: 1,
+                      transform: "translateY(0) scale(1) rotateY(0deg)"
                     },
                   },
                   "&::before": {
