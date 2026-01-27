@@ -82,17 +82,17 @@ const Home = () => {
       <BackgroundDecorations />
       
       {/* Hero Banner Carousel */}
-      <Box sx={{ position: "relative", zIndex: 1 }}>
-        <HeroBanner />
+      <Box sx={{ position: "relative", zIndex: 1, mt: 0 }}>
+      <HeroBanner />
       </Box>
-
+      
       <Container maxWidth={false} sx={{ px: { xs: 2, md: 3 }, py: { xs: 4, md: 6 }, position: "relative", zIndex: 1 }}>
         {/* Category Carousel */}
         <CategoryCarousel />
-
+        
         {/* Featured Products / Bestsellers */}
         <FeaturedProductsCarousel />
-
+        
         {/* Our Best Selling Products - From API */}
         <CategoryProductSection
           categoryGroupname="COOKIES"
@@ -103,41 +103,26 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["COOKIES"]?.products || []}
         />
-
-        {/* Birthday Cakes - From API */}
-        <CategoryProductSection
-          categoryGroupname="CAKES WEB AND APP"
-          title="Birthday Cakes"
-          subtitle="Celebration Special"
-          icon={CakeIcon}
-          limit={10}
-          preloadedProducts={productsData["CAKES WEB AND APP"]?.products || []}
-        />
-
-        {/* Beautiful Cakes - From API */}
+        
+        {/* All Cakes - Merged Section (Birthday Cakes + Beautiful Cakes + Creamless Cakes + Dry Cakes and Muffins) */}
         <CategoryProductSection
           categoryGroupname="CAKES"
-          title="Beautiful Cakes"
-          subtitle="Artistic Creations"
+          title="Cakes"
+          subtitle="Birthday Cakes, Beautiful Cakes, Creamless Cakes & Dry Cakes and Muffins"
           icon={CakeIcon}
           bgColor="rgba(255,248,245,0.5)"
-          limit={10}
-          preloadedProducts={productsData["CAKES"]?.products || []}
+          limit={40}
+          preloadedProducts={[
+            ...(productsData["CAKES WEB AND APP"]?.products || []),
+            ...(productsData["CAKES"]?.products || []),
+            ...(productsData["SNB CREAMLESS CAKES"]?.products || []),
+            ...(productsData["DRY CAKES AND MUFFINS"]?.products || [])
+          ]}
         />
-
-        {/* Creamless Cakes - From API */}
-        <CategoryProductSection
-          categoryGroupname="SNB CREAMLESS CAKES"
-          title="Creamless Cakes"
-          subtitle="Eggless Delights"
-          icon={LocalCafeIcon}
-          limit={10}
-          preloadedProducts={productsData["SNB CREAMLESS CAKES"]?.products || []}
-        />
-
+        
         {/* Special Offers / Deals */}
         <SpecialOffersSection />
-
+        
         {/* Hunger Bites - From API */}
         <CategoryProductSection
           categoryGroupname="FAST FOOD"
@@ -148,7 +133,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["FAST FOOD"]?.products || []}
         />
-
+        
         {/* Fillers - From API */}
         <CategoryProductSection
           categoryGroupname="ITALIAN SNACKS"
@@ -158,7 +143,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["ITALIAN SNACKS"]?.products || []}
         />
-
+        
         {/* Take me Along - From API */}
         <CategoryProductSection
           categoryGroupname="GIFT HAMPERS"
@@ -170,7 +155,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["GIFT HAMPERS"]?.products || []}
         />
-
+        
         {/* Breakfast Special - From API */}
         <CategoryProductSection
           categoryGroupname="BREAKFAST SPECIAL"
@@ -180,7 +165,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["BREAKFAST SPECIAL"]?.products || []}
         />
-
+        
         {/* Pizza and Burgers - From API */}
         <CategoryProductSection
           categoryGroupname="PIZZA AND BURGERS"
@@ -191,7 +176,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["PIZZA AND BURGERS"]?.products || []}
         />
-
+        
         {/* Celebration Items - From API */}
         <CategoryProductSection
           categoryGroupname="CELEBRATION ITEMS"
@@ -201,7 +186,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["CELEBRATION ITEMS"]?.products || []}
         />
-
+        
         {/* Chocolates - From API */}
         <CategoryProductSection
           categoryGroupname="CHOCOLATES"
@@ -212,7 +197,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["CHOCOLATES"]?.products || []}
         />
-
+        
         {/* Danbrew Mocktails - From API */}
         <CategoryProductSection
           categoryGroupname="DANBREW MOCKTAILS"
@@ -222,18 +207,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["DANBREW MOCKTAILS"]?.products || []}
         />
-
-        {/* Dry Cakes and Muffins - From API */}
-        <CategoryProductSection
-          categoryGroupname="DRY CAKES AND MUFFINS"
-          title="Dry Cakes and Muffins"
-          subtitle="Baked Fresh"
-          icon={CakeIcon}
-          bgColor="rgba(255,248,245,0.5)"
-          limit={10}
-          preloadedProducts={productsData["DRY CAKES AND MUFFINS"]?.products || []}
-        />
-
+        
         {/* Frozen Products - From API */}
         <CategoryProductSection
           categoryGroupname="FROZEN PRODUCTS"
@@ -243,7 +217,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["FROZEN PRODUCTS"]?.products || []}
         />
-
+        
         {/* Mithai - From API */}
         <CategoryProductSection
           categoryGroupname="MITHAI"
@@ -254,28 +228,21 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["MITHAI"]?.products || []}
         />
-
-        {/* Namkeen - From API */}
+        
+        {/* Namkeen - Merged Section (Namkeen + Namkeen Shyam) */}
         <CategoryProductSection
           categoryGroupname="NAMKEEN"
           title="Namkeen"
-          subtitle="Crunchy Snacks"
-          icon={RestaurantIcon}
-          limit={10}
-          preloadedProducts={productsData["NAMKEEN"]?.products || []}
-        />
-
-        {/* Namkeen Shyam - From API */}
-        <CategoryProductSection
-          categoryGroupname="NAMKEEN SHYAM"
-          title="Namkeen Shyam"
-          subtitle="Premium Snacks"
+          subtitle="Crunchy Snacks & Premium Selection"
           icon={RestaurantIcon}
           bgColor="rgba(255,248,245,0.5)"
-          limit={10}
-          preloadedProducts={productsData["NAMKEEN SHYAM"]?.products || []}
+          limit={20}
+          preloadedProducts={[
+            ...(productsData["NAMKEEN"]?.products || []),
+            ...(productsData["NAMKEEN SHYAM"]?.products || [])
+          ]}
         />
-
+        
         {/* New Sapru Marg EJ - From API */}
         <CategoryProductSection
           categoryGroupname="NEW SAPRU MARG EJ"
@@ -285,7 +252,7 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["NEW SAPRU MARG EJ"]?.products || []}
         />
-
+        
         {/* Taj - From API */}
         <CategoryProductSection
           categoryGroupname="TAJ"
@@ -296,20 +263,20 @@ const Home = () => {
           limit={10}
           preloadedProducts={productsData["TAJ"]?.products || []}
         />
-
+        
         {/* About the Bakery */}
         <AboutBakerySection />
-
+        
         {/* YouTube Videos Section */}
         <YouTubeVideosSection />
-
+        
         {/* Bakery Services */}
         <BakeryServicesSection />
-
+        
         {/* Testimonials / Reviews */}
         <TestimonialsCarousel />
       </Container>
-
+      
       {/* Newsletter Signup */}
       <NewsletterSection />
     </Box>

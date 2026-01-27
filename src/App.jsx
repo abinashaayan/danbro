@@ -72,7 +72,7 @@ const AppContent = () => {
             // Navbar height: ~50px mobile, ~55px desktop (when visible)
             pt: hideNavbar 
               ? { xs: "65px", sm: "70px", md: "65px", lg: "70px" } // Profile page: only TopHeader
-              : { xs: "115px", sm: "120px", md: "115px", lg: "120px" } // Other pages: TopHeader + Navbar
+              : { xs: "107px", sm: "111px", md: "107px", lg: "111px" } // Other pages: TopHeader (~60-65px) + Navbar top (50-57px) + Navbar padding (24px) = ~107-111px
           }}
         >
           <AppRoutes />

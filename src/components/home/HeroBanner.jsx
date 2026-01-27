@@ -63,7 +63,7 @@ export const HeroBanner = () => {
     // Remove animations from all slides first
     const allSlides = document.querySelectorAll('.slick-slide');
     allSlides.forEach((slide) => {
-      const animatedElements = slide.querySelectorAll('[data-animation]');
+      const animatedElements = slide?.querySelectorAll('[data-animation]');
       animatedElements.forEach((el) => {
         el.classList.remove('animated', 'flipInX', 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'fadeInDown', 'zoomIn', 'bounceIn');
       });
@@ -73,7 +73,7 @@ export const HeroBanner = () => {
     setTimeout(() => {
       const activeSlide = document.querySelector('.slick-active');
       if (activeSlide) {
-        const animatedElements = activeSlide.querySelectorAll('[data-animation]');
+        const animatedElements = activeSlide?.querySelectorAll('[data-animation]');
         animatedElements.forEach((el) => {
           const animationType = el.getAttribute('data-animation');
           if (animationType) {
@@ -93,7 +93,8 @@ export const HeroBanner = () => {
         sx={{
           width: "100%",
           maxWidth: "100%",
-          mb: { xs: 2, md: 3 },
+          mb: 0,
+          mt: { xs: "-2px", md: "-2px" },
           position: "relative",
           display: "flex",
           justifyContent: "center",
@@ -305,7 +306,7 @@ export const HeroBanner = () => {
               const isActive = currentSlide === index;
               return (
                 <Box
-                  key={slide.id}
+                  key={slide?.id}
                   sx={{
                     width: "100%",
                     height: { xs: "70vh", sm: "75vh", md: "80vh", lg: "85vh" },
@@ -363,8 +364,8 @@ export const HeroBanner = () => {
                 >
                   <Box
                     component="img"
-                    src={slide.img}
-                    alt={slide.alt}
+                    src={slide?.img}
+                    alt={slide?.alt}
                     className={isActive ? "kb-kenburns-img" : ""}
                     sx={{
                       width: "100%",
@@ -406,23 +407,23 @@ export const HeroBanner = () => {
 
                   {/* Enhanced Slide Content Overlay - Positioned at Top */}
                   <Box
-                    className={`kb-caption ${slide.captionPosition === "right"
+                    className={`kb-caption ${slide?.captionPosition === "right"
                         ? "kb-caption-right"
-                        : slide.captionPosition === "center"
+                        : slide?.captionPosition === "center"
                           ? "kb-caption-center"
                           : ""
                       }`}
                     sx={{
                       position: "absolute",
                       top: { xs: "8%", sm: "10%", md: "12%", lg: "15%" },
-                      left: { xs: "50%", md: slide.captionPosition === "right" ? "auto" : slide.captionPosition === "center" ? "50%" : "8%" },
-                      right: { xs: "auto", md: slide.captionPosition === "right" ? "8%" : "auto" },
-                      transform: { xs: "translateX(-50%)", md: slide.captionPosition === "center" ? "translateX(-50%)" : "none" },
+                      left: { xs: "50%", md: slide?.captionPosition === "right" ? "auto" : slide?.captionPosition === "center" ? "50%" : "8%" },
+                      right: { xs: "auto", md: slide?.captionPosition === "right" ? "8%" : "auto" },
+                      transform: { xs: "translateX(-50%)", md: slide?.captionPosition === "center" ? "translateX(-50%)" : "none" },
                       zIndex: 4,
                       opacity: isActive ? 1 : 0,
                       transition: "opacity 0.7s ease-in-out, transform 0.7s ease-in-out",
-                      width: { xs: "90%", md: slide.captionPosition === "center" ? "75%" : "50%" },
-                      textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
+                      width: { xs: "90%", md: slide?.captionPosition === "center" ? "75%" : "50%" },
+                      textAlign: { xs: "center", md: slide?.captionPosition === "center" ? "center" : "left" },
                     }}
                   >
                     {/* Glassmorphism Background for Text */}
@@ -445,14 +446,14 @@ export const HeroBanner = () => {
 
                     <CustomText
                       component="h1"
-                      data-animation={`animated ${slide.animationType}`}
-                      className={isActive ? `animated ${slide.animationType}` : ""}
+                      data-animation={`animated ${slide?.animationType}`}
+                      className={isActive ? `animated ${slide?.animationType}` : ""}
                       sx={{
                         fontSize: { xs: "22px", sm: "28px", md: "38px", lg: "42px" },
                         fontWeight: 700,
                         color: "var(--themeColor)",
                         fontFamily: "var(--fontFamily)",
-                        textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
+                        textAlign: { xs: "center", md: slide?.captionPosition === "center" ? "center" : "left" },
                         textShadow: "none",
                         padding: { xs: "8px 12px", md: "10px 15px" },
                         mb: { xs: 0.5, md: 1 },
@@ -465,14 +466,14 @@ export const HeroBanner = () => {
                     </CustomText>
                     <CustomText
                       component="h2"
-                      data-animation={`animated ${slide.animationType}`}
-                      className={isActive ? `animated ${slide.animationType}` : ""}
+                      data-animation={`animated ${slide?.animationType}`}
+                      className={isActive ? `animated ${slide?.animationType}` : ""}
                       sx={{
                         fontSize: { xs: "14px", sm: "16px", md: "18px", lg: "20px" },
                         fontWeight: 500,
                         fontFamily: "var(--fontFamily)",
                         color: "#666",
-                        textAlign: { xs: "center", md: slide.captionPosition === "center" ? "center" : "left" },
+                        textAlign: { xs: "center", md: slide?.captionPosition === "center" ? "center" : "left" },
                         textShadow: "none",
                         padding: { xs: "0 12px 8px", md: "0 15px 10px" },
                         lineHeight: 1.4,

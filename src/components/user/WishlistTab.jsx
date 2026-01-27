@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert } from "@mui/material";
+import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert, Typography } from "@mui/material";
 import { Favorite as FavoriteIcon } from "@mui/icons-material";
 import { CustomText } from "../comman/CustomText";
 import api from "../../utils/api";
@@ -23,8 +23,8 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
         // Format wishlist items - API returns products directly in data array
         const formattedItems = response.data.data.map((item) => {
           // Product data is directly in item (new API structure)
-          // Support both old structure (item.product) and new structure (item directly)
-          const product = item.product || item;
+          // Support both old structure (item?.product) and new structure (item directly)
+          const product = item?.product || item;
 
           // Extract price - price is an array
           const price = product.price && Array.isArray(product.price) && product.price.length > 0
@@ -37,8 +37,8 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
             : "https://via.placeholder.com/300";
 
           return {
-            id: item._id || item.id || product.productId || product._id,
-            productId: product.productId || product._id || item.productId,
+            id: item?._id || item?.id || product.productId || product._id,
+            productId: product.productId || product._id || item?.productId,
             prdcode: product.prdcode || null,
             name: product.name || "Unknown Product",
             image: image,
@@ -75,7 +75,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
 
       if (response.data) {
         // Remove from local state
-        setWishlistItems((prev) => prev.filter((item) => item.productId !== productId));
+        setWishlistItems((prev) => prev.filter((item) => item?.productId !== productId));
 
         // Call parent callback if provided
         if (onRemoveFromWishlist) {
@@ -129,15 +129,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
 
   return (
     <Box>
-      <CustomText
-        variant="h4"
-        sx={{
-          fontSize: { xs: 20, md: 32 },
-          fontWeight: 700,
-          color: "var(--themeColor)",
-          mb: { xs: 2, md: 2 },
-        }}
-      >
+      <CustomText variant="h4" sx={{ fontSize: { xs: 20, md: 32 }, fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 2 }, }}>
         My Wishlist
       </CustomText>
 
@@ -166,9 +158,9 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
           </CustomText>
         </Box>
       ) : (
-        <Grid container spacing={{ xs: 2, md: 3 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ justifyContent: { xs: "flex-start", md: "center" } }}>
           {wishlistItems?.map((item, index) => (
-            <Grid size={{ xs: 6, sm: 4 }} key={item.id}>
+            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
               <Card
                 sx={{
                   borderRadius: { xs: 2, md: 2.5 },
@@ -181,6 +173,8 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                   flexDirection: "column",
                   backgroundColor: "#fff",
                   border: "1px solid #f0f0f0",
+                  maxWidth: { xs: "100%", sm: "280px", md: "260px" },
+                  mx: "auto",
                   "&:hover": {
                     transform: "translateY(-6px)",
                     boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
@@ -192,10 +186,10 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                 }}
               >
                 <Box sx={{ position: "relative", overflow: "hidden", backgroundColor: "#f8f8f8", }}>
-                  <Box className="product-image" component="img" src={item?.image} alt={item?.name} sx={{ width: "100%", height: { xs: 180, sm: 200, md: 240 }, objectFit: "cover", transition: "transform 0.4s ease", }} />
+                  <Box className="product-image" component="img" src={item?.image} alt={item?.name} sx={{ width: "100%", height: { xs: 150, sm: 170, md: 190 }, objectFit: "cover", transition: "transform 0.4s ease", }} />
                   <IconButton
-                    onClick={() => handleRemoveFromWishlist(item.productId)}
-                    disabled={removingId === item.productId}
+                    onClick={() => handleRemoveFromWishlist(item?.productId)}
+                    disabled={removingId === item?.productId}
                     sx={{
                       position: "absolute",
                       top: { xs: 8, md: 10 },
@@ -214,7 +208,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                       },
                     }}
                   >
-                    {removingId === item.productId ? (
+                    {removingId === item?.productId ? (
                       <CircularProgress size={18} sx={{ color: "#f44336" }} />
                     ) : (
                       <FavoriteIcon sx={{ color: "#f44336", fontSize: { xs: 18, md: 22 } }} />
@@ -222,11 +216,10 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                   </IconButton>
                 </Box>
                 <CardContent sx={{ p: { xs: 1.75, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column", backgroundColor: "#fff", }}>
-                  <CustomText
+                  <Typography
                     variant="body1"
                     sx={{
                       fontWeight: 600,
-                      mb: 0.5,
                       fontSize: { xs: 14, md: 15 },
                       lineHeight: 1.4,
                       color: "#2c2c2c",
@@ -237,15 +230,16 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                       overflow: "hidden",
                       textTransform: "none",
                     }}
+                    style={{ textTransform: "none" }}
                   >
                     {item?.name}
-                  </CustomText>
+                  </Typography>
                   {item?.weight && (
                     <CustomText variant="body2" sx={{ color: "#666", mb: 1, fontSize: { xs: 12, md: 13 }, fontWeight: 400, textTransform: "capitalize", }}>
-                      {item.weight}
+                      {item?.weight}
                     </CustomText>
                   )}
-                  <Box sx={{ mt: "auto" }}>
+                  <Box >
                     <CustomText variant="h6" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: 1.5, fontSize: { xs: 16, md: 18 }, textTransform: "none", }}>
                       {item?.price}
                     </CustomText>
@@ -254,9 +248,9 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                       variant="contained"
                       onClick={() => {
                         if (item?.prdcode) {
-                          window.location.href = `/products/${item.prdcode}`;
+                          window.location.href = `/products/${item?.prdcode}`;
                         } else if (item?.productId) {
-                          window.location.href = `/products/${item.productId}`;
+                          window.location.href = `/products/${item?.productId}`;
                         }
                       }}
                       sx={{

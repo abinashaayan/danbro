@@ -165,97 +165,97 @@ export const SavedAddressesTab = () => {
           </Button>
         </Box>
       ) : (
-        <Grid container spacing={{ xs: 2, md: 3 }}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
           {addresses.map((address) => {
             const addressId = address._id || address.id;
             const isDeleting = deletingId === addressId;
 
             return (
               <Grid size={{ xs: 12, md: 6 }} key={addressId}>
-                <Card
-                  sx={{
-                    borderRadius: 3,
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+            <Card
+              sx={{
+                borderRadius: 3,
+                boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
                     border: address.isDefault ? "2px solid var(--themeColor)" : "1px solid #ddd",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateY(-3px)",
-                      boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-                    },
-                  }}
-                >
-                  <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  transform: "translateY(-3px)",
+                  boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                },
+              }}
+            >
+              <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
                       <Box sx={{ flex: 1 }}>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                          <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+                      <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)" }}>
                             {address.addressType || "Address"}
-                          </CustomText>
-                          {address.isDefault && (
-                            <Box
-                              sx={{
-                                px: 1.5,
-                                py: 0.3,
-                                borderRadius: 1,
-                                backgroundColor: "#FFB5A1",
-                                color: "#000",
-                                fontSize: 11,
-                                fontWeight: 600,
-                              }}
-                            >
-                              Default
-                            </Box>
-                          )}
+                      </CustomText>
+                      {address.isDefault && (
+                        <Box
+                          sx={{
+                            px: 1.5,
+                            py: 0.3,
+                            borderRadius: 1,
+                            backgroundColor: "#FFB5A1",
+                            color: "#000",
+                            fontSize: 11,
+                            fontWeight: 600,
+                          }}
+                        >
+                          Default
                         </Box>
+                      )}
+                    </Box>
                         <CustomText variant="body2" sx={{ color: "#666", lineHeight: 1.6, mb: 1 }}>
                           {formatAddress(address)}
-                        </CustomText>
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
-                      <Button
-                        startIcon={<EditIcon />}
-                        variant="outlined"
+                    </CustomText>
+                  </Box>
+                </Box>
+                <Box sx={{ display: "flex", gap: 1, mt: 2 }}>
+                  <Button
+                    startIcon={<EditIcon />}
+                    variant="outlined"
                         onClick={() => handleEdit(address)}
                         disabled={isDeleting}
-                        sx={{
-                          borderColor: "var(--themeColor)",
-                          color: "var(--themeColor)",
-                          textTransform: "none",
-                          borderRadius: 2,
-                          "&:hover": {
-                            borderColor: "var(--themeColor)",
-                            backgroundColor: "#fbeeee",
-                          },
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        startIcon={<DeleteIcon />}
-                        variant="outlined"
+                    sx={{
+                      borderColor: "var(--themeColor)",
+                      color: "var(--themeColor)",
+                      textTransform: "none",
+                      borderRadius: 2,
+                      "&:hover": {
+                        borderColor: "var(--themeColor)",
+                        backgroundColor: "#fbeeee",
+                      },
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    startIcon={<DeleteIcon />}
+                    variant="outlined"
                         onClick={() => handleDeleteClick(address)}
                         disabled={isDeleting}
-                        sx={{
-                          borderColor: "#f44336",
-                          color: "#f44336",
-                          textTransform: "none",
-                          borderRadius: 2,
-                          "&:hover": {
-                            borderColor: "#f44336",
-                            backgroundColor: "#ffebee",
-                          },
-                        }}
-                      >
+                    sx={{
+                      borderColor: "#f44336",
+                      color: "#f44336",
+                      textTransform: "none",
+                      borderRadius: 2,
+                      "&:hover": {
+                        borderColor: "#f44336",
+                        backgroundColor: "#ffebee",
+                      },
+                    }}
+                  >
                         {isDeleting ? "Deleting..." : "Delete"}
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
+                  </Button>
+                </Box>
+              </CardContent>
+            </Card>
+          </Grid>
             );
           })}
-        </Grid>
+      </Grid>
       )}
 
       {/* Add/Edit Dialog */}

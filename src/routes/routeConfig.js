@@ -19,6 +19,7 @@ const Login = createLazyComponent(() => import("../pages/auth/Login"), "Login");
 const Register = createLazyComponent(() => import("../pages/auth/Register"), "Register");
 const VerifyOtp = createLazyComponent(() => import("../pages/auth/VerifyOtp"), "VerifyOtp");
 const UserProfile = createLazyComponent(() => import("../pages/user/UserProfile"), "UserProfile");
+const Wishlist = createLazyComponent(() => import("../pages/user/Wishlist"), "Wishlist");
 const TrackOrder = createLazyComponent(() => import("../pages/orders/TrackOrder"), "TrackOrder");
 const ProductList = createLazyComponent(() => import("../pages/products/ProductList"), "ProductList");
 const ProductDetails = createLazyComponent(() => import("../pages/products/ProductDetails"), "ProductDetails");
@@ -125,6 +126,10 @@ export const privateRoutes = [
   {
     path: "/profile",
     component: UserProfile,
+  },
+  {
+    path: "/wishlist",
+    component: Wishlist,
   },
   {
     path: "/track-order",

@@ -1,10 +1,12 @@
 import { Box, Popover, Grid } from "@mui/material";
 import { CustomText } from "./CustomText";
 import { useNavigate } from "react-router-dom";
+import { useItemCategories } from "../../hooks/useItemCategories";
+import { useMemo } from "react";
 
 /**
  * NavbarDropdown Component
- * Displays dropdown menu content for navbar items
+ * Displays dropdown menu content for navbar items dynamically from API
  * 
  * @param {Object} props
  * @param {string} props.category - Category label
@@ -12,120 +14,149 @@ import { useNavigate } from "react-router-dom";
  * @param {Function} props.onClose - Close handler
  * @param {Object} props.anchorEl - Anchor element for popover positioning
  */
-// Dropdown menu data based on category
-const getDropdownData = (categoryLabel) => {
-    const menus = {
-      "CAKES & DRY CAKES": {
-        sections: [
-          {
-            title: "CAKES BY TYPE",
-            color: "#d32f2f",
-            items: ["Kids Cakes", "Photo Cakes", "Cheese Cakes", "Fondant Cakes", "Tier/Wedding Cakes"],
-          },
-          {
-            title: "REGULAR FLAVOUR CAKES",
-            color: "#d32f2f",
-            items: ["Mango Cakes", "Pineapple Cakes", "Chocolate Cakes", "Butterscotch Cakes", "Blackforest & Whiteforest Cakes"],
-          },
-          {
-            title: "SPECIAL FLAVOUR CAKES",
-            color: "#d32f2f",
-            badge: { text: "TOP SELLING", color: "#1976d2" },
-            items: ["German Truffle Cakes", "Fresh Fruit & Rasmalai Cakes", "Red Velvet Cakes", "Coffee & Tiramisu Cakes", "Strawberry & Blueberry Cakes"],
-          },
-          {
-            title: "HOT SELLING CAKES",
-            color: "#d32f2f",
-            items: ["Birthday Cakes", "Anniversary Cakes", "Bento Cakes", "Double Flavor Cakes", "Hammer Pinata Cakes"],
-          },
-          {
-            title: "CAKE FOR CELEBRATION",
-            color: "#2e7d32",
-            badge: { text: "TRENDING", color: "#ff9800" },
-            items: ["Mother's Day Cakes", "Father's Day Cakes", "Valentine's Day Cakes", "New Year Cakes"],
-          },
-          {
-            title: "CAKE BY OCASSION",
-            color: "#2e7d32",
-            items: ["Lohri Cakes", "Holi Cakes", "Diwali Cakes", "Rakhi Cakes", "Janmashtami Cakes"],
-          },
-          {
-            title: "DRY CAKES & MUFFINS",
-            color: "#f57c00",
-            items: ["Brownies", "Muffins", "Dry Cakes", "Plum Cakes"],
-          },
-        ],
-      },
-      "MITHAI & COOKIES": {
-        sections: [
-          {
-            title: "SWEETS",
-            color: "#00897b",
-            items: ["Gujia", "Authentic Mithai", "Premium Sweets"],
-            badge: { text: "BESTSELLER", color: "#ffc107" },
-          },
-          {
-            title: "HANDMADE COOKIES",
-            color: "#d32f2f",
-            items: ["Special Cookies", "Maida Free Cookies", "No Added Sugar Cookies"],
-          },
-        ],
-      },
-      "BREAD & RUSK": {
-        sections: [
-          {
-            title: "BREADS",
-            color: "#7b1fa2",
-            items: ["Breads & Loafs", "Pizza & Buns"],
-          },
-          {
-            title: "RUSKS",
-            color: "#558b2f",
-            items: ["Crispy Rusks"],
-          },
-        ],
-      },
-      "GIFT HAMPERS & CHOCOLATES": {
-        sections: [
-          {
-            title: "GIFT HAMPERS",
-            color: "#2e7d32",
-            badge: { text: "EXCLUSIVE", color: "#2e7d32" },
-            items: ["Gift Packs", "Gift Baskets"],
-          },
-          {
-            title: "CHOCOLATES",
-            color: "#f57c00",
-            badge: { text: "HOT", color: "#ff9800" },
-            items: ["Bar & Customize Chocolates", "Special Chocolates", "Chocolate Baskets"],
-          },
-        ],
-      },
-      "ADDONS": {
-        sections: [
-          {
-            title: "ADDONS",
-            color: "#00b53d",
-            items: ["Candles", "Cards", "Balloons", "Decorations"],
-          },
-        ],
-      },
-    };
 
-  return menus[categoryLabel] || { sections: [] };
+// Map category groupnames to display names (like home page subtitles)
+const getCategoryDisplayName = (groupname) => {
+  const name = groupname?.toUpperCase() || "";
+  
+  // Cakes mapping
+  if (name === "CAKES WEB AND APP") return "Birthday Cakes";
+  if (name === "CAKES") return "Beautiful Cakes";
+  if (name === "SNB CREAMLESS CAKES") return "Creamless Cakes";
+  if (name === "DRY CAKES AND MUFFINS") return "Dry Cakes and Muffins";
+  
+  // Other categories - use formatted groupname
+  return groupname || "Category";
+};
+
+// Map navbar labels to home page sections with items (like MainLayout.jsx)
+const getHomePageSections = (navbarLabel) => {
+  const label = navbarLabel?.toUpperCase() || "";
+  
+  if (label.includes("CAKE")) {
+    return [
+      { 
+        title: "Cakes", 
+        groupnames: ["CAKES WEB AND APP", "CAKES", "SNB CREAMLESS CAKES", "DRY CAKES AND MUFFINS"],
+        color: "#d32f2f" 
+      },
+    ];
+  }
+  
+  if (label.includes("MITHAI") || label.includes("COOKIE")) {
+    return [
+      { title: "Mithai", groupnames: ["MITHAI"], color: "#00897b" },
+      { title: "Cookies", groupnames: ["COOKIES"], color: "#d32f2f" },
+    ];
+  }
+  
+  if (label.includes("BREAD") || label.includes("RUSK")) {
+    return [
+      { title: "Bread & Rusk", groupnames: ["BREAD & RUSK"], color: "#7b1fa2" },
+    ];
+  }
+  
+  if (label.includes("GIFT") || label.includes("CHOCOLATE")) {
+    return [
+      { title: "Gift Hampers", groupnames: ["GIFT HAMPERS"], color: "#2e7d32" },
+      { title: "Chocolates", groupnames: ["CHOCOLATES"], color: "#f57c00" },
+    ];
+  }
+  
+  if (label.includes("ADDON")) {
+    return [
+      { title: "Addons", groupnames: ["ADDONS"], color: "#00b53d" },
+      { title: "Celebration Items", groupnames: ["CELEBRATION ITEMS"], color: "#00b53d" },
+    ];
+  }
+  
+  return [];
+};
+
+// Get keywords to filter categories
+const getCategoryKeywords = (navbarLabel) => {
+  const label = navbarLabel?.toUpperCase() || "";
+  if (label.includes("CAKE")) {
+    return ["CAKE", "MUFFIN", "BROWNIE"];
+  }
+  if (label.includes("MITHAI") || label.includes("COOKIE")) {
+    return ["MITHAI", "COOKIE", "SWEET"];
+  }
+  if (label.includes("BREAD") || label.includes("RUSK")) {
+    return ["BREAD", "RUSK"];
+  }
+  if (label.includes("GIFT") || label.includes("CHOCOLATE")) {
+    return ["GIFT", "CHOCOLATE", "HAMPER"];
+  }
+  if (label.includes("ADDON")) {
+    return ["ADDON", "CELEBRATION", "CANDLE", "BALLOON"];
+  }
+  return [];
 };
 
 export const NavbarDropdown = ({ category, isOpen, onClose, anchorEl }) => {
   const navigate = useNavigate();
+  const { categories, loading } = useItemCategories();
 
-  const dropdownData = getDropdownData(category);
+  // Get sections and filter categories dynamically
+  const dropdownData = useMemo(() => {
+    if (!categories || categories.length === 0) {
+      return { sections: [] };
+    }
+
+    // Get home page sections for this navbar label
+    const homePageSections = getHomePageSections(category);
+    
+    // Get keywords for additional filtering
+    const keywords = getCategoryKeywords(category);
+
+    // Create sections with their category items
+    const sections = homePageSections.map((section) => {
+      // Find categories that match this section's groupnames
+      const sectionCategories = categories.filter((cat) => {
+        const groupname = (cat.groupname || "").toUpperCase();
+        return section.groupnames.some((gn) => groupname === gn.toUpperCase());
+      });
+
+      // If no exact match, try keyword matching
+      const fallbackCategories = sectionCategories.length === 0
+        ? categories.filter((cat) => {
+            const groupname = (cat.groupname || cat.name || "").toUpperCase();
+            return keywords.some((keyword) => groupname.includes(keyword));
+          })
+        : [];
+
+      const items = [...sectionCategories, ...fallbackCategories]
+        .map((cat) => ({
+          name: getCategoryDisplayName(cat.groupname || cat.name),
+          originalName: cat.groupname || cat.name,
+          id: cat.id,
+        }))
+        .filter((item) => item.name)
+        .filter((item, index, self) => 
+          self.findIndex((i) => i.originalName === item.originalName) === index
+        ); // Remove duplicates by original name
+
+      return {
+        title: section.title,
+        color: section.color,
+        items: items,
+      };
+    });
+
+    return { sections: sections.filter((s) => s.items.length > 0) };
+  }, [categories, category]);
 
   if (!isOpen || !dropdownData.sections || dropdownData.sections.length === 0) {
     return null;
   }
 
-  const handleItemClick = (item) => {
-    navigate(`/products?search=${encodeURIComponent(item)}`);
+  const handleItemClick = (itemName, categoryId, originalName) => {
+    if (categoryId) {
+      navigate(`/products?category=${categoryId}&groupname=${encodeURIComponent(originalName || itemName)}`);
+    } else {
+      navigate(`/products?search=${encodeURIComponent(itemName)}`);
+    }
     onClose();
   };
 
@@ -215,7 +246,7 @@ export const NavbarDropdown = ({ category, isOpen, onClose, anchorEl }) => {
                   {section.items.map((item, itemIndex) => (
                     <CustomText
                       key={itemIndex}
-                      onClick={() => handleItemClick(item)}
+                      onClick={() => handleItemClick(item.name, item.id, item.originalName)}
                       sx={{
                         fontSize: { xs: 13, sm: 14, md: 15 },
                         color: "#333",
@@ -232,7 +263,7 @@ export const NavbarDropdown = ({ category, isOpen, onClose, anchorEl }) => {
                         },
                       }}
                     >
-                      {item}
+                      {item.name}
                     </CustomText>
                   ))}
                 </Box>

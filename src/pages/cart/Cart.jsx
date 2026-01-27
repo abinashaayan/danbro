@@ -30,6 +30,7 @@ import { getAccessToken } from "../../utils/cookies";
 import api from "../../utils/api";
 import { getMyAddresses } from "../../utils/apiService";
 import { Radio, RadioGroup, FormControlLabel } from "@mui/material";
+import { AddressFormDialog } from "../../components/user/AddressFormDialog";
 
 export const Cart = () => {
   const navigate = useNavigate();
@@ -43,10 +44,15 @@ export const Cart = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressesLoading, setAddressesLoading] = useState(false);
+  const [addressDialogOpen, setAddressDialogOpen] = useState(false);
+  const [coupons, setCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState(null);
 
   useEffect(() => {
     loadCart();
     loadAddresses();
+    loadCoupons();
   }, []);
 
   const loadAddresses = async () => {
@@ -84,6 +90,71 @@ export const Cart = () => {
     if (address.state) parts.push(address.state);
     if (address.zipCode) parts.push(address.zipCode);
     return parts.join(", ");
+  };
+
+  const loadCoupons = async () => {
+    try {
+      setCouponsLoading(true);
+      const token = getAccessToken();
+      if (!token) {
+        setCoupons([]);
+        return;
+      }
+      const response = await api.get('/coupon/getAll');
+      if (response.data && response.data.data) {
+        // Format coupon data
+        const formattedCoupons = response.data.data.map((coupon) => {
+          const isPercentage = coupon.discountType === "ITEM_DISCOUNT_PERCENTAGE";
+          const discount = isPercentage 
+            ? `${coupon.discountPercentage}%` 
+            : `₹${coupon.discountAmount}`;
+          
+          // Check if coupon is still valid
+          const now = new Date();
+          const validUntil = new Date(coupon.validTo);
+          const isValid = validUntil >= now;
+
+          return {
+            id: coupon._id,
+            code: coupon.couponCode,
+            discount: discount,
+            discountType: coupon.discountType,
+            discountPercentage: coupon.discountPercentage,
+            discountAmount: coupon.discountAmount,
+            description: isPercentage 
+              ? `Get ${coupon.discountPercentage}% off on your order` 
+              : `Flat ₹${coupon.discountAmount} off on your order`,
+            isValid: isValid,
+          };
+        }).filter(coupon => coupon.isValid); // Only show valid coupons
+        setCoupons(formattedCoupons);
+      }
+    } catch (err) {
+      console.error("Error loading coupons:", err);
+      setCoupons([]);
+    } finally {
+      setCouponsLoading(false);
+    }
+  };
+
+  const handleAddressSuccess = () => {
+    loadAddresses();
+    setAddressDialogOpen(false);
+  };
+
+  const handleCouponSelect = (couponId) => {
+    const coupon = coupons.find(c => c.id === couponId);
+    if (coupon) {
+      setSelectedCoupon(couponId);
+      setAppliedCoupon({
+        code: coupon.code,
+        discountPercent: coupon.discountPercentage || 0,
+        discountAmount: coupon.discountAmount || 0,
+        discountType: coupon.discountType,
+      });
+      setCouponCode(coupon.code);
+      setCouponError("");
+    }
   };
 
   const loadCart = async () => {
@@ -255,21 +326,21 @@ export const Cart = () => {
   const total = finalSubtotal - discount + shipping;
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 4, md: 0 }, pb: { xs: 12, md: 0 }, p: { xs: 1.25, md: 0 }, mb: 4 }}>
-      <Container  sx={{ py: 4, px: { xs: 2, md: 3 } }}>
-        <Box sx={{ mb: { xs: 3, md: 4 } }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 3 }, pb: { xs: 12, md: 4 }, mb: 4 }}>
+      <Container sx={{ py: { xs: 2, md: 3 }, px: { xs: 2, md: 3 } }}>
+        <Box sx={{ mb: { xs: 2, md: 3 } }}>
           <CustomText
             variant="h4"
             sx={{
-              fontSize: { xs: 24, md: 32 },
+              fontSize: { xs: 22, md: 28 },
               fontWeight: 700,
               color: "var(--themeColor)",
-              mb: 1,
+              mb: 0.5,
             }}
           >
             Shopping Cart
           </CustomText>
-          <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+          <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#666" }}>
             {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
           </CustomText>
         </Box>
@@ -320,10 +391,10 @@ export const Cart = () => {
             </Button>
           </Box>
         ) : (
-          <Grid container spacing={{ xs: 2, md: 4 }}>
+          <Grid container spacing={{ xs: 2, md: 3 }}>
             {/* Cart Items */}
             <Grid size={{ xs: 12, md: 8 }}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 } }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 } }}>
                 {cartItems.map((item) => {
                   const productId = item.productId || item._id || item.id;
                   const isUpdating = updatingItems.has(productId);
@@ -332,15 +403,15 @@ export const Cart = () => {
                   <Card
                     key={productId || item.id}
                     sx={{
-                      borderRadius: { xs: 2, md: 3 },
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                      borderRadius: { xs: 2, md: 2.5 },
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                       transition: "all 0.3s ease",
                       "&:hover": {
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
                       },
                     }}
                   >
-                    <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                    <CardContent sx={{ p: { xs: 1.5, md: 2.5 } }}>
                       <Box
                         sx={{
                           display: "flex",
@@ -351,8 +422,8 @@ export const Cart = () => {
                         {/* Product Image */}
                         <Box
                           sx={{
-                            width: { xs: "100%", sm: 120 },
-                            height: { xs: 200, sm: 120 },
+                            width: { xs: "100%", sm: 110 },
+                            height: { xs: 180, sm: 110 },
                             borderRadius: { xs: 2, md: 2 },
                             overflow: "hidden",
                             flexShrink: 0,
@@ -497,7 +568,7 @@ export const Cart = () => {
               </Box>
 
               {/* Continue Shopping Button */}
-              <Box sx={{ mt: { xs: 3, md: 4 } }}>
+              <Box sx={{ mt: { xs: 2, md: 3 } }}>
                 <Button
                   variant="outlined"
                   onClick={() => navigate("/products")}
@@ -506,8 +577,8 @@ export const Cart = () => {
                     color: "var(--themeColor)",
                     textTransform: "none",
                     px: { xs: 3, md: 4 },
-                    py: { xs: 1, md: 1.2 },
-                    fontSize: { xs: 14, md: 16 },
+                    py: { xs: 0.9, md: 1.1 },
+                    fontSize: { xs: 13, md: 15 },
                     fontWeight: 600,
                     "&:hover": {
                       borderColor: "var(--specialColor)",
@@ -525,41 +596,43 @@ export const Cart = () => {
             <Grid size={{ xs: 12, md: 4 }}>
               <Card
                 sx={{
-                  borderRadius: { xs: 2, md: 3 },
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  borderRadius: { xs: 2, md: 2.5 },
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                   position: { md: "sticky" },
                   top: { md: 100 },
-                  mb: 3,
+                  mb: 2,
                 }}
               >
-                <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
                   <CustomText
                     sx={{
-                      fontSize: { xs: 20, md: 24 },
+                      fontSize: { xs: 18, md: 22 },
                       fontWeight: 700,
                       color: "#2c2c2c",
-                      mb: { xs: 2, md: 3 },
+                      mb: { xs: 1.5, md: 2 },
                     }}
                   >
                     Saved Addresses
                   </CustomText>
 
                   {addressesLoading ? (
-                    <Box sx={{ display: "flex", justifyContent: "center", py: 2 }}>
-                      <CircularProgress size={24} />
+                    <Box sx={{ display: "flex", justifyContent: "center", py: 1.5 }}>
+                      <CircularProgress size={20} />
                     </Box>
                   ) : addresses.length === 0 ? (
-                    <Box sx={{ mb: 2 }}>
-                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", mb: 2 }}>
-                        No saved addresses. Please add an address in your profile.
+                    <Box sx={{ mb: 1.5 }}>
+                      <CustomText sx={{ fontSize: { xs: 13, md: 14 }, color: "#666", mb: 1.5 }}>
+                        No saved addresses. Please add an address.
                       </CustomText>
                       <Button
                         variant="outlined"
-                        onClick={() => navigate("/profile", { state: { activeTab: "addresses" } })}
+                        onClick={() => setAddressDialogOpen(true)}
                         sx={{
                           borderColor: "var(--themeColor)",
                           color: "var(--themeColor)",
                           textTransform: "none",
+                          fontSize: { xs: 12, md: 13 },
+                          py: 0.8,
                           "&:hover": {
                             borderColor: "var(--themeColor)",
                             backgroundColor: "#fbeeee",
@@ -573,7 +646,7 @@ export const Cart = () => {
                     <RadioGroup
                       value={selectedAddress || ""}
                       onChange={(e) => setSelectedAddress(e.target.value)}
-                      sx={{ mb: 2 }}
+                      sx={{ mb: 1.5 }}
                     >
                       {addresses.map((address) => {
                         const addressId = address._id || address.id;
@@ -581,7 +654,7 @@ export const Cart = () => {
                           <Card
                             key={addressId}
                             sx={{
-                              mb: 2,
+                              mb: 1.5,
                               border: selectedAddress === addressId ? "2px solid var(--themeColor)" : "1px solid #ddd",
                               borderRadius: 2,
                               transition: "all 0.3s ease",
@@ -590,7 +663,7 @@ export const Cart = () => {
                               },
                             }}
                           >
-                            <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                            <CardContent sx={{ p: 1.5, "&:last-child": { pb: 1.5 } }}>
                               <FormControlLabel
                                 value={addressId}
                                 control={<Radio sx={{ color: "var(--themeColor)" }} />}
@@ -629,79 +702,218 @@ export const Cart = () => {
                       })}
                     </RadioGroup>
                   )}
+                  
+                  {/* Add New Address Button */}
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={() => setAddressDialogOpen(true)}
+                    sx={{
+                      borderColor: "var(--themeColor)",
+                      color: "var(--themeColor)",
+                      textTransform: "none",
+                      mt: 1.5,
+                      py: 1,
+                      fontSize: { xs: 13, md: 14 },
+                      fontWeight: 600,
+                      "&:hover": {
+                        borderColor: "var(--themeColor)",
+                        backgroundColor: "#fbeeee",
+                      },
+                    }}
+                  >
+                    Add New Address
+                  </Button>
                 </CardContent>
               </Card>
 
               <Card
                 sx={{
-                  borderRadius: { xs: 2, md: 3 },
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                  borderRadius: { xs: 2, md: 2.5 },
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
                   position: { md: "sticky" },
                   top: { md: 100 },
                 }}
               >
-                <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+                <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
                   <CustomText
                     sx={{
-                      fontSize: { xs: 20, md: 24 },
+                      fontSize: { xs: 18, md: 22 },
                       fontWeight: 700,
                       color: "#2c2c2c",
-                      mb: { xs: 2, md: 3 },
+                      mb: { xs: 1.5, md: 2 },
                     }}
                   >
                     Order Summary
                   </CustomText>
 
                   {/* Coupon Section */}
-                  <Box sx={{ mb: 2 }}>
-                    <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600, mb: 1, color: "#2c2c2c" }}>
-                      Apply Coupon
+                  <Box sx={{ mb: 1.5 }}>
+                    <CustomText sx={{ fontSize: { xs: 13, md: 15 }, fontWeight: 600, mb: 1, color: "#2c2c2c" }}>
+                      Available Coupons
                     </CustomText>
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <TextField
-                        fullWidth
-                        size="small"
-                        placeholder="Enter coupon code"
-                        value={couponCode}
-                        onChange={(e) => {
-                          setCouponCode(e.target.value.toUpperCase());
-                          setCouponError("");
-                        }}
-                        disabled={applyingCoupon || !!appliedCoupon}
-                        sx={{
-                          "& .MuiOutlinedInput-root": {
-                            borderRadius: 2,
-                          },
-                        }}
-                      />
-                      <Button
-                        variant="contained"
-                        onClick={handleApplyCoupon}
-                        disabled={!couponCode || applyingCoupon || !!appliedCoupon}
-                        sx={{
-                          backgroundColor: appliedCoupon ? "#4caf50" : "var(--themeColor)",
-                          color: "#fff",
-                          textTransform: "none",
-                          borderRadius: 2,
-                          px: 3,
-                          "&:hover": {
-                            backgroundColor: appliedCoupon ? "#45a049" : "var(--specialColor)",
-                          },
-                          "&:disabled": {
-                            backgroundColor: "#ccc",
-                          },
-                        }}
+                    
+                    {couponsLoading ? (
+                      <Box sx={{ display: "flex", justifyContent: "center", py: 1 }}>
+                        <CircularProgress size={20} />
+                      </Box>
+                    ) : coupons.length === 0 ? (
+                      <Box sx={{ mb: 1.5 }}>
+                        <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666", mb: 1 }}>
+                          No coupons available
+                        </CustomText>
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            placeholder="Enter coupon code"
+                            value={couponCode}
+                            onChange={(e) => {
+                              setCouponCode(e.target.value.toUpperCase());
+                              setCouponError("");
+                            }}
+                            disabled={applyingCoupon || !!appliedCoupon}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: 2,
+                              },
+                            }}
+                          />
+                          <Button
+                            variant="contained"
+                            onClick={handleApplyCoupon}
+                            disabled={!couponCode || applyingCoupon || !!appliedCoupon}
+                            sx={{
+                              backgroundColor: appliedCoupon ? "#4caf50" : "var(--themeColor)",
+                              color: "#fff",
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 2.5,
+                              fontSize: { xs: 12, md: 13 },
+                              "&:hover": {
+                                backgroundColor: appliedCoupon ? "#45a049" : "var(--specialColor)",
+                              },
+                              "&:disabled": {
+                                backgroundColor: "#ccc",
+                              },
+                            }}
+                          >
+                            {applyingCoupon ? "Applying..." : appliedCoupon ? "Applied" : "Apply"}
+                          </Button>
+                        </Box>
+                      </Box>
+                    ) : (
+                      <RadioGroup
+                        value={selectedCoupon || ""}
+                        onChange={(e) => handleCouponSelect(e.target.value)}
+                        sx={{ mb: 1.5 }}
                       >
-                        {applyingCoupon ? "Applying..." : appliedCoupon ? "Applied" : "Apply"}
-                      </Button>
-                    </Box>
+                        {coupons.map((coupon) => (
+                          <Card
+                            key={coupon.id}
+                            sx={{
+                              mb: 1,
+                              border: selectedCoupon === coupon.id ? "2px solid var(--themeColor)" : "1px solid #ddd",
+                              borderRadius: 2,
+                              transition: "all 0.3s ease",
+                              "&:hover": {
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                              },
+                            }}
+                          >
+                            <CardContent sx={{ p: 1.2, "&:last-child": { pb: 1.2 } }}>
+                              <FormControlLabel
+                                value={coupon.id}
+                                control={<Radio sx={{ color: "var(--themeColor)", padding: "4px" }} />}
+                                label={
+                                  <Box>
+                                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.3 }}>
+                                      <CustomText sx={{ fontWeight: 600, fontSize: { xs: 13, md: 14 }, color: "var(--themeColor)" }}>
+                                        {coupon.code}
+                                      </CustomText>
+                                      <Box
+                                        sx={{
+                                          px: 0.8,
+                                          py: 0.15,
+                                          borderRadius: 1,
+                                          backgroundColor: "#FFB5A1",
+                                          color: "#000",
+                                          fontSize: 9,
+                                          fontWeight: 600,
+                                        }}
+                                      >
+                                        {coupon.discount} OFF
+                                      </Box>
+                                    </Box>
+                                    <CustomText sx={{ fontSize: { xs: 10, md: 11 }, color: "#666" }}>
+                                      {coupon.description}
+                                    </CustomText>
+                                  </Box>
+                                }
+                                sx={{ width: "100%", m: 0, alignItems: "flex-start" }}
+                              />
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </RadioGroup>
+                    )}
+                    
+                    {/* Manual Coupon Input */}
+                    {coupons.length > 0 && (
+                      <Box sx={{ mt: 1.5, pt: 1.5, borderTop: "1px solid #eee" }}>
+                        <CustomText sx={{ fontSize: { xs: 11, md: 12 }, fontWeight: 600, mb: 0.8, color: "#2c2c2c" }}>
+                          Or Enter Coupon Code
+                        </CustomText>
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            placeholder="Enter coupon code"
+                            value={couponCode}
+                            onChange={(e) => {
+                              setCouponCode(e.target.value.toUpperCase());
+                              setCouponError("");
+                              setSelectedCoupon(null);
+                            }}
+                            disabled={applyingCoupon || !!appliedCoupon}
+                            sx={{
+                              "& .MuiOutlinedInput-root": {
+                                borderRadius: 2,
+                              },
+                            }}
+                          />
+                          <Button
+                            variant="contained"
+                            onClick={handleApplyCoupon}
+                            disabled={!couponCode || applyingCoupon || !!appliedCoupon}
+                            sx={{
+                              backgroundColor: appliedCoupon ? "#4caf50" : "var(--themeColor)",
+                              color: "#fff",
+                              textTransform: "none",
+                              borderRadius: 2,
+                              px: 2.5,
+                              fontSize: { xs: 12, md: 13 },
+                              "&:hover": {
+                                backgroundColor: appliedCoupon ? "#45a049" : "var(--specialColor)",
+                              },
+                              "&:disabled": {
+                                backgroundColor: "#ccc",
+                              },
+                            }}
+                          >
+                            {applyingCoupon ? "Applying..." : appliedCoupon ? "Applied" : "Apply"}
+                          </Button>
+                        </Box>
+                      </Box>
+                    )}
+                    
                     {couponError && (
-                      <Alert severity="error" sx={{ mt: 1, fontSize: 12 }}>
+                      <Alert severity="error" sx={{ mt: 1, fontSize: 11, py: 0.5 }}>
                         {couponError}
                       </Alert>
                     )}
                     {appliedCoupon && (
-                      <Alert severity="success" sx={{ mt: 1, fontSize: 12 }}>
+                      <Alert severity="success" sx={{ mt: 1, fontSize: 11, py: 0.5 }}>
                         Coupon "{appliedCoupon.code}" applied! {
                           appliedCoupon.discountType === "ITEM_DISCOUNT_PERCENTAGE" || appliedCoupon.discountPercent
                             ? `${appliedCoupon.discountPercent}% discount`
@@ -712,42 +924,45 @@ export const Cart = () => {
                     {appliedCoupon && (
                       <Button
                         size="small"
-                        onClick={handleRemoveCoupon}
-                        sx={{ mt: 1, textTransform: "none", fontSize: 12 }}
+                        onClick={() => {
+                          handleRemoveCoupon();
+                          setSelectedCoupon(null);
+                        }}
+                        sx={{ mt: 0.8, textTransform: "none", fontSize: 11 }}
                       >
                         Remove Coupon
                       </Button>
                     )}
                   </Box>
 
-                  <Divider sx={{ mb: 2 }} />
+                  <Divider sx={{ mb: 1.5 }} />
 
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5, mb: 2 }}>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2, mb: 1.5 }}>
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#666" }}>
                         Subtotal
                       </CustomText>
-                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
+                      <CustomText sx={{ fontSize: { xs: 13, md: 15 }, fontWeight: 600 }}>
                         ₹{finalSubtotal.toFixed(2)}
                       </CustomText>
                     </Box>
 
                     {appliedCoupon && discount > 0 && (
                       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                        <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#4caf50" }}>
+                        <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#4caf50" }}>
                           Discount ({appliedCoupon.code})
                         </CustomText>
-                        <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600, color: "#4caf50" }}>
+                        <CustomText sx={{ fontSize: { xs: 13, md: 15 }, fontWeight: 600, color: "#4caf50" }}>
                           -₹{discount.toFixed(2)}
                         </CustomText>
                       </Box>
                     )}
 
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666" }}>
+                      <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#666" }}>
                         Shipping
                       </CustomText>
-                      <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 600 }}>
+                      <CustomText sx={{ fontSize: { xs: 13, md: 15 }, fontWeight: 600 }}>
                         {shipping === 0 ? (
                           <Box component="span" sx={{ color: "#4caf50" }}>
                             Free
@@ -761,7 +976,7 @@ export const Cart = () => {
                     {finalSubtotal < 50 && (
                       <CustomText
                         sx={{
-                          fontSize: { xs: 12, md: 13 },
+                          fontSize: { xs: 11, md: 12 },
                           color: "#ED7D2B",
                           fontStyle: "italic",
                         }}
@@ -770,12 +985,12 @@ export const Cart = () => {
                       </CustomText>
                     )}
 
-                    <Divider sx={{ my: 1 }} />
+                    <Divider sx={{ my: 0.8 }} />
 
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                       <CustomText
                         sx={{
-                          fontSize: { xs: 18, md: 20 },
+                          fontSize: { xs: 16, md: 18 },
                           fontWeight: 700,
                           color: "#2c2c2c",
                         }}
@@ -784,7 +999,7 @@ export const Cart = () => {
                       </CustomText>
                       <CustomText
                         sx={{
-                          fontSize: { xs: 18, md: 20 },
+                          fontSize: { xs: 16, md: 18 },
                           fontWeight: 700,
                           color: "var(--themeColor)",
                         }}
@@ -802,10 +1017,10 @@ export const Cart = () => {
                       backgroundColor: "var(--themeColor)",
                       color: "#fff",
                       textTransform: "none",
-                      py: { xs: 1.2, md: 1.5 },
-                      fontSize: { xs: 14, md: 16 },
+                      py: { xs: 1.1, md: 1.3 },
+                      fontSize: { xs: 13, md: 15 },
                       fontWeight: 600,
-                      mb: 2,
+                      mb: 1.5,
                       "&:hover": {
                         backgroundColor: "var(--specialColor)",
                       },
@@ -818,21 +1033,21 @@ export const Cart = () => {
                     sx={{
                       display: "flex",
                       flexDirection: "column",
-                      gap: 1.5,
-                      mt: 2,
-                      pt: 2,
+                      gap: 1,
+                      mt: 1.5,
+                      pt: 1.5,
                       borderTop: "1px solid #eee",
                     }}
                   >
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <LocalShippingIcon sx={{ fontSize: { xs: 18, md: 20 }, color: "#666" }} />
-                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                      <LocalShippingIcon sx={{ fontSize: { xs: 16, md: 18 }, color: "#666" }} />
+                      <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666" }}>
                         Free shipping on orders over ₹50
                       </CustomText>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <PaymentIcon sx={{ fontSize: { xs: 18, md: 20 }, color: "#666" }} />
-                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                      <PaymentIcon sx={{ fontSize: { xs: 16, md: 18 }, color: "#666" }} />
+                      <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666" }}>
                         Secure payment
                       </CustomText>
                     </Box>
@@ -843,6 +1058,13 @@ export const Cart = () => {
           </Grid>
         )}
       </Container>
+      
+      {/* Address Form Dialog */}
+      <AddressFormDialog
+        open={addressDialogOpen}
+        onClose={() => setAddressDialogOpen(false)}
+        onSuccess={handleAddressSuccess}
+      />
     </Box>
   );
 };

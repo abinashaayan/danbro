@@ -235,7 +235,7 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfil
       </Grid>
 
       <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 18, md: 24 } }}>
-        Your Favorite Items
+        Your Recent Items
       </CustomText>
       <Box sx={{ border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 0.5, sm: 1, md: 3 } }}>
         <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
