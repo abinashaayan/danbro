@@ -293,7 +293,7 @@ export const Cart = () => {
   };
 
   // Calculate subtotal from cart items
-  const subtotal = cartItems.reduce((sum, item) => {
+  const subtotal = cartItems?.reduce((sum, item) => {
     // Handle price - can be array or number
     let itemPrice = 0;
     if (Array.isArray(item.price) && item.price.length > 0) {
@@ -328,7 +328,7 @@ export const Cart = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 3 }, pb: { xs: 12, md: 4 }, mb: 4 }}>
-      <Container sx={{ py: { xs: 2, md: 3 }, px: { xs: 2, md: 3 } }}>
+      <Container sx={{ px: { xs: 2, md: 3 } }}>
         <Box sx={{ mb: { xs: 2, md: 3 } }}>
           <CustomText
             variant="h4"
@@ -342,7 +342,7 @@ export const Cart = () => {
             Shopping Cart
           </CustomText>
           <CustomText sx={{ fontSize: { xs: 13, md: 15 }, color: "#666" }}>
-            {cartItems.length} {cartItems.length === 1 ? "item" : "items"} in your cart
+            {cartItems?.length} {cartItems?.length === 1 ? "item" : "items"} in your cart
           </CustomText>
         </Box>
 
@@ -356,7 +356,7 @@ export const Cart = () => {
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
             <CircularProgress />
           </Box>
-        ) : cartItems.length === 0 ? (
+        ) : cartItems?.length === 0 ? (
           <Box
             sx={{
               textAlign: "center",
@@ -396,7 +396,7 @@ export const Cart = () => {
             {/* Cart Items */}
             <Grid size={{ xs: 12, md: 8 }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 } }}>
-                {cartItems.map((item) => {
+                {cartItems?.map((item) => {
                   const productId = item.productId || item._id || item.id;
                   const isUpdating = updatingItems.has(productId);
                   

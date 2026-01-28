@@ -73,15 +73,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     // Enable source maps only in development
     sourcemap: false,
-    // Minify
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
-    // Optimize chunk size
+    // Use default esbuild minifier (no external terser dependency)
     target: 'es2015',
     cssCodeSplit: true,
   },

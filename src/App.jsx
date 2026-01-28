@@ -28,6 +28,7 @@ const AppContent = () => {
 
   // Hide Navbar on profile page
   const hideNavbar = pathname === "/profile" || pathname === "/user-profile";
+  const isAuthPage = pathname === "/login" || pathname === "/register" || pathname === "/verify-otp";
 
   useEffect(() => {
     // Check if location is already set
@@ -80,12 +81,14 @@ const AppContent = () => {
         <Box 
           sx={{ 
             flex: 1,
-            // Add padding-top to account for fixed TopHeader
-            // TopHeader height: ~60-70px mobile (with wrapping), ~55-60px desktop
-            // Navbar height: ~50px mobile, ~55px desktop (when visible)
-            pt: hideNavbar 
-              ? { xs: "65px", sm: "70px", md: "65px", lg: "70px" } // Profile page: only TopHeader
-              : { xs: "107px", sm: "111px", md: "107px", lg: "111px" } // Other pages: TopHeader (~60-65px) + Navbar top (50-57px) + Navbar padding (24px) = ~107-111px
+            // Add padding-top to account for fixed TopHeader / Navbar on most pages.
+            // For auth pages (login/register/verify-otp) we remove this padding so the hero background
+            // can sit directly behind the header without extra blank space.
+            pt: isAuthPage
+              ? { xs: "0px", sm: "0px", md: "0px", lg: "0px" }
+              : hideNavbar 
+                ? { xs: "65px", sm: "70px", md: "65px", lg: "70px" } // Profile page: only TopHeader
+                : { xs: "107px", sm: "111px", md: "107px", lg: "111px" } // Other pages
           }}
         >
           <AppRoutes />

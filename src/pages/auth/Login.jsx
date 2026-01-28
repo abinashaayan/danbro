@@ -291,13 +291,11 @@ export const Login = () => {
   return (
     <Box
       sx={{
-        // minHeight: "100vh",
+        minHeight: "100vh",
         position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        py: { xs: 4, md: 0 },
-        pb: { xs: 12, md: 0 },
         overflow: "hidden",
         p: { xs: 1.25, md: 0 },
       }}
@@ -327,7 +325,13 @@ export const Login = () => {
       />
 
       {/* Login Form / Forgot Password Card */}
-      <Container maxWidth="sm" sx={{ mb: { xs: 6, md: 8 } }}>
+      <Container
+        maxWidth="sm"
+        sx={{
+          mt: { xs: 6, md: 8 }, // small gap below navbar/top header
+          mb: { xs: 6, md: 8 },
+        }}
+      >
         {isRedirecting ? (
           <Box
             sx={{
