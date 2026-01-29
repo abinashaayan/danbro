@@ -589,7 +589,7 @@ export const ProductDetails = () => {
               {/* Weight selection */}
               {weightOptions.length > 0 && (
                 <Box sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1.5 }}>
+                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
                     Select Weight
                   </CustomText>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
@@ -604,12 +604,16 @@ export const ProductDetails = () => {
                           fontSize: 13,
                           fontWeight: 500,
                           fontFamily: "'Poppins', sans-serif",
-                          borderRadius: 1,
-                          px: 1.5,
-                          py: 0.5,
+                          borderRadius: "999px", // 👈 pill shape
+                          px: 1.8,
+                          py: 0.6,
                           border: productWeight === w ? "2px solid #F31400" : "1px solid #ddd",
                           backgroundColor: productWeight === w ? "#FFE9E3" : "#fff",
                           color: productWeight === w ? "#F31400" : "#333",
+                          transition: "all 0.2s ease",
+                          "&:hover": {
+                            backgroundColor: productWeight === w ? "#FFE9E3" : "#fafafa"
+                          }
                         }}
                       />
                     ))}
@@ -618,7 +622,7 @@ export const ProductDetails = () => {
               )}
 
               {/* Cake message input */}
-              <Box sx={{ mb: 1 }}>
+              <Box sx={{ mb: 0.5 }}>
                 <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1 }}>
                   Cake Message
                 </CustomText>
@@ -643,8 +647,8 @@ export const ProductDetails = () => {
               </Box>
 
               {/* Delivery location section */}
-              <Box sx={{ mb: 3, p: 2, borderRadius: 1, border: "1px solid #e0e0e0", backgroundColor: "#fafafa" }}>
-                <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1.5 }}>
+              <Box sx={{ mb: 0, p: 1, borderRadius: 1, border: "1px solid #e0e0e0", backgroundColor: "#fafafa" }}>
+                <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
                   Delivery Location
                 </CustomText>
 
@@ -657,7 +661,7 @@ export const ProductDetails = () => {
                     alignItems: { xs: "flex-start", sm: "center" }
                   }}>
                     <Box>
-                      <CustomText sx={{ fontSize: 14, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
+                      <CustomText sx={{ fontSize: 12, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
                         {deliveryLocationLabel}
                       </CustomText>
                       <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#1B9C3F", mt: 0.5 }}>
@@ -738,7 +742,7 @@ export const ProductDetails = () => {
               </Box>
 
               {/* Quantity and Add to Cart */}
-              <Grid container spacing={2} sx={{ mt: 2 }}>
+              <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid size={{ xs: 4, sm: 3 }}>
                   <Box sx={{
                     display: "flex",
@@ -833,7 +837,7 @@ export const ProductDetails = () => {
               {cartMessage && (
                 <Alert
                   severity={cartMessage.type}
-                  sx={{ mt: 2, borderRadius: 1 }}
+                  sx={{ mt: 1, borderRadius: 1 }}
                   onClose={() => setCartMessage(null)}
                 >
                   {cartMessage.text}
@@ -844,7 +848,7 @@ export const ProductDetails = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 1,
-                mt: 3,
+                mt: 1,
                 backgroundColor: "#f0f9f0",
                 p: 1.5,
                 borderRadius: 1,
@@ -868,7 +872,7 @@ export const ProductDetails = () => {
       </Container>
 
 
-      <Box sx={{ py: 4, backgroundColor: "#fafafa" }}>
+      <Box sx={{ py: 1, backgroundColor: "#fafafa" }}>
         <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
           <Grid container spacing={3}>
             {features?.map((text, i) => (
