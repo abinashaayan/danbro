@@ -1,19 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert, Typography } from "@mui/material";
+import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Favorite as FavoriteIcon } from "@mui/icons-material";
+import Slider from "react-slick";
 import { CustomText } from "../comman/CustomText";
 import { getWishlist, removeFromWishlist } from "../../utils/wishlist";
 import { getAccessToken } from "../../utils/cookies";
 import { fetchProductById } from "../../utils/apiService";
 import blankImage from "../../assets/blankimage.png";
 
+const responsivePadding = { xs: 1, sm: 2, md: 3 };
+
 export const WishlistTab = ({ onRemoveFromWishlist }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isMobileView = useMediaQuery(theme.breakpoints.down("md"));
+  const sliderRef = useRef(null);
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [removingId, setRemovingId] = useState(null);
+
+  const mobileSliderSettings = {
+    dots: true,
+    infinite: wishlistItems.length > 1,
+    speed: 400,
+    slidesToShow: 1.15,
+    slidesToScroll: 1,
+    arrows: false,
+    swipeToSlide: true,
+    adaptiveHeight: true,
+  };
 
   const formatWishlistItem = (item) => {
     const product = item?.product || item;
@@ -102,7 +119,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
 
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8, p: responsivePadding, pt: responsivePadding, mt: responsivePadding }}>
         <CircularProgress sx={{ color: "var(--themeColor)" }} />
       </Box>
     );
@@ -110,7 +127,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
 
   if (error && wishlistItems.length === 0) {
     return (
-      <Box>
+      <Box sx={{ p: responsivePadding, pt: responsivePadding, mt: responsivePadding }}>
         <CustomText
           variant="h4"
           sx={{
@@ -130,41 +147,8 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
     );
   }
 
-  return (
-    <Box sx={{ mb: 5 }}>
-      <CustomText variant="h4" sx={{ fontSize: { xs: 20, md: 32 }, fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 2 }, }}>
-        My Wishlist
-      </CustomText>
-
-      {error && (
-        <Alert severity="warning" sx={{ mb: 3, borderRadius: 2 }}>
-          {error}
-        </Alert>
-      )}
-
-      {wishlistItems.length === 0 ? (
-        <Box
-          sx={{
-            textAlign: "center",
-            py: 10,
-            px: 3,
-            borderRadius: 3,
-            background: "linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)",
-          }}
-        >
-          <FavoriteIcon sx={{ fontSize: 64, color: "#ccc", mb: 2 }} />
-          <CustomText variant="h6" sx={{ color: "#666", mb: 1, fontWeight: 600, textTransform: "none" }}>
-            Your wishlist is empty
-          </CustomText>
-          <CustomText variant="body2" sx={{ color: "#999", textTransform: "none" }}>
-            Start adding products to your wishlist to see them here!
-          </CustomText>
-        </Box>
-      ) : (
-        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ justifyContent: { xs: "flex-start", md: "center" } }}>
-          {wishlistItems?.map((item, index) => (
-            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
-              <Card
+  const renderCard = (item) => (
+    <Card
                 sx={{
                   borderRadius: { xs: 2, md: 2.5 },
                   boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
@@ -277,6 +261,53 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
                   </Box>
                 </CardContent>
               </Card>
+  );
+
+  return (
+    <Box sx={{ mb: 5, mt: responsivePadding, p: responsivePadding, pt: responsivePadding }}>
+      <CustomText variant="h4" sx={{ fontSize: { xs: 20, md: 32 }, fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 2 }, }}>
+        My Wishlist
+      </CustomText>
+
+      {error && (
+        <Alert severity="warning" sx={{ mb: 3, borderRadius: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      {wishlistItems.length === 0 ? (
+        <Box
+          sx={{
+            textAlign: "center",
+            py: 10,
+            px: 3,
+            borderRadius: 3,
+            background: "linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)",
+          }}
+        >
+          <FavoriteIcon sx={{ fontSize: 64, color: "#ccc", mb: 2 }} />
+          <CustomText variant="h6" sx={{ color: "#666", mb: 1, fontWeight: 600, textTransform: "none" }}>
+            Your wishlist is empty
+          </CustomText>
+          <CustomText variant="body2" sx={{ color: "#999", textTransform: "none" }}>
+            Start adding products to your wishlist to see them here!
+          </CustomText>
+        </Box>
+      ) : isMobileView ? (
+        <Box sx={{ overflow: "hidden", mx: -1, "& .slick-list": { overflow: "visible" }, "& .slick-slide": { px: 0.5 }, "& .slick-dots": { bottom: -8 } }}>
+          <Slider ref={sliderRef} {...mobileSliderSettings}>
+            {wishlistItems?.map((item) => (
+              <Box key={item?.id}>
+                {renderCard(item)}
+              </Box>
+            ))}
+          </Slider>
+        </Box>
+      ) : (
+        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ justifyContent: { xs: "flex-start", md: "center" } }}>
+          {wishlistItems?.map((item) => (
+            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
+              {renderCard(item)}
             </Grid>
           ))}
         </Grid>

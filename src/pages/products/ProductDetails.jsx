@@ -381,9 +381,9 @@ export const ProductDetails = () => {
   }
 
   return (
-    <Box>
-      <Container maxWidth="lg" sx={{ pb: 6, px: { xs: 2, sm: 3, md: 4 }, }}>
-        <Breadcrumbs sx={{ mb: 4 }}>
+    <Box sx={{ overflowX: "hidden", maxWidth: "100%" }}>
+      <Container maxWidth="lg" sx={{ pb: { xs: 4, sm: 5, md: 6 }, px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%" }}>
+        <Breadcrumbs sx={{ mb: { xs: 2, sm: 3, md: 4 }, overflow: "hidden", textOverflow: "ellipsis" }}>
           <Link
             component="button"
             variant="body1"
@@ -393,21 +393,21 @@ export const ProductDetails = () => {
               textDecoration: "none",
               cursor: "pointer",
               fontFamily: "'Poppins', sans-serif",
-              fontSize: 14,
+              fontSize: { xs: 12, sm: 14 },
               fontWeight: 400,
               "&:hover": { color: "#FF9472" },
             }}
           >
             Products
           </Link>
-          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Poppins', sans-serif", fontSize: 14, fontWeight: 400, }}>
+          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Poppins', sans-serif", fontSize: { xs: 12, sm: 14 }, fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
             {productData?.name}
           </CustomText>
         </Breadcrumbs>
 
-        <Grid container spacing={{ xs: 3, md: 5 }} sx={{ alignItems: "stretch" }}>
-          <Grid size={{ xs: 12, md: 6 }} sx={{ display: { md: "flex" } }}>
-            <Box sx={{ display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, height: { xs: "auto", md: "100%" }, width: "100%" }}>
+        <Grid container spacing={{ xs: 2, sm: 3, md: 5 }} sx={{ alignItems: "stretch", maxWidth: "100%" }}>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ display: { md: "flex" }, minWidth: 0 }}>
+            <Box sx={{ display: "flex", gap: { xs: 1.5, md: 2 }, flexDirection: { xs: "column", md: "row" }, height: { xs: "auto", md: "100%" }, width: "100%", minWidth: 0 }}>
               <Box
                 sx={{
                   display: { xs: "none", md: "flex" },
@@ -446,12 +446,13 @@ export const ProductDetails = () => {
                   </Box>
                 ))}
               </Box>
-              <Box sx={{ flex: 1, position: "relative", minHeight: 0 }}>
+              <Box sx={{ flex: 1, position: "relative", minHeight: 0, minWidth: 0 }}>
                 <Box
                   ref={imageContainerRef}
                   sx={{
                     width: "100%",
-                    // height: { xs: 350, sm: 400, md: "100%" },
+                    height: { xs: 280, sm: 340, md: "100%" },
+                    minHeight: { xs: 280, sm: 340, md: 380 },
                     borderRadius: 1,
                     overflow: "hidden",
                     backgroundColor: "#f5f5f5",
@@ -537,36 +538,37 @@ export const ProductDetails = () => {
               </Box>
             </Box>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
+            <Box sx={{ minWidth: 0 }}>
               <CustomText
                 variant="h3"
                 autoTitleCase={true}
                 sx={{
-                  fontSize: { xs: 24, sm: 28, md: 32 },
+                  fontSize: { xs: 20, sm: 26, md: 32 },
                   fontWeight: 600,
                   fontFamily: "'Playfair Display', serif",
                   color: "#2c2c2c",
                   mb: 1,
+                  wordBreak: "break-word",
                 }}
               >
                 {productData?.name}
               </CustomText>
               <Box>
-                <CustomText sx={{ fontSize: { xs: 24, sm: 28, md: 32 }, fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#F31400", }}>
+                <CustomText sx={{ fontSize: { xs: 20, sm: 26, md: 32 }, fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#F31400", wordBreak: "break-word" }}>
                   {productData?.price}
-                  <Box component="span" sx={{ fontSize: 14, fontWeight: 400, color: "#666", ml: 0.5 }}>
+                  <Box component="span" sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, color: "#666", ml: 0.5 }}>
                     / {productData?.weight}
                   </Box>
                 </CustomText>
               </Box>
               <Box>
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                  <Rating value={4.5} precision={0.5} readOnly sx={{ color: "#FF643A" }} />
-                  <CustomText sx={{ fontSize: 14, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#333" }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1, flexWrap: "wrap" }}>
+                  <Rating value={4.5} precision={0.5} readOnly size="small" sx={{ color: "#FF643A" }} />
+                  <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#333" }}>
                     4.5
                   </CustomText>
-                  <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#777" }}>
+                  <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#777" }}>
                     (245 Reviews)
                   </CustomText>
                 </Box>
@@ -578,9 +580,10 @@ export const ProductDetails = () => {
                   color: "#666",
                   lineHeight: 1.7,
                   mb: 1,
-                  fontSize: 15,
+                  fontSize: { xs: 14, sm: 15 },
                   fontWeight: 400,
                   fontFamily: "'Poppins', sans-serif",
+                  wordBreak: "break-word",
                 }}
               >
                 {productData?.description}
@@ -742,7 +745,7 @@ export const ProductDetails = () => {
               </Box>
 
               {/* Quantity and Add to Cart */}
-              <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid container spacing={{ xs: 1.5, sm: 2 }} sx={{ mt: 1 }}>
                 <Grid size={{ xs: 4, sm: 3 }}>
                   <Box sx={{
                     display: "flex",
@@ -750,7 +753,7 @@ export const ProductDetails = () => {
                     alignItems: "center",
                     borderRadius: 1,
                     border: "1px solid #ddd",
-                    p: 1,
+                    p: { xs: 0.75, sm: 1 },
                     backgroundColor: "#fff"
                   }}>
                     <Box
@@ -785,9 +788,9 @@ export const ProductDetails = () => {
                     sx={{
                       backgroundColor: "#FF9472",
                       color: "#fff",
-                      py: 1.2,
+                      py: { xs: 1, sm: 1.2 },
                       borderRadius: 1,
-                      fontSize: 15,
+                      fontSize: { xs: 13, sm: 15 },
                       fontWeight: 500,
                       fontFamily: "'Poppins', sans-serif",
                       textTransform: "none",
@@ -872,25 +875,26 @@ export const ProductDetails = () => {
       </Container>
 
 
-      <Box sx={{ py: 1, backgroundColor: "#fafafa" }}>
-        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
-          <Grid container spacing={3}>
+      <Box sx={{ py: { xs: 1.5, md: 1 }, backgroundColor: "#fafafa" }}>
+        <Container maxWidth="lg" sx={{ px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%" }}>
+          <Grid container spacing={{ xs: 2, sm: 3 }}>
             {features?.map((text, i) => (
-              <Grid key={i} size={{ xs: 12, sm: 6, md: 3 }}>
+              <Grid key={i} size={{ xs: 12, sm: 6, md: 3 }} sx={{ minWidth: 0 }}>
                 <Box sx={{
                   backgroundColor: "#fff",
-                  p: 3,
+                  p: { xs: 2, sm: 2.5, md: 3 },
                   borderRadius: 1,
                   border: "1px solid #e0e0e0",
                   display: "flex",
                   alignItems: "center",
-                  gap: 2,
-                  height: "100%"
+                  gap: { xs: 1.5, md: 2 },
+                  height: "100%",
+                  minWidth: 0,
                 }}>
-                  <Box sx={{ backgroundColor: "#fff5f2", color: "#FF6F61", width: 50, height: 50, borderRadius: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Box sx={{ backgroundColor: "#fff5f2", color: "#FF6F61", width: { xs: 44, sm: 50 }, height: { xs: 44, sm: 50 }, borderRadius: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {icons[i]}
                   </Box>
-                  <CustomText sx={{ whiteSpace: "pre-line", fontSize: 13, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#515151", lineHeight: 1.6 }}>
+                  <CustomText sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, sm: 13 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#515151", lineHeight: 1.6, wordBreak: "break-word" }}>
                     {text}
                   </CustomText>
                 </Box>
@@ -901,22 +905,23 @@ export const ProductDetails = () => {
       </Box>
 
       {/* What's Inside + Nutrition Facts */}
-      <Container maxWidth="lg" sx={{ py: 5, px: { xs: 2, sm: 3, md: 4 } }}>
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ p: 3, border: "1px solid #e0e0e0", borderRadius: 1, backgroundColor: "#fff" }}>
-              <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: 18, mb: 2, color: "#2c2c2c" }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 3, sm: 4, md: 5 }, px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%" }}>
+        <Grid container spacing={{ xs: 2, sm: 3 }}>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
+            <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #e0e0e0", borderRadius: 1, backgroundColor: "#fff", minWidth: 0 }}>
+              <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: { xs: 16, sm: 18 }, mb: 2, color: "#2c2c2c" }}>
                 What's Inside
               </CustomText>
               <CustomText
                 autoTitleCase={true}
                 sx={{
-                  fontSize: 14,
+                  fontSize: { xs: 13, sm: 14 },
                   fontWeight: 400,
                   fontFamily: "'Poppins', sans-serif",
                   color: "#666",
                   lineHeight: 1.7,
-                  mb: product.veg ? 2 : 0
+                  mb: product.veg ? 2 : 0,
+                  wordBreak: "break-word",
                 }}
               >
                 {productData?.ingredient || "Ingredients information not available."}
@@ -952,7 +957,7 @@ export const ProductDetails = () => {
               )}
             </Box>
           </Grid>
-          <Grid size={{ xs: 12, md: 6 }} sx={{ position: "relative" }}>
+          <Grid size={{ xs: 12, md: 6 }} sx={{ position: "relative", minWidth: 0 }}>
             <Accordion
               expanded={expanded}
               onChange={() => setExpanded(!expanded)}
@@ -962,13 +967,14 @@ export const ProductDetails = () => {
                 borderRadius: 1,
                 backgroundColor: "#fff",
                 "&:before": { display: "none" },
-                boxShadow: "none"
+                boxShadow: "none",
+                minWidth: 0,
               }}
             >
               <AccordionSummary
                 expandIcon={<ExpandMore sx={{ color: "#2c2c2c" }} />}
                 sx={{
-                  px: 3,
+                  px: { xs: 2, md: 3 },
                   py: 1.5,
                   minHeight: 56,
                   "& .MuiAccordionSummary-content": {
@@ -977,8 +983,8 @@ export const ProductDetails = () => {
                   }
                 }}
               >
-                <Box>
-                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: 18, color: "#2c2c2c" }}>
+                <Box sx={{ minWidth: 0 }}>
+                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: { xs: 16, sm: 18 }, color: "#2c2c2c" }}>
                     Nutrition Facts
                   </CustomText>
                   {product?.expiryday && (
@@ -1060,18 +1066,18 @@ export const ProductDetails = () => {
         </Grid>
 
         {/* Rating Section */}
-        <Box sx={{ mt: 5, mb: 4 }}>
-          <CustomText sx={{ fontSize: 28, fontWeight: 600, fontFamily: "'Playfair Display', serif", color: "#2c2c2c", mb: 0.5 }}>
+        <Box sx={{ mt: { xs: 3, md: 5 }, mb: { xs: 3, md: 4 } }}>
+          <CustomText sx={{ fontSize: { xs: 22, sm: 26, md: 28 }, fontWeight: 600, fontFamily: "'Playfair Display', serif", color: "#2c2c2c", mb: 0.5 }}>
             4.5 ⭐
           </CustomText>
-          <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", mb: 3 }}>
+          <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", mb: 3 }}>
             120 reviews
           </CustomText>
 
           {/* Rating Bars */}
           {[5, 4, 3, 2, 1].map((r, i) => (
-            <Box key={i} sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1.5 }}>
-              <CustomText sx={{ width: 20, fontSize: 14, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
+            <Box key={i} sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: 1.5, minWidth: 0 }}>
+              <CustomText sx={{ width: 20, flexShrink: 0, fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
                 {r}
               </CustomText>
               <Box sx={{
@@ -1087,7 +1093,7 @@ export const ProductDetails = () => {
                   backgroundColor: "#FF6F61",
                 }} />
               </Box>
-              <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", width: 40, textAlign: "right" }}>
+              <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", width: 40, flexShrink: 0, textAlign: "right" }}>
                 {[40, 20, 19, 10, 7][i]}%
               </CustomText>
             </Box>
@@ -1095,7 +1101,7 @@ export const ProductDetails = () => {
         </Box>
 
         {/* Reviews */}
-        <Box sx={{ mt: 4, mb: 5 }}>
+        <Box sx={{ mt: { xs: 3, md: 4 }, mb: { xs: 4, md: 5 } }}>
           {[{
             name: "Sophia Carter",
             time: "2 weeks ago",
@@ -1108,30 +1114,31 @@ export const ProductDetails = () => {
             <Box
               key={i}
               sx={{
-                p: 3,
+                p: { xs: 2, md: 3 },
                 borderRadius: 1,
                 backgroundColor: "#fafafa",
                 border: "1px solid #e0e0e0",
-                mt: 2
+                mt: 2,
+                minWidth: 0,
               }}
             >
-              <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 1.5 }}>
+              <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 2 }, alignItems: "center", mb: 1.5, flexWrap: "wrap" }}>
                 <Avatar
                   alt={review.name}
                   sx={{
-                    width: 40,
-                    height: 40,
+                    width: { xs: 36, sm: 40 },
+                    height: { xs: 36, sm: 40 },
                     backgroundColor: "#FF9472"
                   }}
                 >
                   {review.name.charAt(0)}
                 </Avatar>
-                <Box>
+                <Box sx={{ minWidth: 0 }}>
                   <CustomText
                     sx={{
                       fontWeight: 600,
                       fontFamily: "'Poppins', sans-serif",
-                      fontSize: 15,
+                      fontSize: { xs: 14, sm: 15 },
                       color: "#2c2c2c"
                     }}
                   >
@@ -1139,7 +1146,7 @@ export const ProductDetails = () => {
                   </CustomText>
                   <CustomText
                     sx={{
-                      fontSize: 13,
+                      fontSize: { xs: 12, sm: 13 },
                       fontWeight: 400,
                       fontFamily: "'Poppins', sans-serif",
                       color: "#666"
@@ -1152,12 +1159,13 @@ export const ProductDetails = () => {
               <Rating value={5 - i} readOnly size="small" sx={{ mb: 1.5, color: "#FF643A" }} />
               <CustomText
                 sx={{
-                  fontSize: 14,
+                  fontSize: { xs: 13, sm: 14 },
                   fontWeight: 400,
                   fontFamily: "'Poppins', sans-serif",
                   color: "#666",
                   lineHeight: 1.7,
-                  mb: 2
+                  mb: 2,
+                  wordBreak: "break-word",
                 }}
               >
                 {review.text}

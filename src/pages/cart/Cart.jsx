@@ -376,8 +376,8 @@ export const Cart = () => {
   const total = finalSubtotal - discount + shipping;
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 3 }, pb: { xs: 12, md: 4 }, mb: 4 }}>
-      <Container sx={{ px: { xs: 2, md: 3 } }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", p: { xs: 1, sm: 2, md: 3 }, pt: { xs: 1, sm: 2, md: 3 }, pb: { xs: 12, md: 4 }, mb: 4 }}>
+      <Container sx={{ px: { xs: 1, sm: 2, md: 3 }, maxWidth: "100%" }}>
         <Box sx={{ mb: { xs: 2, md: 3 } }}>
           <CustomText
             variant="h4"
