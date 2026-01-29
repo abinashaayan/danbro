@@ -37,6 +37,8 @@
 html {
   overflow-x: hidden;
   width: 100%;
+  /* Reserve space for scrollbar so dropdown hover doesn’t change layout width */
+  scrollbar-gutter: stable;
 }
 
 body {

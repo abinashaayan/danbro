@@ -26,6 +26,7 @@ import { CustomText } from "../../components/comman/CustomText";
 import {
   Add,
   Remove,
+  Favorite,
   FavoriteBorder,
   LocalGroceryStore,
   Handshake,
@@ -42,6 +43,7 @@ import { fetchProducts, fetchProductById } from "../../utils/apiService";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { useHomeLayout } from "../../hooks/useHomeLayout";
 import { addToCart } from "../../utils/cart";
+import { addToWishlist, removeFromWishlist, isInWishlist } from "../../utils/wishlist";
 import { getStoredLocation } from "../../utils/location";
 import blankImage from "../../assets/blankimage.png";
 
@@ -62,6 +64,8 @@ export const ProductDetails = () => {
   const [cartMessage, setCartMessage] = useState(null);
   const [cakeMessage, setCakeMessage] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
 
   // Delivery location display
   const [deliveryLocationLabel, setDeliveryLocationLabel] = useState("");
@@ -224,6 +228,45 @@ export const ProductDetails = () => {
     }
   }, [id, apiCategories, homeLayoutProducts]);
 
+  const productIdForWishlist = product?._id || product?.productId || product?.id || id;
+
+  useEffect(() => {
+    if (!productIdForWishlist) return;
+    let cancelled = false;
+    isInWishlist(productIdForWishlist).then((inList) => {
+      if (!cancelled) setInWishlist(!!inList);
+    });
+    return () => { cancelled = true; };
+  }, [productIdForWishlist]);
+
+  useEffect(() => {
+    const handleWishlistUpdated = () => {
+      if (productIdForWishlist) {
+        isInWishlist(productIdForWishlist).then(setInWishlist);
+      }
+    };
+    window.addEventListener("wishlistUpdated", handleWishlistUpdated);
+    return () => window.removeEventListener("wishlistUpdated", handleWishlistUpdated);
+  }, [productIdForWishlist]);
+
+  const handleWishlistToggle = async () => {
+    if (!productIdForWishlist || wishlistLoading) return;
+    setWishlistLoading(true);
+    try {
+      if (inWishlist) {
+        await removeFromWishlist(productIdForWishlist);
+        setInWishlist(false);
+      } else {
+        await addToWishlist(productIdForWishlist);
+        setInWishlist(true);
+      }
+    } catch (err) {
+      console.error("Wishlist toggle error:", err);
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
+
   const handleAddToCart = async () => {
     if (!product) return;
     try {
@@ -233,7 +276,7 @@ export const ProductDetails = () => {
       if (!productId) {
         throw new Error("Product ID not found");
       }
-      const options = productData ? { weight: productWeight, productSnapshot: { name: productData.name, price: product.price, images: product.images, weight: productWeight } } : {};
+      const options = productData ? { weight: productWeight, productSnapshot: { name: productData?.name, price: product?.price, images: product?.images, weight: productWeight } } : {};
       const response = await addToCart(productId, quantity, options);
 
       setCartMessage({
@@ -365,7 +408,20 @@ export const ProductDetails = () => {
         <Grid container spacing={{ xs: 3, md: 5 }} sx={{ alignItems: "stretch" }}>
           <Grid size={{ xs: 12, md: 6 }} sx={{ display: { md: "flex" } }}>
             <Box sx={{ display: "flex", gap: 2, flexDirection: { xs: "column", md: "row" }, height: { xs: "auto", md: "100%" }, width: "100%" }}>
-              <Box sx={{ display: { xs: "none", md: "flex" }, flexDirection: "column", gap: 1.5 }}>
+              <Box
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  flexDirection: "column",
+                  gap: 1.5,
+                  maxHeight: 398,
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                  pr: 0.5,
+                  "&::-webkit-scrollbar": { width: 6 },
+                  "&::-webkit-scrollbar-thumb": { borderRadius: 3, bgcolor: "rgba(0,0,0,0.2)" },
+                  "&::-webkit-scrollbar-track": { bgcolor: "transparent" },
+                }}
+              >
                 {productData?.images?.map((image, index) => (
                   <Box
                     key={index}
@@ -373,6 +429,7 @@ export const ProductDetails = () => {
                     sx={{
                       width: 70,
                       height: 70,
+                      flexShrink: 0,
                       borderRadius: 1,
                       overflow: "hidden",
                       cursor: "pointer",
@@ -394,7 +451,7 @@ export const ProductDetails = () => {
                   ref={imageContainerRef}
                   sx={{
                     width: "100%",
-                    height: { xs: 350, sm: 400, md: "100%" },
+                    // height: { xs: 350, sm: 400, md: "100%" },
                     borderRadius: 1,
                     overflow: "hidden",
                     backgroundColor: "#f5f5f5",
@@ -423,7 +480,7 @@ export const ProductDetails = () => {
                       objectFit: "cover",
                     }}
                   />
-                  {/* Zoom lens overlay */}
+                  {/* Zoom lens overlay - square */}
                   {isZooming && !isMobile && (
                     <Box
                       sx={{
@@ -432,14 +489,13 @@ export const ProductDetails = () => {
                         left: mousePosition.x - 100,
                         width: 200,
                         height: 200,
-                        borderRadius: "50%",
+                        borderRadius: 1,
                         border: "2px solid #FF9472",
                         backgroundColor: "rgba(255, 148, 114, 0.15)",
                         pointerEvents: "none",
                         display: { xs: "none", md: "block" },
                         zIndex: 10,
                         boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.3)",
-                        clipPath: "circle(100px at center)",
                       }}
                     />
                   )}
@@ -532,7 +588,7 @@ export const ProductDetails = () => {
               <Divider sx={{ backgroundColor: "#e0e0e0" }} />
               {/* Weight selection */}
               {weightOptions.length > 0 && (
-                <Box sx={{ mb: 1 }}>
+                <Box sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1.5 }}>
                     Select Weight
                   </CustomText>
@@ -601,21 +657,10 @@ export const ProductDetails = () => {
                     alignItems: { xs: "flex-start", sm: "center" }
                   }}>
                     <Box>
-                      <CustomText sx={{
-                        fontSize: 14,
-                        fontWeight: 500,
-                        fontFamily: "'Poppins', sans-serif",
-                        color: "#2c2c2c"
-                      }}>
+                      <CustomText sx={{ fontSize: 14, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
                         {deliveryLocationLabel}
                       </CustomText>
-                      <CustomText sx={{
-                        fontSize: 13,
-                        fontWeight: 400,
-                        fontFamily: "'Poppins', sans-serif",
-                        color: "#1B9C3F",
-                        mt: 0.5
-                      }}>
+                      <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#1B9C3F", mt: 0.5 }}>
                         Awesome, we deliver to this location.
                       </CustomText>
                     </Box>
@@ -763,16 +808,24 @@ export const ProductDetails = () => {
                 </Grid>
                 <Grid size={{ xs: 2, sm: 2 }}>
                   <IconButton
-                    aria-label="favorite"
+                    aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+                    onClick={handleWishlistToggle}
+                    disabled={wishlistLoading}
                     sx={{
-                      backgroundColor: "#f5f5f5",
+                      backgroundColor: inWishlist ? "rgba(244, 67, 54, 0.08)" : "#f5f5f5",
                       borderRadius: 1,
                       "&:hover": {
-                        backgroundColor: "#e0e0e0",
-                      }
+                        backgroundColor: inWishlist ? "rgba(244, 67, 54, 0.15)" : "#e0e0e0",
+                      },
                     }}
                   >
-                    <FavoriteBorder sx={{ color: "#2c2c2c", fontSize: 20 }} />
+                    {wishlistLoading ? (
+                      <CircularProgress size={20} sx={{ color: "var(--themeColor)" }} />
+                    ) : inWishlist ? (
+                      <Favorite sx={{ color: "#f44336", fontSize: 20 }} />
+                    ) : (
+                      <FavoriteBorder sx={{ color: "#2c2c2c", fontSize: 20 }} />
+                    )}
                   </IconButton>
                 </Grid>
               </Grid>
@@ -830,29 +883,10 @@ export const ProductDetails = () => {
                   gap: 2,
                   height: "100%"
                 }}>
-                  <Box sx={{
-                    backgroundColor: "#fff5f2",
-                    color: "#FF6F61",
-                    width: 50,
-                    height: 50,
-                    borderRadius: 1,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0
-                  }}>
+                  <Box sx={{ backgroundColor: "#fff5f2", color: "#FF6F61", width: 50, height: 50, borderRadius: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {icons[i]}
                   </Box>
-                  <CustomText
-                    sx={{
-                      whiteSpace: "pre-line",
-                      fontSize: 13,
-                      fontWeight: 500,
-                      fontFamily: "'Poppins', sans-serif",
-                      color: "#515151",
-                      lineHeight: 1.6
-                    }}
-                  >
+                  <CustomText sx={{ whiteSpace: "pre-line", fontSize: 13, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#515151", lineHeight: 1.6 }}>
                     {text}
                   </CustomText>
                 </Box>
@@ -867,15 +901,7 @@ export const ProductDetails = () => {
         <Grid container spacing={3}>
           <Grid size={{ xs: 12, md: 6 }}>
             <Box sx={{ p: 3, border: "1px solid #e0e0e0", borderRadius: 1, backgroundColor: "#fff" }}>
-              <CustomText
-                sx={{
-                  fontWeight: 600,
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: 18,
-                  mb: 2,
-                  color: "#2c2c2c"
-                }}
-              >
+              <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: 18, mb: 2, color: "#2c2c2c" }}>
                 What's Inside
               </CustomText>
               <CustomText
@@ -891,7 +917,7 @@ export const ProductDetails = () => {
               >
                 {productData?.ingredient || "Ingredients information not available."}
               </CustomText>
-              {product.veg && (
+              {product?.veg && (
                 <Box sx={{
                   mt: 2,
                   p: 2,
@@ -904,15 +930,7 @@ export const ProductDetails = () => {
                 }}>
                   <ThumbUpOffAlt sx={{ color: "#FF643A", fontSize: 20, mt: 0.5 }} />
                   <Box>
-                    <CustomText
-                      sx={{
-                        fontWeight: 600,
-                        fontFamily: "'Poppins', sans-serif",
-                        fontSize: 14,
-                        color: "#2c2c2c",
-                        mb: 0.5
-                      }}
-                    >
+                    <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", fontSize: 14, color: "#2c2c2c", mb: 0.5 }}>
                       Vegetarian Product
                     </CustomText>
                     <CustomText

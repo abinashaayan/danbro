@@ -183,6 +183,7 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
       disableRestoreFocus
       disableAutoFocus
       disableEnforceFocus
+      disableScrollLock
       sx={{
         mt: 0.5,
         pointerEvents: "auto",
