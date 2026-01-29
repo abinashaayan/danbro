@@ -1,10 +1,10 @@
-import { Box, Container,  Grid, Button, Divider, IconButton } from "@mui/material";
+import { Box, Container, Grid, Button, Divider, IconButton, Link } from "@mui/material";
 import { CustomText } from "../../components/comman/CustomText";
 import { useEffect, useRef, useState } from "react";
 import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
 
 import blogHero from "../../assets/blog.png";
-import visitors from "../../assets/e347211cb5caeeec77eae32383b9d19dd9459edf.jpg";
+import visitors from "../../assets/egpqen3o_danbro_625x300_04_March_20.webp";
 import getintouch from "../../assets/getintouch.png";
 
 const inputStyle = {
@@ -121,9 +121,27 @@ export const Contact = () => {
             <CustomText sx={{ fontSize: { xs: 18, sm: 20, md: 21, lg: 22 }, fontWeight: 700, mb: 2 }}>CONTACT DETAILS</CustomText>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📞 +91 7309032618  |  0522-4113205</CustomText>
-              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>✉️ Info@Mrbrownbakery.Com</CustomText>
-              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>📍 B-35, Sector-P, Aliganj, Lucknow, UP 220024</CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>
+                📞{" "}
+                <Link href="tel:+917309032618" sx={{ color: "inherit", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>+91 7309032618</Link>
+                {"  |  "}
+                <Link href="tel:05224113205" sx={{ color: "inherit", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>0522-4113205</Link>
+              </CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>
+                ✉️{" "}
+                <Link href="mailto:Info@Mrbrownbakery.Com" sx={{ color: "inherit", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}>Info@Mrbrownbakery.Com</Link>
+              </CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 14, md: 14, lg: 16 } }}>
+                📍{" "}
+                <Link
+                  href="https://www.google.com/maps/search/?api=1&query=B-35,+Sector-P,+Aliganj,+Lucknow,+UP+220024"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={{ color: "inherit", textDecoration: "none", "&:hover": { textDecoration: "underline" } }}
+                >
+                  B-35, Sector-P, Aliganj, Lucknow, UP 220024
+                </Link>
+              </CustomText>
             </Box>
           </Box>
         </Box>
