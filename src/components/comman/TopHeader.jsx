@@ -15,6 +15,7 @@ import { getCart } from "../../utils/cart";
 import { getStoredLocation } from "../../utils/location";
 import { useAppSelector } from "../../store/hooks";
 import { getGuestCart, getGuestWishlist } from "../../store/guestSlice";
+import { store } from "../../store/store";
 
 
 export const TopHeader = () => {
@@ -112,11 +113,10 @@ export const TopHeader = () => {
         return () => clearTimeout(timeoutId);
     }, [isLoggedIn, guestWishlist?.length]);
 
-    // Fetch cart count (guest: from Redux; logged-in: API)
+    // Fetch cart count = number of products/line items (guest: from Redux; logged-in: API)
     useEffect(() => {
         if (!isLoggedIn) {
-            const total = (guestCart ?? []).reduce((sum, i) => sum + (i.quantity || 0), 0);
-            setCartCount(total);
+            setCartCount((guestCart ?? []).length);
             return;
         }
         const timeoutId = setTimeout(async () => {
@@ -127,8 +127,7 @@ export const TopHeader = () => {
                 else if (cartData?.data && Array.isArray(cartData.data)) items = cartData.data;
                 else if (cartData?.data?.data && Array.isArray(cartData.data.data)) items = cartData.data.data;
                 else if (Array.isArray(cartData)) items = cartData;
-                const totalQuantity = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-                setCartCount(totalQuantity);
+                setCartCount(items.length);
             } catch (error) {
                 console.error("Error fetching cart count:", error);
                 setCartCount(0);
@@ -151,12 +150,12 @@ export const TopHeader = () => {
         return () => window.removeEventListener("headerWishlistLoading", handleWishlistLoading);
     }, []);
 
-    // Listen for cart updates
+    // Listen for cart updates (badge = number of products/line items)
     useEffect(() => {
         const handleCartUpdate = async () => {
-            if (!isLoggedIn) {
-                const total = (guestCart ?? []).reduce((sum, i) => sum + (i.quantity || 0), 0);
-                setCartCount(total);
+            if (!getAccessToken()) {
+                const guestCartItems = store.getState().guest?.guestCart ?? [];
+                setCartCount(guestCartItems.length);
                 return;
             }
             try {
@@ -166,8 +165,7 @@ export const TopHeader = () => {
                 else if (cartData?.data && Array.isArray(cartData.data)) items = cartData.data;
                 else if (cartData?.data?.data && Array.isArray(cartData.data.data)) items = cartData.data.data;
                 else if (Array.isArray(cartData)) items = cartData;
-                const totalQuantity = items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-                setCartCount(totalQuantity);
+                setCartCount(items.length);
             } catch (error) {
                 console.error("Error fetching cart count:", error);
             }

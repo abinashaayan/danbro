@@ -42,6 +42,8 @@ export const Cart = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingItems, setUpdatingItems] = useState(new Set());
+  const [updatingAction, setUpdatingAction] = useState({});
+  const getItemKey = (productId, weight) => `${productId ?? ""}|${weight ?? ""}`;
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressesLoading, setAddressesLoading] = useState(false);
@@ -259,9 +261,12 @@ export const Cart = () => {
   };
 
   const updateQuantity = async (productId, change, weight) => {
-    if (updatingItems.has(productId)) return;
+    const itemKey = getItemKey(productId, weight);
+    if (updatingItems.has(itemKey)) return;
+    const action = change > 0 ? "increase" : "decrease";
     try {
-      setUpdatingItems((prev) => new Set(prev).add(productId));
+      setUpdatingItems((prev) => new Set(prev).add(itemKey));
+      setUpdatingAction((prev) => ({ ...prev, [itemKey]: action }));
       if (change > 0) {
         await increaseItemCount(productId, weight);
       } else {
@@ -275,7 +280,12 @@ export const Cart = () => {
     } finally {
       setUpdatingItems((prev) => {
         const next = new Set(prev);
-        next.delete(productId);
+        next.delete(itemKey);
+        return next;
+      });
+      setUpdatingAction((prev) => {
+        const next = { ...prev };
+        delete next[itemKey];
         return next;
       });
     }
@@ -447,8 +457,11 @@ export const Cart = () => {
               <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 } }}>
                 {cartItems?.map((item) => {
                   const productId = item.productId || item._id || item.id;
-                  const isUpdating = updatingItems.has(productId);
-                  
+                  const itemKey = getItemKey(productId, item.rawWeight ?? item.weight);
+                  const isUpdatingIncrease = updatingItems.has(itemKey) && updatingAction[itemKey] === "increase";
+                  const isUpdatingDecrease = updatingItems.has(itemKey) && updatingAction[itemKey] === "decrease";
+                  const isUpdating = isUpdatingIncrease || isUpdatingDecrease;
+
                   return (
                   <Card
                     key={productId || item.id}
@@ -565,7 +578,7 @@ export const Cart = () => {
                                   "&:disabled": { opacity: 0.5 },
                                 }}
                               >
-                                {isUpdating ? (
+                                {isUpdatingDecrease ? (
                                   <CircularProgress size={16} />
                                 ) : (
                                 <RemoveIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
@@ -591,7 +604,7 @@ export const Cart = () => {
                                   "&:disabled": { opacity: 0.5 },
                                 }}
                               >
-                                {isUpdating ? (
+                                {isUpdatingIncrease ? (
                                   <CircularProgress size={16} />
                                 ) : (
                                 <AddIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
