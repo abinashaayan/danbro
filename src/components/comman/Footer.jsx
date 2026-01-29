@@ -75,17 +75,17 @@ export const Footer = () => {
     { label: "Press and Media", link: "/media" },
     { label: "Events & Catering", link: "/events" },
     { label: "Blogs", link: "/blog" },
+    { label: "About Us", link: "/about-us" },
     { label: "Career at Danbro", link: "/career" },
     { label: "Danbro Institute", link: "/institute" },
   ];
 
   const ourStories = [
-    { label: "About Us", link: "/about-us" },
     { label: "Lucknow Stores", link: "/store" },
-    { label: "Kanpur Stores", link: "/events" },
-    { label: "Ghaziabad Stores", link: "/blogs" },
-    { label: "Noida Stores", link: "/career" },
-    { label: "Delhi Stores", link: "/career-danbro" },
+    { label: "Kanpur Stores", link: "/store" },
+    { label: "Ghaziabad Stores", link: "/store" },
+    { label: "Noida Stores", link: "/store" },
+    { label: "Delhi Stores", link: "/store" },
   ];
 
   const knowMore = [

@@ -209,7 +209,7 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
       }}
       onMouseLeave={(e) => {
         const relatedTarget = e.relatedTarget;
-        if (!relatedTarget || !e.currentTarget.contains(relatedTarget)) {
+        if (!relatedTarget || !(relatedTarget instanceof Node) || !e.currentTarget.contains(relatedTarget)) {
           onClose();
         }
       }}
@@ -221,7 +221,7 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
           },
           onMouseLeave: (e) => {
             const relatedTarget = e.relatedTarget;
-            if (!relatedTarget || !e.currentTarget.contains(relatedTarget)) {
+            if (!relatedTarget || !(relatedTarget instanceof Node) || !e.currentTarget.contains(relatedTarget)) {
               onClose();
             }
           },

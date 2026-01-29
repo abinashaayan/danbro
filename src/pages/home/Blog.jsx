@@ -89,6 +89,7 @@ export const Blog = () => {
         backgroundColor: "#fff",
         pb: { xs: 8, md: 10 },
         p: { xs: 1.25, md: 0 },
+        mb:5
       }}
     >
       {/* ---------------- HERO HEADER ---------------- */}
@@ -188,9 +189,9 @@ export const Blog = () => {
 
         <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
           <Grid size={{ xs: 12, md: 8 }}>
-            {blogs.map((blog) => (
+            {blogs?.map((blog) => (
               <Box
-                key={blog.id}
+                key={blog?.id}
                 sx={{
                   display: "flex",
                   gap: { xs: 2, sm: 2.5, md: 3, lg: 3 },
@@ -211,8 +212,8 @@ export const Blog = () => {
                   }}
                 >
                   <img
-                    src={blog.image}
-                    alt={blog.title}
+                    src={blog?.image}
+                    alt={blog?.title}
                     loading="lazy"
                     style={{
                       width: "100%",
@@ -233,7 +234,7 @@ export const Blog = () => {
                       color: "#9a9a9a",
                     }}
                   >
-                    {blog.category}
+                    {blog?.category}
                   </CustomText>
 
                   <CustomText
@@ -244,7 +245,7 @@ export const Blog = () => {
                       color: "#111",
                     }}
                   >
-                    {blog.title}
+                    {blog?.title}
                   </CustomText>
 
                   <CustomText
@@ -254,7 +255,7 @@ export const Blog = () => {
                       mb: 1,
                     }}
                   >
-                    {blog.date} • Posted by {blog.author}
+                    {blog?.date} • Posted by {blog?.author}
                   </CustomText>
 
                   <CustomText
@@ -265,9 +266,9 @@ export const Blog = () => {
                       mb: 2.5,
                     }}
                   >
-                    {blog.description.length > 200
-                      ? blog.description.slice(0, 200) + "..."
-                      : blog.description}
+                    {blog?.description.length > 200
+                      ? blog?.description.slice(0, 200) + "..."
+                      : blog?.description}
                   </CustomText>
 
                   <Button
@@ -424,7 +425,6 @@ export const Blog = () => {
             display: "flex",
             gap: { xs: 0.5, sm: 1, md: 1 },
             justifyContent: "center",
-            mt: { xs: 3, sm: 3.5, md: 4, lg: 4 },
             flexWrap: "wrap",
             opacity: visibleSections.pagination ? 1 : 0,
             transform: visibleSections.pagination ? "translateY(0)" : "translateY(30px)",
