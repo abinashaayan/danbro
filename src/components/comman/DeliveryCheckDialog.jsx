@@ -123,13 +123,24 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
 
       let addressLabel = "Selected location";
       try {
-        if (window.google && window.google.maps && window.google.maps.Geocoder) {
+        if (window.google?.maps?.Geocoder) {
           const geocoder = new window.google.maps.Geocoder();
-          const response = await geocoder.geocode({
-            location: { lat: location.lat, lng: location.long },
+          const response = await new Promise((resolve, reject) => {
+            geocoder.geocode(
+              { location: { lat: location.lat, lng: location.long } },
+              (results, status) => {
+                const ok = status === (window.google.maps.GeocoderStatus?.OK || "OK");
+                if (ok && Array.isArray(results) && results[0]?.formatted_address) {
+                  resolve({ results, status });
+                } else {
+                  resolve({ results: [], status });
+                }
+              }
+            );
           });
-          if (Array.isArray(response.results) && response.results[0]?.formatted_address) {
-            addressLabel = response.results[0].formatted_address;
+          const results = response?.results;
+          if (Array.isArray(results) && results[0]?.formatted_address) {
+            addressLabel = results[0].formatted_address;
           }
         }
       } catch (geoError) {

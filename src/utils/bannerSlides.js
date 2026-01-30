@@ -52,7 +52,7 @@ export const bannerSlides = [
     captionPosition: "left"
   },
   {
-    id: 1,
+    id: 6,
     img: bannerSlide5,
     alt: "Fresh bakery products",
     title: "Fresh Baked Daily",

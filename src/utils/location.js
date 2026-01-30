@@ -15,9 +15,10 @@ export const getCurrentLocation = () => {
         });
       },
       (error) => {
-        // Default to a fallback location (can be set to a default city)
-        console.warn('Error getting location:', error);
-        // Default location (example: Lucknow, India)
+        // User denied (1), unavailable (2), or timeout (3) — use default location silently
+        if (error?.code !== 1) {
+          console.warn('Location unavailable:', error?.message || error);
+        }
         resolve({
           lat: 26.86957,
           long: 81.00935,

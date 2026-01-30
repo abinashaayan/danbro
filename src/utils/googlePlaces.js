@@ -32,9 +32,13 @@ export const initGooglePlaces = () => {
       return;
     }
 
-    // Load Google Maps script
-    // Note: Replace with your Google Maps API key in environment variable
-    const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'AIzaSyCZnyllT9k7qNHFeuHjVtkSKRIxm-RHOiY';
+    // Load Google Maps script (API key from Jenkins build-arg in production, or .env for local dev)
+    const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!API_KEY) {
+      console.warn('Google Maps API key not set. Set VITE_GOOGLE_MAPS_API_KEY in .env for local dev. Address search will be limited.');
+      resolve();
+      return;
+    }
     const script = document.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     script.async = true;
@@ -78,11 +82,11 @@ export const getPlacePredictions = (input, callback) => {
           }
         );
       } else {
-        console.error('AutocompleteService not initialized');
+        // Expected when VITE_GOOGLE_MAPS_API_KEY is not set (e.g. local dev)
         callback([], 'ERROR');
       }
     }).catch((error) => {
-      console.error('Error initializing Google Places:', error);
+      console.warn('Google Places not available:', error?.message || error);
       callback([], 'ERROR');
     });
     return;

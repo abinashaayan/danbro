@@ -30,7 +30,7 @@ export const HeroBanner = () => {
               <div className="des">{slide.subtitle}</div>
               <a
                 className="seeMore"
-                href="https://github.com/MDJAmin"
+                href="http://34.206.193.218:5556"
                 target="_blank"
                 rel="noreferrer"
               >
