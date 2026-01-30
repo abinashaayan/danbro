@@ -382,7 +382,7 @@ export const ProductDetails = () => {
 
   return (
     <Box sx={{ overflowX: "hidden", maxWidth: "100%" }}>
-      <Container maxWidth="lg" sx={{ pb: { xs: 4, sm: 5, md: 6 }, px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%" }}>
+      <Container maxWidth="lg" sx={{ pb: { xs: 4, sm: 5, md: 6 }, p: { xs: 1.5, sm: 2, md: 3 }, maxWidth: "100%" }}>
         <Breadcrumbs sx={{ mb: { xs: 2, sm: 3, md: 4 }, overflow: "hidden", textOverflow: "ellipsis" }}>
           <Link
             component="button"
@@ -451,8 +451,8 @@ export const ProductDetails = () => {
                   ref={imageContainerRef}
                   sx={{
                     width: "100%",
-                    height: { xs: 280, sm: 340, md: "100%" },
-                    minHeight: { xs: 280, sm: 340, md: 380 },
+                    height: { xs: 260, sm: 320, md: 420 },
+                    minHeight: { xs: 260, sm: 320, md: 420 },
                     borderRadius: 1,
                     overflow: "hidden",
                     backgroundColor: "#f5f5f5",

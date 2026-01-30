@@ -21,7 +21,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
-  
+
   // Use prop categories if provided, otherwise use hook categories
   const categories = propCategories || hookCategories;
   const isLoading = propCategories ? false : loading;
@@ -70,19 +70,45 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
 
   const settings = {
     infinite: true,
-    speed: 600,
+    speed: 500,
     slidesToShow: 6,
-    slidesToScroll: 2,
+    slidesToScroll: 1,
     arrows: false,
     autoplay: true,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 3500,
     pauseOnHover: true,
-    cssEase: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+    swipeToSlide: true,
+    touchThreshold: 10,
+    cssEase: "ease-out",
     responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 5 } },
-      { breakpoint: 992, settings: { slidesToShow: 4 } },
-      { breakpoint: 768, settings: { slidesToShow: 3 } },
-      { breakpoint: 576, settings: { slidesToShow: 2 } },
+      {
+        breakpoint: 1200,
+        settings: { slidesToShow: 5 }
+      },
+      {
+        breakpoint: 992,
+        settings: { slidesToShow: 4 }
+      },
+      {
+        breakpoint: 768, // tablet
+        settings: { slidesToShow: 3 }
+      },
+      {
+        breakpoint: 600, // mobile landscape / large phones
+        settings: {
+          slidesToShow: 2.2, // slightly show next slide to encourage swipe
+          autoplay: false,
+          arrows: false
+        }
+      },
+      {
+        breakpoint: 480, // mobile portrait
+        settings: {
+          slidesToShow: 1.8, // show part of next slide
+          autoplay: false,
+          arrows: false
+        }
+      }
     ],
   };
 
@@ -157,6 +183,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
             <IconButton
               onClick={() => sliderRef?.slickPrev()}
               sx={{
+                display: { xs: "none", md: "flex" }, // Hide on mobile
                 position: "absolute",
                 left: { xs: 5, md: 10 },
                 top: "50%",
@@ -314,6 +341,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
             <IconButton
               onClick={() => sliderRef?.slickNext()}
               sx={{
+                display: { xs: "none", md: "flex" }, // Hide on mobile
                 position: "absolute",
                 right: { xs: 5, md: 10 },
                 top: "50%",
