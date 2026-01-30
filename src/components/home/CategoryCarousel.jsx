@@ -1,7 +1,7 @@
-import Slider from "react-slick";
 import { Box, IconButton, CircularProgress, Alert } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import cat1 from "../../assets/09f1ee59e9d78cc206e6e867e1cda04c1887d8f8.png";
 import cat2 from "../../assets/60be109ca830b1d8ab92f161cd0ca3083a16e4ca.png";
 import cat3 from "../../assets/43676d15934fc50bdda59d3e39fd8a4ceaadcb9e.png";
@@ -16,7 +16,7 @@ const getCategoryImage = (categoryName, index) => {
 };
 
 export const CategoryCarousel = ({ categories: propCategories }) => {
-  let sliderRef = null;
+  const carouselRef = useRef(null);
   const { categories: hookCategories, loading, error } = useItemCategories();
   const navigate = useNavigate();
   const [visible, setVisible] = useState(false);
@@ -68,49 +68,6 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
     brandid: category?.brandid,
   }));
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 6,
-    slidesToScroll: 1,
-    arrows: false,
-    autoplay: true,
-    autoplaySpeed: 3500,
-    pauseOnHover: true,
-    swipeToSlide: true,
-    touchThreshold: 10,
-    cssEase: "ease-out",
-    responsive: [
-      {
-        breakpoint: 1200,
-        settings: { slidesToShow: 5 }
-      },
-      {
-        breakpoint: 992,
-        settings: { slidesToShow: 4 }
-      },
-      {
-        breakpoint: 768, // tablet
-        settings: { slidesToShow: 3 }
-      },
-      {
-        breakpoint: 600, // mobile landscape / large phones
-        settings: {
-          slidesToShow: 2.2, // slightly show next slide to encourage swipe
-          autoplay: false,
-          arrows: false
-        }
-      },
-      {
-        breakpoint: 480, // mobile portrait
-        settings: {
-          slidesToShow: 1.8, // show part of next slide
-          autoplay: false,
-          arrows: false
-        }
-      }
-    ],
-  };
 
   const handleToProductList = (categoryId) => {
     navigate(`/products?categoryId=${categoryId}`)
@@ -180,37 +137,38 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
             ))}
 
             {/* Left Arrow */}
-            <IconButton
-              onClick={() => sliderRef?.slickPrev()}
+            <CustomCarouselArrow
+              direction="prev"
+              onClick={() => carouselRef.current?.handlePrev()}
               sx={{
                 display: { xs: "none", md: "flex" }, // Hide on mobile
-                position: "absolute",
-                left: { xs: 5, md: 10 },
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 10,
-                backgroundColor: "#fff",
-                border: "2px solid rgba(255,181,161,0.3)",
-                width: { xs: 40, md: 50 },
-                height: { xs: 40, md: 50 },
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                "&:hover": {
-                  backgroundColor: "var(--themeColor)",
-                  borderColor: "var(--themeColor)",
-                  transform: "translateY(-50%) scale(1.1)",
-                  "& svg": {
-                    color: "#fff",
-                  },
-                },
               }}
             >
               <ArrowBackIosNewIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 24 } }} />
-            </IconButton>
+            </CustomCarouselArrow>
 
             {/* Carousel */}
             <Box sx={{ position: "relative", zIndex: 1 }}>
-              <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
+              <CustomCarousel
+                ref={carouselRef}
+                slidesToShow={6}
+                slidesToScroll={1}
+                autoplay={true}
+                autoplaySpeed={3500}
+                pauseOnHover={true}
+                swipeToSlide={true}
+                infinite={true}
+                speed={500}
+                cssEase="ease-out"
+                arrows={false}
+                responsive={[
+                  { breakpoint: 1200, settings: { slidesToShow: 5 } },
+                  { breakpoint: 992, settings: { slidesToShow: 4 } },
+                  { breakpoint: 768, settings: { slidesToShow: 3 } },
+                  { breakpoint: 600, settings: { slidesToShow: 2.2, autoplay: false } },
+                  { breakpoint: 480, settings: { slidesToShow: 1.8, autoplay: false } }
+                ]}
+              >
                 {items?.map((item, i) => (
                   <Box
                     key={item.id || i}
@@ -334,37 +292,19 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                     </Box>
                   </Box>
                 ))}
-              </Slider>
+              </CustomCarousel>
             </Box>
 
             {/* Right Arrow */}
-            <IconButton
-              onClick={() => sliderRef?.slickNext()}
+            <CustomCarouselArrow
+              direction="next"
+              onClick={() => carouselRef.current?.handleNext()}
               sx={{
                 display: { xs: "none", md: "flex" }, // Hide on mobile
-                position: "absolute",
-                right: { xs: 5, md: 10 },
-                top: "50%",
-                transform: "translateY(-50%)",
-                zIndex: 10,
-                backgroundColor: "#fff",
-                border: "2px solid rgba(255,181,161,0.3)",
-                width: { xs: 40, md: 50 },
-                height: { xs: 40, md: 50 },
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                "&:hover": {
-                  backgroundColor: "var(--themeColor)",
-                  borderColor: "var(--themeColor)",
-                  transform: "translateY(-50%) scale(1.1)",
-                  "& svg": {
-                    color: "#fff",
-                  },
-                },
               }}
             >
               <ArrowForwardIosIcon sx={{ color: "var(--themeColor)", fontSize: { xs: 20, md: 24 } }} />
-            </IconButton>
+            </CustomCarouselArrow>
           </Box>
         </Box>
       </Box>

@@ -4,7 +4,7 @@ import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
 import { useState, useRef } from "react";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import { CakeSection } from "./Cake";
 import { PersonalisedInstant } from "./PersonalisedInstant";
 import { TestimonialsSection } from "./TestimonialsSection";
@@ -139,20 +139,12 @@ const specialMoments = [
 export const OffersSection = () => {
   const [activeTab, setActiveTab] = useState("Danbro Special");
   const isMobile = useMediaQuery("(max-width:899px)");
-  let sliderRef = useRef(null);
+  const sliderRef = useRef(null);
   const filteredItems =
     activeTab === "Others"
       ? offers
       : offers.filter((item) => item.category === activeTab);
 
-  const sliderSettings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    dots: false,
-  };
 
   return (
     <Box>
@@ -219,22 +211,33 @@ export const OffersSection = () => {
         {/* Offer */}
         {isMobile ? (
           <Box sx={{ position: "relative", mb: { xs: 6, md: 8 } }}>
-            <IconButton
-              onClick={() => sliderRef?.slickPrev()}
+            <CustomCarouselArrow
+              direction="prev"
+              onClick={() => sliderRef.current?.handlePrev()}
               sx={{
                 position: "absolute",
                 left: { xs: -10, sm: -15 },
                 top: "50%",
                 transform: "translateY(-50%)",
                 zIndex: 10,
+                width: 40,
+                height: 40,
                 bgcolor: "#fff",
                 boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                 "&:hover": { bgcolor: "#fff4f0" },
               }}
             >
               <ArrowBackIosNewIcon />
-            </IconButton>
-            <Slider ref={(slider) => (sliderRef = slider)} {...sliderSettings}>
+            </CustomCarouselArrow>
+            <CustomCarousel
+              ref={sliderRef}
+              slidesToShow={1}
+              slidesToScroll={1}
+              infinite={true}
+              speed={500}
+              arrows={false}
+              dots={false}
+            >
               {filteredItems?.map((offer, index) => (
                 <Box key={index} sx={{ px: 1 }}>
                   {(() => {
@@ -381,22 +384,25 @@ export const OffersSection = () => {
                   })()}
                 </Box>
               ))}
-            </Slider>
-            <IconButton
-              onClick={() => sliderRef?.slickNext()}
+            </CustomCarousel>
+            <CustomCarouselArrow
+              direction="next"
+              onClick={() => sliderRef.current?.handleNext()}
               sx={{
                 position: "absolute",
                 right: { xs: -10, sm: -15 },
                 top: "50%",
                 transform: "translateY(-50%)",
                 zIndex: 10,
+                width: 40,
+                height: 40,
                 bgcolor: "#fff",
                 boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                 "&:hover": { bgcolor: "#fff4f0" },
               }}
             >
               <ArrowForwardIosIcon />
-            </IconButton>
+            </CustomCarouselArrow>
           </Box>
         ) : (
           <Box

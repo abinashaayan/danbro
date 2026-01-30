@@ -3,7 +3,7 @@ import { CustomText } from "../comman/CustomText";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState, useRef } from "react";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import img1 from "../../assets/cakeimg.png";
 import img2 from "../../assets/cakeimg.png";
 import img3 from "../../assets/cakeimg.png";
@@ -52,16 +52,8 @@ const articleList = [
 export const Artical = () => {
     const [active, setActive] = useState(0);
     const isMobile = useMediaQuery("(max-width:899px)");
-    let articlesSliderRef = useRef(null);
+    const articlesSliderRef = useRef(null);
 
-    const sliderSettings = {
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        dots: false,
-    };
 
 
     return (
@@ -138,22 +130,30 @@ export const Artical = () => {
             <Container sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
                 {isMobile ? (
                     <Box sx={{ position: "relative" }}>
-                        <IconButton
-                            onClick={() => articlesSliderRef?.slickPrev()}
+                        <CustomCarouselArrow
+                            direction="prev"
+                            onClick={() => articlesSliderRef.current?.handlePrev()}
                             sx={{
                                 position: "absolute",
                                 left: -10,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                zIndex: 10,
+                                width: 40,
+                                height: 40,
                                 bgcolor: "#fff",
                                 boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                                 "&:hover": { bgcolor: "#fff4f0" },
                             }}
                         >
                             <ArrowBackIosNewIcon />
-                        </IconButton>
-                        <Slider ref={(slider) => (articlesSliderRef = slider)} {...sliderSettings}>
+                        </CustomCarouselArrow>
+                        <CustomCarousel
+                            ref={articlesSliderRef}
+                            slidesToShow={1}
+                            slidesToScroll={1}
+                            infinite={true}
+                            speed={500}
+                            arrows={false}
+                            dots={false}
+                        >
                             {articleList?.map((item, i) => (
                                 <Box key={i} sx={{ px: 1 }}>
                                     {(() => {
@@ -243,22 +243,22 @@ export const Artical = () => {
                                     })()}
                                 </Box>
                             ))}
-                        </Slider>
-                        <IconButton
-                            onClick={() => articlesSliderRef?.slickNext()}
+                        </CustomCarousel>
+                        <CustomCarouselArrow
+                            direction="next"
+                            onClick={() => articlesSliderRef.current?.handleNext()}
                             sx={{
                                 position: "absolute",
                                 right: -10,
-                                top: "50%",
-                                transform: "translateY(-50%)",
-                                zIndex: 10,
+                                width: 40,
+                                height: 40,
                                 bgcolor: "#fff",
                                 boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                                 "&:hover": { bgcolor: "#fff4f0" },
                             }}
                         >
                             <ArrowForwardIosIcon />
-                        </IconButton>
+                        </CustomCarouselArrow>
                     </Box>
                 ) : (
                     <Grid container spacing={{ xs: 2, sm: 2, md: 2.5, lg: 3 }}>

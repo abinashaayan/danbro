@@ -1,6 +1,6 @@
 import { Box, IconButton, CircularProgress } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useRef, useEffect, useState, memo, useMemo, useCallback } from "react";
@@ -22,7 +22,7 @@ export const ProductSectionCarousel = memo(({
   showBadge = true
 }) => {
   const navigate = useNavigate();
-  let sliderRef = useRef(null);
+  const sliderRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const sectionRef = useRef(null);
@@ -281,33 +281,51 @@ export const ProductSectionCarousel = memo(({
 
       {/* Products Carousel */}
       <Box sx={{ position: "relative", zIndex: 1 }}>
-        <IconButton
-          onClick={() => sliderRef?.slickPrev()}
+        <CustomCarouselArrow
+          direction="prev"
+          onClick={() => sliderRef.current?.handlePrev()}
           sx={{
             position: "absolute",
             left: { xs: -15, md: -25 },
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 10,
-            bgcolor: "#fff",
-            color: "var(--themeColor)",
-            width: { xs: 45, md: 55 },
-            height: { xs: 45, md: 55 },
-            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            border: "2px solid rgba(255,181,161,0.2)",
+            backgroundColor: "#fff",
+            border: "2px solid rgba(255,181,161,0.3)",
+            width: { xs: 40, md: 50 },
+            height: { xs: 40, md: 50 },
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
             "&:hover": {
-              bgcolor: "var(--themeColor)",
-              color: "#fff",
+              backgroundColor: "var(--themeColor)",
+              borderColor: "var(--themeColor)",
               transform: "translateY(-50%) scale(1.1)",
-              boxShadow: "0 8px 25px rgba(95,41,48,0.3)",
+              "& svg": {
+                color: "#fff",
+              },
             },
           }}
         >
           <ArrowBackIosNewIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
-        </IconButton>
+        </CustomCarouselArrow>
 
-        <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
+        <CustomCarousel
+          ref={sliderRef}
+          slidesToShow={4}
+          slidesToScroll={1}
+          infinite={true}
+          speed={600}
+          arrows={false}
+          autoplay={true}
+          autoplaySpeed={4000}
+          pauseOnHover={true}
+          responsive={[
+            { breakpoint: 1200, settings: { slidesToShow: 3 } },
+            { breakpoint: 992, settings: { slidesToShow: 3 } },
+            { breakpoint: 768, settings: { slidesToShow: 2 } },
+            { breakpoint: 576, settings: { slidesToShow: 1 } },
+          ]}
+        >
           {products?.map((product, index) => (
             <Box
               key={product?.id || index}
@@ -534,33 +552,35 @@ export const ProductSectionCarousel = memo(({
               </Box>
             </Box>
           ))}
-        </Slider>
+        </CustomCarousel>
 
-        <IconButton
-          onClick={() => sliderRef?.slickNext()}
+        <CustomCarouselArrow
+          direction="next"
+          onClick={() => sliderRef.current?.handleNext()}
           sx={{
             position: "absolute",
             right: { xs: -15, md: -25 },
             top: "50%",
             transform: "translateY(-50%)",
             zIndex: 10,
-            bgcolor: "#fff",
-            color: "var(--themeColor)",
-            width: { xs: 45, md: 55 },
-            height: { xs: 45, md: 55 },
-            boxShadow: "0 6px 20px rgba(0,0,0,0.12)",
-            border: "2px solid rgba(255,181,161,0.2)",
+            backgroundColor: "#fff",
+            border: "2px solid rgba(255,181,161,0.3)",
+            width: { xs: 40, md: 50 },
+            height: { xs: 40, md: 50 },
             transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
             "&:hover": {
-              bgcolor: "var(--themeColor)",
-              color: "#fff",
+              backgroundColor: "var(--themeColor)",
+              borderColor: "var(--themeColor)",
               transform: "translateY(-50%) scale(1.1)",
-              boxShadow: "0 8px 25px rgba(95,41,48,0.3)",
+              "& svg": {
+                color: "#fff",
+              },
             },
           }}
         >
           <ArrowForwardIosIcon sx={{ fontSize: { xs: 20, md: 24 } }} />
-        </IconButton>
+        </CustomCarouselArrow>
 
         {/* Custom Dots */}
         <Box

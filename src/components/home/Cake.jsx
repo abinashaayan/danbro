@@ -7,7 +7,7 @@ import offer1 from "../../assets/Group 8.png";
 import offer2 from "../../assets/Group 8 (2).png";
 import offer3 from "../../assets/Group 8 (1).png";
 import { useState, useRef } from "react";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import { TabButton } from "../comman/TabButton";
 
 const categoryTabs = ["Category 1", "Category 2", "Category 3", "Category 4"];
@@ -147,20 +147,12 @@ export const CakeSection = () => {
     const [activeBreadTab, setActiveBreadTab] = useState("Fresh Bread");
     const [activeComboTab, setActiveComboTab] = useState("Birthday Combos");
     
-    let cakesSliderRef = useRef(null);
-    let pastriesSliderRef = useRef(null);
-    let cookiesSliderRef = useRef(null);
-    let breadsSliderRef = useRef(null);
-    let combosSliderRef = useRef(null);
+    const cakesSliderRef = useRef(null);
+    const pastriesSliderRef = useRef(null);
+    const cookiesSliderRef = useRef(null);
+    const breadsSliderRef = useRef(null);
+    const combosSliderRef = useRef(null);
 
-    const sliderSettings = {
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        arrows: false,
-        dots: false,
-    };
 
     const filteredCategoryItems =
         activeCategoryTab === "Category 1"
@@ -245,22 +237,33 @@ export const CakeSection = () => {
             {/* Cake Cards */}
             {isMobile ? (
                 <Box sx={{ position: "relative" }}>
-                    <IconButton
-                        onClick={() => cakesSliderRef?.slickPrev()}
+                    <CustomCarouselArrow
+                        direction="prev"
+                        onClick={() => cakesSliderRef.current?.handlePrev()}
                         sx={{
                             position: "absolute",
                             left: -10,
                             top: "50%",
                             transform: "translateY(-50%)",
                             zIndex: 10,
+                            width: 40,
+                            height: 40,
                             bgcolor: "#fff",
                             boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                             "&:hover": { bgcolor: "#fff4f0" },
                         }}
                     >
                         <ArrowBackIosNewIcon />
-                    </IconButton>
-                    <Slider ref={(slider) => (cakesSliderRef = slider)} {...sliderSettings}>
+                    </CustomCarouselArrow>
+                    <CustomCarousel
+                        ref={cakesSliderRef}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        infinite={true}
+                        speed={500}
+                        arrows={false}
+                        dots={false}
+                    >
                         {filteredCategoryItems?.map((offer, index) => (
                             <Box key={index} sx={{ px: 1 }}>
                                 {(() => {
@@ -437,22 +440,25 @@ export const CakeSection = () => {
                                 })()}
                             </Box>
                         ))}
-                    </Slider>
-                    <IconButton
-                        onClick={() => cakesSliderRef?.slickNext()}
+                    </CustomCarousel>
+                    <CustomCarouselArrow
+                        direction="next"
+                        onClick={() => cakesSliderRef.current?.handleNext()}
                         sx={{
                             position: "absolute",
                             right: -10,
                             top: "50%",
                             transform: "translateY(-50%)",
                             zIndex: 10,
+                            width: 40,
+                            height: 40,
                             bgcolor: "#fff",
                             boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
                             "&:hover": { bgcolor: "#fff4f0" },
                         }}
                     >
                         <ArrowForwardIosIcon />
-                    </IconButton>
+                    </CustomCarouselArrow>
                 </Box>
             ) : (
                 <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr 1fr" }, gap: { xs: 3, md: 4 }, }}>
@@ -704,7 +710,7 @@ export const CakeSection = () => {
             {isMobile ? (
                 <Box sx={{ position: "relative", mt: 4 }}>
                     <IconButton
-                        onClick={() => pastriesSliderRef?.slickPrev()}
+                        onClick={() => pastriesSliderRef.current?.handlePrev()}
                         sx={{
                             position: "absolute",
                             left: -10,
@@ -718,7 +724,15 @@ export const CakeSection = () => {
                     >
                         <ArrowBackIosNewIcon />
                     </IconButton>
-                    <Slider ref={(slider) => (pastriesSliderRef = slider)} {...sliderSettings}>
+                    <CustomCarousel
+                        ref={pastriesSliderRef}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        infinite={true}
+                        speed={500}
+                        arrows={false}
+                        dots={false}
+                    >
                         {filteredPastries?.map((item, index) => (
                             <Box key={index} sx={{ px: 1 }}>
                                 {(() => {
@@ -837,9 +851,9 @@ export const CakeSection = () => {
                                 })()}
                             </Box>
                         ))}
-                    </Slider>
+                    </CustomCarousel>
                     <IconButton
-                        onClick={() => pastriesSliderRef?.slickNext()}
+                        onClick={() => pastriesSliderRef.current?.handleNext()}
                         sx={{
                             position: "absolute",
                             right: -10,
@@ -1035,7 +1049,7 @@ export const CakeSection = () => {
             {isMobile ? (
                 <Box sx={{ position: "relative", mt: 4 }}>
                     <IconButton
-                        onClick={() => cookiesSliderRef?.slickPrev()}
+                        onClick={() => cookiesSliderRef.current?.handlePrev()}
                         sx={{
                             position: "absolute",
                             left: -10,
@@ -1049,7 +1063,15 @@ export const CakeSection = () => {
                     >
                         <ArrowBackIosNewIcon />
                     </IconButton>
-                    <Slider ref={(slider) => (cookiesSliderRef = slider)} {...sliderSettings}>
+                    <CustomCarousel
+                        ref={cookiesSliderRef}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        infinite={true}
+                        speed={500}
+                        arrows={false}
+                        dots={false}
+                    >
                         {filteredCookies?.map((item, index) => (
                             <Box key={index} sx={{ px: 1 }}>
                                 {(() => {
@@ -1153,9 +1175,9 @@ export const CakeSection = () => {
                                 })()}
                             </Box>
                         ))}
-                    </Slider>
+                    </CustomCarousel>
                     <IconButton
-                        onClick={() => cookiesSliderRef?.slickNext()}
+                        onClick={() => cookiesSliderRef.current?.handleNext()}
                         sx={{
                             position: "absolute",
                             right: -10,
@@ -1329,7 +1351,7 @@ export const CakeSection = () => {
             {isMobile ? (
                 <Box sx={{ position: "relative", mt: 4 }}>
                     <IconButton
-                        onClick={() => breadsSliderRef?.slickPrev()}
+                        onClick={() => breadsSliderRef.current?.handlePrev()}
                         sx={{
                             position: "absolute",
                             left: -10,
@@ -1343,7 +1365,15 @@ export const CakeSection = () => {
                     >
                         <ArrowBackIosNewIcon />
                     </IconButton>
-                    <Slider ref={(slider) => (breadsSliderRef = slider)} {...sliderSettings}>
+                    <CustomCarousel
+                        ref={breadsSliderRef}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        infinite={true}
+                        speed={500}
+                        arrows={false}
+                        dots={false}
+                    >
                         {filteredBreads?.map((item, index) => (
                             <Box key={index} sx={{ px: 1 }}>
                                 {(() => {
@@ -1447,9 +1477,9 @@ export const CakeSection = () => {
                                 })()}
                             </Box>
                         ))}
-                    </Slider>
+                    </CustomCarousel>
                     <IconButton
-                        onClick={() => breadsSliderRef?.slickNext()}
+                        onClick={() => breadsSliderRef.current?.handleNext()}
                         sx={{
                             position: "absolute",
                             right: -10,
@@ -1623,7 +1653,7 @@ export const CakeSection = () => {
             {isMobile ? (
                 <Box sx={{ position: "relative", mt: 4 }}>
                     <IconButton
-                        onClick={() => combosSliderRef?.slickPrev()}
+                        onClick={() => combosSliderRef.current?.handlePrev()}
                         sx={{
                             position: "absolute",
                             left: -10,
@@ -1637,7 +1667,15 @@ export const CakeSection = () => {
                     >
                         <ArrowBackIosNewIcon />
                     </IconButton>
-                    <Slider ref={(slider) => (combosSliderRef = slider)} {...sliderSettings}>
+                    <CustomCarousel
+                        ref={combosSliderRef}
+                        slidesToShow={1}
+                        slidesToScroll={1}
+                        infinite={true}
+                        speed={500}
+                        arrows={false}
+                        dots={false}
+                    >
                         {filteredCombos?.map((item, index) => (
                             <Box key={index} sx={{ px: 1 }}>
                                 {(() => {
@@ -1741,9 +1779,9 @@ export const CakeSection = () => {
                                 })()}
                             </Box>
                         ))}
-                    </Slider>
+                    </CustomCarousel>
                     <IconButton
-                        onClick={() => combosSliderRef?.slickNext()}
+                        onClick={() => combosSliderRef.current?.handleNext()}
                         sx={{
                             position: "absolute",
                             right: -10,

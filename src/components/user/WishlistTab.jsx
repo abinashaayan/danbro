@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert, Typography, useTheme, useMediaQuery } from "@mui/material";
 import { Favorite as FavoriteIcon } from "@mui/icons-material";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import { CustomText } from "../comman/CustomText";
 import { getWishlist, removeFromWishlist } from "../../utils/wishlist";
 import { getAccessToken } from "../../utils/cookies";
@@ -21,16 +21,6 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
   const [error, setError] = useState(null);
   const [removingId, setRemovingId] = useState(null);
 
-  const mobileSliderSettings = {
-    dots: true,
-    infinite: wishlistItems.length > 1,
-    speed: 400,
-    slidesToShow: 1.15,
-    slidesToScroll: 1,
-    arrows: false,
-    swipeToSlide: true,
-    adaptiveHeight: true,
-  };
 
   const formatWishlistItem = (item) => {
     const product = item?.product || item;
@@ -294,14 +284,23 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
           </CustomText>
         </Box>
       ) : isMobileView ? (
-        <Box sx={{ overflow: "hidden", mx: -1, "& .slick-list": { overflow: "visible" }, "& .slick-slide": { px: 0.5 }, "& .slick-dots": { bottom: -8 } }}>
-          <Slider ref={sliderRef} {...mobileSliderSettings}>
+        <Box sx={{ overflow: "hidden", mx: -1 }}>
+          <CustomCarousel
+            ref={sliderRef}
+            dots={true}
+            infinite={wishlistItems.length > 1}
+            speed={400}
+            slidesToShow={1.15}
+            slidesToScroll={1}
+            arrows={false}
+            swipeToSlide={true}
+          >
             {wishlistItems?.map((item) => (
               <Box key={item?.id}>
                 {renderCard(item)}
               </Box>
             ))}
-          </Slider>
+          </CustomCarousel>
         </Box>
       ) : (
         <Grid container spacing={{ xs: 2, md: 3 }} sx={{ justifyContent: { xs: "flex-start", md: "center" } }}>

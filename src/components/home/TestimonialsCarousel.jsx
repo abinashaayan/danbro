@@ -1,6 +1,6 @@
 import { Box, Container, IconButton, Avatar, Chip, Stack } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useRef, useEffect, useState } from "react";
@@ -61,7 +61,7 @@ const testimonials = [
 ];
 
 export const TestimonialsCarousel = () => {
-  let sliderRef = null;
+  const sliderRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const sectionRef = useRef(null);
@@ -95,6 +95,10 @@ export const TestimonialsCarousel = () => {
     fade: true,
     cssEase: "cubic-bezier(0.4, 0, 0.2, 1)",
     beforeChange: (current, next) => setCurrentSlide(next),
+  };
+
+  const handleBeforeChange = (current, next) => {
+    setCurrentSlide(next);
   };
 
   return (
@@ -141,62 +145,82 @@ export const TestimonialsCarousel = () => {
         {/* Single Card Carousel */}
         <Box sx={{ position: "relative", maxWidth: { xs: "100%", md: "900px" }, mx: "auto" }}>
           {/* Navigation Buttons */}
-          <IconButton
-            onClick={() => sliderRef?.slickPrev()}
+          <CustomCarouselArrow
+            direction="prev"
+            onClick={() => sliderRef.current?.handlePrev()}
             sx={{
               position: "absolute",
               left: { xs: -10, md: -70 },
               top: "50%",
               transform: "translateY(-50%)",
               zIndex: 10,
-              bgcolor: "#fff",
-              color: "var(--themeColor)",
-              width: { xs: 50, md: 64 },
-              height: { xs: 50, md: 64 },
-              boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-              border: "2px solid rgba(255,148,114,0.15)",
+              width: { xs: 45, md: 55 },
+              height: { xs: 45, md: 55 },
+              backgroundColor: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(255,181,161,0.3)",
+              borderRadius: "50%",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
               transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
               "&:hover": {
-                bgcolor: "var(--themeColor)",
-                color: "#fff",
-                transform: "translateY(-50%) scale(1.1)",
-                boxShadow: "0 12px 32px rgba(95,41,48,0.4)",
+                backgroundColor: "var(--themeColor)",
                 borderColor: "var(--themeColor)",
+                transform: "translateY(-50%) scale(1.1)",
+                "& svg": {
+                  color: "#fff",
+                },
               },
             }}
           >
             <ArrowBackIosNewIcon sx={{ fontSize: { xs: 22, md: 26 } }} />
-          </IconButton>
+          </CustomCarouselArrow>
 
-          <IconButton
-            onClick={() => sliderRef?.slickNext()}
+          <CustomCarouselArrow
+            direction="next"
+            onClick={() => sliderRef.current?.handleNext()}
             sx={{
               position: "absolute",
               right: { xs: -10, md: -70 },
               top: "50%",
               transform: "translateY(-50%)",
               zIndex: 10,
-              bgcolor: "#fff",
-              color: "var(--themeColor)",
-              width: { xs: 50, md: 64 },
-              height: { xs: 50, md: 64 },
-              boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
-              border: "2px solid rgba(255,148,114,0.15)",
+              width: { xs: 45, md: 55 },
+              height: { xs: 45, md: 55 },
+              backgroundColor: "rgba(255,255,255,0.9)",
+              backdropFilter: "blur(10px)",
+              border: "2px solid rgba(255,181,161,0.3)",
+              borderRadius: "50%",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
               transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
               "&:hover": {
-                bgcolor: "var(--themeColor)",
-                color: "#fff",
-                transform: "translateY(-50%) scale(1.1)",
-                boxShadow: "0 12px 32px rgba(95,41,48,0.4)",
+                backgroundColor: "var(--themeColor)",
                 borderColor: "var(--themeColor)",
+                transform: "translateY(-50%) scale(1.1)",
+                "& svg": {
+                  color: "#fff",
+                },
               },
             }}
           >
             <ArrowForwardIosIcon sx={{ fontSize: { xs: 22, md: 26 } }} />
-          </IconButton>
+          </CustomCarouselArrow>
 
           {/* Carousel Slider */}
-          <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
+          <CustomCarousel
+            ref={sliderRef}
+            slidesToShow={1}
+            slidesToScroll={1}
+            infinite={true}
+            speed={600}
+            arrows={false}
+            dots={true}
+            autoplay={true}
+            autoplaySpeed={5000}
+            pauseOnHover={true}
+            fade={true}
+            cssEase="cubic-bezier(0.4, 0, 0.2, 1)"
+            beforeChange={handleBeforeChange}
+          >
             {testimonials?.map((testimonial, index) => {
               const isActive = currentSlide === index;
               return (
@@ -356,7 +380,7 @@ export const TestimonialsCarousel = () => {
                 </Box>
               );
             })}
-          </Slider>
+          </CustomCarousel>
 
           {/* Custom Dots */}
           <Box

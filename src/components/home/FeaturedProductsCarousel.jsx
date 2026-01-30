@@ -1,6 +1,6 @@
 import { Box, IconButton, Button, CircularProgress } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
-import Slider from "react-slick";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useRef, useEffect, useState } from "react";
@@ -80,7 +80,7 @@ const featuredProducts = [
 
 export const FeaturedProductsCarousel = () => {
   const navigate = useNavigate();
-  let sliderRef = useRef(null);
+  const carouselRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
   const [loadingCart, setLoadingCart] = useState(new Set());
@@ -114,19 +114,45 @@ export const FeaturedProductsCarousel = () => {
     return () => observer.disconnect();
   }, []);
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    arrows: false,
-    dots: false,
-    responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 576, settings: { slidesToShow: 1 } },
-    ],
+  const handleAddToCart = async (e, product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!isLoggedIn) {
+      setToast({
+        open: true,
+        message: "Please login to add items to cart",
+        severity: "info",
+        loading: false
+      });
+      return;
+    }
+
+    const productId = product?.id || product?.productId || product?._id;
+    setLoadingCart(prev => new Set(prev).add(productId));
+
+    try {
+      await addToCart({ productId: productId, quantity: 1 });
+      setToast({
+        open: true,
+        message: "Product added to cart successfully!",
+        severity: "success",
+        loading: false
+      });
+    } catch (error) {
+      setToast({
+        open: true,
+        message: error.message || "Failed to add product to cart",
+        severity: "error",
+        loading: false
+      });
+    } finally {
+      setLoadingCart(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(productId);
+        return newSet;
+      });
+    }
   };
 
   return (
@@ -177,26 +203,31 @@ export const FeaturedProductsCarousel = () => {
 
         {/* Products Carousel */}
         <Box sx={{ position: "relative" }}>
-          <IconButton
-            onClick={() => sliderRef?.slickPrev()}
+          <CustomCarouselArrow
+            direction="prev"
+            onClick={() => carouselRef.current?.handlePrev()}
             sx={{
-              position: "absolute",
               left: { xs: -15, md: -20 },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              bgcolor: "#fff",
-              color: "var(--themeColor)",
-              width: { xs: 40, md: 50 },
-              height: { xs: 40, md: 50 },
-              boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-              "&:hover": { bgcolor: "#f5f5f5", transform: "translateY(-50%) scale(1.1)" },
             }}
           >
             <ArrowBackIosNewIcon />
-          </IconButton>
+          </CustomCarouselArrow>
 
-          <Slider ref={(slider) => (sliderRef = slider)} {...settings}>
+          <CustomCarousel
+            ref={carouselRef}
+            slidesToShow={3}
+            slidesToScroll={1}
+            infinite={true}
+            speed={500}
+            arrows={false}
+            dots={false}
+            responsive={[
+              { breakpoint: 1200, settings: { slidesToShow: 3 } },
+              { breakpoint: 992, settings: { slidesToShow: 2 } },
+              { breakpoint: 768, settings: { slidesToShow: 2 } },
+              { breakpoint: 576, settings: { slidesToShow: 1 } },
+            ]}
+          >
             {featuredProducts.map((product, index) => (
               <Box 
                 key={product.id} 
@@ -432,26 +463,17 @@ export const FeaturedProductsCarousel = () => {
                 </Box>
               </Box>
             ))}
-          </Slider>
+          </CustomCarousel>
 
-          <IconButton
-            onClick={() => sliderRef?.slickNext()}
+          <CustomCarouselArrow
+            direction="next"
+            onClick={() => carouselRef.current?.handleNext()}
             sx={{
-              position: "absolute",
               right: { xs: -15, md: -20 },
-              top: "50%",
-              transform: "translateY(-50%)",
-              zIndex: 10,
-              bgcolor: "#fff",
-              color: "var(--themeColor)",
-              width: { xs: 40, md: 50 },
-              height: { xs: 40, md: 50 },
-              boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-              "&:hover": { bgcolor: "#f5f5f5", transform: "translateY(-50%) scale(1.1)" },
             }}
           >
             <ArrowForwardIosIcon />
-          </IconButton>
+          </CustomCarouselArrow>
         </Box>
 
       {/* Toast Notification */}
