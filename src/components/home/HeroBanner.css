@@ -45,10 +45,10 @@
 
 /* Only 2 small images visible on the right */
 .slide .item:nth-child(3) {
-  left: calc(100% - 616px);
+  left: calc(100% - 550px);
 }
 .slide .item:nth-child(4) {
-  left: calc(100% - 312px);
+  left: calc(100% - 250px);
 }
 .slide .item:nth-child(5),
 .slide .item:nth-child(n + 6) {
