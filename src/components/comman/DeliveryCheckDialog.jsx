@@ -256,7 +256,6 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
                 zIndex: 1,
               }}
             />
-            <LocationOnIcon sx={{ color: "#d32f2f", fontSize: 24, position: "absolute", bottom: 0, zIndex: 2 }} />
           </Box>
         </Box>
 
