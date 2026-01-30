@@ -63,7 +63,7 @@ export const HeroBanner = () => {
           alignItems: "center",
           px: 0,
           py: 0,
-          overflowX: "hidden",
+          overflow: "hidden",
         }}
       >
         <Box sx={{ position: "relative", width: "100%" }}>
