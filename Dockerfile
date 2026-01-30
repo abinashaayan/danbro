@@ -10,6 +10,10 @@ RUN npm install
 # Copy source code
 COPY . .
 
+# Build-time env for Vite (from Jenkins build-arg)
+ARG VITE_GOOGLE_MAPS_API_KEY
+ENV VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY
+
 # Build frontend
 RUN npm run build
 

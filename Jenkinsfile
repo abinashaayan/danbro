@@ -43,9 +43,16 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
-                    docker build -t $IMAGE_NAME:$IMAGE_TAG .
-                '''
+                script {
+                    withCredentials([string(
+                        credentialsId: 'vite-google-maps-api-key',
+                        variable: 'VITE_GOOGLE_MAPS_API_KEY'
+                    )]) {
+                        sh '''
+                            docker build --build-arg VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY -t $IMAGE_NAME:$IMAGE_TAG .
+                        '''
+                    }
+                }
             }
         }
 
