@@ -22,12 +22,10 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
   const [visible, setVisible] = useState(false);
   const sectionRef = useRef(null);
 
-  // Use prop categories if provided, otherwise use hook categories
   const categories = propCategories || hookCategories;
   const isLoading = propCategories ? false : loading;
 
   useEffect(() => {
-    // Set visible immediately if component is already in viewport
     if (sectionRef.current) {
       const rect = sectionRef.current.getBoundingClientRect();
       const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
@@ -49,7 +47,6 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
 
     if (sectionRef.current) observer.observe(sectionRef.current);
 
-    // Fallback: make visible after 500ms if observer doesn't trigger
     const fallbackTimer = setTimeout(() => {
       setVisible(true);
     }, 500);

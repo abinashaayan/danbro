@@ -1,7 +1,9 @@
-import { Box,  IconButton, Drawer, useMediaQuery, useTheme } from "@mui/material";
+import { Box,  IconButton, Drawer, useMediaQuery, useTheme, Collapse, List, ListItem } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useHomeLayout } from "../../hooks/useHomeLayout";
@@ -12,6 +14,7 @@ export const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [expandedItems, setExpandedItems] = useState(new Set());
     const [hoveredItem, setHoveredItem] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -39,6 +42,31 @@ export const Navbar = () => {
         },
         ...menuItems
     ], [menuItems]);
+
+    // Helper functions for mobile dropdown
+    const toggleMobileDropdown = (label) => {
+        const newExpanded = new Set(expandedItems);
+        if (newExpanded.has(label)) {
+            newExpanded.delete(label);
+        } else {
+            newExpanded.add(label);
+        }
+        setExpandedItems(newExpanded);
+    };
+
+    const getProductsForCategory = (categoryId) => {
+        const menu = menus?.find((m) => m.categoryId === categoryId);
+        return menu?.products?.slice(0, 10) || [];
+    };
+
+    const getCategoryDisplayName = (categoryName) => {
+        const name = categoryName?.toUpperCase() || "";
+        if (name === "CAKES WEB AND APP") return "Birthday Cakes";
+        if (name === "CAKES") return "Beautiful Cakes";
+        if (name === "SNB CREAMLESS CAKES") return "Creamless Cakes";
+        if (name === "DRY CAKES AND MUFFINS") return "Dry Cakes and Muffins";
+        return categoryName || "Category";
+    };
 
     // Sticky header with hide/show on scroll
     useEffect(() => {
@@ -236,39 +264,121 @@ export const Navbar = () => {
                     sx={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: 3,
+                        gap: 2,
                         px: 3,
                     }}
                 >
-                    {navbarItems.map(({ label, categoryId, path: itemPath }, index) => {
+                    {navbarItems.map(({ label, categoryId, hasProducts, path: itemPath }, index) => {
                         const path = itemPath || `/products?categoryId=${categoryId}`;
+                        const products = getProductsForCategory(categoryId);
+                        const isExpanded = expandedItems.has(label);
+                        const showExpandable = hasProducts && products.length > 0;
+                        
                         return (
-                            <CustomText
-                                key={categoryId || label}
-                                autoTitleCase={true}
-                                onClick={() => {
-                                    navigate(path);
-                                    handleDrawerToggle();  // close drawer after navigating
-                                }}
-                                sx={{
-                                    fontWeight: 600,
-                                    fontSize: 14,
-                                    cursor: "pointer",
-                                    color: "var(--themeColor)",
-                                    transition: "all 0.3s ease",
-                                    animation: `slideIn 0.3s ease ${index * 0.1}s both`,
-                                    "@keyframes slideIn": {
-                                        "0%": { opacity: 0, transform: "translateX(20px)" },
-                                        "100%": { opacity: 1, transform: "translateX(0)" },
-                                    },
-                                    "&:hover": {
-                                        opacity: 0.8,
-                                        transform: "translateX(5px)",
-                                    },
-                                }}
-                            >
-                                {label}
-                            </CustomText>
+                            <Box key={categoryId || label}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() => {
+                                        if (showExpandable) {
+                                            toggleMobileDropdown(label);
+                                        } else {
+                                            navigate(path);
+                                            handleDrawerToggle();
+                                        }
+                                    }}
+                                >
+                                    <CustomText
+                                        autoTitleCase={true}
+                                        sx={{
+                                            fontWeight: 600,
+                                            fontSize: 14,
+                                            color: "var(--themeColor)",
+                                            transition: "all 0.3s ease",
+                                            animation: `slideIn 0.3s ease ${index * 0.1}s both`,
+                                            "@keyframes slideIn": {
+                                                "0%": { opacity: 0, transform: "translateX(20px)" },
+                                                "100%": { opacity: 1, transform: "translateX(0)" },
+                                            },
+                                            "&:hover": {
+                                                opacity: 0.8,
+                                                transform: "translateX(5px)",
+                                            },
+                                        }}
+                                    >
+                                        {label}
+                                    </CustomText>
+                                    {showExpandable && (
+                                        isExpanded ? <ExpandLessIcon /> : <ExpandMoreIcon />
+                                    )}
+                                </Box>
+                                
+                                {/* Mobile Products Dropdown */}
+                                {showExpandable && (
+                                    <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+                                        <Box sx={{ pl: 2, mt: 1, borderLeft: "2px solid rgba(255,148,114,0.3)" }}>
+                                            <CustomText
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(path);
+                                                    handleDrawerToggle();
+                                                }}
+                                                sx={{
+                                                    fontSize: 12,
+                                                    fontWeight: 700,
+                                                    color: "#FF9472",
+                                                    mb: 1,
+                                                    cursor: "pointer",
+                                                    "&:hover": {
+                                                        textDecoration: "underline",
+                                                    },
+                                                }}
+                                            >
+                                                View All {label}
+                                            </CustomText>
+                                            {products.map((product, productIndex) => (
+                                                <CustomText
+                                                    key={product.productId || productIndex}
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const productId = product?.productId || product?.id;
+                                                        if (productId) {
+                                                            navigate(`/products/${productId}`);
+                                                        } else {
+                                                            navigate(`/products?categoryId=${categoryId}&search=${encodeURIComponent(product.name)}`);
+                                                        }
+                                                        handleDrawerToggle();
+                                                    }}
+                                                    sx={{
+                                                        fontSize: 13,
+                                                        color: "#333",
+                                                        cursor: "pointer",
+                                                        transition: "all 0.2s ease",
+                                                        py: 0.5,
+                                                        borderRadius: 1,
+                                                        whiteSpace: "nowrap",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        "&:hover": {
+                                                            color: "var(--themeColor)",
+                                                            backgroundColor: "rgba(255,148,114,0.1)",
+                                                            transform: "translateX(4px)",
+                                                            fontWeight: 500,
+                                                        },
+                                                    }}
+                                                    title={product.name}
+                                                >
+                                                    {product.name}
+                                                </CustomText>
+                                            ))}
+                                        </Box>
+                                    </Collapse>
+                                )}
+                            </Box>
                         );
                     })}
 
