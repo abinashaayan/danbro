@@ -5,11 +5,19 @@ import {
   Box,
   Button,
   TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  CircularProgress,
+  Alert,
 } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import {
   LocalShipping as LocalShippingIcon,
   Payment as PaymentIcon,
+  CheckCircle as CheckCircleIcon,
+  Error as ErrorIcon,
 } from "@mui/icons-material";
 import { getAccessToken } from "../../utils/cookies";
 
@@ -29,6 +37,15 @@ export const OrderSummary = ({
   cartItems,
   deliveryType,
   someoneElseData,
+  onInitiateOrder,
+  orderInitiating,
+  orderError,
+  paymentMode,
+  setPaymentMode,
+  deliveryInstructions,
+  setDeliveryInstructions,
+  paymentStatus,
+  paymentVerifying,
 }) => {
   const isCheckoutDisabled = () => {
     if (cartItems?.length === 0) return true;
@@ -206,11 +223,98 @@ export const OrderSummary = ({
             </Box>
           </Box>
 
+          {/* Payment Mode Selection */}
+          <Box sx={{ mt: 3 }}>
+            <CustomText
+              sx={{
+                fontSize: { xs: 14, md: 16 },
+                fontWeight: 600,
+                color: "#2c2c2c",
+                mb: 1,
+              }}
+            >
+              Payment Mode
+            </CustomText>
+            <FormControl fullWidth>
+              <Select
+                value={paymentMode}
+                onChange={(e) => setPaymentMode(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                  },
+                }}
+              >
+                <MenuItem value="UPI">UPI</MenuItem>
+                <MenuItem value="COD">Cash on Delivery</MenuItem>
+                <MenuItem value="CARD">Credit/Debit Card</MenuItem>
+                <MenuItem value="NET_BANKING">Net Banking</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          {/* Delivery Instructions */}
+          <Box sx={{ mt: 3 }}>
+            <CustomText
+              sx={{
+                fontSize: { xs: 14, md: 16 },
+                fontWeight: 600,
+                color: "#2c2c2c",
+                mb: 1,
+              }}
+            >
+              Delivery Instructions (Optional)
+            </CustomText>
+            <TextField
+              fullWidth
+              multiline
+              rows={2}
+              placeholder="Enter any special delivery instructions..."
+              value={deliveryInstructions}
+              onChange={(e) => setDeliveryInstructions(e.target.value)}
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: "8px",
+                },
+              }}
+            />
+          </Box>
+
+          {/* Order Error */}
+          {orderError && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {orderError}
+            </Alert>
+          )}
+
+          {/* Payment Success */}
+          {paymentStatus === 'success' && (
+            <Alert 
+              severity="success" 
+              icon={<CheckCircleIcon />}
+              sx={{ mt: 2 }}
+            >
+              Payment successful! Redirecting to order confirmation...
+            </Alert>
+          )}
+
+          {/* Payment Failure */}
+          {paymentStatus === 'failure' && (
+            <Alert 
+              severity="error" 
+              icon={<ErrorIcon />}
+              sx={{ mt: 2 }}
+            >
+              Payment failed. Please try again.
+            </Alert>
+          )}
+
           {/* Checkout Button */}
           <Button
             variant="contained"
             fullWidth
-            disabled={isCheckoutDisabled()}
+            disabled={isCheckoutDisabled() || orderInitiating || paymentVerifying}
+            onClick={onInitiateOrder}
             sx={{
               backgroundColor: "var(--themeColor)",
               color: "#fff",
@@ -218,6 +322,7 @@ export const OrderSummary = ({
               py: 1.5,
               fontSize: { xs: 14, md: 16 },
               fontWeight: 600,
+              mt: 3,
               "&:hover": {
                 backgroundColor: "var(--specialColor)",
               },
@@ -227,7 +332,16 @@ export const OrderSummary = ({
               },
             }}
           >
-            {getAccessToken() ? "Proceed to Checkout" : "Login to proceed to checkout"}
+            {orderInitiating || paymentVerifying ? (
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <CircularProgress size={20} color="inherit" />
+                {paymentVerifying ? "Verifying Payment..." : "Processing Order..."}
+              </Box>
+            ) : paymentStatus === 'success' ? (
+              "Order Placed Successfully!"
+            ) : (
+              `Place Order • ₹${total.toFixed(2)}`
+            )}
           </Button>
 
           <Box

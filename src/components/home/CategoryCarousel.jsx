@@ -155,8 +155,8 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                 pauseOnHover={true}
                 swipeToSlide={true}
                 infinite={true}
-                speed={500}
-                cssEase="ease-out"
+                speed={0}
+                cssEase="none"
                 arrows={false}
                 responsive={[
                   { breakpoint: 1200, settings: { slidesToShow: 5 } },

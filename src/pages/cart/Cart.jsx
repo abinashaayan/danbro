@@ -14,6 +14,7 @@ import { loadCartItems, updateCartItemQuantity, removeCartItem } from "../../sto
 import { getAccessToken } from "../../utils/cookies";
 import api from "../../utils/api";
 import { getMyAddresses } from "../../utils/apiService";
+import { initiateOrderSelf, initiateOrderOther, verifyOrderPayment } from "../../utils/apiService";
 import { CartItem } from "../../components/cart/CartItem";
 import { OrderSummary } from "../../components/cart/OrderSummary";
 import { AddressSection } from "../../components/cart/AddressSection";
@@ -56,6 +57,14 @@ export const Cart = () => {
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponError, setCouponError] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
+
+  // Order initiation state
+  const [orderInitiating, setOrderInitiating] = useState(false);
+  const [orderError, setOrderError] = useState("");
+  const [paymentMode, setPaymentMode] = useState("UPI");
+  const [deliveryInstructions, setDeliveryInstructions] = useState("");
+  const [paymentVerifying, setPaymentVerifying] = useState(false);
+  const [paymentStatus, setPaymentStatus] = useState(null); // 'success', 'failure', null
 
   const getItemKey = (productId, weight) => `${productId ?? ""}|${weight ?? ""}`;
 
@@ -151,6 +160,98 @@ export const Cart = () => {
       });
       setCouponCode(coupon.code);
       setCouponError("");
+    }
+  };
+
+  const handleInitiateOrder = async () => {
+    try {
+      setOrderInitiating(true);
+      setOrderError("");
+      setPaymentStatus(null);
+
+      let orderResponse;
+
+      if (deliveryType === 'self') {
+        if (!selectedAddress) {
+          setOrderError("Please select a delivery address");
+          return;
+        }
+        
+        orderResponse = await initiateOrderSelf({
+          addressId: selectedAddress,
+          paymentMode: paymentMode,
+          instructions: deliveryInstructions,
+        });
+      } else {
+        // someone_else delivery
+        if (!someoneElseData.name || !someoneElseData.phone) {
+          setOrderError("Please fill in recipient name and phone number");
+          return;
+        }
+
+        orderResponse = await initiateOrderOther({
+          deliveryAddress: {
+            name: someoneElseData.name,
+            phone: someoneElseData.phone,
+            houseNumber: someoneElseData.address,
+            streetName: "",
+            area: someoneElseData.address,
+            landmark: someoneElseData.landmark,
+            city: someoneElseData.city,
+            state: someoneElseData.state,
+            zipCode: someoneElseData.pincode,
+          },
+          paymentMode: paymentMode,
+          instructions: deliveryInstructions,
+        });
+      }
+
+      // Order initiated successfully, now verify payment
+      if (orderResponse?.data?.orderId) {
+        await handleVerifyPayment(orderResponse.data.orderId);
+      } else {
+        throw new Error("Order initiation failed: No order ID received");
+      }
+
+    } catch (error) {
+      console.error("Order initiation error:", error);
+      setOrderError(error.message || "Failed to initiate order. Please try again.");
+      setPaymentStatus('failure');
+    } finally {
+      setOrderInitiating(false);
+    }
+  };
+
+  const handleVerifyPayment = async (orderId) => {
+    try {
+      setPaymentVerifying(true);
+      setPaymentStatus(null);
+
+      const verificationResponse = await verifyOrderPayment(orderId);
+
+      if (verificationResponse?.success) {
+        setPaymentStatus('success');
+        // Clear cart after successful order
+        dispatch(loadCartItems());
+        // Navigate to order success page after a delay
+        setTimeout(() => {
+          navigate('/order-success', { 
+            state: { 
+              orderId: orderId,
+              message: 'Order placed successfully!' 
+            } 
+          });
+        }, 2000);
+      } else {
+        setPaymentStatus('failure');
+        setOrderError(verificationResponse?.message || "Payment verification failed");
+      }
+    } catch (error) {
+      console.error("Payment verification error:", error);
+      setPaymentStatus('failure');
+      setOrderError(error.message || "Payment verification failed. Please try again.");
+    } finally {
+      setPaymentVerifying(false);
     }
   };
 
@@ -363,6 +464,15 @@ export const Cart = () => {
                 cartItems={cartItems}
                 deliveryType={deliveryType}
                 someoneElseData={someoneElseData}
+                onInitiateOrder={handleInitiateOrder}
+                orderInitiating={orderInitiating}
+                orderError={orderError}
+                paymentMode={paymentMode}
+                setPaymentMode={setPaymentMode}
+                deliveryInstructions={deliveryInstructions}
+                setDeliveryInstructions={setDeliveryInstructions}
+                paymentStatus={paymentStatus}
+                paymentVerifying={paymentVerifying}
               />
             </Grid>
           </Grid>

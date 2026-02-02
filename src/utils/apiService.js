@@ -3,6 +3,213 @@ import axios from 'axios';
 import { getStoredLocation } from './location';
 import { getAccessToken } from './cookies';
 
+/**
+ * Initiate order for SELF delivery
+ * @param {Object} orderData - Order data
+ * @param {string} orderData.addressId - Address ID for delivery
+ * @param {string} orderData.paymentMode - Payment mode (UPI, COD, etc.)
+ * @param {string} orderData.instructions - Delivery instructions
+ * @returns {Promise} Order initiation response
+ */
+export const initiateOrderSelf = async (orderData) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    if (!token) {
+      throw new Error('Authentication required. Please login.');
+    }
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    
+    const payload = {
+      orderFor: "SELF",
+      addressId: orderData.addressId,
+      paymentMode: orderData.paymentMode,
+      instructions: orderData.instructions || "",
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/order/initiate`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 30000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error initiating order (SELF):', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.response.data?.error;
+      
+      switch (status) {
+        case 400:
+          throw new Error(message || 'Invalid order data. Please check your information.');
+        case 401:
+          throw new Error('Authentication expired. Please login again.');
+        case 403:
+          throw new Error('You do not have permission to place orders.');
+        case 404:
+          throw new Error('Address not found. Please select a valid delivery address.');
+        case 500:
+          throw new Error('Server error. Please try again later.');
+        default:
+          throw new Error(message || `Order initiation failed (${status}). Please try again.`);
+      }
+    }
+    
+    throw new Error(error.message || 'Failed to initiate order. Please try again.');
+  }
+};
+
+/**
+ * Initiate order for OTHER delivery
+ * @param {Object} orderData - Order data
+ * @param {Object} orderData.deliveryAddress - Delivery address details
+ * @param {string} orderData.paymentMode - Payment mode (UPI, COD, etc.)
+ * @param {string} orderData.instructions - Delivery instructions
+ * @returns {Promise} Order initiation response
+ */
+export const initiateOrderOther = async (orderData) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    if (!token) {
+      throw new Error('Authentication required. Please login.');
+    }
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    
+    const payload = {
+      orderFor: "OTHER",
+      deliveryAddress: {
+        name: orderData.deliveryAddress.name,
+        phone: orderData.deliveryAddress.phone,
+        houseNumber: orderData.deliveryAddress.houseNumber || "",
+        streetName: orderData.deliveryAddress.streetName || "",
+        area: orderData.deliveryAddress.area || "",
+        landmark: orderData.deliveryAddress.landmark || "",
+        city: orderData.deliveryAddress.city || "",
+        state: orderData.deliveryAddress.state || "",
+        zipCode: orderData.deliveryAddress.zipCode || "",
+        coordinates: {
+          lat: location.lat,
+          long: location.long
+        }
+      },
+      paymentMode: orderData.paymentMode,
+      instructions: orderData.instructions || "",
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/order/initiate`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 30000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error initiating order (OTHER):', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.response.data?.error;
+      
+      switch (status) {
+        case 400:
+          throw new Error(message || 'Invalid order data. Please check your information.');
+        case 401:
+          throw new Error('Authentication expired. Please login again.');
+        case 403:
+          throw new Error('You do not have permission to place orders.');
+        case 500:
+          throw new Error('Server error. Please try again later.');
+        default:
+          throw new Error(message || `Order initiation failed (${status}). Please try again.`);
+      }
+    }
+    
+    throw new Error(error.message || 'Failed to initiate order. Please try again.');
+  }
+};
+
+/**
+ * Verify payment for an order
+ * @param {string} orderId - Order ID to verify
+ * @returns {Promise} Payment verification response
+ */
+export const verifyOrderPayment = async (orderId) => {
+  try {
+    const token = getAccessToken();
+    
+    if (!token) {
+      throw new Error('Authentication required. Please login.');
+    }
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/order/verify?orderId=${orderId}`, {}, {
+      headers,
+      withCredentials: false,
+      timeout: 30000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying payment:', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.response.data?.error;
+      
+      switch (status) {
+        case 400:
+          throw new Error(message || 'Invalid payment verification request.');
+        case 401:
+          throw new Error('Authentication expired. Please login again.');
+        case 404:
+          throw new Error('Order not found. Please check your order ID.');
+        case 500:
+          throw new Error('Server error. Please try again later.');
+        default:
+          throw new Error(message || `Payment verification failed (${status}). Please try again.`);
+      }
+    }
+    
+    throw new Error(error.message || 'Failed to verify payment. Please try again.');
+  }
+};
+
 
 /**
  * Sanitize JSON string by escaping control characters within string values

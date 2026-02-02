@@ -814,31 +814,6 @@ export const Login = () => {
                   </CustomText>
                 }
               />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="newsletter"
-                    checked={formData.newsletter}
-                    onChange={handleChange}
-                    sx={{
-                      color: "#333",
-                      "&.Mui-checked": {
-                        color: "#fff",
-                      },
-                      "&:hover": {
-                        backgroundColor: "rgba(95,41,48,0.1)",
-                      },
-                    }}
-                  />
-                }
-                label={
-                  <CustomText sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
-                    Subscribe to our monthly newsletter
-                  </CustomText>
-                }
-              />
-
             </Box>
 
             {/* reCAPTCHA - hidden when SKIP_RECAPTCHA is true (e.g. IP without domain) */}
