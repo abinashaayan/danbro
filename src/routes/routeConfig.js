@@ -30,6 +30,7 @@ const PrivacyPolicy = createLazyComponent(() => import("../pages/home/PrivacyPol
 const TermsAndConditions = createLazyComponent(() => import("../pages/home/TermsAndConditions"), "TermsAndConditions");
 const RefundReturnsPolicy = createLazyComponent(() => import("../pages/home/RefundReturnsPolicy"), "RefundReturnsPolicy");
 const CorporateQueries = createLazyComponent(() => import("../pages/home/CorporateQueries"), "CorporateQueries");
+// const paymentSuccess = createLazyComponent(() => import("../pages/home/paymentSuccess"), "paymentSuccess");
 
 /**
  * Public Routes - Accessible without authentication

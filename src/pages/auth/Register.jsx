@@ -296,7 +296,7 @@ export const Register = () => {
             position: "relative",
             zIndex: 1,
             width: "100%",
-            maxWidth: 400,
+            maxWidth: 500,
             backgroundColor: "rgba(0,0,0,0.45)",
             backdropFilter: "blur(25px) saturate(180%)",
             borderRadius: { xs: "16px", md: "20px" },
@@ -666,30 +666,6 @@ export const Register = () => {
                     >
                       Privacy Policy
                     </Link>
-                  </CustomText>
-                }
-              />
-
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="newsletter"
-                    checked={formData.newsletter}
-                    onChange={handleChange}
-                    sx={{
-                      color: "#333",
-                      "&.Mui-checked": {
-                        color: "white",
-                      },
-                      "&:hover": {
-                        backgroundColor: "rgba(95,41,48,0.1)",
-                      },
-                    }}
-                  />
-                }
-                label={
-                  <CustomText sx={{ color: "#fff", fontSize: { xs: 13, md: 14 } }}>
-                    Subscribe to our monthly newsletter
                   </CustomText>
                 }
               />

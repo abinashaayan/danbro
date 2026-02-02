@@ -86,8 +86,11 @@ export const increaseItemCount = async (productId, weight) => {
       }
       return { success: true };
     }
-    const payload = { productId };
-    const response = await api.post('/cart/increaseItemCount', payload);
+    const payload = { 
+      productId: productId,
+      action: 'increment'
+    };
+    const response = await api.patch('/cart/updateQuantity', payload);
     return response.data;
   } catch (error) {
     console.error('Error increasing item count:', error);
@@ -115,8 +118,11 @@ export const decreaseItemCount = async (productId, weight) => {
       }
       return { success: true };
     }
-    const payload = { productId };
-    const response = await api.post('/cart/decreseItemCount', payload);
+    const payload = { 
+      productId: productId,
+      action: 'decrement'
+    };
+    const response = await api.patch('/cart/updateQuantity', payload);
     return response.data;
   } catch (error) {
     console.error('Error decreasing item count:', error);
@@ -139,11 +145,30 @@ export const removeFromCart = async (productId, weight) => {
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       return { success: true };
     }
-    const payload = { productId };
-    const response = await api.post('/cart/remove', payload);
+    const response = await api.delete(`/cart/removeItem/${productId}`);
     return response.data;
   } catch (error) {
     console.error('Error removing from cart:', error);
+    throw error;
+  }
+};
+
+/**
+ * Clear all items from cart (guest: Redux; logged-in: API)
+ * @returns {Promise} API response or guest success
+ */
+export const clearCart = async () => {
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      store.dispatch({ type: 'guest/clearGuestCart' });
+      window.dispatchEvent(new CustomEvent('cartUpdated'));
+      return { success: true };
+    }
+    const response = await api.delete('/cart/clear');
+    return response.data;
+  } catch (error) {
+    console.error('Error clearing cart:', error);
     throw error;
   }
 };

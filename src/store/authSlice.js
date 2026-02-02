@@ -132,6 +132,8 @@ const authSlice = createSlice({
         state.user = action.payload.user;
         state.error = null;
         state.isRedirecting = true;
+        // Reload window to update cart quantity in header
+        window.location.reload();
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;

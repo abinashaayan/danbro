@@ -19,8 +19,11 @@ import {
 import { CustomText } from "../comman/CustomText";
 import { addAddress, updateAddress } from "../../utils/apiService";
 import { getStoredLocation } from "../../utils/location";
+import { getAccessToken } from "../../utils/cookies";
+import { useNavigate } from "react-router-dom";
 
 export const AddressFormDialog = ({ open, onClose, address = null, onSuccess }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     addressType: "Home",
     zipCode: "",
@@ -123,6 +126,16 @@ export const AddressFormDialog = ({ open, onClose, address = null, onSuccess }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if user is authenticated
+    const token = getAccessToken();
+    if (!token) {
+      setError("Please login to add an address.");
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
+      return;
+    }
 
     if (!validateForm()) {
       return;
