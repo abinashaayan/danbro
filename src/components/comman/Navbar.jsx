@@ -35,10 +35,10 @@ export const Navbar = () => {
     // Add PRODUCTS heading at the beginning - memoized
     const navbarItems = useMemo(() => [
         {
-            label: "PRODUCTS",
+            label: "Track Order",
             categoryId: null,
             hasProducts: false,
-            path: "/products",
+            path: "/track-order",
         },
         ...menuItems
     ], [menuItems]);

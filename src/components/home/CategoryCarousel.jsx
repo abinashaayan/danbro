@@ -168,7 +168,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
               >
                 {items?.map((item, i) => (
                   <Box
-                    key={item.id || i}
+                    key={item?.id || i}
                     sx={{
                       cursor: "pointer",
                       transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -185,13 +185,11 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                   >
                     <Box
                       className="category-card"
-                      onClick={() => handleToProductList(item.id)}
+                      onClick={() => handleToProductList(item?.id)}
                       sx={{
-                        backgroundColor: "rgba(255,255,255,0.95)",
                         backdropFilter: "blur(10px)",
                         borderRadius: { xs: "20px", md: "25px" },
                         transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
-                        overflow: "visible",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -200,6 +198,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                         boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
                         border: "2px solid rgba(255,181,161,0.2)",
                         position: "relative",
+                        overflow: "visible",
                         "&::before": {
                           content: '""',
                           position: "absolute",
@@ -209,12 +208,11 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                           width: "0",
                           height: "0",
                           borderRadius: "50%",
-                          background: "radial-gradient(circle, rgba(255,181,161,0.2) 0%, transparent 70%)",
                           transition: "all 0.5s ease",
                           zIndex: -1,
                         },
                         "&:hover": {
-                          transform: "translateY(-15px) scale(1.08)",
+                          transform: "translateY(-10px) scale(1.08)",
                           boxShadow: "0 12px 40px rgba(255,181,161,0.3)",
                           borderColor: "rgba(255,181,161,0.5)",
                           backgroundColor: "#fff",
@@ -223,7 +221,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                             height: "150%",
                           },
                           "& img": {
-                            transform: "scale(1.2) rotate(5deg)",
+                            transform: "scale(1.15) rotate(3deg)",
                             filter: "drop-shadow(0 12px 24px rgba(0,0,0,0.25)) brightness(1.1)",
                           },
                           "& .category-title": {

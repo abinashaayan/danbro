@@ -39,6 +39,16 @@ export const Cart = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [addressesLoading, setAddressesLoading] = useState(false);
   const [addressDialogOpen, setAddressDialogOpen] = useState(false);
+  const [deliveryType, setDeliveryType] = useState('self'); // 'self' or 'someone_else'
+  const [someoneElseData, setSomeoneElseData] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    landmark: '',
+    city: '',
+    state: '',
+    pincode: '',
+  });
   const [coupons, setCoupons] = useState([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState(null);
@@ -331,6 +341,10 @@ export const Cart = () => {
                 addressDialogOpen={addressDialogOpen}
                 setAddressDialogOpen={setAddressDialogOpen}
                 handleAddressSuccess={handleAddressSuccess}
+                deliveryType={deliveryType}
+                setDeliveryType={setDeliveryType}
+                someoneElseData={someoneElseData}
+                setSomeoneElseData={setSomeoneElseData}
               />
               
               <OrderSummary
@@ -347,6 +361,8 @@ export const Cart = () => {
                 handleRemoveCoupon={handleRemoveCoupon}
                 selectedAddress={selectedAddress}
                 cartItems={cartItems}
+                deliveryType={deliveryType}
+                someoneElseData={someoneElseData}
               />
             </Grid>
           </Grid>

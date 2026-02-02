@@ -1,0 +1,31 @@
+/* Slick core fixes */
+.slick-slider {
+    width: 100%;
+}
+
+.slick-list {
+    overflow: hidden;
+}
+
+.slick-track {
+    display: flex !important;
+}
+
+/* Fix slide shrinking on mobile */
+.slick-slide>div {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Mobile spacing */
+@media (max-width: 600px) {
+    .slick-slide {
+        padding: 0 6px;
+    }
+}
+
+/* Prevent collapse bug */
+.slick-slide {
+    min-height: 1px;
+}

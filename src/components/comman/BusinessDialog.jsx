@@ -1,10 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box,  Button, IconButton, Grid } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import CloseIcon from "@mui/icons-material/Close";
 import CampaignIcon from "@mui/icons-material/Campaign";
 
 export const BusinessDialog = ({ open, onClose }) => {
+  useEffect(() => {
+    if (open) {
+      // Prevent body scroll when dialog is open
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+
+      return () => {
+        // Restore body scroll when dialog closes
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [open]);
   const handleClickHere = () => {
     // Handle "Click Here" action
     console.log("Click Here clicked");
@@ -41,6 +60,16 @@ export const BusinessDialog = ({ open, onClose }) => {
         p: { xs: 2, md: 3 },
       }}
       onClick={onClose}
+      onWheel={(e) => {
+        // Prevent scroll on backdrop
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      onTouchMove={(e) => {
+        // Prevent touch scroll on backdrop
+        e.preventDefault();
+        e.stopPropagation();
+      }}
     >
       <Box
         sx={{

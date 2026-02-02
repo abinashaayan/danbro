@@ -1,7 +1,6 @@
-import { Box, Button, IconButton, useMediaQuery, useTheme, Avatar, Badge, CircularProgress } from "@mui/material";
+import { Box, Button, IconButton, useMediaQuery, useTheme, Avatar, Badge, CircularProgress, Tooltip } from "@mui/material";
 import { NearMe, ShoppingCart, Favorite } from "@mui/icons-material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import logo from "../../assets/logo.png";
@@ -32,6 +31,7 @@ export const TopHeader = () => {
     const [cartCount, setCartCount] = useState(0);
     const [isScrolled, setIsScrolled] = useState(false);
     const [locationLabel, setLocationLabel] = useState("Location...?");
+    const [fullLocationLabel, setFullLocationLabel] = useState("Location...?");
     const [cartIconLoading, setCartIconLoading] = useState(false);
     const [wishlistIconLoading, setWishlistIconLoading] = useState(false);
     const guestCart = useAppSelector(getGuestCart);
@@ -64,14 +64,15 @@ export const TopHeader = () => {
 
     // Initialize and listen for delivery location changes
     useEffect(() => {
-        // On mount, read any stored location and show it
+        // Load stored location on mount
         const storedLocation = getStoredLocation();
-        if (storedLocation?.label) {
-            const label =
+        if (storedLocation && storedLocation.label) {
+            const displayLabel =
                 storedLocation.label.length > 28
                     ? `${storedLocation.label.slice(0, 28)}...`
                     : storedLocation.label;
-            setLocationLabel(label);
+            setLocationLabel(displayLabel);
+            setFullLocationLabel(storedLocation.label);
         }
 
         // Listen for updates from DeliveryCheckDialog
@@ -82,6 +83,7 @@ export const TopHeader = () => {
                     ? `${updatedLabel.slice(0, 28)}...`
                     : updatedLabel;
             setLocationLabel(displayLabel);
+            setFullLocationLabel(updatedLabel);
         };
 
         window.addEventListener("locationUpdated", handleLocationUpdated);
@@ -231,23 +233,23 @@ export const TopHeader = () => {
                 alignItems: "center",
                 px: { xs: 1, sm: 2, md: 3 },
                 py: { xs: 1, md: 0 },
-                backgroundColor: isScrolled 
-                    ? "rgba(255, 255, 255, 0.98)" 
+                backgroundColor: isScrolled
+                    ? "rgba(255, 255, 255, 0.98)"
                     : "#fff",
                 background: isScrolled
                     ? "linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(251,199,181,0.05) 50%, rgba(255,255,255,0.98) 100%)"
                     : "#fff",
                 flexWrap: { xs: "wrap", md: "nowrap" },
                 gap: { xs: 1, md: 0 },
-                borderBottom: isProfilePage 
-                    ? "2px solid #fbc7b5" 
-                    : isScrolled 
-                        ? "1px solid rgba(255,181,161,0.2)" 
+                borderBottom: isProfilePage
+                    ? "2px solid #fbc7b5"
+                    : isScrolled
+                        ? "1px solid rgba(255,181,161,0.2)"
                         : "none",
-                boxShadow: isProfilePage 
-                    ? "0 2px 8px rgba(0,0,0,0.05)" 
-                    : isScrolled 
-                        ? "0 8px 30px rgba(255,181,161,0.15)" 
+                boxShadow: isProfilePage
+                    ? "0 2px 8px rgba(0,0,0,0.05)"
+                    : isScrolled
+                        ? "0 8px 30px rgba(255,181,161,0.15)"
                         : "none",
                 position: "fixed",
                 top: 0,
@@ -269,23 +271,35 @@ export const TopHeader = () => {
                     zIndex: -1,
                 } : {},
                 "&:hover": {
-                    boxShadow: isScrolled 
-                        ? "0 12px 40px rgba(255,181,161,0.2)" 
+                    boxShadow: isScrolled
+                        ? "0 12px 40px rgba(255,181,161,0.2)"
                         : "0 2px 12px rgba(0,0,0,0.08)",
-                    backgroundColor: isScrolled 
-                        ? "rgba(255, 255, 255, 1)" 
+                    backgroundColor: isScrolled
+                        ? "rgba(255, 255, 255, 1)"
                         : "#fff",
                 },
             }}
         >
             {/* Left Buttons - Hidden on mobile */}
             <Box className="d-none d-md-flex" sx={{ display: { xs: "none", md: "flex" }, gap: 1, flexWrap: "wrap", }}>
-                <AnimatedButton
-                    startIcon={<NearMe />}
-                    onClick={() => setOpenDeliveryDialog(true)}
+                <Tooltip
+                    title={
+                        fullLocationLabel && fullLocationLabel !== "Location...?"
+                            ? fullLocationLabel
+                            : "Allow location to see delivery area"
+                    }
+                    arrow
+                    placement="bottom"
                 >
-                    {locationLabel}
-                </AnimatedButton>
+                    <Box sx={{ position: 'relative' }}>
+                        <AnimatedButton
+                            startIcon={<NearMe />}
+                            onClick={() => setOpenDeliveryDialog(true)}
+                        >
+                            Location
+                        </AnimatedButton>
+                    </Box>
+                </Tooltip>
 
                 <AnimatedButton
                     onClick={() => setOpenBusinessDialog(true)}
@@ -296,17 +310,46 @@ export const TopHeader = () => {
 
             {/* Mobile Left Buttons - Compact */}
             <Box className="d-flex d-md-none" sx={{ display: { xs: "flex", md: "none" }, gap: 0.5, order: 1, }}>
-                <AnimatedButton
-                    startIcon={<NearMe />}
-                    onClick={() => setOpenDeliveryDialog(true)}
-                    sx={{
-                        fontSize: 10,
-                        px: 1,
-                        minWidth: "auto",
+                <Tooltip
+                    title={fullLocationLabel}
+                    arrow
+                    placement="bottom"
+                    PopperProps={{
+                        sx: {
+                            zIndex: 99999,
+                        },
+                    }}
+                    componentsProps={{
+                        tooltip: {
+                            sx: {
+                                backgroundColor: '#333',
+                                color: '#fff',
+                                fontSize: '12px',
+                                padding: '8px 12px',
+                                borderRadius: '6px',
+                                maxWidth: '250px',
+                                wordWrap: 'break-word',
+                            },
+                        },
+                        arrow: {
+                            sx: {
+                                color: '#333',
+                            },
+                        },
                     }}
                 >
-                    {isMobile ? "" : (locationLabel || "Location")}
-                </AnimatedButton>
+                    <AnimatedButton
+                        startIcon={<NearMe />}
+                        onClick={() => setOpenDeliveryDialog(true)}
+                        sx={{
+                            fontSize: 10,
+                            px: 1,
+                            minWidth: "auto",
+                        }}
+                    >
+                        {isMobile ? "" : "Location"}
+                    </AnimatedButton>
+                </Tooltip>
             </Box>
 
             {/* Logo - Centered */}
@@ -320,58 +363,6 @@ export const TopHeader = () => {
                             height: isMobile ? 30 : isTablet ? 35 : 40,
                             maxWidth: "100%",
                             cursor: "pointer",
-                            transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                            position: "relative",
-                            animation: "logoBounce 2s ease-in-out infinite, logoRotate 4s ease-in-out infinite, logoGlow 2.5s ease-in-out infinite",
-                            "@keyframes logoBounce": {
-                                "0%, 100%": {
-                                    transform: "translateY(0) rotate(0deg) scale(1)",
-                                },
-                                "25%": {
-                                    transform: "translateY(-6px) rotate(-2deg) scale(1.02)",
-                                },
-                                "50%": {
-                                    transform: "translateY(-3px) rotate(0deg) scale(1.05)",
-                                },
-                                "75%": {
-                                    transform: "translateY(-6px) rotate(2deg) scale(1.02)",
-                                },
-                            },
-                            "@keyframes logoRotate": {
-                                "0%, 100%": {
-                                    filter: "hue-rotate(0deg) brightness(1)",
-                                },
-                                "50%": {
-                                    filter: "hue-rotate(5deg) brightness(1.1)",
-                                },
-                            },
-                            "@keyframes logoGlow": {
-                                "0%, 100%": {
-                                    filter: "drop-shadow(0 0 0 rgba(255, 148, 114, 0)) drop-shadow(0 0 0 rgba(242, 112, 156, 0))",
-                                },
-                                "25%": {
-                                    filter: "drop-shadow(0 0 10px rgba(255, 148, 114, 0.5)) drop-shadow(0 0 5px rgba(242, 112, 156, 0.3))",
-                                },
-                                "50%": {
-                                    filter: "drop-shadow(0 0 15px rgba(242, 112, 156, 0.6)) drop-shadow(0 0 8px rgba(255, 148, 114, 0.4))",
-                                },
-                                "75%": {
-                                    filter: "drop-shadow(0 0 10px rgba(255, 148, 114, 0.5)) drop-shadow(0 0 5px rgba(242, 112, 156, 0.3))",
-                                },
-                            },
-                            "&:hover": {
-                                transform: "translateY(-4px) rotate(5deg) scale(1.1)",
-                                filter: "drop-shadow(0 8px 20px rgba(255, 148, 114, 0.6)) drop-shadow(0 0 15px rgba(242, 112, 156, 0.5)) brightness(1.15)",
-                                animation: "logoHoverPulse 0.6s ease-in-out infinite",
-                                "@keyframes logoHoverPulse": {
-                                    "0%, 100%": {
-                                        transform: "translateY(-4px) rotate(5deg) scale(1.1)",
-                                    },
-                                    "50%": {
-                                        transform: "translateY(-6px) rotate(5deg) scale(1.12)",
-                                    },
-                                },
-                            },
                         }}
                     />
                 </Link>
