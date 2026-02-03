@@ -60,14 +60,14 @@ export const Login = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/profile", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [isAuthenticated, navigate]);
 
   // Redirect after successful login
   useEffect(() => {
     if (isRedirecting && isAuthenticated) {
-      navigate("/profile", { replace: true });
+      navigate("/home", { replace: true });
     }
   }, [isRedirecting, isAuthenticated, navigate]);
 
@@ -325,6 +325,25 @@ export const Login = () => {
     setResetError("");
     setResetSuccess("");
   };
+
+  const hasToken = !!getAccessToken();
+  if (isAuthenticated || hasToken) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          gap: 2,
+        }}
+      >
+        <CircularProgress size={40} sx={{ color: "var(--themeColor, #e67850)" }} />
+        <CustomText sx={{ fontSize: 14, color: "#666" }}>Redirecting to home...</CustomText>
+      </Box>
+    );
+  }
 
   return (
     <Box

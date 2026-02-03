@@ -215,8 +215,6 @@ export const CustomCarousel = forwardRef(({
     <Box
       ref={containerRef}
       sx={{
-        position: 'relative',
-        overflow: 'hidden',
         userSelect: isDragging ? 'none' : 'auto',
         cursor: isDragging ? 'grabbing' : 'grab',
         ...props.sx

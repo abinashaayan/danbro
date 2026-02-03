@@ -354,7 +354,7 @@ export const TopHeader = () => {
 
             {/* Logo - Centered */}
             <Box sx={{ py: { xs: 0.5, md: 1 }, bgcolor: "transparent", display: "flex", justifyContent: "center", order: { xs: 3, md: 2 }, width: { xs: "100%", md: "auto" }, }}>
-                <Link to="/">
+                <Link to="/home">
                     <Box
                         component="img"
                         src={logo}

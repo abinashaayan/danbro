@@ -256,8 +256,8 @@ export const verifyOrderPayment = async (intentId) => {
       'Authorization': `Bearer ${token}`,
     };
 
-    // POST /api/order/verify/:intentId (no body)
-    const response = await axios.post(`${API_BASE_URL}/order/verify/${intentId}`, {}, {
+    // GET /api/order/verify/:intentId
+    const response = await axios.get(`${API_BASE_URL}/order/verify/${intentId}`, {
       headers,
       withCredentials: false,
       timeout: 30000,
@@ -300,9 +300,8 @@ export const verifyOrderPayment = async (intentId) => {
  */
 export const verifyOrderPaymentGuest = async (intentId) => {
   try {
-    const response = await axios.post(
+    const response = await axios.get(
       `${API_BASE_URL}/order/verify/${intentId}`,
-      {},
       {
         headers: {
           'Content-Type': 'application/json',

@@ -42,6 +42,10 @@ export const publicRoutes = [
     component: Home,
   },
   {
+    path: "/home",
+    component: Home,
+  },
+  {
     path: "/about-us",
     component: AboutUs,
   },

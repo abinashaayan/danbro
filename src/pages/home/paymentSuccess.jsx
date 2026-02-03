@@ -55,7 +55,10 @@ const PaymentSuccess = () => {
           ? await verifyOrderPayment(intentId)
           : await verifyOrderPaymentGuest(intentId);
 
-        if (res?.success) {
+        const ok = res?.status === 200 || res?.success === true;
+        const order = res?.order ?? res?.data ?? res;
+        const id = res?.orderId ?? order?.orderId ?? intentId;
+        if (ok && id) {
           sessionStorage.removeItem("pendingIntentId");
           sessionStorage.removeItem("pendingOrderId");
           if (!token) {
@@ -63,8 +66,8 @@ const PaymentSuccess = () => {
             window.dispatchEvent(new CustomEvent("cartUpdated"));
           }
           dispatch(loadCartItems());
-          setOrderDetails(res?.data ?? res);
-          setOrderId(res?.data?.orderId ?? res?.orderId ?? intentId);
+          setOrderDetails(order);
+          setOrderId(id);
           setStatus("success");
         } else {
           setStatus("failure");
@@ -80,13 +83,16 @@ const PaymentSuccess = () => {
   }, [searchParams, location.state, dispatch]);
 
   const details = orderDetails || {};
-  const amount = details.amount ?? details.totalAmount ?? details.amountPaid;
+  const pricing = details.pricing || {};
+  const amount = pricing.grandTotal ?? details.amount ?? details.totalAmount ?? details.amountPaid;
   const paymentId =
     details.paymentId ??
     details.razorpay_payment_id ??
     details.payment_id ??
     searchParams.get("razorpay_payment_id");
   const currency = details.currency ?? "INR";
+  const orderItems = details.items || [];
+  const deliveryAddress = details.deliveryAddress || {};
 
   return (
     <Box sx={{ minHeight: "60vh", py: 6, px: 2 }}>
@@ -115,7 +121,7 @@ const PaymentSuccess = () => {
               sx={{
                 textAlign: "left",
                 p: 2.5,
-                mb: 3,
+                mb: 2,
                 border: "1px solid #e0e0e0",
                 borderRadius: 2,
                 backgroundColor: "#fafafa",
@@ -132,12 +138,80 @@ const PaymentSuccess = () => {
                   <CustomText sx={{ fontSize: 12, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, mb: 0.5 }}>
                     Payment ID
                   </CustomText>
-                  <CustomText sx={{ fontSize: 14, fontWeight: 500, color: "#444" }}>
+                  <CustomText sx={{ fontSize: 14, fontWeight: 500, color: "#444", mb: 1.5 }}>
                     {paymentId}
                   </CustomText>
                 </>
               )}
+              {details.paymentMode && (
+                <CustomText sx={{ fontSize: 12, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, mb: 0.5 }}>
+                  Payment Mode
+                </CustomText>
+              )}
+              {details.paymentMode && (
+                <CustomText sx={{ fontSize: 14, fontWeight: 500, color: "#444" }}>
+                  {details.paymentMode}
+                </CustomText>
+              )}
             </Paper>
+            {orderItems.length > 0 && (
+              <Paper
+                elevation={0}
+                sx={{
+                  textAlign: "left",
+                  p: 2,
+                  mb: 2,
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 2,
+                  backgroundColor: "#fafafa",
+                }}
+              >
+                <CustomText sx={{ fontSize: 12, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, mb: 1 }}>
+                  Order summary
+                </CustomText>
+                {orderItems.map((item, idx) => (
+                  <Box key={idx} sx={{ display: "flex", justifyContent: "space-between", py: 0.5, fontSize: 13 }}>
+                    <CustomText sx={{ fontSize: 13 }}>{item.name} × {item.quantity}</CustomText>
+                    <CustomText sx={{ fontSize: 13, fontWeight: 600 }}>₹{Number(item.total).toFixed(2)}</CustomText>
+                  </Box>
+                ))}
+                {pricing.grandTotal != null && (
+                  <Box sx={{ borderTop: "1px solid #eee", mt: 1, pt: 1, display: "flex", justifyContent: "space-between" }}>
+                    <CustomText sx={{ fontSize: 14, fontWeight: 600 }}>Total</CustomText>
+                    <CustomText sx={{ fontSize: 14, fontWeight: 600, color: "var(--themeColor)" }}>
+                      ₹{Number(pricing.grandTotal).toFixed(2)}
+                    </CustomText>
+                  </Box>
+                )}
+              </Paper>
+            )}
+            {deliveryAddress && (deliveryAddress.name || deliveryAddress.city) && (
+              <Paper
+                elevation={0}
+                sx={{
+                  textAlign: "left",
+                  p: 2,
+                  mb: 3,
+                  border: "1px solid #e0e0e0",
+                  borderRadius: 2,
+                  backgroundColor: "#fafafa",
+                }}
+              >
+                <CustomText sx={{ fontSize: 12, color: "#888", textTransform: "uppercase", letterSpacing: 0.5, mb: 1 }}>
+                  Delivery address
+                </CustomText>
+                <CustomText sx={{ fontSize: 14, fontWeight: 600 }}>{deliveryAddress.name}</CustomText>
+                {deliveryAddress.phone && (
+                  <CustomText sx={{ fontSize: 13, color: "#666" }}>{deliveryAddress.phone}</CustomText>
+                )}
+                <CustomText sx={{ fontSize: 13, color: "#666" }}>
+                  {[deliveryAddress.houseNumber, deliveryAddress.streetName, deliveryAddress.area].filter(Boolean).join(", ")}
+                </CustomText>
+                <CustomText sx={{ fontSize: 13, color: "#666" }}>
+                  {[deliveryAddress.city, deliveryAddress.state, deliveryAddress.zipCode].filter(Boolean).join(", ")}
+                </CustomText>
+              </Paper>
+            )}
 
             <Button
               variant="contained"

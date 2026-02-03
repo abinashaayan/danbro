@@ -415,6 +415,7 @@ export const Cart = () => {
   // Remove coupon
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
+    setSelectedCoupon(null);
     setCouponCode("");
     setCouponError("");
   };
@@ -592,6 +593,10 @@ export const Cart = () => {
                   setCouponCode={setCouponCode}
                   handleApplyCoupon={handleApplyCoupon}
                   handleRemoveCoupon={handleRemoveCoupon}
+                  coupons={coupons}
+                  couponsLoading={couponsLoading}
+                  selectedCoupon={selectedCoupon}
+                  handleCouponSelect={handleCouponSelect}
                   selectedAddress={selectedAddress}
                   cartItems={cartItems}
                   deliveryType={deliveryType}

@@ -255,35 +255,26 @@ export const AddressSection = ({
         }}
       />
       <CardContent sx={{ p: { xs: 2, md: 2.5 }, pt: { xs: 1, md: 1.5 } }}>
-        {/* Delivery Type Radio Buttons (only when logged in) */}
-        {isLoggedIn && (
-          <RadioGroup
-            row
-            value={deliveryType}
-            onChange={(e) => setDeliveryType(e.target.value)}
-            name="delivery-type-radio"
-            sx={{ mb: 2, gap: { xs: 1, md: 2 } }}
-          >
-            <FormControlLabel
-              value="self"
-              control={<Radio sx={{ color: "var(--themeColor)" }} />}
-              label={
-                <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 500 }}>
-                  Deliver to My Address
-                </CustomText>
-              }
-            />
-            <FormControlLabel
-              value="someone_else"
-              control={<Radio sx={{ color: "var(--themeColor)" }} />}
-              label={
-                <CustomText sx={{ fontSize: { xs: 14, md: 16 }, fontWeight: 500 }}>
-                  Deliver to Someone Else
-                </CustomText>
-              }
-            />
-          </RadioGroup>
-        )}
+        <RadioGroup
+          row
+          aria-labelledby="delivery-address-radio-label"
+          name="delivery-address-radio"
+          value={deliveryType}
+          onChange={(e) => setDeliveryType(e.target.value)}
+          sx={{ gap: { xs: 1, md: 2 } }}
+        >
+          <FormControlLabel
+            value="self"
+            control={<Radio sx={{ color: "#999", "&.Mui-checked": { color: "var(--themeColor)" } }} />}
+            label="My Address"
+            disabled={!isLoggedIn}
+          />
+          <FormControlLabel
+            value="someone_else"
+            control={<Radio sx={{ color: "#999", "&.Mui-checked": { color: "var(--themeColor)" } }} />}
+            label="For Friends"
+          />
+        </RadioGroup>
 
         {/* Self Address Section (only when logged in) */}
         {isLoggedIn && deliveryType === 'self' && (
@@ -393,7 +384,7 @@ export const AddressSection = ({
                 })}
               </RadioGroup>
             )}
-            
+
             {/* Add New Address Button */}
             <Button
               variant="outlined"

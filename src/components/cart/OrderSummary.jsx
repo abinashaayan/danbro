@@ -6,11 +6,12 @@ import {
   Button,
   TextField,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
   CircularProgress,
   Alert,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import {
@@ -32,6 +33,10 @@ export const OrderSummary = ({
   setCouponCode,
   handleApplyCoupon,
   handleRemoveCoupon,
+  coupons = [],
+  couponsLoading,
+  selectedCoupon,
+  handleCouponSelect,
   selectedAddress,
   cartItems,
   deliveryType,
@@ -85,7 +90,7 @@ export const OrderSummary = ({
             Order Summary
           </CustomText>
 
-          {/* Coupon Section */}
+          {/* Coupon Section - checkboxes only */}
           <Box sx={{ mb: 2 }}>
             <CustomText
               sx={{
@@ -97,73 +102,79 @@ export const OrderSummary = ({
             >
               Coupon Code
             </CustomText>
-            <Box sx={{ display: "flex", gap: 1, mb: 1 }}>
-              <TextField
-                fullWidth
-                size="small"
-                placeholder="Enter coupon code"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-                disabled={!!appliedCoupon}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: 2,
-                    fontSize: { xs: 13, md: 14 },
-                  },
-                }}
-              />
-              <Button
-                variant="outlined"
-                onClick={handleApplyCoupon}
-                disabled={applyingCoupon || !couponCode.trim() || !!appliedCoupon}
-                sx={{
-                  borderColor: "var(--themeColor)",
-                  color: "var(--themeColor)",
-                  textTransform: "none",
-                  px: 2,
-                  fontSize: { xs: 12, md: 13 },
-                  fontWeight: 600,
-                  "&:hover": {
-                    borderColor: "var(--specialColor)",
-                    color: "var(--specialColor)",
-                  },
-                }}
-              >
-                {applyingCoupon ? "Applying..." : "Apply"}
-              </Button>
-            </Box>
-            {couponError && (
-              <CustomText sx={{ fontSize: 12, color: "#d32f2f", mb: 1 }}>
-                {couponError}
-              </CustomText>
-            )}
-            {appliedCoupon && (
-              <Box
-                sx={{
-                  p: 1,
-                  backgroundColor: "#f0f9ff",
-                  borderRadius: 1,
-                  border: "1px solid #0284c7",
-                }}
-              >
-                <CustomText sx={{ fontSize: 12, color: "#0284c7", mb: 0.5 }}>
-                  Coupon Applied: {appliedCoupon.code}
-                </CustomText>
-                <Button
-                  size="small"
-                  onClick={handleRemoveCoupon}
-                  sx={{
-                    fontSize: 11,
-                    color: "#0284c7",
-                    textTransform: "none",
-                    p: 0,
-                    minWidth: "auto",
-                    "&:hover": { backgroundColor: "transparent" },
-                  }}
-                >
-                  Remove
-                </Button>
+            {coupons.length > 0 ? (
+              <Box sx={{ width: "100%" }}>
+                {couponsLoading ? (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, py: 1 }}>
+                    <CircularProgress size={18} />
+                    <CustomText sx={{ fontSize: 13, color: "#666" }}>Loading coupons...</CustomText>
+                  </Box>
+                ) : (
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                    {coupons.map((coupon) => {
+                      const isChecked = selectedCoupon === coupon.id;
+                      return (
+                        <FormControlLabel
+                          key={coupon.id}
+                          control={
+                            <Checkbox
+                              size="small"
+                              checked={isChecked}
+                              onChange={() => {
+                                if (isChecked) {
+                                  handleRemoveCoupon();
+                                } else {
+                                  handleCouponSelect(coupon.id);
+                                }
+                              }}
+                              sx={{
+                                color: "#999",
+                                p: 0.75,
+                                "&.Mui-checked": {
+                                  color: "var(--themeColor)",
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Box sx={{ py: 0.5 }}>
+                              <CustomText sx={{ fontSize: { xs: 13, md: 14 }, fontWeight: 600, color: "#2c2c2c" }}>
+                                {coupon.code}
+                              </CustomText>
+                              <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666", display: "block" }}>
+                                {coupon.description}
+                              </CustomText>
+                            </Box>
+                          }
+                          sx={{
+                            m: 0,
+                            alignItems: "flex-start",
+                            p: 1,
+                            borderRadius: 1,
+                            bgcolor: isChecked ? "rgba(var(--themeColor-rgb, 230, 120, 80), 0.06)" : "transparent",
+                            border: "1px solid",
+                            borderColor: isChecked ? "var(--themeColor)" : "#eee",
+                            "&:hover": {
+                              bgcolor: isChecked ? "rgba(var(--themeColor-rgb, 230, 120, 80), 0.08)" : "#fafafa",
+                            },
+                          }}
+                        />
+                      );
+                    })}
+                  </Box>
+                )}
+                {couponError && (
+                  <CustomText sx={{ fontSize: 12, color: "#d32f2f", mt: 1 }}>
+                    {couponError}
+                  </CustomText>
+                )}
               </Box>
+            ) : (
+              !couponsLoading && (
+                <CustomText sx={{ fontSize: 13, color: "#666" }}>
+                  No coupons available. Log in to see your coupons.
+                </CustomText>
+              )
             )}
           </Box>
 
@@ -248,8 +259,6 @@ export const OrderSummary = ({
               >
                 <MenuItem value="UPI">UPI</MenuItem>
                 <MenuItem value="COD">Cash on Delivery</MenuItem>
-                <MenuItem value="CARD">Credit/Debit Card</MenuItem>
-                <MenuItem value="NET_BANKING">Net Banking</MenuItem>
               </Select>
             </FormControl>
           </Box>
@@ -337,12 +346,6 @@ export const OrderSummary = ({
               borderTop: "1px solid #eee",
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
-              <LocalShippingIcon sx={{ fontSize: { xs: 16, md: 18 }, color: "#666" }} />
-              <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666" }}>
-                Free shipping on orders over ₹50
-              </CustomText>
-            </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
               <PaymentIcon sx={{ fontSize: { xs: 16, md: 18 }, color: "#666" }} />
               <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666" }}>
