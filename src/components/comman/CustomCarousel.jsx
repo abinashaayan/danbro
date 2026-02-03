@@ -241,7 +241,7 @@ export const CustomCarousel = forwardRef(({
       >
         {displaySlides.map((child, index) => (
           <Box
-            key={child.key || index}
+            key={`slide-${index}`}
             sx={{
               flex: `0 0 ${100 / currentSlidesToShow}%`,
               padding: '0 4px'

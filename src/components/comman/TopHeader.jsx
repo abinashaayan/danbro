@@ -154,7 +154,12 @@ export const TopHeader = () => {
 
     // Listen for cart updates (badge = number of products/line items)
     useEffect(() => {
-        const handleCartUpdate = async () => {
+        const handleCartUpdate = async (e) => {
+            const explicitCount = e?.detail?.cartCount;
+            if (typeof explicitCount === "number") {
+                setCartCount(explicitCount);
+                return;
+            }
             if (!getAccessToken()) {
                 const guestCartItems = store.getState().guest?.guestCart ?? [];
                 setCartCount(guestCartItems.length);

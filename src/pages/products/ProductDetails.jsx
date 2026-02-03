@@ -384,7 +384,7 @@ export const ProductDetails = () => {
           <Link
             component="button"
             variant="body1"
-            onClick={() => navigate("/products")}
+            onClick={() => navigate("/")}
             sx={{
               color: "#666",
               textDecoration: "none",
@@ -395,9 +395,25 @@ export const ProductDetails = () => {
               "&:hover": { color: "#FF9472" },
             }}
           >
-            Products
+            Home
           </Link>
-          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Poppins', sans-serif", fontSize: { xs: 12, sm: 14 }, fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+          <Link
+            component="button"
+            variant="body1"
+            onClick={() => navigate(product?.categoryid != null ? `/products?categoryId=${product.categoryid}` : "/products")}
+            sx={{
+              color: "#666",
+              textDecoration: "none",
+              cursor: "pointer",
+              fontFamily: "'Poppins', sans-serif",
+              fontSize: { xs: 12, sm: 14 },
+              fontWeight: 400,
+              "&:hover": { color: "#FF9472" },
+            }}
+          >
+            {apiCategories?.find((c) => c.id === product?.categoryid || c.id === parseInt(product?.categoryid, 10))?.groupname || product?.subcategory || "Products"}
+          </Link>
+          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Poppins', sans-serif", fontSize: { xs: 12, sm: 14 }, fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: { xs: 120, sm: 200 } }}>
             {productData?.name}
           </CustomText>
         </Breadcrumbs>
@@ -454,7 +470,7 @@ export const ProductDetails = () => {
                     overflow: "hidden",
                     backgroundColor: "#f5f5f5",
                     position: "relative",
-                    cursor: { xs: "default", md: isZooming ? "crosshair" : "default" },
+                    cursor: { xs: "default", md: isZooming ? "crosshair" : "zoom-in" },
                   }}
                   onMouseEnter={() => !isMobile && setIsZooming(true)}
                   onMouseLeave={() => setIsZooming(false)}
@@ -463,7 +479,13 @@ export const ProductDetails = () => {
                     const rect = imageContainerRef.current.getBoundingClientRect();
                     const x = ((e.clientX - rect.left) / rect.width) * 100;
                     const y = ((e.clientY - rect.top) / rect.height) * 100;
-                    setMousePosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+                    const relX = e.clientX - rect.left;
+                    const relY = e.clientY - rect.top;
+                    const lensSize = 120;
+                    const half = lensSize / 2;
+                    const left = Math.max(0, Math.min(rect.width - lensSize, relX - half));
+                    const top = Math.max(0, Math.min(rect.height - lensSize, relY - half));
+                    setMousePosition({ x: left, y: top });
                     setZoomPosition({ x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) });
                   }}
                 >
@@ -478,42 +500,63 @@ export const ProductDetails = () => {
                       objectFit: "cover",
                     }}
                   />
-                  {/* Zoom lens overlay - square */}
+                  {/* Veg badge - top right of main image */}
+                  {(product?.veg === "Y" || product?.veg === true) && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 12,
+                        right: 12,
+                        px: 1.5,
+                        py: 0.5,
+                        borderRadius: 1,
+                        backgroundColor: "rgba(27, 156, 63, 0.95)",
+                        border: "1px solid #fff",
+                        boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
+                        zIndex: 5,
+                      }}
+                    >
+                      <CustomText sx={{ fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif", color: "#fff", letterSpacing: "0.02em" }}>
+                        Veg
+                      </CustomText>
+                    </Box>
+                  )}
+                  {/* Zoom lens overlay - follows cursor, clamped inside image */}
                   {isZooming && !isMobile && (
                     <Box
                       sx={{
                         position: "absolute",
-                        top: mousePosition.y - 100,
-                        left: mousePosition.x - 100,
-                        width: 200,
-                        height: 200,
-                        borderRadius: 1,
-                        border: "2px solid #FF9472",
-                        backgroundColor: "rgba(255, 148, 114, 0.15)",
+                        top: mousePosition.y,
+                        left: mousePosition.x,
+                        width: 120,
+                        height: 120,
+                        borderRadius: "50%",
+                        border: "2px solid rgba(255, 148, 114, 0.9)",
+                        backgroundColor: "rgba(255, 255, 255, 0.25)",
                         pointerEvents: "none",
                         display: { xs: "none", md: "block" },
                         zIndex: 10,
-                        boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.3)",
+                        boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.35)",
                       }}
                     />
                   )}
                 </Box>
-                {/* Zoomed image panel */}
+                {/* Zoomed image panel - no card, only zoomed image with light shadow */}
                 {isZooming && !isMobile && (
                   <Box
                     sx={{
                       position: "absolute",
                       top: 0,
-                      right: { xs: 0, md: -420 },
-                      width: { xs: "100%", md: 400 },
-                      height: { xs: 350, sm: 400, md: 500 },
+                      left: "100%",
+                      ml: 1,
+                      width: 400,
+                      height: 420,
                       borderRadius: 1,
                       overflow: "hidden",
-                      backgroundColor: "#fff",
-                      border: "1px solid #e0e0e0",
+                      backgroundColor: "transparent",
                       zIndex: 20,
                       display: { xs: "none", md: "block" },
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
                     }}
                   >
                     <Box
@@ -525,8 +568,8 @@ export const ProductDetails = () => {
                         height: "200%",
                         objectFit: "cover",
                         position: "absolute",
-                        left: `${-zoomPosition.x * 2}%`,
-                        top: `${-zoomPosition.y * 2}%`,
+                        left: `${50 - zoomPosition.x}%`,
+                        top: `${50 - zoomPosition.y}%`,
                         pointerEvents: "none",
                       }}
                     />

@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Box,  Button, IconButton, Grid } from "@mui/material";
+import { Box, Button, IconButton, Grid } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import CloseIcon from "@mui/icons-material/Close";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import { Link } from "react-router-dom";
 
 export const BusinessDialog = ({ open, onClose }) => {
   useEffect(() => {
@@ -114,7 +115,6 @@ export const BusinessDialog = ({ open, onClose }) => {
         </IconButton>
 
         <Grid container spacing={{ xs: 2, md: 3 }}>
-          {/* Something About Us Card */}
           <Grid size={{ xs: 12, md: 6 }}>
             <Box
               sx={{
@@ -157,6 +157,7 @@ export const BusinessDialog = ({ open, onClose }) => {
                   Danbro by Mr. Brown Bakery brings you oven-fresh goodness inspired by tradition and baked with heart, We believe in slow baking, honest ingredients, and creating moments worth savoring.
                 </CustomText>
               </Box>
+              <Link to="/about-us" className="link-no-decoration">
               <Button
                 onClick={handleClickHere}
                 sx={{
@@ -180,11 +181,12 @@ export const BusinessDialog = ({ open, onClose }) => {
                   },
                 }}
               >
-                <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 20, md: 22 } }} />
+                <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 30, md: 32 } }} />
                 <CustomText sx={{ color: "#000", fontWeight: 600 }}>
                   Click Here
                 </CustomText>
               </Button>
+              </Link>
             </Box>
           </Grid>
 
@@ -231,34 +233,36 @@ export const BusinessDialog = ({ open, onClose }) => {
                   Danbro by Mr. Brown Bakery delivers fresh, high quality baked goods tailored for businesses, We're your reliable Business to Business partner, committed to consistency, taste and timely supply.
                 </CustomText>
               </Box>
-              <Button
-                onClick={handleInquireNow}
-                sx={{
-                  backgroundColor: "#fff",
-                  color: "#000",
-                  borderRadius: "8px",
-                  padding: { xs: "12px 20px", md: "14px 24px" },
-                  fontSize: { xs: 14, md: 16 },
-                  fontWeight: 600,
-                  textTransform: "none",
-                  mt: { xs: 3, md: 4 },
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    backgroundColor: "#f5f5f5",
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
-                  },
-                }}
-              >
-                <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 20, md: 22 } }} />
-                <CustomText sx={{ color: "#000", fontWeight: 600 }}>
-                  Inquire Now
-                </CustomText>
-              </Button>
+              <Link to="/danbro-fresh-b2b" className="link-no-decoration">
+                <Button
+                  onClick={handleInquireNow}
+                  sx={{
+                    backgroundColor: "#fff",
+                    color: "#000",
+                    borderRadius: "8px",
+                    padding: { xs: "12px 20px", md: "14px 24px" },
+                    fontSize: { xs: 14, md: 16 },
+                    fontWeight: 600,
+                    textTransform: "none",
+                    mt: { xs: 3, md: 4 },
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    boxShadow: "0 4px 15px rgba(0,0,0,0.2)",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: "#f5f5f5",
+                      transform: "translateY(-2px)",
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.3)",
+                    },
+                  }}
+                >
+                  <CampaignIcon sx={{ color: "#FFB5A1", fontSize: { xs: 30, md: 32 } }} />
+                  <CustomText sx={{ color: "#000", fontWeight: 600 }}>
+                    Inquire Now
+                  </CustomText>
+                </Button>
+              </Link>
             </Box>
           </Grid>
         </Grid>

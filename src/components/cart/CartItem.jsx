@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -48,74 +49,97 @@ export const CartItem = ({
             flexDirection: { xs: "column", sm: "row" },
           }}
         >
-          {/* Product Image */}
+          {/* Clickable: Product Image + Name/Price → Product Details */}
           <Box
+            component={Link}
+            to={`/products/${productId}`}
             sx={{
-              width: { xs: "100%", sm: 110 },
-              height: { xs: 180, sm: 110 },
-              borderRadius: { xs: 2, md: 2 },
-              overflow: "hidden",
-              flexShrink: 0,
+              display: "flex",
+              flex: 1,
+              minWidth: 0,
+              textDecoration: "none",
+              color: "inherit",
+              cursor: "pointer",
             }}
           >
-            <img
-              src={
-                (item.images && Array.isArray(item.images) && item.images.length > 0 && (item.images[0].url || item.images[0])) ||
-                item.image ||
-                item.product?.image ||
-                blankImage
-              }
-              alt={item.name || item.product?.name || "Product"}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
+            <Box
+              component="span"
+              sx={{
+                display: "flex",
+                gap: { xs: 2, md: 3 },
+                flex: 1,
+                minWidth: 0,
+                flexDirection: { xs: "column", sm: "row" },
+                "&:hover": { opacity: 0.9 },
               }}
-            />
+            >
+              <Box
+                sx={{
+                  width: { xs: "100%", sm: 110 },
+                  height: { xs: 180, sm: 110 },
+                  borderRadius: { xs: 2, md: 2 },
+                  overflow: "hidden",
+                  flexShrink: 0,
+                }}
+              >
+                <img
+                  src={
+                    (item.images && Array.isArray(item.images) && item.images.length > 0 && (item.images[0].url || item.images[0])) ||
+                    item.image ||
+                    item.product?.image ||
+                    blankImage
+                  }
+                  alt={item.name || item.product?.name || "Product"}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              </Box>
+              <Box sx={{ flex: 1, minWidth: 0 }}>
+                <CustomText
+                  sx={{
+                    fontSize: { xs: 16, md: 18 },
+                    fontWeight: 600,
+                    color: "#2c2c2c",
+                    mb: 0.5,
+                  }}
+                >
+                  {item.name || item.product?.name || "Product"}
+                </CustomText>
+                <CustomText
+                  sx={{
+                    fontSize: { xs: 12, md: 14 },
+                    color: "#666",
+                    mb: { xs: 1, md: 1.5 },
+                  }}
+                >
+                  Weight: {item.weight ?? item.product?.weight ?? "N/A"}
+                </CustomText>
+                <CustomText
+                  sx={{
+                    fontSize: { xs: 18, md: 20 },
+                    fontWeight: 700,
+                    color: "var(--themeColor)",
+                  }}
+                >
+                  ₹{
+                    (item.lineTotal != null && item.lineTotal > 0)
+                      ? Number(item.lineTotal).toFixed(2)
+                      : (Array.isArray(item.price) && item.price.length > 0)
+                        ? (Number(item.price[0].rate) || Number(item.price[0].mrp) || 0).toFixed(2)
+                        : (item.price && typeof item.price === "object" && (item.price.rate != null || item.price.mrp != null))
+                          ? (Number(item.price.rate) || Number(item.price.mrp) || 0).toFixed(2)
+                          : (typeof item.price === "number" ? item.price : 0).toFixed(2)
+                  }
+                </CustomText>
+              </Box>
+            </Box>
           </Box>
 
-          {/* Product Details */}
-          <Box sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <Box>
-              <CustomText
-                sx={{
-                  fontSize: { xs: 16, md: 18 },
-                  fontWeight: 600,
-                  color: "#2c2c2c",
-                  mb: 0.5,
-                }}
-              >
-                {item.name || item.product?.name || "Product"}
-              </CustomText>
-              <CustomText
-                sx={{
-                  fontSize: { xs: 12, md: 14 },
-                  color: "#666",
-                  mb: { xs: 1, md: 1.5 },
-                }}
-              >
-                Weight: {item.weight ?? item.product?.weight ?? "N/A"}
-              </CustomText>
-              <CustomText
-                sx={{
-                  fontSize: { xs: 18, md: 20 },
-                  fontWeight: 700,
-                  color: "var(--themeColor)",
-                }}
-              >
-                ₹{
-                  (item.lineTotal != null && item.lineTotal > 0)
-                    ? Number(item.lineTotal).toFixed(2)
-                    : (Array.isArray(item.price) && item.price.length > 0)
-                      ? (Number(item.price[0].rate) || Number(item.price[0].mrp) || 0).toFixed(2)
-                      : (item.price && typeof item.price === "object" && (item.price.rate != null || item.price.mrp != null))
-                        ? (Number(item.price.rate) || Number(item.price.mrp) || 0).toFixed(2)
-                        : (typeof item.price === "number" ? item.price : 0).toFixed(2)
-                }
-              </CustomText>
-            </Box>
-
-            {/* Quantity Controls */}
+          {/* Quantity Controls */}
+          <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flexShrink: 0 }}>
             <Box
               sx={{
                 display: "flex",

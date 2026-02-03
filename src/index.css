@@ -84,6 +84,11 @@ span,
   font-weight: 600;
 }
 
+/* Link without underline */
+.link-no-decoration {
+  text-decoration: none;
+}
+
 .slick-list {
   overflow: visible !important;
 }

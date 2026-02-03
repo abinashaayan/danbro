@@ -214,6 +214,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 md: "calc(25% - 18px)",
                 lg: "calc(20% - 20px)",
               },
+              display: "flex",
               animation: isVisible
                 ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                 : "none",
@@ -242,6 +243,10 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 cursor: "pointer",
                 transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                 position: "relative",
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
                 "& .green-dot": {
                   position: "absolute",
                   top: 8,
@@ -292,6 +297,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 sx={{
                   position: "relative",
                   overflow: "hidden",
+                  flexShrink: 0,
                   "&::after": {
                     content: '""',
                     position: "absolute",
@@ -429,7 +435,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   </IconButton>
                 </Box>
               </Box>
-              <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+              <CardContent sx={{ p: { xs: 1.5, sm: 2 }, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
                 <CustomText
                   autoTitleCase={true}
                   sx={{
@@ -439,6 +445,12 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                     fontSize: { xs: 11, sm: 12, md: 13 },
                     lineHeight: 1.3,
                     transition: "color 0.3s ease",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    minHeight: { xs: "2.6em", sm: "2.6em", md: "2.6em" },
                     "&:hover": {
                       color: "#FF643A",
                     },
@@ -447,7 +459,19 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   {product?.name}
                 </CustomText>
 
-                <ProductDescription>{product?.description}</ProductDescription>
+                <ProductDescription
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    flex: 1,
+                    minHeight: 0,
+                  }}
+                >
+                  {product?.description}
+                </ProductDescription>
 
                 <ProductPrice>{product?.price}</ProductPrice>
               </CardContent>

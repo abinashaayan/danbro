@@ -87,7 +87,7 @@ export const Store = () => {
                             transform: visibleSections.hero ? "translateY(0)" : "translateY(30px)"
                         }}
                     >
-                        <Link to="/" style={{ textDecoration: "none" }}>
+                        <Link to="/" className="link-no-decoration">
                             <Box sx={{ display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}>
                                 <ArrowBackIosNew sx={{ fontSize: 16, color: "#fff" }} />
                                 <CustomText variant="body1" sx={{ fontWeight: "bold", color: "#fff" }}>

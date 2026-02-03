@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, TextField, Button, IconButton, Autocomplete, CircularProgress, Paper } from "@mui/material";
+import { Box, TextField, Autocomplete, CircularProgress, Paper } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
-import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -193,9 +192,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
         e.preventDefault();
         e.stopPropagation();
       }}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onClose();
-      }}
+      onClick={(e) => e.stopPropagation()}
     >
       <Box
         sx={{
@@ -220,26 +217,8 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close Button */}
-        <IconButton
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            top: 12,
-            right: 12,
-            color: "#666",
-            zIndex: 10,
-            "&:hover": {
-              backgroundColor: "rgba(0,0,0,0.05)",
-              color: "#000",
-            },
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-
         {/* Header with title and location icons */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, position: "relative", pr: 5 }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, position: "relative" }}>
           <CustomText sx={{ fontSize: { xs: 20, md: 22 }, fontWeight: 700, color: "#333", }}>
             Enter Delivery Location
           </CustomText>
@@ -412,25 +391,6 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
           >
             Use my current location
           </CustomText>
-        </Box>
-
-        {/* Skip / Close without setting location */}
-        <Box sx={{ textAlign: "center", mt: 2 }}>
-          <Button
-            variant="text"
-            onClick={onClose}
-            sx={{
-              textTransform: "none",
-              fontSize: 14,
-              color: "#666",
-              "&:hover": {
-                backgroundColor: "rgba(0,0,0,0.04)",
-                color: "#333",
-              },
-            }}
-          >
-            Skip for now
-          </Button>
         </Box>
       </Box>
     </Box>

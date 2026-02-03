@@ -28,7 +28,9 @@ const PaymentSuccess = () => {
       setStatus("success");
       if (!getAccessToken()) {
         dispatch(setGuestCart([]));
-        window.dispatchEvent(new CustomEvent("cartUpdated"));
+        window.dispatchEvent(new CustomEvent("cartUpdated", { detail: { cartCount: 0 } }));
+      } else {
+        window.dispatchEvent(new CustomEvent("cartUpdated", { detail: { cartCount: 0 } }));
       }
       dispatch(loadCartItems());
       return;
@@ -63,7 +65,9 @@ const PaymentSuccess = () => {
           sessionStorage.removeItem("pendingOrderId");
           if (!token) {
             dispatch(setGuestCart([]));
-            window.dispatchEvent(new CustomEvent("cartUpdated"));
+            window.dispatchEvent(new CustomEvent("cartUpdated", { detail: { cartCount: 0 } }));
+          } else {
+            window.dispatchEvent(new CustomEvent("cartUpdated", { detail: { cartCount: 0 } }));
           }
           dispatch(loadCartItems());
           setOrderDetails(order);
@@ -95,7 +99,7 @@ const PaymentSuccess = () => {
   const deliveryAddress = details.deliveryAddress || {};
 
   return (
-    <Box sx={{ minHeight: "60vh", py: 6, px: 2 }}>
+    <Box sx={{ minHeight: "60vh", py: 6, px: 2, mb: 4 }}>
       <Container maxWidth="sm">
         {status === "loading" && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>

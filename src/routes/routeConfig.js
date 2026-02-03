@@ -32,6 +32,7 @@ const RefundReturnsPolicy = createLazyComponent(() => import("../pages/home/Refu
 const CorporateQueries = createLazyComponent(() => import("../pages/home/CorporateQueries"), "CorporateQueries");
 const PaymentSuccess = createLazyComponent(() => import("../pages/home/paymentSuccess"));
 const PaymentFailure = createLazyComponent(() => import("../pages/home/paymentFailure"), "paymentFailure");
+const DanbroFreshB2B = createLazyComponent(() => import("../pages/home/DanbroFreshB2B"), "DanbroFreshB2B");
 
 /**
  * Public Routes - Accessible without authentication
@@ -124,6 +125,10 @@ export const publicRoutes = [
   {
     path: "/order-failure",
     component: PaymentFailure,
+  },
+  {
+    path: "/danbro-fresh-b2b",
+    component: DanbroFreshB2B,
   },
 ];
 

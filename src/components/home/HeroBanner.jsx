@@ -19,7 +19,7 @@ export const HeroBanner = () => {
     <>
    <div className="container">
       <div className="slide" ref={slideRef}>
-        {bannerSlides.map((slide, index) => (
+        {bannerSlides?.map((slide, index) => (
           <div
             key={slide.id ?? index}
             className="item"
