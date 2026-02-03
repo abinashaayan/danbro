@@ -19,9 +19,9 @@ export const EmptyCart = ({ navigate }) => {
       <CustomText sx={{ fontSize: { xs: 18, md: 24 }, fontWeight: 600, color: "#666" }}>
         Your cart is empty
       </CustomText>
+      <Link to="/home" className="link-no-decoration">
       <Button
         variant="contained"
-        onClick={() => navigate("/products")}
         sx={{
           backgroundColor: "var(--themeColor)",
           color: "#fff",
@@ -38,6 +38,7 @@ export const EmptyCart = ({ navigate }) => {
       >
         Continue Shopping
       </Button>
+      </Link>
     </Box>
   );
 };

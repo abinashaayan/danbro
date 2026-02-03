@@ -27,6 +27,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
     const priceArr = Array.isArray(product?.price) ? product.price : [];
     const priceObj = priceArr[0] ?? (product?.price && typeof product.price === "object" ? product.price : null);
     const rate = priceObj != null ? (Number(priceObj.rate) || Number(priceObj.mrp) || 0) : 0;
+    const displayPrice = rate >= 0 ? `₹${rate}` : "Price not available";
     const imgFirst = product?.images?.[0];
     const image = imgFirst != null ? (typeof imgFirst === "string" ? imgFirst : imgFirst?.url) || blankImage : blankImage;
     return {
@@ -35,7 +36,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
       prdcode: product?.prdcode ?? null,
       name: product?.name || "Unknown Product",
       image,
-      price: rate > 0 ? `₹${rate}` : "Price not available",
+      price: displayPrice,
       mrp: priceObj?.mrp ?? null,
       rate: priceObj?.rate ?? null,
       weight: product?.weight ?? null,

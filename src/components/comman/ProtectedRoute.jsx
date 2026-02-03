@@ -16,7 +16,7 @@ import { checkAuth } from "../../store/authSlice";
  */
 export const ProtectedRoute = ({ children }) => {
   const dispatch = useAppDispatch();
-  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isLoading, authChecked } = useAppSelector((state) => state.auth);
   const location = useLocation();
 
   useEffect(() => {
@@ -24,8 +24,8 @@ export const ProtectedRoute = ({ children }) => {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  // Show loading state while checking authentication
-  if (isLoading) {
+  // Show loading state until auth check has completed (avoids redirect to login on refresh)
+  if (!authChecked || isLoading) {
     return (
       <Box
         sx={{

@@ -412,9 +412,9 @@ export const TopHeader = () => {
                 </IconButton>
 
                 {isLoggedIn && userProfile ? (
+                    <Link to="/profile" className="link-no-decoration">
                     <IconButton
                         size="small"
-                        onClick={() => navigate("/profile")}
                         sx={{
                             padding: { xs: 0.5, md: 0.75 },
                             width: { xs: 36, md: 40 },
@@ -446,6 +446,7 @@ export const TopHeader = () => {
                                     : "U"}
                         </Avatar>
                     </IconButton>
+                    </Link>
                 ) : (
                     <IconButton
                         size="small"

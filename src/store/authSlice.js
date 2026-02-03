@@ -94,6 +94,7 @@ export const checkAuth = createAsyncThunk(
 const initialState = {
   isAuthenticated: false,
   isLoading: false,
+  authChecked: false,
   user: null,
   accessToken: null,
   refreshToken: null,
@@ -152,6 +153,7 @@ const authSlice = createSlice({
       })
       // Check auth cases
       .addCase(checkAuth.fulfilled, (state, action) => {
+        state.authChecked = true;
         state.isAuthenticated = action.payload;
         if (!action.payload) {
           state.user = null;
