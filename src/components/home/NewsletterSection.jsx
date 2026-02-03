@@ -37,11 +37,12 @@ export const NewsletterSection = () => {
     <Box
       ref={sectionRef}
       sx={{
-        py: { xs: 6, md: 10 },
+        py: { xs: 1, md: 4 },
         bgcolor: "var(--themeColor)",
         position: "relative",
         overflow: "hidden",
         opacity: visible ? 1 : 0,
+        borderRadius: 5,
         transform: visible ? "translateY(0)" : "translateY(50px)",
         transition: "opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
         "&::before": {
@@ -67,6 +68,7 @@ export const NewsletterSection = () => {
             textAlign: "center",
             maxWidth: 700,
             mx: "auto",
+            mb: 4,
           }}
         >
           {/* Icon with Animation */}
@@ -79,7 +81,6 @@ export const NewsletterSection = () => {
               height: 80,
               borderRadius: "50%",
               bgcolor: "rgba(255, 255, 255, 0.2)",
-              mb: 3,
               animation: visible ? "floatIcon 3s ease-in-out infinite" : "none",
               "@keyframes floatIcon": {
                 "0%, 100%": { transform: "translateY(0px)" },
@@ -101,7 +102,6 @@ export const NewsletterSection = () => {
               fontSize: { xs: 28, sm: 34, md: 42 },
               fontWeight: 800,
               color: "#fff",
-              mb: 2,
             }}
           >
             Subscribe to Our Newsletter
@@ -112,7 +112,7 @@ export const NewsletterSection = () => {
             sx={{
               fontSize: { xs: 14, md: 16 },
               color: "rgba(255, 255, 255, 0.9)",
-              mb: 4,
+              mb: 2,
               lineHeight: 1.6,
             }}
           >

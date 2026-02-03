@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Button } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { ShoppingCart as ShoppingCartIcon } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export const EmptyCart = ({ navigate }) => {
   return (

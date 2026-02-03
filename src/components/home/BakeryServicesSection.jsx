@@ -42,7 +42,7 @@ const services = [
   {
     icon: <MenuBookIcon sx={{ fontSize: 50 }} />,
     title: "Baking Classes",
-    description: "Learn the art of baking from our expert chefs",
+    description: "Learn the art of baking from our expert chefs professionally",
     color: "#AA96DA",
   },
 ];
@@ -69,13 +69,12 @@ export const BakeryServicesSection = () => {
   }, []);
 
   return (
-    <Box ref={sectionRef}>
+    <Box ref={sectionRef} sx={{ py: { xs: 2, md: 4 } }}>
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 }, position: "relative", zIndex: 1 }}>
-        {/* Section Header */}
         <Box
           sx={{
             textAlign: "center",
-            mb: { xs: 6, md: 10 },
+            mb: { xs: 1, md: 4 },
             opacity: visible ? 1 : 0,
             transform: visible ? "translateY(0)" : "translateY(30px)",
             transition: "opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s",

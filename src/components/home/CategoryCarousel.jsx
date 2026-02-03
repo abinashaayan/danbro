@@ -1,4 +1,4 @@
-import { Box, IconButton, CircularProgress, Alert } from "@mui/material";
+import { Box, CircularProgress, Alert } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
@@ -65,7 +65,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
 
   return (
     isLoading ? (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         <CircularProgress sx={{ color: "var(--themeColor)" }} />
       </Box>
     ) : error || !items || items.length === 0 ? (
@@ -78,7 +78,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
       <Box
         ref={sectionRef}
         sx={{
-          mb: { xs: 6, md: 8 },
+          mb: { xs: 2, md: 4 },
           opacity: visible ? 1 : 0.3,
           transform: visible ? "translateY(0)" : "translateY(20px)",
           transition: "opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
@@ -87,11 +87,11 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
         }}
       >
         {/* Section Header */}
-        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
-          <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, mb: 1, }}>
+        <Box sx={{ textAlign: "center", mb: { xs: 2, md: 4 } }}>
+          <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2 }}>
             Browse Categories
           </CustomText>
-          <CustomText sx={{ fontSize: { xs: 28, sm: 34, md: 42 }, fontWeight: 800, color: "var(--themeColor)", mb: 2, }}>
+          <CustomText sx={{ fontSize: { xs: 28, sm: 34, md: 42 }, fontWeight: 800, color: "var(--themeColor)" }}>
             Shop by Category
           </CustomText>
           <CustomText sx={{ fontSize: { xs: 14, md: 16 }, color: "#666", maxWidth: 600, mx: "auto", }}>

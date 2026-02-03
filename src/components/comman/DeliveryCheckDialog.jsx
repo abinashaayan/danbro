@@ -124,7 +124,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
       try {
         if (window.google?.maps?.Geocoder) {
           const geocoder = new window.google.maps.Geocoder();
-          const response = await new Promise((resolve, reject) => {
+          const response = await new Promise((resolve) => {
             geocoder.geocode(
               { location: { lat: location.lat, lng: location.long } },
               (results, status) => {
@@ -234,7 +234,6 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
                 zIndex: 1,
               }}
             />
-            <LocationOnIcon sx={{ color: "#d32f2f", fontSize: 24, position: "absolute", bottom: 0, zIndex: 2 }} />
           </Box>
         </Box>
 

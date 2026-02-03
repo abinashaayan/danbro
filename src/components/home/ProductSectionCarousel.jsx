@@ -3,7 +3,7 @@ import { CustomText } from "../comman/CustomText";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useRef, useEffect, useState, memo, useMemo, useCallback } from "react";
+import { useRef, useEffect, useState, memo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
@@ -168,29 +168,10 @@ export const ProductSectionCarousel = memo(({
     }
   }, [wishlistIds]);
 
-  const settings = {
-    infinite: true,
-    speed: 600,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    arrows: false,
-    dots: true,
-    autoplay: true,
-    autoplaySpeed: 4000,
-    pauseOnHover: true,
-    responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 3 } },
-      { breakpoint: 992, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 576, settings: { slidesToShow: 1 } },
-    ],
-  };
-
   return (
     <Box
       ref={sectionRef}
       sx={{
-        mb: { xs: 6, md: 8 },
         position: "relative",
         background: bgColor,
         borderRadius: { xs: 0, md: 3 },
@@ -228,7 +209,6 @@ export const ProductSectionCarousel = memo(({
               height: 70,
               borderRadius: "50%",
               bgcolor: "rgba(255,181,161,0.15)",
-              mb: 2,
               animation: visible ? "pulseIcon 2s ease-in-out infinite" : "none",
               "@keyframes pulseIcon": {
                 "0%, 100%": { transform: "scale(1)" },
@@ -246,7 +226,6 @@ export const ProductSectionCarousel = memo(({
             color: "#FF9472",
             textTransform: "uppercase",
             letterSpacing: 2,
-            mb: 1,
           }}
         >
           {subtitle}
@@ -256,7 +235,6 @@ export const ProductSectionCarousel = memo(({
             fontSize: { xs: 32, sm: 38, md: 48 },
             fontWeight: 800,
             color: "var(--themeColor)",
-            mb: 2,
             position: "relative",
             display: "inline-block",
             fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",

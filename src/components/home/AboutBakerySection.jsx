@@ -58,7 +58,7 @@ export const AboutBakerySection = () => {
     <Box
       ref={sectionRef}
       sx={{
-        py: { xs: 8, md: 12 },
+        py: { xs: 2, md: 6 },
         position: "relative",
         overflow: "hidden",
         opacity: visible ? 1 : 0,
@@ -129,19 +129,19 @@ export const AboutBakerySection = () => {
             >
               {/* Logo & Badge */}
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
-                <Box
+                {/* <Box
                   component="img"
                   src={logo}
                   alt="Danbro Logo"
                   sx={{
-                    height: { xs: 50, md: 60 },
+                    height: { xs: 40, md: 50 },
                     width: "auto",
                   }}
-                />
+                /> */}
                 <CustomText
                   sx={{
-                    fontSize: { xs: 12, md: 14 },
-                    fontWeight: 600,
+                    fontSize: { xs: 10, md: 12 },
+                    fontWeight: 'bold',
                     color: "#FF9472",
                     textTransform: "uppercase",
                     letterSpacing: 2,
@@ -154,10 +154,9 @@ export const AboutBakerySection = () => {
               {/* Title */}
               <CustomText
                 sx={{
-                  fontSize: { xs: 32, sm: 38, md: 48 },
+                  fontSize: { xs: 28, sm: 32, md: 42 },
                   fontWeight: 800,
                   color: "var(--themeColor)",
-                  mb: 2,
                   lineHeight: 1.2,
                 }}
               >
@@ -169,8 +168,7 @@ export const AboutBakerySection = () => {
                 sx={{
                   fontSize: { xs: 15, md: 17 },
                   color: "#666",
-                  mb: 3,
-                  lineHeight: 1.8,
+                  mb: 1,
                 }}
               >
                 A gourmet family-owned pastry shop in Lucknow, now expanded to Kanpur & Delhi. We blend Asian traditions with modern flavors, creating premium desserts, mousse cakes, artisan tarts, and innovative baked mithai.
@@ -178,14 +176,14 @@ export const AboutBakerySection = () => {
 
               {/* Features List */}
               <Box sx={{ mb: 4 }}>
-                {features.map((feature, index) => (
+                {features?.map((feature, index) => (
                   <Box
                     key={index}
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
                       gap: 2,
-                      mb: 2.5,
+                      mb: 1,
                       opacity: visible ? 1 : 0,
                       transform: visible ? "translateY(0)" : "translateY(20px)",
                       transition: isReducedMotion

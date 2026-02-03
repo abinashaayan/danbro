@@ -14,7 +14,7 @@ import { loadCartItems, updateCartItemQuantity, removeCartItem, clearCartItems }
 import { getAccessToken } from "../../utils/cookies";
 import api from "../../utils/api";
 import { getMyAddresses } from "../../utils/apiService";
-import { initiateOrderSelf, initiateOrderOther, initiateOrderGuest, verifyOrderPayment, verifyOrderPaymentGuest, validateCoupon } from "../../utils/apiService";
+import { initiateOrderSelf, initiateOrderOther, initiateOrderGuest, validateCoupon } from "../../utils/apiService";
 import { CartItem } from "../../components/cart/CartItem";
 import { OrderSummary } from "../../components/cart/OrderSummary";
 import { AddressSection } from "../../components/cart/AddressSection";
@@ -298,41 +298,6 @@ export const Cart = () => {
     }
   };
 
-  const handleVerifyPayment = async (intentId) => {
-    try {
-      setPaymentVerifying(true);
-      setPaymentStatus(null);
-
-      const verificationResponse = isGuest
-        ? await verifyOrderPaymentGuest(intentId)
-        : await verifyOrderPayment(intentId);
-
-      if (verificationResponse?.success) {
-        setPaymentStatus('success');
-        dispatch(loadCartItems());
-        const orderIdFromRes = verificationResponse?.data?.orderId ?? verificationResponse?.orderId ?? intentId;
-        setTimeout(() => {
-          navigate('/order-success', {
-            state: {
-              orderId: orderIdFromRes,
-              orderDetails: verificationResponse?.data ?? verificationResponse,
-              message: 'Order placed successfully!'
-            }
-          });
-        }, 2000);
-      } else {
-        setPaymentStatus('failure');
-        setOrderError(verificationResponse?.message || "Payment failed. Please try again.");
-      }
-    } catch (error) {
-      console.error("Payment verification error:", error);
-      setPaymentStatus('failure');
-      setOrderError(error.message || "Payment verification failed. Please try again.");
-    } finally {
-      setPaymentVerifying(false);
-    }
-  };
-
   const updateQuantity = async (productId, change, weight) => {
     const itemKey = getItemKey(productId, weight);
     if (updatingItems.has(itemKey)) return;
@@ -460,8 +425,17 @@ export const Cart = () => {
   const total = finalSubtotal - discount + shipping;
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", p: { xs: 1, sm: 2, md: 3 }, pt: { xs: 2, sm: 3, md: 4 }, pb: { xs: 12, md: 6 } }}>
-      <Container sx={{ px: { xs: 1, sm: 2, md: 3 }, maxWidth: "100%" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        backgroundColor: "#fff",
+        p: { xs: 1, sm: 2, md: 3 },
+        pt: { xs: 2, sm: 3, md: 4 },
+        pb: { xs: 14, sm: 12, md: 6 },
+        boxSizing: "border-box",
+      }}
+    >
+      <Container sx={{ px: { xs: 0, sm: 2, md: 3 }, maxWidth: "100%", width: "100%" }}>
         {/* Header */}
         <Box sx={{ mb: { xs: 2, md: 3 } }}>
           <CustomText
@@ -500,10 +474,10 @@ export const Cart = () => {
         ) : cartItems?.length === 0 ? (
           <EmptyCart navigate={navigate} />
         ) : (
-          <Grid container spacing={2}>
+          <Grid container spacing={{ xs: 2, md: 2 }}>
             {/* Left Column - Cart Items */}
-            <Grid size={8}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 } }}>
+            <Grid size={{ xs: 12, md: 8 }} sx={{ order: { xs: 1, md: 1 }, minWidth: 0 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, md: 2 }, minWidth: 0 }}>
                 {cartItems?.map((item) => (
                   <CartItem
                     key={item.productId || item._id || item.id}
@@ -565,8 +539,8 @@ export const Cart = () => {
             </Grid>
 
             {/* Right Column - Address & Order Summary */}
-            <Grid size={4}>
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+            <Grid size={{ xs: 12, md: 4 }} sx={{ order: { xs: 2, md: 2 }, minWidth: 0 }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 2.5 }, minWidth: 0 }}>
                 <AddressSection
                   addresses={addresses}
                   selectedAddress={selectedAddress}

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, memo, useCallback } from "react";
+import { useEffect, useState, useMemo, memo } from "react";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { fetchProducts } from "../../utils/apiService";
 import { ProductSectionCarousel } from "./ProductSectionCarousel";
@@ -75,15 +75,15 @@ export const CategoryProductSection = memo(({
         if (response?.data && Array.isArray(response.data)) {
           productsData = response.data.map((product) => {
             const priceObj =
-              product.price && product.price.length > 0
-                ? product.price[0]
+              product?.price && product?.price.length > 0
+                ? product?.price[0]
                 : { rate: 0, mrp: 0 };
             const displayPrice = priceObj.rate || priceObj.mrp || 0;
             const originalPrice = priceObj.mrp || priceObj.rate || 0;
 
             const productImage =
-              product.images && product.images.length > 0 && product.images[0].url
-                ? product.images[0].url
+              product?.images && product?.images.length > 0 && product?.images[0].url
+                ? product?.images[0].url
                 : blankImage;
 
             // Calculate discount if applicable
@@ -96,20 +96,20 @@ export const CategoryProductSection = memo(({
             }
 
             return {
-              id: product.prdcode || product.productId || product._id,
-              productId: product.productId || product._id,
-              name: product.name,
-              title: product.name,
-              description: product.ingredient || product.name,
+              id: product?.prdcode || product?.productId || product?._id,
+              productId: product?.productId || product?._id,
+              name: product?.name,
+              title: product?.name,
+              description: product?.ingredient || product?.name,
               price: `₹${displayPrice}`,
               originalPrice: originalPrice > displayPrice ? `₹${originalPrice}` : null,
               image: productImage,
               discount: discount,
-              rating: product.rating || 4.5,
-              reviews: product.reviews || 75, // Fixed value instead of random to prevent re-renders
-              sku: product.prdcode,
-              badge: product.badge || "New",
-              badgeColor: product.badgeColor || "#FF9472",
+              rating: product?.rating || 4.5,
+              reviews: product?.reviews || 75, // Fixed value instead of random to prevent re-renders
+              sku: product?.prdcode,
+              badge: product?.badge || "New",
+              badgeColor: product?.badgeColor || "#FF9472",
               categoryId: category.id, // Add categoryId for navigation
             };
           });
@@ -175,14 +175,14 @@ export const CategoryProductSection = memo(({
 }, (prevProps, nextProps) => {
   // Custom comparison function for memo
   return (
-    prevProps.categoryGroupname === nextProps.categoryGroupname &&
-    prevProps.title === nextProps.title &&
-    prevProps.subtitle === nextProps.subtitle &&
-    prevProps.bgColor === nextProps.bgColor &&
-    prevProps.showBadge === nextProps.showBadge &&
-    prevProps.limit === nextProps.limit &&
-    prevProps.preloadedProducts?.length === nextProps.preloadedProducts?.length &&
-    JSON.stringify(prevProps.preloadedProducts) === JSON.stringify(nextProps.preloadedProducts)
+    prevProps.categoryGroupname === nextProps?.categoryGroupname &&
+    prevProps.title === nextProps?.title &&
+    prevProps.subtitle === nextProps?.subtitle &&
+    prevProps.bgColor === nextProps?.bgColor &&
+    prevProps.showBadge === nextProps?.showBadge &&
+    prevProps.limit === nextProps?.limit &&
+    prevProps.preloadedProducts?.length === nextProps?.preloadedProducts?.length &&
+    JSON.stringify(prevProps.preloadedProducts) === JSON.stringify(nextProps?.preloadedProducts)
   );
 });
 

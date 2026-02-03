@@ -66,7 +66,6 @@ export const YouTubeVideosSection = () => {
       <Box
         ref={sectionRef}
         sx={{
-          py: { xs: 6, md: 10 },
           position: "relative",
           overflow: "hidden",
           opacity: visible ? 1 : 0,
@@ -75,8 +74,7 @@ export const YouTubeVideosSection = () => {
         }}
       >
         <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 } }}>
-          {/* Section Header */}
-          <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
+          <Box sx={{ textAlign: "center", mb: { xs: 2, md: 4 } }}>
             <Box
               sx={{
                 display: "inline-flex",
@@ -86,7 +84,7 @@ export const YouTubeVideosSection = () => {
                 height: 70,
                 borderRadius: "50%",
                 bgcolor: "rgba(255, 0, 0, 0.1)",
-                mb: 2,
+                mb: 1,
                 animation: visible ? "pulseIcon 2s ease-in-out infinite" : "none",
                 "@keyframes pulseIcon": {
                   "0%, 100%": { transform: "scale(1)" },
@@ -103,7 +101,6 @@ export const YouTubeVideosSection = () => {
                 color: "#FF9472",
                 textTransform: "uppercase",
                 letterSpacing: 2,
-                mb: 1,
               }}
             >
               Watch Our Videos
@@ -112,8 +109,7 @@ export const YouTubeVideosSection = () => {
               sx={{
                 fontSize: { xs: 32, sm: 38, md: 48 },
                 fontWeight: 800,
-                color: "var(--themeColor)",
-                mb: 2,
+                color: "var(--themeColor)"
               }}
             >
               Discover Danbro Bakery

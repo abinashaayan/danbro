@@ -82,21 +82,6 @@ export const TestimonialsCarousel = () => {
     return () => observer.disconnect();
   }, []);
 
-  const settings = {
-    infinite: true,
-    speed: 600,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    dots: true,
-    autoplay: true,
-    autoplaySpeed: 5000,
-    pauseOnHover: true,
-    fade: true,
-    cssEase: "cubic-bezier(0.4, 0, 0.2, 1)",
-    beforeChange: (current, next) => setCurrentSlide(next),
-  };
-
   const handleBeforeChange = (current, next) => {
     setCurrentSlide(next);
   };
@@ -110,12 +95,10 @@ export const TestimonialsCarousel = () => {
           px: { xs: 2, md: 4 },
           position: "relative",
           zIndex: 1,
-          mt:4
         }}
       >
         {/* Section Header */}
-        <Box sx={{ textAlign: "center", mb: { xs: 6, md: 8 } }}>
-
+        <Box sx={{ textAlign: "center", mb: { xs: 4, md: 6 } }}>
           <CustomText
             sx={{
               fontSize: { xs: 32, sm: 40, md: 52 },

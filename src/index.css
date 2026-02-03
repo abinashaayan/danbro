@@ -104,6 +104,10 @@ span,
   padding-right: 0 !important;
 }
 
+.MuiBox-root.css-njg9tb {
+    padding: 10px;
+}
+
 @media (min-width: 0px) {
    .css-17vi2fq {
        padding-top: 50px !important;
