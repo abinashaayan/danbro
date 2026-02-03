@@ -21,7 +21,6 @@ const VerifyOtp = createLazyComponent(() => import("../pages/auth/VerifyOtp"), "
 const UserProfile = createLazyComponent(() => import("../pages/user/UserProfile"), "UserProfile");
 const Wishlist = createLazyComponent(() => import("../pages/user/Wishlist"), "Wishlist");
 const TrackOrder = createLazyComponent(() => import("../pages/order/TrackOrder"), "TrackOrder");
-const OrderSuccess = createLazyComponent(() => import("../pages/order/OrderSuccess"), "OrderSuccess");
 const ProductList = createLazyComponent(() => import("../pages/products/ProductList"), "ProductList");
 const ProductDetails = createLazyComponent(() => import("../pages/products/ProductDetails"), "ProductDetails");
 const Store = createLazyComponent(() => import("../pages/home/Store"), "Store");
@@ -31,7 +30,8 @@ const PrivacyPolicy = createLazyComponent(() => import("../pages/home/PrivacyPol
 const TermsAndConditions = createLazyComponent(() => import("../pages/home/TermsAndConditions"), "TermsAndConditions");
 const RefundReturnsPolicy = createLazyComponent(() => import("../pages/home/RefundReturnsPolicy"), "RefundReturnsPolicy");
 const CorporateQueries = createLazyComponent(() => import("../pages/home/CorporateQueries"), "CorporateQueries");
-// const paymentSuccess = createLazyComponent(() => import("../pages/home/paymentSuccess"), "paymentSuccess");
+const PaymentSuccess = createLazyComponent(() => import("../pages/home/paymentSuccess"), "paymentSuccess");
+const PaymentFailure = createLazyComponent(() => import("../pages/home/paymentFailure"), "paymentFailure");
 
 /**
  * Public Routes - Accessible without authentication
@@ -115,7 +115,11 @@ export const publicRoutes = [
   },
   {
     path: "/order-success",
-    component: OrderSuccess,
+    component: PaymentSuccess,
+  },
+  {
+    path: "/order-failure",
+    component: PaymentFailure,
   },
 ];
 

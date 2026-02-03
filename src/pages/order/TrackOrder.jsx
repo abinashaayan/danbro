@@ -19,7 +19,7 @@ import {
 import { CustomText } from "../../components/comman/CustomText";
 import { Search as SearchIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import api from "../../utils/api";
+import { trackOrder as trackOrderApi } from "../../utils/apiService";
 
 export const TrackOrder = () => {
   const navigate = useNavigate();
@@ -38,15 +38,19 @@ export const TrackOrder = () => {
     setError("");
 
     try {
-      const response = await api.get(`/order/track/${orderId.trim()}`);
-      if (response.data && response.data.success) {
-        setOrderData(response.data.data);
+      const response = await trackOrderApi(orderId.trim());
+      const success = response?.success === true || response?.status === 200;
+      const data = response?.data ?? response;
+      if (success && data) {
+        setOrderData(data);
+      } else if (data && typeof data === "object" && (data.orderId || data.status)) {
+        setOrderData(data);
       } else {
-        setError(response.data?.message || "Order not found");
+        setError(response?.message || "Order not found");
       }
     } catch (err) {
       console.error("Error tracking order:", err);
-      setError(err.response?.data?.message || "Failed to track order. Please try again.");
+      setError(err?.message || "Failed to track order. Please try again.");
     } finally {
       setLoading(false);
     }

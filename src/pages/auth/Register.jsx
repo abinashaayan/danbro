@@ -41,6 +41,9 @@ export const Register = () => {
   const formRef = useRef(null);
   const navigate = useNavigate();
 
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim());
+  const isValidMobile = (mobile) => /^[6-9]\d{9}$/.test((mobile || "").replace(/\s/g, ""));
+
   // Redirect if already logged in
   useEffect(() => {
     const token = getAccessToken();
@@ -97,10 +100,53 @@ export const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setApiError("");
+    setApiSuccess("");
 
-    // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+    const fullName = (formData.fullName || "").trim();
+    const email = (formData.email || "").trim();
+    const mobile = (formData.mobile || "").replace(/\s/g, "");
+    const password = formData.password || "";
+    const confirmPassword = formData.confirmPassword || "";
+
+    if (!fullName) {
+      setApiError("Full name is required.");
+      return;
+    }
+    if (fullName.length < 2) {
+      setApiError("Full name must be at least 2 characters.");
+      return;
+    }
+    if (!email) {
+      setApiError("Email is required.");
+      return;
+    }
+    if (!isValidEmail(email)) {
+      setApiError("Please enter a valid email address.");
+      return;
+    }
+    if (!mobile) {
+      setApiError("Mobile number is required.");
+      return;
+    }
+    if (!isValidMobile(mobile)) {
+      setApiError("Please enter a valid 10-digit Indian mobile number.");
+      return;
+    }
+    if (!password) {
+      setApiError("Password is required.");
+      return;
+    }
+    if (password.length < 8) {
+      setApiError("Password must be at least 8 characters long.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setApiError("Password and confirm password do not match.");
+      return;
+    }
+    if (!formData.agreeTerms) {
+      setApiError("You must agree to the Terms of use and Privacy Policy.");
       return;
     }
 
@@ -108,18 +154,14 @@ export const Register = () => {
     setRecaptchaError("");
 
     try {
-      // Prepare signup payload
-      const signupPayload = {
-        name: formData.fullName,
-        email: formData.email,
-        phone: formData.mobile,
-        password: formData.password,
-      };
-
-      // Call signup API
+      const location = getStoredLocation();
       try {
-        const location = getStoredLocation();
-        const response = await axios.post(`${API_BASE_URL}/user/signup`, signupPayload, {
+        const response = await axios.post(`${API_BASE_URL}/user/signup`, {
+          name: fullName,
+          email,
+          phone: mobile,
+          password,
+        }, {
           headers: {
             'Content-Type': 'application/json',
             'lat': location.lat.toString(),
@@ -134,14 +176,14 @@ export const Register = () => {
           // Subscribe to newsletter if checked
           if (formData.newsletter) {
             try {
-              const location = getStoredLocation();
+              const loc = getStoredLocation();
               await axios.post(`${API_BASE_URL}/newsletter/subscribe`, {
-                email: formData.email,
+                email,
               }, {
                 headers: {
                   'Content-Type': 'application/json',
-                  'lat': location.lat.toString(),
-                  'long': location.long.toString(),
+                  'lat': loc.lat.toString(),
+                  'long': loc.long.toString(),
                 },
               });
             } catch (error) {
@@ -151,7 +193,7 @@ export const Register = () => {
           }
           
           // Store registered email for OTP verification
-          setRegisteredEmail(formData.email);
+          setRegisteredEmail(email);
           
           // Show OTP verification step
           setShowOtpVerification(true);

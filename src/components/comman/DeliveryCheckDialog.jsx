@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, TextField, Button, IconButton, Autocomplete, CircularProgress, Paper } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
+import CloseIcon from "@mui/icons-material/Close";
 import SearchIcon from "@mui/icons-material/Search";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -15,31 +16,12 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
   const [inputValue, setInputValue] = useState("");
   const [serviceMessage, setServiceMessage] = useState(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
-  const [hasStoredLocation, setHasStoredLocation] = useState(false);
   const autocompleteRef = useRef(null);
   const debounceTimer = useRef(null);
 
   useEffect(() => {
     if (open) {
       setServiceMessage(null);
-      
-      // Check if location is already stored and set it in input
-      const storedLocation = localStorage.getItem('userLocation');
-      if (storedLocation) {
-        try {
-          const locationData = JSON.parse(storedLocation);
-          if (locationData.label) {
-            setInputValue(locationData.label);
-            setHasStoredLocation(true);
-          }
-        } catch (error) {
-          console.error('Error parsing stored location:', error);
-          setHasStoredLocation(false);
-        }
-      } else {
-        setHasStoredLocation(false);
-      }
-      
       // Initialize Google Places when dialog opens
       initGooglePlaces().catch((error) => {
         console.error('Failed to initialize Google Places:', error);
@@ -239,12 +221,30 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Close Button */}
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            top: 12,
+            right: 12,
+            color: "#666",
+            zIndex: 10,
+            "&:hover": {
+              backgroundColor: "rgba(0,0,0,0.05)",
+              color: "#000",
+            },
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+
         {/* Header with title and location icons */}
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mb: 3, position: "relative" }}>
-          <CustomText sx={{ fontSize: { xs: 20, md: 22 }, fontWeight: 700, color: "#333", textAlign: "center" }}>
-            {hasStoredLocation ? "Update Delivery Location" : "Enter Delivery Location"}
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3, position: "relative", pr: 5 }}>
+          <CustomText sx={{ fontSize: { xs: 20, md: 22 }, fontWeight: 700, color: "#333", }}>
+            Enter Delivery Location
           </CustomText>
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, position: "absolute", right: 0, width: 40, height: 50 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, position: "relative", width: 40, height: 50 }}>
             <LocationOnIcon sx={{ color: "#d32f2f", fontSize: 24, position: "absolute", top: 0, zIndex: 2 }} />
             <Box
               sx={{
@@ -256,6 +256,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
                 zIndex: 1,
               }}
             />
+            <LocationOnIcon sx={{ color: "#d32f2f", fontSize: 24, position: "absolute", bottom: 0, zIndex: 2 }} />
           </Box>
         </Box>
 
@@ -281,7 +282,7 @@ export const DeliveryCheckDialog = ({ open, onClose }) => {
           renderInput={(params) => (
             <TextField
               {...params}
-              placeholder={hasStoredLocation ? "Update your delivery location" : "Search for area/locality/pincode"}
+              placeholder="Search for area/locality/pincode"
               sx={{
                 "& .MuiOutlinedInput-root": {
                   borderRadius: "12px",

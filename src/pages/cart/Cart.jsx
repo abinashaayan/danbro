@@ -10,11 +10,11 @@ import {
 import { CustomText } from "../../components/comman/CustomText";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { loadCartItems, updateCartItemQuantity, removeCartItem } from "../../store/cartSlice";
+import { loadCartItems, updateCartItemQuantity, removeCartItem, clearCartItems } from "../../store/cartSlice";
 import { getAccessToken } from "../../utils/cookies";
 import api from "../../utils/api";
 import { getMyAddresses } from "../../utils/apiService";
-import { initiateOrderSelf, initiateOrderOther, verifyOrderPayment } from "../../utils/apiService";
+import { initiateOrderSelf, initiateOrderOther, initiateOrderGuest, verifyOrderPayment, verifyOrderPaymentGuest, validateCoupon } from "../../utils/apiService";
 import { CartItem } from "../../components/cart/CartItem";
 import { OrderSummary } from "../../components/cart/OrderSummary";
 import { AddressSection } from "../../components/cart/AddressSection";
@@ -94,7 +94,6 @@ export const Cart = () => {
       }
       const data = await getMyAddresses();
       setAddresses(data || []);
-      // Set default address as selected
       const defaultAddress = data?.find((addr) => addr.isDefault);
       if (defaultAddress) {
         setSelectedAddress(defaultAddress._id || defaultAddress.id);
@@ -181,72 +180,115 @@ export const Cart = () => {
 
       let orderResponse;
 
-      if (deliveryType === 'self') {
-        if (!selectedAddress) {
-          setOrderError("Please select a delivery address");
+      if (isGuest) {
+        if (
+          !someoneElseData?.name ||
+          !someoneElseData?.phone ||
+          !someoneElseData?.houseNumber ||
+          !someoneElseData?.streetName ||
+          !someoneElseData?.area ||
+          !someoneElseData?.city ||
+          !someoneElseData?.state ||
+          !someoneElseData?.zipCode
+        ) {
+          setOrderError("Please fill in all required delivery address fields");
+          setOrderInitiating(false);
           return;
         }
 
+        orderResponse = await initiateOrderGuest({
+          cart: cartItems?.map((item) => ({
+            productId: item.productId || item.id,
+            quantity: Number(item.quantity) || 1,
+          })),
+          deliveryAddress: {
+            name: someoneElseData?.name,
+            phone: someoneElseData?.phone,
+            houseNumber: someoneElseData?.houseNumber,
+            streetName: someoneElseData?.streetName,
+            area: someoneElseData?.area,
+            landmark: someoneElseData?.landmark,
+            city: someoneElseData?.city,
+            state: someoneElseData?.state,
+            zipCode: someoneElseData?.zipCode,
+          },
+          paymentMode: paymentMode,
+          couponCode: appliedCoupon?.code || couponCode || undefined,
+        });
+      } else if (deliveryType === 'self') {
+        if (!selectedAddress) {
+          setOrderError("Please select a delivery address");
+          setOrderInitiating(false);
+          return;
+        }
         orderResponse = await initiateOrderSelf({
           addressId: selectedAddress,
           paymentMode: paymentMode,
           instructions: deliveryInstructions,
+          couponCode: appliedCoupon?.code || couponCode || undefined,
         });
       } else {
-        // someone_else delivery
         if (
-          !someoneElseData.name ||
-          !someoneElseData.phone ||
-          !someoneElseData.houseNumber ||
-          !someoneElseData.streetName ||
-          !someoneElseData.area ||
-          !someoneElseData.city ||
-          !someoneElseData.state ||
-          !someoneElseData.zipCode
+          !someoneElseData?.name ||
+          !someoneElseData?.phone ||
+          !someoneElseData?.houseNumber ||
+          !someoneElseData?.streetName ||
+          !someoneElseData?.area ||
+          !someoneElseData?.city ||
+          !someoneElseData?.state ||
+          !someoneElseData?.zipCode
         ) {
           setOrderError("Please fill in all required delivery address fields");
+          setOrderInitiating(false);
           return;
         }
-
         orderResponse = await initiateOrderOther({
           deliveryAddress: {
-            name: someoneElseData.name,
-            phone: someoneElseData.phone,
-            houseNumber: someoneElseData.houseNumber,
-            streetName: someoneElseData.streetName,
-            area: someoneElseData.area,
-            landmark: someoneElseData.landmark,
-            city: someoneElseData.city,
-            state: someoneElseData.state,
-            zipCode: someoneElseData.zipCode,
+            name: someoneElseData?.name,
+            phone: someoneElseData?.phone,
+            houseNumber: someoneElseData?.houseNumber,
+            streetName: someoneElseData?.streetName,
+            area: someoneElseData?.area,
+            landmark: someoneElseData?.landmark,
+            city: someoneElseData?.city,
+            state: someoneElseData?.state,
+            zipCode: someoneElseData?.zipCode,
           },
           paymentMode: paymentMode,
           instructions: deliveryInstructions,
+          couponCode: appliedCoupon?.code || couponCode || undefined,
         });
       }
-
-      // API returns response.data, so orderResponse is the body (orderId, paymentUrl, etc.)
-      const orderId = orderResponse?.orderId ?? orderResponse?.data?.orderId;
-      const paymentUrl =
-        orderResponse?.paymentUrl ??
-        orderResponse?.paymentLink ??
-        orderResponse?.data?.paymentUrl ??
-        orderResponse?.data?.short_url;
+      const orderId = orderResponse?.orderId;
+      const paymentLink = orderResponse?.paymentLink;
+      const intentId = orderResponse?.intentId;
 
       if (!orderId) {
         throw new Error("Order initiation failed: No order ID received");
       }
 
-      // If Razorpay payment URL returned, open it and verify after user returns
-      if (paymentUrl) {
+      if (paymentLink && intentId) {
+        sessionStorage.setItem("pendingIntentId", intentId);
         sessionStorage.setItem("pendingOrderId", orderId);
-        window.location.href = paymentUrl;
+        window.location.href = paymentLink;
         return;
       }
 
-      // No payment URL (e.g. COD): verify immediately
-      await handleVerifyPayment(orderId);
+      if (!paymentLink) {
+        dispatch(loadCartItems());
+        navigate("/order-success", {
+          state: {
+            orderId,
+            orderDetails: {
+              orderId,
+              amount: orderResponse?.amount,
+            },
+          },
+        });
+        return;
+      }
 
+      setOrderError("Order initiated but payment link missing. Please contact support.");
     } catch (error) {
       console.error("Order initiation error:", error);
       setOrderError(error.message || "Failed to initiate order. Please try again.");
@@ -256,20 +298,24 @@ export const Cart = () => {
     }
   };
 
-  const handleVerifyPayment = async (orderId) => {
+  const handleVerifyPayment = async (intentId) => {
     try {
       setPaymentVerifying(true);
       setPaymentStatus(null);
 
-      const verificationResponse = await verifyOrderPayment(orderId);
+      const verificationResponse = isGuest
+        ? await verifyOrderPaymentGuest(intentId)
+        : await verifyOrderPayment(intentId);
 
       if (verificationResponse?.success) {
         setPaymentStatus('success');
         dispatch(loadCartItems());
+        const orderIdFromRes = verificationResponse?.data?.orderId ?? verificationResponse?.orderId ?? intentId;
         setTimeout(() => {
           navigate('/order-success', {
             state: {
-              orderId: orderId,
+              orderId: orderIdFromRes,
+              orderDetails: verificationResponse?.data ?? verificationResponse,
               message: 'Order placed successfully!'
             }
           });
@@ -310,10 +356,25 @@ export const Cart = () => {
     }
   };
 
-  // Apply coupon
+  const handleClearCart = async () => {
+    if (!window.confirm("Remove all items from your cart?")) return;
+    try {
+      await dispatch(clearCartItems());
+      await dispatch(loadCartItems());
+      window.dispatchEvent(new CustomEvent("cartUpdated"));
+    } catch (err) {
+      console.error("Error clearing cart:", err);
+    }
+  };
+
+  // Apply coupon (validate API – works for guest and logged-in)
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
       setCouponError("Please enter a coupon code");
+      return;
+    }
+    if (!cartItems?.length) {
+      setCouponError("Add items to cart to apply a coupon");
       return;
     }
 
@@ -321,25 +382,31 @@ export const Cart = () => {
     setCouponError("");
 
     try {
-      const response = await api.post('/coupon/apply', {
-        couponCode: couponCode.trim(),
-      });
+      const cart = cartItems.map((item) => ({
+        productId: item.productId || item.id,
+        quantity: Number(item.quantity) || 1,
+      }));
+      const res = await validateCoupon(couponCode.trim(), cart);
 
-      if (response.data && response.data.success) {
-        const couponData = response.data.data || response.data;
+      const valid = res?.valid === true;
+      const discountType = res?.discountType || "";
+      const discountValue = Number(res?.discount) || 0;
+
+      if (valid && discountType) {
+        const isPercentage = discountType === "ITEM_DISCOUNT_PERCENTAGE";
         setAppliedCoupon({
           code: couponCode.trim(),
-          discountPercent: couponData.discountPercentage || couponData.discount || 0,
-          discountAmount: couponData.discountAmount || 0,
-          discountType: couponData.discountType,
+          discountPercent: isPercentage ? discountValue : 0,
+          discountAmount: isPercentage ? 0 : discountValue,
+          discountType,
         });
         setCouponCode("");
       } else {
-        setCouponError(response.data?.message || "Invalid coupon code");
+        setCouponError(res?.message || "Invalid or expired coupon");
       }
     } catch (err) {
-      console.error("Error applying coupon:", err);
-      setCouponError(err.response?.data?.message || err.message || "Failed to apply coupon");
+      console.error("Error validating coupon:", err);
+      setCouponError(err?.message || "Failed to apply coupon");
     } finally {
       setApplyingCoupon(false);
     }
@@ -372,15 +439,19 @@ export const Cart = () => {
   // Use cartTotal from API if available, otherwise calculate
   const finalSubtotal = cartTotal > 0 ? cartTotal : subtotal;
 
-  // Calculate discount based on coupon type
+  // Calculate discount based on coupon type (ITEM_DISCOUNT_AMOUNT | ITEM_DISCOUNT_PERCENTAGE)
   let discount = 0;
   if (appliedCoupon) {
-    if (appliedCoupon.discountType === "ITEM_DISCOUNT_PERCENTAGE" || appliedCoupon.discountPercent) {
-      // Percentage discount
-      discount = finalSubtotal * (appliedCoupon.discountPercent || 0) / 100;
-    } else if (appliedCoupon.discountAmount) {
-      // Fixed amount discount
-      discount = appliedCoupon.discountAmount;
+    if (appliedCoupon.discountType === "ITEM_DISCOUNT_PERCENTAGE") {
+      discount = (finalSubtotal * (appliedCoupon.discountPercent || 0)) / 100;
+    } else if (appliedCoupon.discountType === "ITEM_DISCOUNT_AMOUNT") {
+      discount = Math.min(appliedCoupon.discountAmount || 0, finalSubtotal);
+    } else {
+      if (appliedCoupon.discountPercent) {
+        discount = (finalSubtotal * appliedCoupon.discountPercent) / 100;
+      } else if (appliedCoupon.discountAmount) {
+        discount = Math.min(appliedCoupon.discountAmount, finalSubtotal);
+      }
     }
   }
 
@@ -445,11 +516,12 @@ export const Cart = () => {
                 ))}
               </Box>
 
-              {/* Continue Shopping Button */}
-              <Box sx={{ mt: { xs: 2, md: 3 } }}>
+              {/* Continue Shopping & Clear Cart Buttons */}
+              <Box sx={{ mt: { xs: 2, md: 3 }, display: "flex", gap: 1.5, flexWrap: "wrap" }}>
                 <Button
                   variant="outlined"
                   onClick={() => navigate("/products")}
+                  disabled={loading}
                   sx={{
                     borderColor: "var(--themeColor)",
                     color: "var(--themeColor)",
@@ -466,6 +538,27 @@ export const Cart = () => {
                   }}
                 >
                   Continue Shopping
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={handleClearCart}
+                  disabled={loading || !cartItems?.length}
+                  sx={{
+                    borderColor: "#d32f2f",
+                    color: "#d32f2f",
+                    textTransform: "none",
+                    px: { xs: 3, md: 4 },
+                    py: { xs: 0.9, md: 1.1 },
+                    fontSize: { xs: 13, md: 15 },
+                    fontWeight: 600,
+                    "&:hover": {
+                      borderColor: "#b71c1c",
+                      color: "#b71c1c",
+                      backgroundColor: "rgba(211, 47, 47, 0.08)",
+                    },
+                  }}
+                >
+                  Clear Cart
                 </Button>
               </Box>
             </Grid>

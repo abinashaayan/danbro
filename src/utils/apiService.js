@@ -34,7 +34,8 @@ export const initiateOrderSelf = async (orderData) => {
       paymentMode: orderData.paymentMode,
       instructions: orderData.instructions || "",
     };
-    
+    if (orderData.couponCode) payload.couponCode = orderData.couponCode;
+
     const response = await axios.post(`${API_BASE_URL}/order/initiate`, payload, {
       headers,
       withCredentials: false,
@@ -118,7 +119,8 @@ export const initiateOrderOther = async (orderData) => {
       paymentMode: orderData.paymentMode,
       instructions: orderData.instructions || "",
     };
-    
+    if (orderData.couponCode) payload.couponCode = orderData.couponCode;
+
     const response = await axios.post(`${API_BASE_URL}/order/initiate`, payload, {
       headers,
       withCredentials: false,
@@ -156,27 +158,106 @@ export const initiateOrderOther = async (orderData) => {
 };
 
 /**
- * Verify payment for an order
- * @param {string} orderId - Order ID to verify
+ * Initiate order for GUEST (no auth token)
+ * @param {Object} orderData
+ * @param {Array<{ productId: string, quantity: number }>} orderData.cart - Cart items
+ * @param {Object} orderData.deliveryAddress - Full delivery address
+ * @param {string} orderData.paymentMode - UPI, COD, etc.
+ * @param {string} [orderData.couponCode] - Optional coupon code
+ * @returns {Promise} Order initiation response
+ */
+export const initiateOrderGuest = async (orderData) => {
+  try {
+    const location = getStoredLocation();
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': String(location.lat),
+      'long': String(location.long),
+    };
+    // No Authorization header for guest
+
+    const payload = {
+      orderFor: 'GUEST',
+      cart: orderData.cart.map((item) => ({
+        productId: item.productId,
+        quantity: Number(item.quantity) || 1,
+      })),
+      deliveryAddress: {
+        name: orderData.deliveryAddress.name,
+        phone: orderData.deliveryAddress.phone,
+        houseNumber: orderData.deliveryAddress.houseNumber || '',
+        streetName: orderData.deliveryAddress.streetName || '',
+        area: orderData.deliveryAddress.area || '',
+        landmark: orderData.deliveryAddress.landmark || '',
+        city: orderData.deliveryAddress.city || '',
+        state: orderData.deliveryAddress.state || '',
+        zipCode: orderData.deliveryAddress.zipCode || '',
+        coordinates: {
+          lat: Number(location.lat),
+          long: Number(location.long),
+        },
+      },
+      paymentMode: orderData.paymentMode,
+    };
+    if (orderData.couponCode) payload.couponCode = orderData.couponCode;
+
+    const response = await axios.post(`${API_BASE_URL}/order/initiate`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 30000,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('Error initiating order (GUEST):', error);
+
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout. Please try again.');
+    }
+
+    if (error.response) {
+      const status = error.response.status;
+      const message = error.response.data?.message || error.response.data?.error;
+
+      switch (status) {
+        case 400:
+          throw new Error(message || 'Invalid order data. Please check your information.');
+        case 403:
+          throw new Error(message || 'You do not have permission to place orders.');
+        case 500:
+          throw new Error(message || 'Server error. Please try again later.');
+        default:
+          throw new Error(message || `Order initiation failed (${status}). Please try again.`);
+      }
+    }
+
+    throw new Error(error.message || 'Failed to initiate order. Please try again.');
+  }
+};
+
+/**
+ * Verify payment for an order (backend expects intentId in path)
+ * @param {string} intentId - Razorpay intent ID (e.g. plink_xxx) to verify
  * @returns {Promise} Payment verification response
  */
-export const verifyOrderPayment = async (orderId) => {
+export const verifyOrderPayment = async (intentId) => {
   try {
     const token = getAccessToken();
-    
+
     if (!token) {
       throw new Error('Authentication required. Please login.');
     }
-    
+
     const headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'Authorization': `Bearer ${token}`,
     };
-    
-    // Updated as per latest backend spec:
-    // POST /api/order/verify/:orderId  (no body)
-    const response = await axios.post(`${API_BASE_URL}/order/verify/${orderId}`, {}, {
+
+    // POST /api/order/verify/:intentId (no body)
+    const response = await axios.post(`${API_BASE_URL}/order/verify/${intentId}`, {}, {
       headers,
       withCredentials: false,
       timeout: 30000,
@@ -212,6 +293,111 @@ export const verifyOrderPayment = async (orderId) => {
   }
 };
 
+/**
+ * Verify payment for a GUEST order (no auth token)
+ * @param {string} intentId - Razorpay intent ID (e.g. plink_xxx) to verify
+ * @returns {Promise} Payment verification response
+ */
+export const verifyOrderPaymentGuest = async (intentId) => {
+  try {
+    const response = await axios.post(
+      `${API_BASE_URL}/order/verify/${intentId}`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        withCredentials: false,
+        timeout: 30000,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error verifying guest order payment:', error);
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout. Please try again.');
+    }
+    if (error.response) {
+      const message = error.response.data?.message || error.response.data?.error;
+      throw new Error(message || `Payment verification failed (${error.response.status}). Please try again.`);
+    }
+    throw new Error(error.message || 'Failed to verify payment. Please try again.');
+  }
+};
+
+/**
+ * Validate coupon (guest: no token; logged-in: with token)
+ * POST /api/coupon/validate with body { couponCode, cart: [{ productId, quantity }] }
+ * @param {string} couponCode - Coupon code to validate
+ * @param {Array<{ productId: string, quantity: number }>} cart - Cart items
+ * @returns {Promise} Validation response with discount details
+ */
+export const validateCoupon = async (couponCode, cart) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': String(location.lat),
+      'long': String(location.long),
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const payload = {
+      couponCode: couponCode.trim(),
+      cart: (cart || []).map((item) => ({
+        productId: item.productId,
+        quantity: Number(item.quantity) || 1,
+      })),
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/coupon/validate`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 15000,
+    });
+
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.response?.data?.error || error.message;
+    throw new Error(message || 'Failed to validate coupon.');
+  }
+};
+
+/**
+ * Track order by order ID
+ * GET /api/order/track/:orderId (works for guest and logged-in; send Authorization if token present)
+ * @param {string} orderId - Order ID to track
+ * @returns {Promise} Order tracking response with status, delivery address, items, etc.
+ */
+export const trackOrder = async (orderId) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': String(location.lat),
+      'long': String(location.long),
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const response = await axios.get(`${API_BASE_URL}/order/track/${orderId}`, {
+      headers,
+      withCredentials: false,
+      timeout: 15000,
+    });
+
+    return response.data;
+  } catch (error) {
+    const message = error.response?.data?.message || error.response?.data?.error || error.message;
+    throw new Error(message || 'Failed to track order. Please check the order ID and try again.');
+  }
+};
 
 /**
  * Sanitize JSON string by escaping control characters within string values
@@ -316,54 +502,55 @@ export const checkServiceAvailability = async (latitude, longitude) => {
   }
 };
 
+// Dedupe in-flight category/getAll so multiple components don't fire parallel requests
+let categoriesFetchPromise = null;
+
 /**
- * Fetch item categories from the external API
+ * Fetch item categories from the external API (single in-flight request)
  * @returns {Promise<Object>} Response object with status and records array
  */
 export const fetchItemCategories = async () => {
-  try {
-    const url = getApiUrl();
-    const location = getStoredLocation();
+  if (categoriesFetchPromise) return categoriesFetchPromise;
 
-    const response = await axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'lat': location.lat.toString(),
-        'long': location.long.toString(),
-      },
-      withCredentials: false,
-      timeout: 30000, // Increased to 30 seconds to handle slower network conditions
-    });
+  categoriesFetchPromise = (async () => {
+    try {
+      const url = getApiUrl();
+      const location = getStoredLocation();
 
-    return response.data;
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'lat': location.lat.toString(),
+          'long': location.long.toString(),
+        },
+        withCredentials: false,
+        timeout: 15000,
+      });
 
-  } catch (error) {
-    console.error('Error fetching item categories:', error);
-
-    // Handle timeout errors specifically
-    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-      throw new Error(
-        'Request timeout: The server is taking too long to respond. Please try again or check your network connection.'
-      );
-    }
-
-    if (!error.response) {
-      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching item categories:', error);
+      if (error.code === 'ECONNABORTED' || error.message?.includes('timeout')) {
         throw new Error(
-          'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+          'Request timeout. Please try again or check your network connection.'
         );
       }
+      if (!error.response) {
+        if (error.code === 'ERR_NETWORK' || error.message?.includes('Network Error')) {
+          throw new Error('Network error. Please check your internet connection.');
+        }
+        throw new Error('Network error. Please try again later.');
+      }
       throw new Error(
-        'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+        error.response?.data?.message || `HTTP error! status: ${error.response.status}`
       );
+    } finally {
+      categoriesFetchPromise = null;
     }
+  })();
 
-    throw new Error(
-      error.response?.data?.message ||
-      `HTTP error! status: ${error.response.status}`
-    );
-  }
+  return categoriesFetchPromise;
 };
 
 /**
@@ -895,52 +1082,63 @@ export const submitContactForm = async (contactData) => {
   }
 };
 
+// In-flight promise for homeLayout to dedupe concurrent calls (e.g. Navbar, MainLayout, NavbarDropdown)
+let homeLayoutFetchPromise = null;
+
 /**
- * Fetch home layout data from the API
+ * Fetch home layout data from the API (deduped: concurrent callers share one request)
  * @returns {Promise<Object>} Response object with menus, categories, and products
  */
 export const fetchHomeLayout = async () => {
-  try {
-    const url = `${API_BASE_URL}/product/homeLayout`;
-    const location = getStoredLocation();
-    
-    const response = await axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'lat': location.lat.toString(),
-        'long': location.long.toString(),
-      },
-      withCredentials: false,
-      timeout: 30000,
-    });
-    
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching home layout:', error);
-    
-    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-      throw new Error(
-        'Request timeout: The server is taking too long to respond. Please try again or check your network connection.'
-      );
-    }
-    
-    if (!error.response) {
-      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+  if (homeLayoutFetchPromise) {
+    return homeLayoutFetchPromise;
+  }
+  homeLayoutFetchPromise = (async () => {
+    try {
+      const url = `${API_BASE_URL}/product/homeLayout`;
+      const location = getStoredLocation();
+
+      const response = await axios.get(url, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'lat': location.lat.toString(),
+          'long': location.long.toString(),
+        },
+        withCredentials: false,
+        timeout: 15000,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching home layout:', error);
+
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        throw new Error(
+          'Request timeout: The server is taking too long to respond. Please try again or check your network connection.'
+        );
+      }
+
+      if (!error.response) {
+        if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+          throw new Error(
+            'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+          );
+        }
         throw new Error(
           'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
         );
       }
+
       throw new Error(
-        'Network error: Unable to connect to the API. Please check your internet connection or try again later.'
+        error.response?.data?.message ||
+        `HTTP error! status: ${error.response.status}`
       );
+    } finally {
+      homeLayoutFetchPromise = null;
     }
-    
-    throw new Error(
-      error.response?.data?.message ||
-      `HTTP error! status: ${error.response.status}`
-    );
-  }
+  })();
+  return homeLayoutFetchPromise;
 };
 
 /**

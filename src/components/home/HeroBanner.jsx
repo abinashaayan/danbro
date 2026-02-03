@@ -1,10 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import { useRef } from "react";
 import "./HeroBanner.css";
 import { bannerSlides } from "../../utils/bannerSlides";
 
 export const HeroBanner = () => {
   const slideRef = useRef(null);
-  const intervalRef = useRef(null);
 
   const nextSlide = () => {
     const items = slideRef.current.querySelectorAll(".item");
@@ -16,45 +15,10 @@ export const HeroBanner = () => {
     slideRef.current.prepend(items[items.length - 1]);
   };
 
-  // Auto slide functionality
-  useEffect(() => {
-    startAutoSlide();
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  const startAutoSlide = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-    intervalRef.current = setInterval(() => {
-      nextSlide();
-    }, 2000);
-  };
-
-  const stopAutoSlide = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-  };
-
-  // Pause auto-slide on hover, resume on mouse leave
-  const handleMouseEnter = () => {
-    stopAutoSlide();
-  };
-
-  const handleMouseLeave = () => {
-    startAutoSlide();
-  };
-
   return (
     <>
    <div className="container">
-      <div className="slide" ref={slideRef} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      <div className="slide" ref={slideRef}>
         {bannerSlides.map((slide, index) => (
           <div
             key={slide.id ?? index}

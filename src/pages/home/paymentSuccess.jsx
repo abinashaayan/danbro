@@ -9,18 +9,17 @@ import { useAppDispatch } from "../../store/hooks";
 import { loadCartItems } from "../../store/cartSlice";
 import { setGuestCart } from "../../store/guestSlice";
 
-export const OrderSuccess = () => {
+const PaymentSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const [status, setStatus] = useState("loading"); // 'loading' | 'success' | 'failure'
   const [orderId, setOrderId] = useState("");
-  const [orderDetails, setOrderDetails] = useState(null); // full verify API response
+  const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // From Cart after immediate verify (no Razorpay redirect)
     const stateOrderId = location.state?.orderId;
     const stateDetails = location.state?.orderDetails;
     if (stateOrderId) {
@@ -35,29 +34,28 @@ export const OrderSuccess = () => {
       return;
     }
 
-    // From Razorpay redirect: URL params or sessionStorage
-    const id =
-      searchParams.get("orderId") ||
-      searchParams.get("order_id") ||
-      sessionStorage.getItem("pendingOrderId") ||
+    // Razorpay redirect: verify with intentId (from URL or sessionStorage)
+    const intentId =
+      searchParams.get("intentId") ||
+      searchParams.get("intent_id") ||
+      sessionStorage.getItem("pendingIntentId") ||
       "";
 
-    if (!id) {
+    if (!intentId) {
       setStatus("failure");
-      setError("Invalid return. No order ID found.");
+      setError("Invalid return. No payment intent found.");
       return;
     }
-
-    setOrderId(id);
 
     const verify = async () => {
       try {
         const token = getAccessToken();
         const res = token
-          ? await verifyOrderPayment(id)
-          : await verifyOrderPaymentGuest(id);
+          ? await verifyOrderPayment(intentId)
+          : await verifyOrderPaymentGuest(intentId);
 
         if (res?.success) {
+          sessionStorage.removeItem("pendingIntentId");
           sessionStorage.removeItem("pendingOrderId");
           if (!token) {
             dispatch(setGuestCart([]));
@@ -65,7 +63,7 @@ export const OrderSuccess = () => {
           }
           dispatch(loadCartItems());
           setOrderDetails(res?.data ?? res);
-          setOrderId(res?.data?.orderId ?? res?.orderId ?? id);
+          setOrderId(res?.data?.orderId ?? res?.orderId ?? intentId);
           setStatus("success");
         } else {
           setStatus("failure");
@@ -174,3 +172,5 @@ export const OrderSuccess = () => {
     </Box>
   );
 };
+
+export default PaymentSuccess;

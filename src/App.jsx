@@ -44,9 +44,7 @@ const AppContent = () => {
     
     // Show dialog if location is not set OR if user hasn't seen the dialog
     if (!hasLocation || !hasSeenDialog) {
-      setTimeout(() => {
-        setShowDeliveryDialog(true);
-      }, 500);
+      setShowDeliveryDialog(true);
     }
   }, []);
 

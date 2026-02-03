@@ -28,12 +28,15 @@ export const Login = () => {
   const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
   const recaptchaWidgetRef = useRef(null);
   const [formData, setFormData] = useState({
-    username: "aman@yopmail.com",
-    password: "Mohan@12",
+    username: "",
+    password: "",
     agreeTerms: true,
     newsletter: true,
   });
+  const [loginErrors, setLoginErrors] = useState({ email: "", password: "", agreeTerms: "" });
   const formRef = useRef(null);
+
+  const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email || "").trim());
 
   // Forgot Password State
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
@@ -165,7 +168,31 @@ export const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setRecaptchaError("");
-    
+    setLoginErrors({ email: "", password: "", agreeTerms: "" });
+
+    const email = (formData.username || "").trim();
+    const password = (formData.password || "").trim();
+
+    const errors = {};
+    if (!email) {
+      errors.email = "Email is required.";
+    } else if (!isValidEmail(email)) {
+      errors.email = "Please enter a valid email address.";
+    }
+    if (!password) {
+      errors.password = "Password is required.";
+    } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters.";
+    }
+    if (!formData.agreeTerms) {
+      errors.agreeTerms = "You must agree to the Terms of use and Privacy Policy.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setLoginErrors((prev) => ({ ...prev, ...errors }));
+      return;
+    }
+
     // Subscribe to newsletter if checked
     if (formData.newsletter) {
       try {
@@ -204,8 +231,12 @@ export const Login = () => {
   // Handle Forgot Password Request
   const handleForgotPasswordRequest = async (e) => {
     e.preventDefault();
-    
-    if (!resetEmail || !resetEmail.includes('@')) {
+    const email = (resetEmail || "").trim();
+    if (!email) {
+      setResetError("Email is required.");
+      return;
+    }
+    if (!isValidEmail(email)) {
       setResetError("Please enter a valid email address.");
       return;
     }
@@ -216,7 +247,7 @@ export const Login = () => {
 
     try {
       const response = await api.post('/user/resetPasswordRequest', {
-        email: resetEmail,
+        email,
       });
 
       if (response.data) {
@@ -235,18 +266,25 @@ export const Login = () => {
   // Handle Password Reset Confirm
   const handleResetPasswordConfirm = async (e) => {
     e.preventDefault();
+    setResetError("");
 
-    if (!resetOtp || resetOtp.length !== 6) {
+    const otp = (resetOtp || "").trim();
+    const pwd = (newPassword || "").trim();
+    const confirmPwd = (confirmNewPassword || "").trim();
+
+    if (!otp || otp.length !== 6) {
       setResetError("Please enter a valid 6-digit OTP.");
       return;
     }
-
-    if (!newPassword || newPassword.length < 6) {
+    if (!pwd) {
+      setResetError("New password is required.");
+      return;
+    }
+    if (pwd.length < 6) {
       setResetError("Password must be at least 6 characters long.");
       return;
     }
-
-    if (newPassword !== confirmNewPassword) {
+    if (pwd !== confirmPwd) {
       setResetError("New password and confirm password do not match.");
       return;
     }
@@ -257,9 +295,9 @@ export const Login = () => {
 
     try {
       const response = await api.post('/user/resetPasswordConfirm', {
-        otp: resetOtp,
-        email: resetEmail,
-        newPassword: newPassword,
+        otp,
+        email: (resetEmail || "").trim(),
+        newPassword: pwd,
       });
 
       if (response.data) {
@@ -686,7 +724,12 @@ export const Login = () => {
               type="email"
               required
               value={formData.username}
-              onChange={handleChange}
+              onChange={(e) => {
+                handleChange(e);
+                if (loginErrors.email) setLoginErrors((p) => ({ ...p, email: "" }));
+              }}
+              error={!!loginErrors.email}
+              helperText={loginErrors.email}
               sx={{ mb: 3 }}
             />
 
@@ -699,7 +742,12 @@ export const Login = () => {
                 type={showPassword ? "text" : "password"}
                 required
                 value={formData.password}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  if (loginErrors.password) setLoginErrors((p) => ({ ...p, password: "" }));
+                }}
+                error={!!loginErrors.password}
+                helperText={loginErrors.password}
                 sx={{ mb: 0 }}
               />
               <Button
@@ -758,12 +806,20 @@ export const Login = () => {
 
             {/* Checkboxes */}
             <Box sx={{ mb: 3 }}>
+              {loginErrors.agreeTerms && (
+                <CustomText sx={{ color: "#f44336", fontSize: 12, mb: 0.5, ml: 1.5 }}>
+                  {loginErrors.agreeTerms}
+                </CustomText>
+              )}
               <FormControlLabel
                 control={
                   <Checkbox
                     name="agreeTerms"
                     checked={formData.agreeTerms}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (loginErrors.agreeTerms) setLoginErrors((p) => ({ ...p, agreeTerms: "" }));
+                    }}
                     sx={{
                       color: "#fff",
                       "&.Mui-checked": {

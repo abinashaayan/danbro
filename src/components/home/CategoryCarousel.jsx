@@ -47,14 +47,7 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
 
     if (sectionRef.current) observer.observe(sectionRef.current);
 
-    const fallbackTimer = setTimeout(() => {
-      setVisible(true);
-    }, 500);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(fallbackTimer);
-    };
+    return () => observer.disconnect();
   }, []);
 
   const items = categories?.map((category, index) => ({

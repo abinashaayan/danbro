@@ -224,6 +224,15 @@ const cartSlice = createSlice({
         delete state.updatingAction[itemKey];
         state.error = action.payload;
       })
+      // Clear cart
+      .addCase(clearCartItems.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(clearCartItems.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
       // Remove item
       .addCase(removeCartItem.pending, (state, action) => {
         const { productId, weight } = action.meta.arg;
@@ -243,10 +252,11 @@ const cartSlice = createSlice({
         delete state.updatingAction[itemKey];
         state.error = action.payload;
       })
-      // Clear cart
       .addCase(clearCartItems.fulfilled, (state) => {
+        state.loading = false;
         state.items = [];
         state.cartTotal = 0;
+        state.error = null;
       });
   },
 });

@@ -3,7 +3,7 @@
 import api from './api';
 import { getAccessToken } from './cookies';
 import { store } from '../store/store';
-import { addToGuestCart, removeFromGuestCart, updateGuestCartQuantity } from '../store/guestSlice';
+import { addToGuestCart, removeFromGuestCart, updateGuestCartQuantity, setGuestCart } from '../store/guestSlice';
 
 /**
  * Add a product to cart (guest: LocalStorage + Redux; logged-in: API)
@@ -161,7 +161,7 @@ export const clearCart = async () => {
   try {
     const token = getAccessToken();
     if (!token) {
-      store.dispatch({ type: 'guest/clearGuestCart' });
+      store.dispatch(setGuestCart([]));
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       return { success: true };
     }

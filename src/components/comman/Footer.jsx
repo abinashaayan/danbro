@@ -1,4 +1,4 @@
-import { Box, Container, Grid,  IconButton } from "@mui/material";
+import { Box, Container, Grid, IconButton } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { styled } from "@mui/material/styles";
 import { useEffect, useRef } from "react";
@@ -106,7 +106,7 @@ export const Footer = () => {
           px: { xs: 2, md: 3, lg: 2 },
         }}
       >
-        <Container 
+        <Container
           maxWidth="false"
           sx={{
             px: { xs: 2, sm: 3, md: 4, lg: 4 },
@@ -203,27 +203,29 @@ export const Footer = () => {
                 ))}
               </Box>
             </Box>
-            <Box
-              sx={{
-                background: "#fff",
-                px: { xs: 3, sm: 4, md: 4, lg: 5 },
-                py: { xs: 1, sm: 1.2, md: 1.3, lg: 1.5 },
-                borderRadius: "40px",
-                fontSize: { xs: 16, sm: 18, md: 18, lg: 20 },
-                fontWeight: 600,
-                cursor: "pointer",
-                transition: "all 0.3s ease",
-                boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                "&:hover": {
-                  transform: "translateY(-3px)",
-                  boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
-                  background: "#f8f8f8",
-                },
-                whiteSpace: "nowrap",
-              }}
-            >
-              Contact
-            </Box>
+            <Link to="/contact">
+              <Box
+                sx={{
+                  background: "#fff",
+                  px: { xs: 3, sm: 4, md: 4, lg: 5 },
+                  py: { xs: 1, sm: 1.2, md: 1.3, lg: 1.5 },
+                  borderRadius: "40px",
+                  fontSize: { xs: 16, sm: 18, md: 18, lg: 20 },
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: "0 6px 20px rgba(0,0,0,0.2)",
+                    background: "#f8f8f8",
+                  },
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Contact
+              </Box>
+            </Link>
           </Box>
           <Box sx={{ mt: { xs: 6, sm: 8, md: 10, lg: 10 }, display: 'flex', flexDirection: { xs: "column", sm: "row" }, justifyContent: { xs: "flex-start", sm: "space-between", md: "space-between" }, alignItems: { xs: "flex-start", sm: "center" }, gap: { xs: 2, sm: 2, md: 2, lg: 0 }, mb: 4, px: { xs: 1, sm: 1, md: 1, lg: 0 } }}>
             <Box
@@ -260,20 +262,20 @@ export const Footer = () => {
               </CustomText>
               <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 1.5, md: 1.5, lg: 2 } }}>
                 {[
-                  { 
-                    icon: FacebookIcon, 
-                    color: "#1877F2", 
-                    url: "https://www.facebook.com/mrbrownbakery" 
+                  {
+                    icon: FacebookIcon,
+                    color: "#1877F2",
+                    url: "https://www.facebook.com/mrbrownbakery"
                   },
-                  { 
-                    icon: InstagramIcon, 
-                    color: "#E4405F", 
-                    url: "https://www.instagram.com/danbrobymrbrown/" 
+                  {
+                    icon: InstagramIcon,
+                    color: "#E4405F",
+                    url: "https://www.instagram.com/danbrobymrbrown/"
                   },
-                  { 
-                    icon: YouTubeIcon, 
-                    color: "#FF0000", 
-                    url: "https://www.youtube.com/channel/UCW4Y_rfg2IscDvrrdiJhSWQ" 
+                  {
+                    icon: YouTubeIcon,
+                    color: "#FF0000",
+                    url: "https://www.youtube.com/channel/UCW4Y_rfg2IscDvrrdiJhSWQ"
                   },
                 ].map(({ icon: Icon, color, url }, index) => (
                   <IconButton
@@ -543,7 +545,7 @@ export const Footer = () => {
             </CustomText>
             <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 2, md: 1.5, lg: 2 }, alignItems: "center", flexWrap: { xs: "wrap", sm: "wrap", md: "nowrap" }, flex: { md: "0 0 auto" } }}>
               <CustomText sx={{ color: "#000", fontSize: { xs: 12, sm: 12, md: 12, lg: 14 }, textAlign: { xs: "left", sm: "left", md: "left" }, whiteSpace: "nowrap" }}>
-                Design & Developed by 
+                Design & Developed by
               </CustomText>
               <Box component="img" src={Maskgroup} alt="makeinindia" sx={{ height: { xs: 20, sm: 24, md: 24, lg: 32 }, width: "auto", flexShrink: 0 }} />
               <Box component="img" src={makeinindia} alt="makeinindia" sx={{ height: { xs: 20, sm: 24, md: 24, lg: 32 }, width: "auto", flexShrink: 0 }} />
