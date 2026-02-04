@@ -140,6 +140,9 @@ export const ProductList = () => {
         name: product.name,
         description: product.ingredient || product.name,
         price: `₹${displayPrice}`,
+        mrp: priceObj.mrp,
+        rate: priceObj.rate,
+        courier: product.courier ?? "N",
         image: productImage,
       };
     });

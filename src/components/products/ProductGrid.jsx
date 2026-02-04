@@ -295,6 +295,26 @@ export const ProductGrid = memo(({ products, isVisible }) => {
               <Box className="green-dot" />
               <Box
                 sx={{
+                  position: "absolute",
+                  top: 8,
+                  right: 8,
+                  px: 1,
+                  py: 0.25,
+                  borderRadius: 1,
+                  fontSize: 10,
+                  fontWeight: 600,
+                  color: "#fff",
+                  zIndex: 15,
+                  bgcolor:
+                    product?.courier === "Y" || product?.courier === "y"
+                      ? "#2e7d32"
+                      : "#d32f2f",
+                }}
+              >
+                Courier
+              </Box>
+              <Box
+                sx={{
                   position: "relative",
                   overflow: "hidden",
                   flexShrink: 0,
@@ -474,6 +494,20 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 </ProductDescription>
 
                 <ProductPrice>{product?.price}</ProductPrice>
+                {(product?.mrp != null || product?.rate != null) && (
+                  <CustomText
+                    sx={{
+                      fontSize: 10,
+                      color: "#666",
+                      mt: 0.5,
+                      textAlign: "right",
+                    }}
+                  >
+                    {product?.mrp != null && `MRP ₹${product.mrp}`}
+                    {product?.mrp != null && product?.rate != null && " · "}
+                    {product?.rate != null && `Rate ₹${product.rate}`}
+                  </CustomText>
+                )}
               </CardContent>
             </Card>
           </Box>
