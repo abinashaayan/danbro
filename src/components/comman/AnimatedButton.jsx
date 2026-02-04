@@ -71,13 +71,13 @@ export const AnimatedButton = ({
             boxShadow: "0 0 0 2px rgba(255, 148, 114, 0.3)",
           },
         },
-        "&:hover": {
-          borderColor: "#FF9472",
-          backgroundColor: "#fbeeee",
-          transform: "translateX(0) translateY(-2px)",
-          boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
-          animation: "none",
-        },
+        // "&:hover": {
+        //   borderColor: "#FF9472",
+        //   backgroundColor: "#fbeeee",
+        //   transform: "translateX(0) translateY(-2px)",
+        //   boxShadow: "0 4px 12px rgba(95,41,48,0.15)",
+        //   animation: "none",
+        // },
         ...sx,
       }}
     >
