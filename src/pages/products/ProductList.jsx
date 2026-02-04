@@ -35,12 +35,14 @@ export const ProductList = () => {
   const ITEMS_PER_PAGE = 20; // Show 20 items per page
 
   const { categories: apiCategories, loading: categoriesLoading, error: categoriesError } = useItemCategories();
+  console.log(apiCategories, 'apiCategories')
 
   const categoryIdFromUrl = searchParams.get('categoryId');
+ 
 
   useEffect(() => {
     if (categoryIdFromUrl && apiCategories && apiCategories.length > 0) {
-      const categoryIndex = apiCategories.findIndex(cat => cat.id === parseInt(categoryIdFromUrl));
+      const categoryIndex = apiCategories.findIndex(cat => cat?.id === parseInt(categoryIdFromUrl));
       if (categoryIndex !== -1) {
         setSelectedCategory(categoryIndex);
       }
@@ -130,6 +132,8 @@ export const ProductList = () => {
 
     return apiFiltered.length > 0 ? apiFiltered : displayedProducts;
   }, [displayedProducts, debouncedSearchQuery]);
+
+  console.log(filteredProducts, 'filteredProducts')
 
   const products = filteredProducts;
   const categories = apiCategories?.map(cat => cat.groupname) || [];

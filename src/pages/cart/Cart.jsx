@@ -466,8 +466,8 @@ export const Cart = () => {
           </Alert>
         )}
 
-        {/* Main Content */}
-        {loading ? (
+        {/* Main Content - full-page spinner only on initial load (no items yet); quantity/remove refresh keeps list visible */}
+        {loading && !cartItems?.length ? (
           <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
             <CircularProgress />
           </Box>
@@ -497,12 +497,11 @@ export const Cart = () => {
                   variant="outlined"
                   onClick={() => navigate("/products")}
                   disabled={loading}
+                  size="small"
                   sx={{
                     borderColor: "var(--themeColor)",
                     color: "var(--themeColor)",
                     textTransform: "none",
-                    px: { xs: 3, md: 4 },
-                    py: { xs: 0.9, md: 1.1 },
                     fontSize: { xs: 13, md: 15 },
                     fontWeight: 600,
                     "&:hover": {
@@ -518,12 +517,11 @@ export const Cart = () => {
                   variant="outlined"
                   onClick={handleClearCart}
                   disabled={loading || !cartItems?.length}
+                  size="small"
                   sx={{
                     borderColor: "#d32f2f",
                     color: "#d32f2f",
                     textTransform: "none",
-                    px: { xs: 3, md: 4 },
-                    py: { xs: 0.9, md: 1.1 },
                     fontSize: { xs: 13, md: 15 },
                     fontWeight: 600,
                     "&:hover": {

@@ -179,7 +179,6 @@ export const ProductDetails = () => {
                 p.id === productId
               );
               if (foundProduct) {
-                // Try to get full product details
                 try {
                   const response = await fetchProductById(productId);
                   if (response?.success && response?.data) {
@@ -190,7 +189,6 @@ export const ProductDetails = () => {
                     return;
                   }
                 } catch (err) {
-                  // Use the product from homeLayout as fallback
                   setProduct(foundProduct);
                   setProductWeight(foundProduct.weight || "500g");
                   markRecentlyViewed();
@@ -369,7 +367,6 @@ export const ProductDetails = () => {
     "No Preservatives\nClean ingredients",
     "Quality Guarantee\nTaste the difference"
   ];
-
 
   if (loading) {
     return (
@@ -640,7 +637,6 @@ export const ProductDetails = () => {
               >
                 {productData?.description}
               </CustomText>
-              <Divider sx={{ backgroundColor: "#e0e0e0" }} />
               {/* Weight selection */}
               {weightOptions.length > 0 && (
                 <Box sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -659,7 +655,7 @@ export const ProductDetails = () => {
                           fontSize: 13,
                           fontWeight: 500,
                           fontFamily: "'Poppins', sans-serif",
-                          borderRadius: "999px", // 👈 pill shape
+                          borderRadius: "999px", 
                           px: 1.8,
                           py: 0.6,
                           border: productWeight === w ? "2px solid #F31400" : "1px solid #ddd",

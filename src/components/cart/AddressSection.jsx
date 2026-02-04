@@ -238,7 +238,6 @@ export const AddressSection = ({
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         position: { md: "sticky" },
         top: { md: 100 },
-        mb: 2,
       }}
     >
       <CardHeader
@@ -284,7 +283,7 @@ export const AddressSection = ({
                 <CircularProgress size={20} />
               </Box>
             ) : addresses.length === 0 ? (
-              <Box sx={{ mb: 1.5 }}>
+              <Box sx={{ mb: 1 }}>
                 <CustomText sx={{ fontSize: { xs: 13, md: 14 }, color: "#666", mb: 1.5 }}>
                   No saved addresses. Please add an address.
                 </CustomText>
@@ -310,7 +309,6 @@ export const AddressSection = ({
               <RadioGroup
                 value={selectedAddress || ""}
                 onChange={(e) => setSelectedAddress(e.target.value)}
-                sx={{ mb: 1.5 }}
               >
                 {addresses.map((address) => {
                   const addressId = address._id || address.id;
@@ -318,7 +316,6 @@ export const AddressSection = ({
                     <Card
                       key={addressId}
                       sx={{
-                        mb: 1.5,
                         border: selectedAddress === addressId ? "2px solid var(--themeColor)" : "1px solid #ddd",
                         borderRadius: 2,
                         transition: "all 0.3s ease",
@@ -395,7 +392,6 @@ export const AddressSection = ({
                 color: "var(--themeColor)",
                 textTransform: "none",
                 mt: 1.5,
-                py: 1,
                 fontSize: { xs: 13, md: 14 },
                 fontWeight: 600,
                 "&:hover": {
