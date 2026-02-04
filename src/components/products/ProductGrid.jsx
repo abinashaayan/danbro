@@ -138,6 +138,14 @@ export const ProductGrid = memo(({ products, isVisible }) => {
     }
   };
 
+  const handleShare = (e, product) => {
+    e.stopPropagation();
+    const url = `${window.location.origin}/products/${product?.productId || ""}`;
+    const text = `${product?.name || "Product"} ${url}`;
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+  };
+
   const handleAddToCart = async (e, product) => {
     e.stopPropagation();
 
@@ -400,7 +408,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                       />
                     )}
                   </IconButton>
-                  <IconButton size="small" onClick={(e) => { e.stopPropagation() }}>
+                  <IconButton size="small" onClick={(e) => handleShare(e, product)}>
                     <ShareOutlined sx={{ fontSize: 18 }} />
                   </IconButton>
                   <IconButton
