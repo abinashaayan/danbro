@@ -419,7 +419,7 @@ export const ProductList = () => {
           <Box sx={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: "480px", px: 2, }}>
             <CustomText
               sx={{
-                fontFamily: `'Playfair Display', serif`,
+                fontFamily: "'Inter', sans-serif",
                 fontSize: { xs: 24, sm: 32, md: 42 },
                 fontStyle: "italic",
                 fontWeight: 700,
@@ -433,7 +433,7 @@ export const ProductList = () => {
 
             <CustomText
               sx={{
-                fontFamily: `'Inter', sans-serif`,
+                fontFamily: "'Inter', sans-serif",
                 fontStyle: "italic",
                 fontSize: { xs: 14, sm: 16, md: 18 },
                 color: "#5D5D5D",

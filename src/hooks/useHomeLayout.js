@@ -137,11 +137,13 @@ export const transformProduct = (apiProduct, categoryId) => {
     rating: 4.5,
     reviews: 75,
     sku: apiProduct.productId,
-    badge: 'New',
-    badgeColor: '#FF9472',
+    badge: apiProduct.badge ?? null,
+    badgeColor: apiProduct.badgeColor ?? null,
     categoryId: categoryId,
     courier: apiProduct.courier,
     mrp: priceObj.mrp,
     rate: priceObj.rate,
+    veg: apiProduct.veg,
+    weight: apiProduct.weight,
   };
 };

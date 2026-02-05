@@ -9,8 +9,8 @@ export const bannerSlides = [
     id: 1,
     img: slider5,
     alt: "Danbro by Mr Brown Bakery",
-    title: "Danbro by Mr Brown Bakery",
-    subtitle: "Warm breads & pastries straight from the oven, made with love",
+    title: "Danbro by Mr Brown",
+    subtitle: "Fresh breads & pastries from the oven, blended with tradition and care. Every bite tells our story.",
     animationType: "flipInX",
     captionPosition: "left"
   },
@@ -19,7 +19,7 @@ export const bannerSlides = [
     img: bannerSlide2,
     alt: "Beautiful cake",
     title: "Handcrafted Cakes",
-    subtitle: "Beautifully designed cakes for every celebration and special moment",
+    subtitle: "Celebration cakes designed for your moments—birthdays, weddings & every sweet occasion.",
     animationType: "flipInX",
     captionPosition: "right"
   },
@@ -28,7 +28,7 @@ export const bannerSlides = [
     img: bannerSlide3,
     alt: "Chocolate desserts",
     title: "Chocolate Delights",
-    subtitle: "Rich, smooth & irresistible chocolate desserts that melt in your mouth",
+    subtitle: "Rich, smooth chocolate creations that melt in your mouth. Indulgence baked with the finest cocoa.",
     animationType: "flipInX",
     captionPosition: "center"
   },
@@ -37,7 +37,7 @@ export const bannerSlides = [
     img: bannerSlide4,
     alt: "Bakery pastries",
     title: "Premium Bakery Treats",
-    subtitle: "Croissants, pastries & cookies baked to perfection with finest ingredients",
+    subtitle: "Croissants, pastries & cookies made with the finest ingredients. Baked fresh, served with love.",
     animationType: "flipInX",
     captionPosition: "left"
   },
@@ -46,7 +46,7 @@ export const bannerSlides = [
     img: bannerSlide5,
     alt: "Fresh bakery products",
     title: "Fresh Baked Daily",
-    subtitle: "Warm breads & pastries straight from the oven, made with love",
+    subtitle: "Morning-fresh breads, buttery pastries & golden cookies. Your everyday bakery, made with heart.",
     animationType: "flipInX",
     captionPosition: "left"
   },

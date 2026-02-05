@@ -8,13 +8,8 @@ import {
   Breadcrumbs,
   Link,
   Rating,
-  Divider,
-  Select,
-  MenuItem,
   IconButton,
   Avatar,
-  Tabs,
-  Tab,
   CircularProgress,
   Alert,
   Chip,
@@ -36,6 +31,7 @@ import {
   ThumbUpOffAlt,
   ThumbDownOffAlt,
   ExpandMore,
+  ErrorOutline,
 } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -162,21 +158,40 @@ export const ProductDetails = () => {
         // OPTIMIZATION 1: Use direct API endpoint to get product by ID (fastest)
         try {
           const response = await fetchProductById(productId);
-          if (response?.success && response?.data) {
-            setProduct(response.data);
-            setProductWeight(response.data.weight || "500g");
+          const data = response?.data;
+          const hasValidProduct = data && typeof data === "object" && !Array.isArray(data) && (data.productId || data._id || data.name);
+          if (response?.success && hasValidProduct) {
+            setProduct(data);
+            setProductWeight(data.weight || "500g");
             markRecentlyViewed();
             setLoading(false);
             return;
-          } else if (response?.data) {
-            // Some APIs return data directly without success flag
-            setProduct(response.data);
-            setProductWeight(response.data.weight || "500g");
+          }
+          if (response?.success === false && response?.message) {
+            setError(response.message);
+            setLoading(false);
+            return;
+          }
+          if (response?.success && !hasValidProduct && response?.message) {
+            setError(response.message);
+            setLoading(false);
+            return;
+          }
+          if (hasValidProduct) {
+            setProduct(data);
+            setProductWeight(data.weight || "500g");
             markRecentlyViewed();
             setLoading(false);
             return;
           }
         } catch (err) {
+          const apiMessage = err.response?.data?.message;
+          const isLocationError = err.response?.status === 400 && apiMessage;
+          if (isLocationError) {
+            setError(apiMessage);
+            setLoading(false);
+            return;
+          }
           console.log('Direct product fetch failed, trying fallback methods...', err);
         }
 
@@ -212,6 +227,7 @@ export const ProductDetails = () => {
         }
 
         // FALLBACK 2: Search without category filter
+        let lastApiMessage = null;
         try {
           const response = await fetchProducts(null, 1, 100, productId);
           if (response?.success && response?.data && Array.isArray(response.data)) {
@@ -229,15 +245,20 @@ export const ProductDetails = () => {
               setLoading(false);
               return;
             }
+            if (response?.message) lastApiMessage = response.message;
+          } else if (response?.message) {
+            lastApiMessage = response.message;
           }
         } catch (err) {
+          if (err.response?.data?.message) lastApiMessage = err.response.data.message;
           console.log('Search without category failed');
         }
-
-        setError("Product not found");
+        console.log(lastApiMessage, 'lastApiMessage');
+        setError(lastApiMessage?.message);
       } catch (err) {
         console.error('Error loading product:', err);
-        setError(err.message || "Failed to load product");
+        const apiMessage = err.response?.data?.message;
+        setError(apiMessage || err.message || "Failed to load product");
       } finally {
         setLoading(false);
       }
@@ -388,11 +409,40 @@ export const ProductDetails = () => {
   }
 
   if (error || !productData) {
+    const isLocationError = error?.toLowerCase?.().includes("selected location");
+    const displayMessage = error || "Product not found";
     return (
-      <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: 4 }}>
-        <Alert severity="error" sx={{ borderRadius: 2 }}>
-          {error || "Product not found"}
-        </Alert>
+      <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: 6, display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh", }}>
+        <Box sx={{ textAlign: "center", }}>
+          <ErrorOutline sx={{ fontSize: 48, color: "error.main", mb: 2, display: "block", mx: "auto", }} />
+          <CustomText sx={{ fontSize: 18, fontWeight: 700, color: "#c62828", mb: 1.5, display: "block", }}>
+            Product unavailable
+          </CustomText>
+          <CustomText sx={{ fontSize: 15, color: "#444", lineHeight: 1.6, mb: isLocationError ? 2 : 0, }}>
+            {displayMessage}
+          </CustomText>
+          {isLocationError && (
+            <CustomText sx={{ display: "block", fontSize: 14, color: "#666", lineHeight: 1.5, mt: 1.5, px: 1, }}>
+              You can change your delivery location from the header to check availability elsewhere.
+            </CustomText>
+          )}
+          <Link to="/home">
+            <Button
+              variant="outlined"
+              sx={{
+                mt: 3,
+                borderColor: "var(--themeColor)",
+                color: "var(--themeColor)",
+                "&:hover": {
+                  borderColor: "var(--themeColor)",
+                  bgcolor: "rgba(95, 41, 48, 0.06)",
+                },
+              }}
+            >
+              Browse products
+            </Button>
+          </Link>
+        </Box>
       </Box>
     );
   }
@@ -409,7 +459,7 @@ export const ProductDetails = () => {
               color: "#666",
               textDecoration: "none",
               cursor: "pointer",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               fontSize: { xs: 12, sm: 14 },
               fontWeight: 400,
               "&:hover": { color: "#FF9472" },
@@ -425,7 +475,7 @@ export const ProductDetails = () => {
               color: "#666",
               textDecoration: "none",
               cursor: "pointer",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               fontSize: { xs: 12, sm: 14 },
               fontWeight: 400,
               "&:hover": { color: "#FF9472" },
@@ -433,7 +483,7 @@ export const ProductDetails = () => {
           >
             {apiCategories?.find((c) => c.id === product?.categoryid || c.id === parseInt(product?.categoryid, 10))?.groupname || product?.subcategory || "Products"}
           </Link>
-          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Poppins', sans-serif", fontSize: { xs: 12, sm: 14 }, fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: { xs: 120, sm: 200 } }}>
+          <CustomText color="text.primary" autoTitleCase={true} sx={{ fontFamily: "'Inter', sans-serif", fontSize: { xs: 12, sm: 14 }, fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: { xs: 120, sm: 200 } }}>
             {productData?.name}
           </CustomText>
         </Breadcrumbs>
@@ -536,7 +586,7 @@ export const ProductDetails = () => {
                         zIndex: 5,
                       }}
                     >
-                      <CustomText sx={{ fontSize: 12, fontWeight: 700, fontFamily: "'Poppins', sans-serif", color: "#fff", letterSpacing: "0.02em" }}>
+                      <CustomText sx={{ fontSize: 12, fontWeight: 700, fontFamily: "'Inter', sans-serif", color: "#fff", letterSpacing: "0.02em" }}>
                         Veg
                       </CustomText>
                     </Box>
@@ -606,7 +656,7 @@ export const ProductDetails = () => {
                 sx={{
                   fontSize: { xs: 20, sm: 26, md: 32 },
                   fontWeight: 600,
-                  fontFamily: "'Playfair Display', serif",
+                  fontFamily: "'Inter', sans-serif",
                   color: "#2c2c2c",
                   mb: 1,
                   wordBreak: "break-word",
@@ -615,7 +665,7 @@ export const ProductDetails = () => {
                 {productData?.name}
               </CustomText>
               <Box>
-                <CustomText sx={{ fontSize: { xs: 20, sm: 26, md: 32 }, fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#F31400", wordBreak: "break-word" }}>
+                <CustomText sx={{ fontSize: { xs: 20, sm: 26, md: 32 }, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#F31400", wordBreak: "break-word" }}>
                   {productData?.price}
                   <Box component="span" sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, color: "#666", ml: 0.5 }}>
                     / {productData?.weight}
@@ -625,10 +675,10 @@ export const ProductDetails = () => {
               <Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1, flexWrap: "wrap" }}>
                   <Rating value={4.5} precision={0.5} readOnly size="small" sx={{ color: "#FF643A" }} />
-                  <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#333" }}>
+                  <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#333" }}>
                     4.5
                   </CustomText>
-                  <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#777" }}>
+                  <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#777" }}>
                     (245 Reviews)
                   </CustomText>
                 </Box>
@@ -642,7 +692,7 @@ export const ProductDetails = () => {
                   mb: 1,
                   fontSize: { xs: 14, sm: 15 },
                   fontWeight: 400,
-                  fontFamily: "'Poppins', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   wordBreak: "break-word",
                 }}
               >
@@ -651,7 +701,7 @@ export const ProductDetails = () => {
               {/* Weight selection */}
               {weightOptions.length > 0 && (
                 <Box sx={{ mb: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
+                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
                     Select Weight
                   </CustomText>
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
@@ -665,8 +715,8 @@ export const ProductDetails = () => {
                         sx={{
                           fontSize: 13,
                           fontWeight: 500,
-                          fontFamily: "'Poppins', sans-serif",
-                          borderRadius: "999px", 
+                          fontFamily: "'Inter', sans-serif",
+                          borderRadius: "999px",
                           px: 1.8,
                           py: 0.6,
                           border: productWeight === w ? "2px solid #F31400" : "1px solid #ddd",
@@ -685,7 +735,7 @@ export const ProductDetails = () => {
 
               {/* Cake message input */}
               <Box sx={{ mb: 0.5 }}>
-                <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1 }}>
+                <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", fontSize: 14, mb: 1 }}>
                   Cake Message
                 </CustomText>
                 <TextField
@@ -701,7 +751,7 @@ export const ProductDetails = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: 1,
-                      fontFamily: "'Poppins', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                     },
                   }}
                   helperText={`${cakeMessage.length}/25`}
@@ -710,7 +760,7 @@ export const ProductDetails = () => {
 
               {/* Delivery location section */}
               <Box sx={{ mb: 0, p: 1, borderRadius: 1, border: "1px solid #e0e0e0", backgroundColor: "#fafafa" }}>
-                <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
+                <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", fontSize: 14 }}>
                   Delivery Location
                 </CustomText>
 
@@ -723,10 +773,10 @@ export const ProductDetails = () => {
                     alignItems: { xs: "flex-start", sm: "center" }
                   }}>
                     <Box>
-                      <CustomText sx={{ fontSize: 12, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
+                      <CustomText sx={{ fontSize: 12, fontFamily: "'Inter', sans-serif", color: "#2c2c2c" }}>
                         {deliveryLocationLabel}
                       </CustomText>
-                      <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#1B9C3F", mt: 0.5 }}>
+                      <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#1B9C3F", mt: 0.5 }}>
                         Awesome, we deliver to this location.
                       </CustomText>
                     </Box>
@@ -741,7 +791,7 @@ export const ProductDetails = () => {
                         textTransform: "none",
                         fontSize: 13,
                         fontWeight: 500,
-                        fontFamily: "'Poppins', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                         px: 2,
                         borderColor: "#F31400",
                         color: "#F31400",
@@ -768,7 +818,7 @@ export const ProductDetails = () => {
                       sx={{
                         "& .MuiOutlinedInput-root": {
                           borderRadius: 1,
-                          fontFamily: "'Poppins', sans-serif",
+                          fontFamily: "'Inter', sans-serif",
                         },
                       }}
                       onFocus={() => {
@@ -789,7 +839,7 @@ export const ProductDetails = () => {
                         textTransform: "none",
                         fontSize: 13,
                         fontWeight: 500,
-                        fontFamily: "'Poppins', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                         px: 2.5,
                         backgroundColor: "#F31400",
                         "&:hover": {
@@ -824,7 +874,7 @@ export const ProductDetails = () => {
                     <CustomText
                       sx={{
                         fontWeight: 500,
-                        fontFamily: "'Poppins', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                         color: "#2c2c2c",
                         fontSize: 14
                       }}
@@ -851,7 +901,7 @@ export const ProductDetails = () => {
                       borderRadius: 1,
                       fontSize: { xs: 13, sm: 15 },
                       fontWeight: 500,
-                      fontFamily: "'Poppins', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                       textTransform: "none",
                       "&:hover": {
                         backgroundColor: "#F2709C",
@@ -865,7 +915,7 @@ export const ProductDetails = () => {
                     {addingToCart ? (
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                         <CircularProgress size={20} sx={{ color: "#fff" }} />
-                        <CustomText sx={{ fontFamily: "'Poppins', sans-serif" }}>Adding...</CustomText>
+                        <CustomText sx={{ fontFamily: "'Inter', sans-serif" }}>Adding...</CustomText>
                       </Box>
                     ) : (
                       "Add to Cart"
@@ -921,7 +971,7 @@ export const ProductDetails = () => {
                   sx={{
                     fontSize: 13,
                     fontWeight: 500,
-                    fontFamily: "'Poppins', sans-serif",
+                    fontFamily: "'Inter', sans-serif",
                     color: "#00A819"
                   }}
                 >
@@ -953,7 +1003,7 @@ export const ProductDetails = () => {
                   <Box sx={{ backgroundColor: "#fff5f2", color: "#FF6F61", width: { xs: 44, sm: 50 }, height: { xs: 44, sm: 50 }, borderRadius: 1, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {icons[i]}
                   </Box>
-                  <CustomText sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, sm: 13 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#515151", lineHeight: 1.6, wordBreak: "break-word" }}>
+                  <CustomText sx={{ whiteSpace: "pre-line", fontSize: { xs: 12, sm: 13 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#515151", lineHeight: 1.6, wordBreak: "break-word" }}>
                     {text}
                   </CustomText>
                 </Box>
@@ -968,7 +1018,7 @@ export const ProductDetails = () => {
         <Grid container spacing={{ xs: 2, sm: 3 }}>
           <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
             <Box sx={{ p: { xs: 2, md: 3 }, border: "1px solid #e0e0e0", borderRadius: 1, backgroundColor: "#fff", minWidth: 0 }}>
-              <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: { xs: 16, sm: 18 }, mb: 2, color: "#2c2c2c" }}>
+              <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", fontSize: { xs: 16, sm: 18 }, mb: 2, color: "#2c2c2c" }}>
                 What's Inside
               </CustomText>
               <CustomText
@@ -976,7 +1026,7 @@ export const ProductDetails = () => {
                 sx={{
                   fontSize: { xs: 13, sm: 14 },
                   fontWeight: 400,
-                  fontFamily: "'Poppins', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   color: "#666",
                   lineHeight: 1.7,
                   mb: product.veg ? 2 : 0,
@@ -998,14 +1048,14 @@ export const ProductDetails = () => {
                 }}>
                   <ThumbUpOffAlt sx={{ color: "#FF643A", fontSize: 20, mt: 0.5 }} />
                   <Box>
-                    <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", fontSize: 14, color: "#2c2c2c", mb: 0.5 }}>
+                    <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#2c2c2c", mb: 0.5 }}>
                       Vegetarian Product
                     </CustomText>
                     <CustomText
                       sx={{
                         fontSize: 13,
                         fontWeight: 400,
-                        fontFamily: "'Poppins', sans-serif",
+                        fontFamily: "'Inter', sans-serif",
                         color: "#666"
                       }}
                     >
@@ -1043,15 +1093,15 @@ export const ProductDetails = () => {
                 }}
               >
                 <Box sx={{ minWidth: 0 }}>
-                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Playfair Display', serif", fontSize: { xs: 16, sm: 18 }, color: "#2c2c2c" }}>
+                  <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", fontSize: { xs: 16, sm: 18 }, color: "#2c2c2c" }}>
                     Nutrition Facts
                   </CustomText>
                   {product?.expiryday && (
                     <Box sx={{ mt: 2, p: 2, backgroundColor: "#fff5f2", borderRadius: 1, border: "1px solid #FF643A" }}>
-                      <CustomText sx={{ fontSize: 14, fontWeight: 600, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c", mb: 0.5 }}>
+                      <CustomText sx={{ fontSize: 14, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", mb: 0.5 }}>
                         Storage Instructions
                       </CustomText>
-                      <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666" }}>
+                      <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666" }}>
                         Best consumed within {product.expiryday} days.
                         Keep in a cool dry place.
                       </CustomText>
@@ -1093,26 +1143,26 @@ export const ProductDetails = () => {
                           borderBottom: index !== array.length - 1 ? "1px solid #e0e0e0" : "none"
                         }}
                       >
-                        <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666" }}>
+                        <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666" }}>
                           {label}
                         </CustomText>
-                        <CustomText sx={{ fontWeight: 500, fontFamily: "'Poppins', sans-serif", fontSize: 14, color: "#2c2c2c" }}>
+                        <CustomText sx={{ fontWeight: 500, fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#2c2c2c" }}>
                           {value}
                         </CustomText>
                       </Box>
                     ))
                   ) : (
-                    <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666" }}>
+                    <CustomText sx={{ fontSize: 14, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666" }}>
                       Nutrition information not available.
                     </CustomText>
                   )}
                 </Box>
                 {product?.expiryday && (
                   <Box sx={{ mt: 2, p: 2, backgroundColor: "#f5f5f5", borderRadius: 1, border: "1px solid #e0e0e0" }}>
-                    <CustomText sx={{ fontWeight: 600, fontFamily: "'Poppins', sans-serif", fontSize: 14, color: "#2c2c2c", mb: 0.5 }}>
+                    <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", fontSize: 14, color: "#2c2c2c", mb: 0.5 }}>
                       Storage Instructions
                     </CustomText>
-                    <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666" }}>
+                    <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666" }}>
                       Best consumed within {product.expiryday} days.
                       <br />
                       Keep in a cool dry place.
@@ -1126,17 +1176,17 @@ export const ProductDetails = () => {
 
         {/* Rating Section */}
         <Box sx={{ mt: { xs: 3, md: 5 }, mb: { xs: 3, md: 4 } }}>
-          <CustomText sx={{ fontSize: { xs: 22, sm: 26, md: 28 }, fontWeight: 600, fontFamily: "'Playfair Display', serif", color: "#2c2c2c", mb: 0.5 }}>
+          <CustomText sx={{ fontSize: { xs: 22, sm: 26, md: 28 }, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", mb: 0.5 }}>
             4.5 ⭐
           </CustomText>
-          <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", mb: 3 }}>
+          <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666", mb: 3 }}>
             120 reviews
           </CustomText>
 
           {/* Rating Bars */}
           {[5, 4, 3, 2, 1].map((r, i) => (
             <Box key={i} sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: 1.5, minWidth: 0 }}>
-              <CustomText sx={{ width: 20, flexShrink: 0, fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Poppins', sans-serif", color: "#2c2c2c" }}>
+              <CustomText sx={{ width: 20, flexShrink: 0, fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#2c2c2c" }}>
                 {r}
               </CustomText>
               <Box sx={{
@@ -1152,7 +1202,7 @@ export const ProductDetails = () => {
                   backgroundColor: "#FF6F61",
                 }} />
               </Box>
-              <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Poppins', sans-serif", color: "#666", width: 40, flexShrink: 0, textAlign: "right" }}>
+              <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666", width: 40, flexShrink: 0, textAlign: "right" }}>
                 {[40, 20, 19, 10, 7][i]}%
               </CustomText>
             </Box>
@@ -1196,7 +1246,7 @@ export const ProductDetails = () => {
                   <CustomText
                     sx={{
                       fontWeight: 600,
-                      fontFamily: "'Poppins', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                       fontSize: { xs: 14, sm: 15 },
                       color: "#2c2c2c"
                     }}
@@ -1207,7 +1257,7 @@ export const ProductDetails = () => {
                     sx={{
                       fontSize: { xs: 12, sm: 13 },
                       fontWeight: 400,
-                      fontFamily: "'Poppins', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                       color: "#666"
                     }}
                   >
@@ -1220,7 +1270,7 @@ export const ProductDetails = () => {
                 sx={{
                   fontSize: { xs: 13, sm: 14 },
                   fontWeight: 400,
-                  fontFamily: "'Poppins', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                   color: "#666",
                   lineHeight: 1.7,
                   mb: 2,
@@ -1245,7 +1295,7 @@ export const ProductDetails = () => {
                     sx={{
                       fontSize: 13,
                       fontWeight: 400,
-                      fontFamily: "'Poppins', sans-serif"
+                      fontFamily: "'Inter', sans-serif"
                     }}
                   >
                     12
@@ -1262,7 +1312,7 @@ export const ProductDetails = () => {
                     sx={{
                       fontSize: 13,
                       fontWeight: 400,
-                      fontFamily: "'Poppins', sans-serif"
+                      fontFamily: "'Inter', sans-serif"
                     }}
                   >
                     3

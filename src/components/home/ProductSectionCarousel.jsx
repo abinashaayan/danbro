@@ -27,11 +27,11 @@ export const ProductSectionCarousel = memo(({
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const sectionRef = useRef(null);
   const [loadingCart, setLoadingCart] = useState(new Set());
-  const [toast, setToast] = useState({ 
-    open: false, 
-    message: "", 
-    severity: "success", 
-    loading: false 
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+    loading: false
   });
   const [wishlistIds, setWishlistIds] = useState(new Set());
   const [loadingWishlist, setLoadingWishlist] = useState(new Set());
@@ -103,17 +103,17 @@ export const ProductSectionCarousel = memo(({
     try {
       const quantity = 1;
       await addToCart(productId, quantity);
-      
+
       setToast({
         open: true,
         message: "Product added to cart successfully!",
         severity: "success",
         loading: false,
       });
-      
+
       // Dispatch event to update cart count in header
       window.dispatchEvent(new CustomEvent('cartUpdated'));
-      
+
       setTimeout(() => setToast((prev) => ({ ...prev, open: false })), 3000);
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -219,15 +219,7 @@ export const ProductSectionCarousel = memo(({
             <Icon sx={{ fontSize: 40, color: "#FF9472" }} />
           </Box>
         )}
-        <CustomText
-          sx={{
-            fontSize: { xs: 12, md: 14 },
-            fontWeight: 600,
-            color: "#FF9472",
-            textTransform: "uppercase",
-            letterSpacing: 2,
-          }}
-        >
+        <CustomText sx={{ fontSize: { xs: 12, md: 14 }, fontWeight: 600, color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, }}>
           {subtitle}
         </CustomText>
         <CustomText
@@ -237,7 +229,7 @@ export const ProductSectionCarousel = memo(({
             color: "var(--themeColor)",
             position: "relative",
             display: "inline-block",
-            fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
+            fontFamily: "'Inter', sans-serif",
             fontStyle: "italic",
             "&::after": {
               content: '""',
@@ -409,6 +401,30 @@ export const ProductSectionCarousel = memo(({
                     </Box>
                   )}
 
+                  {/* Veg / Non-Veg - top left corner (when badge not present) */}
+                  {!product?.badge && product?.veg != null && product?.veg !== "" && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        top: 12,
+                        left: 12,
+                        bgcolor: product?.veg === "Y" || product?.veg === "y" ? "#2e7d32" : "#d32f2f",
+                        color: "#fff",
+                        px: 1.25,
+                        py: 0.5,
+                        borderRadius: 2,
+                        fontSize: 10,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.5px",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                        zIndex: 2,
+                      }}
+                    >
+                      {product?.veg === "Y" || product?.veg === "y" ? "Veg" : "Non-Veg"}
+                    </Box>
+                  )}
+
                   {/* Courier - top right corner */}
                   {product?.courier != null && product?.courier !== "" && (
                     <Box
@@ -518,16 +534,45 @@ export const ProductSectionCarousel = memo(({
                           {product?.originalPrice}
                         </CustomText>
                       )}
-                      {(product?.mrp != null || product?.rate != null) && (
-                        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5, mt: 0.5 }}>
-                          {product?.mrp != null && (
-                            <CustomText sx={{ fontSize: 11, color: "#666", textTransform: "none" }}>
-                              MRP: ₹{Number(product.mrp).toFixed(2)}
-                            </CustomText>
-                          )}
-                          {product?.rate != null && (
-                            <CustomText sx={{ fontSize: 11, color: "#666", textTransform: "none" }}>
-                              Rate: ₹{Number(product.rate).toFixed(2)}
+                      {(product?.mrp != null || product?.rate != null || product?.weight) && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            flexWrap: "wrap",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: 1
+                          }}
+                        >
+                          <Box sx={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 1 }}>
+                            {product?.mrp != null && (
+                              <CustomText sx={{ fontSize: 12, color: "#444", fontWeight: 600, textTransform: "none" }}>
+                                MRP <Box component="span" sx={{ color: "#2c2c2c" }}>₹{Number(product.mrp).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</Box>
+                              </CustomText>
+                            )}
+                            {product?.mrp != null && product?.rate != null && (
+                              <Box component="span" sx={{ color: "#bbb", fontSize: 10 }}>•</Box>
+                            )}
+                            {product?.rate != null && (
+                              <CustomText sx={{ fontSize: 12, color: "#444", fontWeight: 600, textTransform: "none" }}>
+                                Rate <Box component="span" sx={{ color: "#2c2c2c" }}>₹{Number(product.rate).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</Box>
+                              </CustomText>
+                            )}
+                          </Box>
+                          {product?.weight && (
+                            <CustomText
+                              sx={{
+                                fontSize: 12,
+                                color: "#2c2c2c",
+                                fontWeight: 700,
+                                textTransform: "none",
+                                bgcolor: "rgba(255,148,114,0.12)",
+                                px: 1,
+                                py: 0.25,
+                                borderRadius: 1,
+                              }}
+                            >
+                              {product.weight}
                             </CustomText>
                           )}
                         </Box>
@@ -538,7 +583,7 @@ export const ProductSectionCarousel = memo(({
                       onClick={(e) => handleAddToCart(e, product)}
                       disabled={loadingCart.has(product?.productId || product?.id || product?._id)}
                       sx={{
-                        bgcolor: "var(--themeColor)",                       
+                        bgcolor: "var(--themeColor)",
                         color: "#fff",
                         width: { xs: 36, md: 40 },
                         height: { xs: 36, md: 40 },

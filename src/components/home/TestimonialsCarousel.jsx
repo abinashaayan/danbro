@@ -105,7 +105,7 @@ export const TestimonialsCarousel = () => {
               fontWeight: 800,
               color: "var(--themeColor)",
               mb: 2,
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Inter', sans-serif",
               lineHeight: 1.2,
             }}
           >

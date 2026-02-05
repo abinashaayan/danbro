@@ -5,7 +5,7 @@ export const ProductPrice = ({ children, ...props }) => {
     <CustomText
       {...props}
       sx={{
-        fontFamily: "'Poppins', sans-serif",
+        fontFamily: "'Inter', sans-serif",
         fontWeight: 600,
         color: "#000",
         fontSize: { xs: 11, sm: 12, md: 13 },

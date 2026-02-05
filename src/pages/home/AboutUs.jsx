@@ -259,7 +259,7 @@ export const AboutUs = () => {
                 fontSize: { xs: 32, sm: 42, md: 56 },
                 fontWeight: 800,
                 color: "var(--themeColor)",
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Inter', sans-serif",
                 background: "linear-gradient(135deg, var(--themeColor) 0%, #7a2d3a 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
@@ -400,7 +400,7 @@ export const AboutUs = () => {
                       fontSize: { xs: 28, md: 38 },
                       fontWeight: 800,
                       color: "var(--themeColor)",
-                      fontFamily: "'Playfair Display', serif",
+                      fontFamily: "'Inter', sans-serif",
                       mb: 1,
                       lineHeight: 1.2,
                     }}

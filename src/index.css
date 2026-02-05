@@ -1,9 +1,10 @@
-/* Fonts loaded from index.html to avoid blocking @import */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+ 
 :root {
   --themeColor: #5F2930;
   --specialColor: #c32e06;
   /* Heading font (for hero etc.) */
-  --fontFamily: 'Playfair Display', serif;
+  --fontFamily: 'Inter', sans-serif;
 }
 /* Sansita Swashed */
 .sansita-swashed {
@@ -33,7 +34,7 @@ body {
   overflow-x: hidden;
   width: 100%;
   position: relative;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   line-height: 1.5;
   color: #222;
 }
@@ -46,7 +47,7 @@ h1, h2, h3, h4, h5, h6,
 .MuiTypography-h4,
 .MuiTypography-h5,
 .MuiTypography-h6 {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
 }
 
@@ -55,18 +56,18 @@ span,
 .MuiTypography-root,
 .MuiTypography-body1,
 .MuiTypography-body2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 400;
 }
 
 .MuiButton-root {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
 
 /* Section title utility */
 .title-style {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
 }
 

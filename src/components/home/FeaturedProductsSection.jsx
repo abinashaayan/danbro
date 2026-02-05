@@ -160,7 +160,7 @@ export const FeaturedProductsSection = () => {
         {/* Products Grid */}
         <Grid container spacing={{ xs: 3, md: 4 }}>
           {featuredProducts.map((product, index) => (
-            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product.id}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={product?.id}>
               <Box
                 data-index={index}
                 sx={{
@@ -200,7 +200,7 @@ export const FeaturedProductsSection = () => {
                     },
                   },
                 }}
-                onClick={() => navigate(`/products/${product.id}`)}
+                onClick={() => navigate(`/products/${product?.id}`)}
               >
                 {/* Badge */}
                 <Box
@@ -209,7 +209,7 @@ export const FeaturedProductsSection = () => {
                     position: "absolute",
                     top: 15,
                     right: 15,
-                    bgcolor: product.badgeColor,
+                    bgcolor: product?.badgeColor,
                     color: "#fff",
                     px: 2,
                     py: 0.5,
@@ -221,7 +221,7 @@ export const FeaturedProductsSection = () => {
                     transition: "all 0.4s ease",
                   }}
                 >
-                  {product.badge}
+                  {product?.badge}
                 </Box>
 
                 {/* Discount Badge */}
@@ -241,7 +241,7 @@ export const FeaturedProductsSection = () => {
                     boxShadow: "0 4px 15px rgba(10,18,52,0.4)",
                   }}
                 >
-                  {product.discount}
+                  {product?.discount}
                 </Box>
 
                 {/* Product Image */}
@@ -266,8 +266,8 @@ export const FeaturedProductsSection = () => {
                 >
                   <Box
                     component="img"
-                    src={product.image}
-                    alt={product.title}
+                    src={product?.image}
+                    alt={product?.title}
                     sx={{
                       width: "100%",
                       height: "100%",
@@ -284,11 +284,11 @@ export const FeaturedProductsSection = () => {
                     <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                       <StarIcon sx={{ fontSize: 18, color: "#FFD700" }} />
                       <CustomText sx={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
-                        {product.rating}
+                        {product?.rating}
                       </CustomText>
                     </Box>
                     <CustomText sx={{ fontSize: 12, color: "#999" }}>
-                      ({product.reviews} reviews)
+                      ({product?.reviews} reviews)
                     </CustomText>
                   </Box>
 
@@ -302,7 +302,7 @@ export const FeaturedProductsSection = () => {
                       lineHeight: 1.3,
                     }}
                   >
-                    {product.title}
+                    {product?.title}
                   </CustomText>
 
                   {/* Description */}
@@ -315,7 +315,7 @@ export const FeaturedProductsSection = () => {
                       minHeight: { xs: 40, md: 44 },
                     }}
                   >
-                    {product.description}
+                    {product?.description}
                   </CustomText>
 
                   {/* Price and Add to Cart */}
@@ -328,7 +328,7 @@ export const FeaturedProductsSection = () => {
                           color: "var(--themeColor)",
                         }}
                       >
-                        {product.price}
+                        {product?.price}
                       </CustomText>
                       <CustomText
                         sx={{
@@ -338,7 +338,7 @@ export const FeaturedProductsSection = () => {
                           ml: 1,
                         }}
                       >
-                        {product.originalPrice}
+                        {product?.originalPrice}
                       </CustomText>
                     </Box>
                     <Button

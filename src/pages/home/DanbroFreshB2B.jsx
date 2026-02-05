@@ -126,7 +126,7 @@ export const DanbroFreshB2B = () => {
             fontSize: { xs: 24, sm: 28, md: 32 },
             fontWeight: 700,
             color: "#2c2c2c",
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             mb: 0.5,
           }}
         >
@@ -136,7 +136,7 @@ export const DanbroFreshB2B = () => {
           sx={{
             fontSize: { xs: 14, sm: 15 },
             color: "#666",
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             mb: 3,
           }}
         >
@@ -148,7 +148,7 @@ export const DanbroFreshB2B = () => {
               fontSize: { xs: 14, sm: 15 },
               color: "#444",
               lineHeight: 1.8,
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
             }}
           >
             <Box component="span" sx={{ fontWeight: 700 }}>Danbro Express</Box> is your dedicated B2B channel from{" "}
@@ -185,7 +185,7 @@ export const DanbroFreshB2B = () => {
               fontSize: { xs: 14, sm: 15 },
               color: "#444",
               lineHeight: 1.8,
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               mt: 1.5,
               fontStyle: "italic",
             }}
@@ -225,7 +225,7 @@ export const DanbroFreshB2B = () => {
                   fontWeight: 600,
                   fontSize: { xs: 11, sm: 12 },
                   textTransform: "uppercase",
-                  fontFamily: "'Poppins', sans-serif",
+                  fontFamily: "'Inter', sans-serif",
                 }}
               >
                 {label}
@@ -274,7 +274,7 @@ export const DanbroFreshB2B = () => {
                       fontSize: 13,
                       fontWeight: 600,
                       color: "#2c2c2c",
-                      fontFamily: "'Poppins', sans-serif",
+                      fontFamily: "'Inter', sans-serif",
                     }}
                   >
                     {item.name}
@@ -292,7 +292,7 @@ export const DanbroFreshB2B = () => {
             fontSize: { xs: 22, sm: 26, md: 28 },
             fontWeight: 700,
             color: "#2c2c2c",
-            fontFamily: "'Poppins', sans-serif",
+            fontFamily: "'Inter', sans-serif",
             mb: 2,
           }}
         >
@@ -312,7 +312,7 @@ export const DanbroFreshB2B = () => {
             sx={{
               fontSize: { xs: 13, sm: 14 },
               color: "#555",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
             }}
           >
             Please fill the form below and submit your request, we will call you back for more discussion. You have to put discounts as per your choice. Discount depends upon the quantity ordered.
@@ -378,7 +378,7 @@ export const DanbroFreshB2B = () => {
               fontSize: 18,
               fontWeight: 700,
               color: "#2c2c2c",
-              fontFamily: "'Poppins', sans-serif",
+              fontFamily: "'Inter', sans-serif",
               textAlign: "center",
               mb: 2,
             }}

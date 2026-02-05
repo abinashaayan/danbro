@@ -26,16 +26,8 @@ export const HeroBanner = () => {
             style={{ backgroundImage: `url(${slide.img})` }}
           >
             <div className="content">
-              <div className="name">{slide.title}</div>
-              <div className="des">{slide.subtitle}</div>
-              <a
-                className="seeMore"
-                href="http://34.206.193.218:5556"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <button>See More</button>
-              </a>
+              <div className="name">{slide?.title}</div>
+              <div className="des">{slide?.subtitle}</div>
             </div>
           </div>
         ))}
