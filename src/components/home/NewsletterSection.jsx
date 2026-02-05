@@ -1,8 +1,10 @@
 import { Box, Container, TextField, Button } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
+import { CustomToast } from "../comman/CustomToast";
 import { useState, useEffect, useRef } from "react";
 import EmailIcon from "@mui/icons-material/Email";
 import SendIcon from "@mui/icons-material/Send";
+import { subscribeNewsletter } from "../../utils/apiService";
 
 export const NewsletterSection = () => {
   const [email, setEmail] = useState("");
@@ -26,9 +28,66 @@ export const NewsletterSection = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleSubmit = (e) => {
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+    loading: false,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setEmail("");
+    
+    if (!email.trim()) {
+      setToast({
+        open: true,
+        message: "Please enter your email address",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setToast({
+        open: true,
+        message: "Please enter a valid email address",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setToast({
+      open: true,
+      message: "Subscribing to newsletter...",
+      severity: "info",
+      loading: true,
+    });
+
+    try {
+      await subscribeNewsletter(email);
+      setToast({
+        open: true,
+        message: "Successfully subscribed to newsletter!",
+        severity: "success",
+        loading: false,
+      });
+      setEmail("");
+    } catch (error) {
+      console.error("Error subscribing to newsletter:", error);
+      setToast({
+        open: true,
+        message: error.message || "Failed to subscribe. Please try again.",
+        severity: "error",
+        loading: false,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -124,6 +183,7 @@ export const NewsletterSection = () => {
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
               required
+              disabled={isSubmitting}
               sx={{
                 flex: 1,
                 bgcolor: "#fff",
@@ -145,6 +205,7 @@ export const NewsletterSection = () => {
             <Button
               type="submit"
               endIcon={<SendIcon />}
+              disabled={isSubmitting}
               sx={{
                 bgcolor: "#fff",
                 color: "var(--themeColor)",
@@ -196,6 +257,15 @@ export const NewsletterSection = () => {
           </Box>
         </Box>
       </Container>
+
+      {/* Toast Notification */}
+      <CustomToast
+        open={toast.open}
+        onClose={() => setToast({ ...toast, open: false })}
+        message={toast.message}
+        severity={toast.severity}
+        loading={toast.loading}
+      />
     </Box>
   );
 };

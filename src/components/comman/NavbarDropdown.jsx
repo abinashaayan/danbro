@@ -165,9 +165,16 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
       disableRestoreFocus
       disableAutoFocus
       disableEnforceFocus
-      disableScrollLock
+      disableScrollLock={true}
+      slotProps={{
+        root: {
+          style: {
+            position: "fixed",
+          },
+        },
+      }}
       sx={{
-        mt: 0.5,
+        mt: 1.5,
         pointerEvents: "auto",
         "& .MuiBackdrop-root": {
           display: "none", // Remove backdrop for instant display
@@ -184,6 +191,34 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
           backgroundColor: "#fff",
           border: "1px solid rgba(255,148,114,0.2)",
           animation: "none", // Remove any animations
+          position: "absolute",
+          margin: 0,
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: "-8px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "8px solid transparent",
+            borderRight: "8px solid transparent",
+            borderBottom: "8px solid #fff",
+            zIndex: 1,
+          },
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: "-9px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 0,
+            height: 0,
+            borderLeft: "9px solid transparent",
+            borderRight: "9px solid transparent",
+            borderBottom: "9px solid rgba(255,148,114,0.2)",
+            zIndex: 0,
+          },
         },
       }}
       onMouseEnter={(e) => {

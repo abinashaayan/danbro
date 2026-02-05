@@ -1,7 +1,9 @@
 import { Box, Container, Grid, Button, Divider, IconButton, Link } from "@mui/material";
 import { CustomText } from "../../components/comman/CustomText";
+import { CustomToast } from "../../components/comman/CustomToast";
 import { useEffect, useRef, useState } from "react";
 import { KeyboardArrowDownRounded, KeyboardArrowUpRounded } from "@mui/icons-material";
+import { submitContact, getAllFAQs } from "../../utils/apiService";
 
 import blogHero from "../../assets/blog.png";
 import visitors from "../../assets/egpqen3o_danbro_625x300_04_March_20.webp";
@@ -20,6 +22,22 @@ const inputStyle = {
 export const Contact = () => {
   const [visibleSections, setVisibleSections] = useState({});
   const [open, setOpen] = useState(0);
+  const [faqs, setFaqs] = useState([]);
+  const [loadingFaqs, setLoadingFaqs] = useState(true);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+    loading: false,
+  });
 
   const sectionRefs = {
     header: useRef(null),
@@ -41,13 +59,145 @@ export const Contact = () => {
     return () => observers.forEach(o => o.disconnect());
   }, []);
 
-  const faqs = [
-    { q: "Can I place an Order Online?", a: "Yes! you can place an order through our website for pickup or delivery." },
-    { q: "What payment methods do you accept?", a: "Online, UPI, Card & Cash depending on store." },
-    { q: "Can I customize my cake or bakery item?", a: "Yes! Custom cakes & bakery products available." },
-    { q: "Can I return my order?", a: "Return policy varies depending on item condition." },
-    { q: "What are your store hours?", a: "Timings vary per location. Check nearest store." },
-  ];
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      try {
+        setLoadingFaqs(true);
+        const response = await getAllFAQs();
+        // Handle different response structures
+        if (response?.data && Array.isArray(response.data)) {
+          setFaqs(response.data);
+        } else if (response?.faqs && Array.isArray(response.faqs)) {
+          setFaqs(response.faqs);
+        } else if (Array.isArray(response)) {
+          setFaqs(response);
+        } else {
+          // Fallback to default FAQs if API structure is different
+          setFaqs([
+            { question: "Can I place an Order Online?", answer: "Yes! you can place an order through our website for pickup or delivery." },
+            { question: "What payment methods do you accept?", answer: "Online, UPI, Card & Cash depending on store." },
+            { question: "Can I customize my cake or bakery item?", answer: "Yes! Custom cakes & bakery products available." },
+            { question: "Can I return my order?", answer: "Return policy varies depending on item condition." },
+            { question: "What are your store hours?", answer: "Timings vary per location. Check nearest store." },
+          ]);
+        }
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+        // Use default FAQs on error
+        setFaqs([
+          { question: "Can I place an Order Online?", answer: "Yes! you can place an order through our website for pickup or delivery." },
+          { question: "What payment methods do you accept?", answer: "Online, UPI, Card & Cash depending on store." },
+          { question: "Can I customize my cake or bakery item?", answer: "Yes! Custom cakes & bakery products available." },
+          { question: "Can I return my order?", answer: "Return policy varies depending on item condition." },
+          { question: "What are your store hours?", answer: "Timings vary per location. Check nearest store." },
+        ]);
+      } finally {
+        setLoadingFaqs(false);
+      }
+    };
+
+    fetchFAQs();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validation
+    if (!formData.firstName.trim() || !formData.lastName.trim()) {
+      setToast({
+        open: true,
+        message: "Please enter both first name and last name",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    if (!formData.email.trim()) {
+      setToast({
+        open: true,
+        message: "Please enter your email address",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setToast({
+        open: true,
+        message: "Please enter a valid email address",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    if (!formData.phone.trim()) {
+      setToast({
+        open: true,
+        message: "Please enter your phone number",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    if (!formData.message.trim()) {
+      setToast({
+        open: true,
+        message: "Please enter your message",
+        severity: "error",
+        loading: false,
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    setToast({
+      open: true,
+      message: "Submitting your message...",
+      severity: "info",
+      loading: true,
+    });
+
+    try {
+      await submitContact(formData);
+      setToast({
+        open: true,
+        message: "Thank you! Your message has been sent successfully.",
+        severity: "success",
+        loading: false,
+      });
+      // Reset form
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      setToast({
+        open: true,
+        message: error.message || "Failed to send message. Please try again.",
+        severity: "error",
+        loading: false,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", overflowX: "hidden" }}>
@@ -173,17 +323,78 @@ export const Contact = () => {
             </CustomText>
 
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 6 }}> <input placeholder="Last Name" style={inputStyle} /> </Grid>
-              <Grid size={{ xs: 12, md: 6 }}> <input placeholder="First Name" style={inputStyle} /> </Grid>
-              <Grid size={{ xs: 12 }}> <input placeholder="Email" style={inputStyle} /> </Grid>
-              <Grid size={{ xs: 12 }}> <input placeholder="Phone Number" style={inputStyle} /> </Grid>
-              <Grid size={{ xs: 12 }}> <textarea rows={4} placeholder="Message" style={inputStyle} /> </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <input
+                  name="lastName"
+                  placeholder="Last Name"
+                  value={formData.lastName}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <input
+                  name="firstName"
+                  placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <input
+                  name="phone"
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <textarea
+                  name="message"
+                  rows={4}
+                  placeholder="Message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
             </Grid>
 
             <Box sx={{ mt: 3, textAlign: { xs: "center", md: "left" } }}>
-              <Button variant="contained"
-                sx={{ background: "#fff", color: "#000", fontWeight: 600, width: { xs: "100%", md: "40%" } }}>
-                Send
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+                sx={{
+                  background: "#fff",
+                  color: "#000",
+                  fontWeight: 600,
+                  width: { xs: "100%", md: "40%" },
+                  "&:disabled": {
+                    background: "rgba(255,255,255,0.7)",
+                    color: "rgba(0,0,0,0.5)",
+                  },
+                }}
+              >
+                {isSubmitting ? "Sending..." : "Send"}
               </Button>
             </Box>
           </Box>
@@ -202,26 +413,45 @@ export const Contact = () => {
         </CustomText>
 
         <Box sx={{ px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
-          {faqs.map((item, i) => (
-            <Box key={i} sx={{
-              background: "#FFEDE8", p: { xs: 1, sm: 1, md: 1, lg: 2 }, borderRadius: 3, mb: 2, cursor: "pointer",
-              "&:hover": { background: "#FFE1D8" }
-            }} onClick={() => setOpen(open === i ? null : i)}>
+          {loadingFaqs ? (
+            <CustomText sx={{ textAlign: "center", py: 4 }}>Loading FAQs...</CustomText>
+          ) : faqs.length === 0 ? (
+            <CustomText sx={{ textAlign: "center", py: 4 }}>No FAQs available</CustomText>
+          ) : (
+            faqs.map((item, i) => {
+              const question = item.question || item.q || "";
+              const answer = item.answer || item.a || "";
+              return (
+                <Box key={i} sx={{
+                  background: "#FFEDE8", p: { xs: 1, sm: 1, md: 1, lg: 2 }, borderRadius: 3, mb: 2, cursor: "pointer",
+                  "&:hover": { background: "#FFE1D8" }
+                }} onClick={() => setOpen(open === i ? null : i)}>
 
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <CustomText sx={{ fontWeight: 600, fontSize: { xs: 14, sm: 15, md: 15, lg: 16 } }}>{item.q}</CustomText>
-                <IconButton>{open === i ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}</IconButton>
-              </Box>
+                  <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                    <CustomText sx={{ fontWeight: 600, fontSize: { xs: 14, sm: 15, md: 15, lg: 16 } }}>{question}</CustomText>
+                    <IconButton>{open === i ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}</IconButton>
+                  </Box>
 
-              {open === i && (
-                <CustomText sx={{ mt: 1.5, fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#444", lineHeight: 1.6 }}>
-                  {item.a}
-                </CustomText>
-              )}
-            </Box>
-          ))}
+                  {open === i && (
+                    <CustomText sx={{ mt: 1.5, fontSize: { xs: 13, sm: 14, md: 14.5, lg: 15 }, color: "#444", lineHeight: 1.6 }}>
+                      {answer}
+                    </CustomText>
+                  )}
+                </Box>
+              );
+            })
+          )}
         </Box>
       </Container>
+
+      {/* Toast Notification */}
+      <CustomToast
+        open={toast.open}
+        onClose={() => setToast({ ...toast, open: false })}
+        message={toast.message}
+        severity={toast.severity}
+        loading={toast.loading}
+      />
 
     </Box>
   );

@@ -584,6 +584,12 @@ const getApiUrl = () => {
  */
 export const checkServiceAvailability = async (latitude, longitude) => {
   try {
+    const token = getAccessToken();
+    const headers = { 'Content-Type': 'application/json' };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
     const response = await axios.post(
       `${API_BASE_URL}/location/checkServiceAvailability`,
       {
@@ -591,7 +597,7 @@ export const checkServiceAvailability = async (latitude, longitude) => {
         longitude: String(longitude),
       },
       {
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         timeout: 15000,
       }
     );
@@ -616,14 +622,20 @@ export const fetchItemCategories = async () => {
     try {
       const url = getApiUrl();
       const location = getStoredLocation();
+      const token = getAccessToken();
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'lat': location.lat.toString(),
+        'long': location.long.toString(),
+      };
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
 
       const response = await axios.get(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'lat': location.lat.toString(),
-          'long': location.long.toString(),
-        },
+        headers,
         withCredentials: false,
         timeout: 15000,
       });
@@ -703,6 +715,7 @@ const getExternalApiUrl = (level, params = {}) => {
  */
 export const fetchProductSearch = async (search, page = 1, limit = 20, minPrice = null, maxPrice = null, categoryId = null) => {
   const location = getStoredLocation();
+  const token = getAccessToken();
   const params = new URLSearchParams();
   if (search && String(search).trim()) params.append('search', String(search).trim());
   if (page != null) params.append('page', String(page));
@@ -711,13 +724,19 @@ export const fetchProductSearch = async (search, page = 1, limit = 20, minPrice 
   if (maxPrice != null && maxPrice !== '') params.append('maxPrice', String(maxPrice));
   if (categoryId) params.append('categoryId', String(categoryId));
   const url = `${API_BASE_URL}/product/search?${params.toString()}`;
+  
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'lat': location.lat.toString(),
+    'long': location.long.toString(),
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  
   const response = await axios.get(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'lat': location.lat.toString(),
-      'long': location.long.toString(),
-    },
+    headers,
     withCredentials: false,
     timeout: 15000,
   });
@@ -734,6 +753,7 @@ export const fetchProductSearch = async (search, page = 1, limit = 20, minPrice 
  */
 export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20, search = '') => {
   const location = getStoredLocation();
+  const token = getAccessToken();
   const params = new URLSearchParams();
   if (page) params.append('page', page.toString());
   if (limit) params.append('limit', limit.toString());
@@ -741,13 +761,18 @@ export const fetchProductsByCategory = async (categoryId, page = 1, limit = 20, 
   const query = params.toString();
   const url = `${API_BASE_URL}/product/getProductsByCategory/${encodeURIComponent(categoryId)}${query ? `?${query}` : ''}`;
 
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'lat': location.lat.toString(),
+    'long': location.long.toString(),
+  };
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await axios.get(url, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'lat': location.lat.toString(),
-      'long': location.long.toString(),
-    },
+    headers,
     withCredentials: false,
     timeout: 15000,
   });
@@ -775,14 +800,20 @@ export const fetchProducts = async (categoryId = null, page = 1, limit = 20, sea
     params.append('search', search);
     const url = `${baseUrl}?${params.toString()}`;
     const location = getStoredLocation();
+    const token = getAccessToken();
+
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
 
     const response = await axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'lat': location.lat.toString(),
-        'long': location.long.toString(),
-      },
+      headers,
       withCredentials: false,
       timeout: 15000,
     });
@@ -851,14 +882,20 @@ export const fetchBranches = async () => {
   try {
     const url = `${API_BASE_URL}/branch/getAll`;
     const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
     
     const response = await axios.get(url, {
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'lat': location.lat.toString(),
-        'long': location.long.toString(),
-      },
+      headers,
       withCredentials: false,
       timeout: 15000,
     });
@@ -1333,6 +1370,166 @@ export const fetchProductById = async (productId) => {
     throw new Error(
       error.response?.data?.message ||
       `HTTP error! status: ${error.response.status}`
+    );
+  }
+};
+
+/**
+ * Submit contact form
+ * POST /api/contact
+ * @param {Object} contactData - Contact form data
+ * @param {string} contactData.firstName - First name
+ * @param {string} contactData.lastName - Last name
+ * @param {string} contactData.email - Email address
+ * @param {string} contactData.phone - Phone number
+ * @param {string} contactData.message - Message/query
+ * @returns {Promise<Object>} Response object
+ */
+export const submitContact = async (contactData) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
+    const payload = {
+      firstName: contactData.firstName || "",
+      lastName: contactData.lastName || "",
+      email: contactData.email || "",
+      phone: contactData.phone || "",
+      message: contactData.message || "",
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/contact`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 30000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting contact form:', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (!error.response) {
+      throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
+    }
+    
+    throw new Error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      `Failed to submit contact form. Status: ${error.response.status}`
+    );
+  }
+};
+
+/**
+ * Subscribe to newsletter
+ * POST /api/newsletter/subscribe
+ * @param {string} email - Email address to subscribe
+ * @returns {Promise<Object>} Response object
+ */
+export const subscribeNewsletter = async (email) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
+    const payload = {
+      email: email.trim(),
+    };
+    
+    const response = await axios.post(`${API_BASE_URL}/newsletter/subscribe`, payload, {
+      headers,
+      withCredentials: false,
+      timeout: 15000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error subscribing to newsletter:', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (!error.response) {
+      throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
+    }
+    
+    throw new Error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      `Failed to subscribe to newsletter. Status: ${error.response.status}`
+    );
+  }
+};
+
+/**
+ * Get all FAQs
+ * GET /api/faq/getAll
+ * @returns {Promise<Object>} Response object with FAQs array
+ */
+export const getAllFAQs = async () => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    
+    const response = await axios.get(`${API_BASE_URL}/faq/getAll`, {
+      headers,
+      withCredentials: false,
+      timeout: 15000,
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching FAQs:', error);
+    
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      throw new Error('Request timeout: The server is taking too long to respond. Please try again.');
+    }
+    
+    if (!error.response) {
+      throw new Error('Network error: Unable to connect to the server. Please check your internet connection.');
+    }
+    
+    throw new Error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      `Failed to fetch FAQs. Status: ${error.response.status}`
     );
   }
 };

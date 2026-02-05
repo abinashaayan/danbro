@@ -87,6 +87,9 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    // Prevent layout shift when menu is open - keep body scroll enabled
+    // Menu uses fixed positioning so it won't affect page layout
+
     const handleDrawerToggle = () => {
         if (isControlled) onMobileMenuClose?.();
         else setInternalMobileOpen((prev) => !prev);
@@ -175,7 +178,7 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                                         whiteSpace: "nowrap",
                                         position: "relative",
                                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                        transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
+                                        transform: hoveredItem === label ? "translateY(2px)" : "translateY(0)",
                                         "&::after": {
                                             content: '""',
                                             position: "absolute",

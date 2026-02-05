@@ -249,14 +249,29 @@ export const Store = () => {
                                                 <Box sx={{ fontWeight: 600, fontSize: 15, color: "#1a1a1a" }}>
                                                     {branch.name}
                                                 </Box>
-                                                <Link
-                                                    to="/products"
-                                                    className="link-no-decoration"
-                                                    onClick={(e) => e.stopPropagation()}
-                                                    style={{ fontSize: 14, fontWeight: 500, color: "#b87333" }}
+                                                <Box
+                                                    component="span"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        window.open(
+                                                            `https://www.google.com/maps?q=${lat},${long}`,
+                                                            "_blank",
+                                                            "noopener,noreferrer"
+                                                        );
+                                                    }}
+                                                    sx={{
+                                                        fontSize: 14,
+                                                        fontWeight: 500,
+                                                        color: "#b87333",
+                                                        cursor: "pointer",
+                                                        textDecoration: "none",
+                                                        "&:hover": {
+                                                            textDecoration: "underline",
+                                                        },
+                                                    }}
                                                 >
                                                     Visit store
-                                                </Link>
+                                                </Box>
                                             </Box>
 
                                             <Box sx={{ fontSize: 13, color: "#555", mt: 0.75, lineHeight: 1.4 }}>
