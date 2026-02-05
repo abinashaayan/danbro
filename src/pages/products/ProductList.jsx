@@ -114,11 +114,12 @@ export const ProductList = () => {
     }, { replace: true });
   }, [debouncedSearchQuery, priceRange]);
 
-  // API expects categoryId (string e.g. "696602a929c5a42df91ef599"), not numeric id
+  // API expects categoryId (string). When URL has search only (no categoryId), pass null for global search.
   const selectedCategoryId = useMemo(() => {
+    if (debouncedSearchQuery.trim() && !categoryIdFromUrl) return null;
     const cat = apiCategories?.[selectedCategory];
     return cat?.categoryId ?? cat?.id ?? null;
-  }, [apiCategories, selectedCategory]);
+  }, [apiCategories, selectedCategory, debouncedSearchQuery, categoryIdFromUrl]);
 
   const handleCategoryChange = (event, newValue) => {
     setSelectedCategory(newValue);

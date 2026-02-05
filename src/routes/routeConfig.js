@@ -33,6 +33,7 @@ const CorporateQueries = createLazyComponent(() => import("../pages/home/Corpora
 const PaymentSuccess = createLazyComponent(() => import("../pages/home/paymentSuccess"));
 const PaymentFailure = createLazyComponent(() => import("../pages/home/paymentFailure"), "paymentFailure");
 const DanbroFreshB2B = createLazyComponent(() => import("../pages/home/DanbroFreshB2B"), "DanbroFreshB2B");
+const SearchPage = createLazyComponent(() => import("../pages/products/SearchPage"), "SearchPage");
 
 /**
  * Public Routes - Accessible without authentication
@@ -89,6 +90,10 @@ export const publicRoutes = [
   {
     path: "/products/:id",
     component: ProductDetails,
+  },
+  {
+    path: "/search",
+    component: SearchPage,
   },
   {
     path: "/privacy-policy",

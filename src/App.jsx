@@ -26,6 +26,7 @@ const ScrollToTop = () => {
 const AppContent = () => {
   const { pathname } = useLocation();
   const [showDeliveryDialog, setShowDeliveryDialog] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const hasCheckedDeliveryDialog = useRef(false);
 
   // Hide Navbar on profile page
@@ -98,8 +99,15 @@ const AppContent = () => {
           flexDirection: "column",
         }}
       >
-        <TopHeader />
-        {!hideNavbar && <Navbar />}
+        <TopHeader
+          onOpenMobileMenu={!hideNavbar ? () => setMobileMenuOpen(true) : undefined}
+        />
+        {!hideNavbar && (
+          <Navbar
+            mobileMenuOpen={mobileMenuOpen}
+            onMobileMenuClose={() => setMobileMenuOpen(false)}
+          />
+        )}
         <Box 
           sx={{ 
             flex: 1,
@@ -110,7 +118,7 @@ const AppContent = () => {
               ? { xs: "0px", sm: "0px", md: "0px", lg: "0px" }
               : hideNavbar 
                 ? { xs: "65px", sm: "70px", md: "65px", lg: "70px" } // Profile page: only TopHeader
-                : { xs: "107px", sm: "111px", md: "107px", lg: "111px" } // Other pages
+                : { xs: "65px", sm: "70px", md: "107px", lg: "111px" } // Mobile: header only (menu in header); Desktop: header + navbar bar
           }}
         >
           <AppRoutes />

@@ -67,24 +67,6 @@ const getHomePageSections = (navbarLabel) => {
   return [];
 };
 
-// Get keywords to filter categories
-const getCategoryKeywords = (navbarLabel) => {
-  const label = navbarLabel?.toUpperCase() || "";
-  if (label.includes("CAKE")) {
-    return ["CAKE", "MUFFIN", "BROWNIE"];
-  }
-  if (label.includes("MITHAI") || label.includes("COOKIE")) {
-    return ["MITHAI", "COOKIE", "SWEET"];
-  }
-  if (label.includes("GIFT") || label.includes("CHOCOLATE")) {
-    return ["GIFT", "CHOCOLATE", "HAMPER"];
-  }
-  if (label.includes("ADDON")) {
-    return ["ADDON", "CELEBRATION", "CANDLE", "BALLOON"];
-  }
-  return [];
-};
-
 export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl }) => {
   const navigate = useNavigate();
   const { menus } = useHomeLayout();

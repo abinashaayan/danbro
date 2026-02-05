@@ -218,7 +218,7 @@ export const ProductDetailsInfo = ({
       )}
     </Box>
 
-    <Grid container spacing={{ xs: 1.5, sm: 2 }} sx={{ mt: 1 }}>
+    <Grid container spacing={{ xs: 1.5, sm: 2 }} sx={{ mt: 2 }}>
       <Grid size={{ xs: 4, sm: 3 }}>
         <Box
           sx={{

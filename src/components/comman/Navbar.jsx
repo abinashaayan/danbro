@@ -9,11 +9,14 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useHomeLayout } from "../../hooks/useHomeLayout";
 import { NavbarDropdown } from "./NavbarDropdown";
 
-export const Navbar = () => {
+export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
     const theme = useTheme();
     const navigate = useNavigate();
     const location = useLocation();
-    const [mobileOpen, setMobileOpen] = useState(false);
+    const [internalMobileOpen, setInternalMobileOpen] = useState(false);
+    const isControlled = typeof onMobileMenuClose === "function";
+    const mobileOpen = isControlled ? !!mobileMenuOpen : internalMobileOpen;
+    const closeDrawer = isControlled ? onMobileMenuClose : () => setInternalMobileOpen(false);
     const [expandedItems, setExpandedItems] = useState(new Set());
     const [hoveredItem, setHoveredItem] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
@@ -85,7 +88,8 @@ export const Navbar = () => {
     }, []);
 
     const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
+        if (isControlled) onMobileMenuClose?.();
+        else setInternalMobileOpen((prev) => !prev);
     };
 
     return (
@@ -207,37 +211,39 @@ export const Navbar = () => {
 
             </Box>
 
-            {/* Mobile Navbar */}
-            <Box
-                sx={{
-                    display: { xs: "flex", md: "none" },
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    py: 1.5,
-                    px: 2,
-                    backgroundColor: "#fbc7b5",
-                    boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-                }}
-            >
-                <IconButton
-                    onClick={handleDrawerToggle}
+            {/* Mobile Navbar strip - only show when menu is not controlled from TopHeader */}
+            {!isControlled && (
+                <Box
                     sx={{
-                        color: "var(--themeColor)",
-                        transition: "transform 0.3s ease",
-                        "&:active": {
-                            transform: "scale(0.95)",
-                        },
+                        display: { xs: "flex", md: "none" },
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        py: 1.5,
+                        px: 2,
+                        backgroundColor: "#fbc7b5",
+                        boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
                     }}
                 >
-                    <MenuIcon />
-                </IconButton>
-            </Box>
+                    <IconButton
+                        onClick={handleDrawerToggle}
+                        sx={{
+                            color: "var(--themeColor)",
+                            transition: "transform 0.3s ease",
+                            "&:active": {
+                                transform: "scale(0.95)",
+                            },
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                </Box>
+            )}
 
             {/* Mobile Drawer */}
             <Drawer
                 anchor="left"
                 open={mobileOpen}
-                onClose={handleDrawerToggle}
+                onClose={closeDrawer}
                 sx={{
                     display: { xs: "block", md: "none" },
                     "& .MuiDrawer-paper": {
@@ -250,7 +256,7 @@ export const Navbar = () => {
             >
                 <Box sx={{ display: "flex", justifyContent: "flex-end", px: 2, mb: 2 }}>
                     <IconButton
-                        onClick={handleDrawerToggle}
+                        onClick={closeDrawer}
                         sx={{
                             color: "var(--themeColor)",
                         }}
@@ -286,7 +292,7 @@ export const Navbar = () => {
                                             toggleMobileDropdown(label);
                                         } else {
                                             navigate(path);
-                                            handleDrawerToggle();
+                                            closeDrawer();
                                         }
                                     }}
                                 >
@@ -323,7 +329,7 @@ export const Navbar = () => {
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     navigate(path);
-                                                    handleDrawerToggle();
+                                                    closeDrawer();
                                                 }}
                                                 sx={{
                                                     fontSize: 12,
@@ -349,7 +355,7 @@ export const Navbar = () => {
                                                         } else {
                                                             navigate(`/products?categoryId=${categoryId}&search=${encodeURIComponent(product.name)}`);
                                                         }
-                                                        handleDrawerToggle();
+                                                        closeDrawer();
                                                     }}
                                                     sx={{
                                                         fontSize: 13,

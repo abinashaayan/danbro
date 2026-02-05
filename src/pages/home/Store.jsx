@@ -212,12 +212,12 @@ export const Store = () => {
 
                     {/* Scrollable Store List */}
                     <Box sx={{ flex: 1, overflowY: "auto", overflowX: "hidden", px: { xs: 2, sm: 2.5 }, pb: 3, pt: 2, }}>
-                        {filteredBranches.length === 0 ? (
+                        {filteredBranches?.length === 0 ? (
                             <Box sx={{ py: 4, textAlign: "center", color: "#666" }}>
                                 No stores match your search.
                             </Box>
                         ) : (
-                            filteredBranches.map((branch, index) => {
+                            filteredBranches?.map((branch, index) => {
                                 const img = branch?.image || contact;
                                 const lat = branch?._lat ?? branch?.lat;
                                 const long = branch?._long ?? branch?.long;

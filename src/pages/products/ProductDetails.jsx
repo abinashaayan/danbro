@@ -350,7 +350,7 @@ export const ProductDetails = () => {
   if (error || !productData) return <ProductDetailsError error={error} />;
 
   return (
-    <Box sx={{ overflowX: "hidden", maxWidth: "100%" }}>
+    <Box sx={{ overflowX: "hidden", maxWidth: "100%", mb: 4 }}>
       <Container maxWidth="lg" sx={{ pb: { xs: 4, sm: 5, md: 6 }, p: { xs: 1.5, sm: 2, md: 3 }, maxWidth: "100%" }}>
         <ProductDetailsBreadcrumbs
           product={product}

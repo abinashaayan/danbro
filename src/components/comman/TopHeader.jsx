@@ -1,8 +1,8 @@
-import { Box, Button, IconButton, useMediaQuery, useTheme, Avatar, Badge, CircularProgress, Tooltip } from "@mui/material";
-import { NearMe, ShoppingCart, Favorite } from "@mui/icons-material";
+import { Box, Button, IconButton, useMediaQuery, useTheme, Avatar, Badge, CircularProgress, Tooltip, TextField, InputAdornment, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { NearMe, ShoppingCart, Favorite, Search as SearchIcon, Menu as MenuIcon } from "@mui/icons-material";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import logo from "../../assets/logo.png";
 import { DeliveryCheckDialog } from "./DeliveryCheckDialog";
 import { BusinessDialog } from "./BusinessDialog";
@@ -17,12 +17,15 @@ import { getGuestCart, getGuestWishlist } from "../../store/guestSlice";
 import { store } from "../../store/store";
 
 
-export const TopHeader = () => {
+export const TopHeader = ({ onOpenMobileMenu }) => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const [openSearchDialog, setOpenSearchDialog] = useState(false);
+    const [mobileSearchQuery, setMobileSearchQuery] = useState("");
     const isTablet = useMediaQuery(theme.breakpoints.down("md"));
     const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams] = useSearchParams();
     const [openDeliveryDialog, setOpenDeliveryDialog] = useState(false);
     const [openBusinessDialog, setOpenBusinessDialog] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,11 +37,22 @@ export const TopHeader = () => {
     const [fullLocationLabel, setFullLocationLabel] = useState("Location...?");
     const [cartIconLoading, setCartIconLoading] = useState(false);
     const [wishlistIconLoading, setWishlistIconLoading] = useState(false);
+    const [headerSearchQuery, setHeaderSearchQuery] = useState("");
     const guestCart = useAppSelector(getGuestCart);
     const guestWishlist = useAppSelector(getGuestWishlist);
 
     // Check if on profile page to add bottom border
     const isProfilePage = location.pathname === "/profile" || location.pathname === "/user-profile";
+
+    // Sync header search input with URL on search page; clear when on any other page
+    const searchQFromUrl = searchParams.get("q") ?? "";
+    useEffect(() => {
+        if (location.pathname === "/search") {
+            setHeaderSearchQuery(searchQFromUrl);
+        } else {
+            setHeaderSearchQuery("");
+        }
+    }, [location.pathname, searchQFromUrl]);
 
     // Check if user is logged in and fetch profile - optimized to prevent unnecessary calls
     useEffect(() => {
@@ -229,6 +243,26 @@ export const TopHeader = () => {
         }
     };
 
+    // Debounced navigate to search page on change (only when user has typed something)
+    const searchDebounceRef = useRef(null);
+    useEffect(() => {
+        if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        const q = (headerSearchQuery || "").trim();
+        if (!q) return;
+        searchDebounceRef.current = setTimeout(() => {
+            navigate(`/search?q=${encodeURIComponent(q)}`, { replace: true });
+        }, 500);
+        return () => {
+            if (searchDebounceRef.current) clearTimeout(searchDebounceRef.current);
+        };
+    }, [headerSearchQuery, navigate]);
+
+    const handleHeaderSearch = (e) => {
+        e?.preventDefault?.();
+        const q = (headerSearchQuery || "").trim();
+        navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search", { replace: true });
+    };
+
     return (
         <Box
             className="container-fluid"
@@ -334,17 +368,34 @@ export const TopHeader = () => {
                 </Box>
             </Box>
 
-            {/* Mobile Left Buttons - Compact */}
+            {/* Mobile Left Buttons - Compact (Menu + Location) */}
             <Box
                 sx={{
                     display: { xs: "flex", md: "none" },
                     gap: 0.5,
                     order: 1,
                     minWidth: 0,
-                    maxWidth: 120,
+                    maxWidth: 160,
                     flexShrink: 1,
+                    alignItems: "center",
                 }}
             >
+                {onOpenMobileMenu && (
+                    <IconButton
+                        size="small"
+                        onClick={onOpenMobileMenu}
+                        sx={{
+                            color: "var(--themeColor)",
+                            padding: 0.5,
+                            width: 36,
+                            height: 36,
+                            "&:hover": { backgroundColor: "rgba(95,41,48,0.08)" },
+                        }}
+                        aria-label="Open menu"
+                    >
+                        <MenuIcon sx={{ fontSize: 24 }} />
+                    </IconButton>
+                )}
                 <Tooltip
                     title={fullLocationLabel && fullLocationLabel !== "Location...?" ? fullLocationLabel : "Allow location to see delivery area"}
                     arrow
@@ -394,29 +445,23 @@ export const TopHeader = () => {
                 </Tooltip>
             </Box>
 
-            {/* Logo - Always center (grid center column) */}
+            {/* Logo + Search - Center (grid center column) */}
             <Box
                 sx={{
                     py: { xs: 0.5, md: 1 },
                     bgcolor: "transparent",
                     display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     justifyContent: "center",
                     order: { xs: 3, md: 2 },
                     width: { xs: "100%", md: "auto" },
                     minWidth: 0,
+                    gap: { xs: 0.5, md: 1 },
                 }}
             >
                 <Link to="/home">
-                    <Box
-                        component="img"
-                        src={logo}
-                        alt="logo"
-                        sx={{
-                            height: isMobile ? 30 : isTablet ? 35 : 40,
-                            maxWidth: "100%",
-                            cursor: "pointer",
-                        }}
-                    />
+                    <Box component="img" src={logo} alt="logo" sx={{ height: isMobile ? 30 : isTablet ? 35 : 40, maxWidth: "100%", cursor: "pointer", }} />
                 </Link>
             </Box>
 
@@ -430,6 +475,79 @@ export const TopHeader = () => {
                     justifyContent: { md: "flex-end" },
                 }}
             >
+                {/* Desktop: search form; Mobile: search icon opens dialog */}
+                {!isMobile && (
+                    <Box
+                        component="form"
+                        onSubmit={handleHeaderSearch}
+                        sx={{
+                            width: { sm: 220, md: 260 },
+                            maxWidth: "100%",
+                            "& .MuiOutlinedInput-root": {
+                                borderRadius: "24px",
+                                backgroundColor: "#fff",
+                                boxShadow: "0 2px 12px rgba(124, 52, 27, 0.08)",
+                                transition: "all 0.25s ease",
+                                "& fieldset": {
+                                    borderColor: "#7c341b",
+                                    borderWidth: "1.5px",
+                                    borderRadius: "24px",
+                                },
+                                "&:hover": {
+                                    boxShadow: "0 4px 16px rgba(124, 52, 27, 0.12)",
+                                    "& fieldset": { borderColor: "#7c341b", borderWidth: "2px" },
+                                },
+                                "&.Mui-focused": {
+                                    boxShadow: "0 4px 20px rgba(124, 52, 27, 0.15)",
+                                    "& fieldset": { borderColor: "#7c341b", borderWidth: "2px" },
+                                },
+                                "& input": {
+                                    py: { sm: 0.9, md: 1.1 },
+                                    px: 1.5,
+                                    fontSize: { sm: 13, md: 14 },
+                                },
+                            },
+                        }}
+                    >
+                        <TextField
+                            size="small"
+                            placeholder="Search products..."
+                            value={headerSearchQuery}
+                            onChange={(e) => setHeaderSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleHeaderSearch(e);
+                            }}
+                            fullWidth
+                            variant="outlined"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end" sx={{ mr: 0.5 }}>
+                                        <SearchIcon sx={{ color: "#7c341b", fontSize: 22 }} />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Box>
+                )}
+                {isMobile && (
+                    <IconButton
+                        size="small"
+                        onClick={() => {
+                            setMobileSearchQuery(headerSearchQuery || "");
+                            setOpenSearchDialog(true);
+                        }}
+                        sx={{
+                            color: "var(--themeColor)",
+                            padding: 0.5,
+                            width: 36,
+                            height: 36,
+                            "&:hover": { backgroundColor: "rgba(95,41,48,0.08)" },
+                        }}
+                        aria-label="Search products"
+                    >
+                        <SearchIcon sx={{ fontSize: 22 }} />
+                    </IconButton>
+                )}
                 <IconButton
                     size="small"
                     onClick={handleWishlistClick}
@@ -461,39 +579,39 @@ export const TopHeader = () => {
 
                 {isLoggedIn && userProfile ? (
                     <Link to="/profile" className="link-no-decoration">
-                    <IconButton
-                        size="small"
-                        sx={{
-                            padding: { xs: 0.5, md: 0.75 },
-                            width: { xs: 36, md: 40 },
-                            height: { xs: 36, md: 40 },
-                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            cursor: "pointer",
-                            "&:hover": {
-                                transform: "translateY(-3px) scale(1.1)",
-                                backgroundColor: "rgba(95,41,48,0.08)",
-                            },
-                        }}
-                    >
-                        <Avatar
+                        <IconButton
+                            size="small"
                             sx={{
-                                width: { xs: 24, md: 28 },
-                                height: { xs: 24, md: 28 },
-                                bgcolor: "var(--themeColor)",
-                                fontSize: { xs: 12, md: 14 },
-                                fontWeight: 600,
-                                border: "2px solid #fff",
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                padding: { xs: 0.5, md: 0.75 },
+                                width: { xs: 36, md: 40 },
+                                height: { xs: 36, md: 40 },
+                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                cursor: "pointer",
+                                "&:hover": {
+                                    transform: "translateY(-3px) scale(1.1)",
+                                    backgroundColor: "rgba(95,41,48,0.08)",
+                                },
                             }}
-                            src={userProfile.avatar || userProfile.profilePicture}
                         >
-                            {userProfile.name
-                                ? userProfile.name.charAt(0).toUpperCase()
-                                : userProfile.email
-                                    ? userProfile.email.charAt(0).toUpperCase()
-                                    : "U"}
-                        </Avatar>
-                    </IconButton>
+                            <Avatar
+                                sx={{
+                                    width: { xs: 24, md: 28 },
+                                    height: { xs: 24, md: 28 },
+                                    bgcolor: "var(--themeColor)",
+                                    fontSize: { xs: 12, md: 14 },
+                                    fontWeight: 600,
+                                    border: "2px solid #fff",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                                }}
+                                src={userProfile.avatar || userProfile.profilePicture}
+                            >
+                                {userProfile.name
+                                    ? userProfile.name.charAt(0).toUpperCase()
+                                    : userProfile.email
+                                        ? userProfile.email.charAt(0).toUpperCase()
+                                        : "U"}
+                            </Avatar>
+                        </IconButton>
                     </Link>
                 ) : (
                     <IconButton
@@ -546,6 +664,72 @@ export const TopHeader = () => {
                     </IconButton>
                 </Link>
             </Box>
+            {/* Mobile search dialog / popup */}
+            <Dialog
+                open={openSearchDialog}
+                onClose={() => { setOpenSearchDialog(false); setMobileSearchQuery(""); }}
+                PaperProps={{
+                    sx: {
+                        borderRadius: 2,
+                        maxWidth: { xs: "calc(100vw - 32px)", sm: 400 },
+                        mx: 1,
+                        top: { xs: "15vh", sm: "20vh" },
+                        m: 0,
+                    },
+                }}
+                fullWidth
+                maxWidth="sm"
+            >
+                <DialogTitle sx={{ pb: 0, fontSize: 18, fontWeight: 600, color: "var(--themeColor)" }}>
+                    Search products
+                </DialogTitle>
+                <DialogContent sx={{ pt: 2 }}>
+                    <TextField
+                        autoFocus
+                        fullWidth
+                        size="small"
+                        placeholder="Type to search..."
+                        value={mobileSearchQuery}
+                        onChange={(e) => setMobileSearchQuery(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                const q = (mobileSearchQuery || "").trim();
+                                setHeaderSearchQuery(q);
+                                setOpenSearchDialog(false);
+                                setMobileSearchQuery("");
+                                navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search", { replace: true });
+                            }
+                        }}
+                        variant="outlined"
+                        InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        size="small"
+                                        onClick={() => {
+                                            const q = (mobileSearchQuery || "").trim();
+                                            setHeaderSearchQuery(q);
+                                            setOpenSearchDialog(false);
+                                            setMobileSearchQuery("");
+                                            navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search", { replace: true });
+                                        }}
+                                        sx={{ color: "var(--themeColor)" }}
+                                    >
+                                        <SearchIcon />
+                                    </IconButton>
+                                </InputAdornment>
+                            ),
+                            sx: {
+                                borderRadius: 2,
+                                backgroundColor: "#fafafa",
+                                "& fieldset": { borderColor: "rgba(124, 52, 27, 0.3)" },
+                            },
+                        }}
+                        sx={{ "& .MuiOutlinedInput-root": { borderRadius: 2 } }}
+                    />
+                </DialogContent>
+            </Dialog>
             <DeliveryCheckDialog
                 open={openDeliveryDialog}
                 onClose={() => setOpenDeliveryDialog(false)}
