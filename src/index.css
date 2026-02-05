@@ -64,6 +64,9 @@ span,
   font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
+.MuiContainer-root.MuiContainer-maxWidthFalse.css-935ve3-MuiContainer-root {
+  padding-top: 30px;
+}
 
 /* Section title utility */
 .title-style {
