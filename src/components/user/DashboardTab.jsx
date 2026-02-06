@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Box,
   Grid,
@@ -14,8 +14,10 @@ import {
 } from "@mui/material";
 import { LocalShipping as LocalShippingIcon, LocalOffer as LocalOfferIcon } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { Link } from "react-router-dom";
 import { CustomText } from "../comman/CustomText";
+import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import blankImage from "../../assets/blankimage.png";
 
 const getStatusMeta = (status) => {
@@ -36,6 +38,7 @@ const getStatusMeta = (status) => {
 
 export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfile, recentOrder, recentOrderRaw, ordersLoading }) => {
   const [orderDetailsOpen, setOrderDetailsOpen] = useState(false);
+  const recentItemsCarouselRef = useRef(null);
 
   // Get user's first name or fallback to "User"
   const getUserName = () => {
@@ -224,58 +227,110 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfil
         Your Recent Items
       </CustomText>
       <Box sx={{ border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 0.5, sm: 1, md: 3 } }}>
-        <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
-          {Array.isArray(favoriteItems) && favoriteItems.length > 0 ? (
-            favoriteItems.map((item) => (
-              <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
-                <Link to={item?.id ? `/products/${item.id}` : "/products"} style={{ textDecoration: "none" }}>
-                  <Box
-                    sx={{
-                      position: "relative",
-                      borderRadius: { xs: 1.5, md: 2 },
-                      overflow: "hidden",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                      },
-                    }}
-                  >
+        {Array.isArray(favoriteItems) && favoriteItems.length > 0 ? (
+          <Box sx={{ position: "relative" }}>
+            <CustomCarouselArrow
+              direction="prev"
+              onClick={() => recentItemsCarouselRef.current?.handlePrev()}
+              sx={{
+                position: "absolute",
+                left: { xs: -8, md: -16 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 2,
+                bgcolor: "#fff",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+                "&:hover": { bgcolor: "#FFF8F2" },
+                width: 36,
+                height: 36,
+              }}
+            >
+              <ArrowBackIosNewIcon sx={{ fontSize: { xs: 18, md: 22 } }} />
+            </CustomCarouselArrow>
+            <CustomCarousel
+              ref={recentItemsCarouselRef}
+              slidesToShow={4}
+              slidesToScroll={1}
+              infinite={true}
+              speed={500}
+              arrows={false}
+              autoplay={true}
+              autoplaySpeed={3000}
+              pauseOnHover={true}
+              responsive={[
+                { breakpoint: 1200, settings: { slidesToShow: 3 } },
+                { breakpoint: 900, settings: { slidesToShow: 2 } },
+                { breakpoint: 600, settings: { slidesToShow: 2 } },
+                { breakpoint: 400, settings: { slidesToShow: 1 } },
+              ]}
+            >
+              {favoriteItems.map((item) => (
+                <Box key={item?.id} sx={{ px: { xs: 0.5, sm: 1, md: 1.5 } }}>
+                  <Link to={item?.id ? `/products/${item.id}` : "/products"} style={{ textDecoration: "none" }}>
                     <Box
-                      component="img"
-                      src={item?.image || blankImage}
-                      alt={item?.name || "Product"}
-                      onError={(e) => {
-                        e.target.src = blankImage;
-                      }}
                       sx={{
-                        width: "100%",
-                        height: { xs: 140, sm: 160, md: 200 },
-                        objectFit: "cover",
+                        position: "relative",
+                        borderRadius: { xs: 1.5, md: 2 },
+                        overflow: "hidden",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                        boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
+                        "&:hover": {
+                          transform: "translateY(-5px)",
+                          boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                        },
                       }}
-                    />
-                    <Box textAlign="center" sx={{ p: { xs: 1, md: 2 } }}>
-                      <CustomText variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 12, md: 14 } }}>
-                        {item?.name}
-                      </CustomText>
-                      <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, fontSize: { xs: 13, md: 14 } }}>
-                        {item?.price}
-                      </CustomText>
+                    >
+                      <Box
+                        component="img"
+                        src={item?.image || blankImage}
+                        alt={item?.name || "Product"}
+                        onError={(e) => {
+                          e.target.src = blankImage;
+                        }}
+                        sx={{
+                          width: "100%",
+                          height: { xs: 140, sm: 160, md: 200 },
+                          objectFit: "cover",
+                        }}
+                      />
+                      <Box textAlign="center" sx={{ p: { xs: 1, md: 2 } }}>
+                        <CustomText variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 12, md: 14 }, color: "#2c2c2c" }}>
+                          {item?.name}
+                        </CustomText>
+                        <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, fontSize: { xs: 13, md: 14 } }}>
+                          {item?.price}
+                        </CustomText>
+                      </Box>
                     </Box>
-                  </Box>
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <Grid size={{ xs: 12 }}>
-              <CustomText sx={{ color: "#666", fontSize: 14, py: 2, textAlign: "center" }}>
-                No recently viewed items yet.
-              </CustomText>
-            </Grid>
-          )}
-        </Grid>
+                  </Link>
+                </Box>
+              ))}
+            </CustomCarousel>
+            <CustomCarouselArrow
+              direction="next"
+              onClick={() => recentItemsCarouselRef.current?.handleNext()}
+              sx={{
+                position: "absolute",
+                right: { xs: -8, md: -16 },
+                top: "50%",
+                transform: "translateY(-50%)",
+                zIndex: 2,
+                bgcolor: "#fff",
+                boxShadow: "0 2px 12px rgba(0,0,0,0.12)",
+                "&:hover": { bgcolor: "#FFF8F2" },
+                width: 36,
+                height: 36,
+              }}
+            >
+              <ArrowBackIosNewIcon sx={{ fontSize: { xs: 18, md: 22 }, transform: "rotate(180deg)" }} />
+            </CustomCarouselArrow>
+          </Box>
+        ) : (
+          <CustomText sx={{ color: "#666", fontSize: 14, py: 2, textAlign: "center" }}>
+            No recently viewed items yet.
+          </CustomText>
+        )}
       </Box>
 
       <Dialog
