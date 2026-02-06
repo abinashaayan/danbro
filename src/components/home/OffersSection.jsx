@@ -423,7 +423,7 @@ export const OffersSection = () => {
                   cursor: "pointer",
                   transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                   boxShadow: "0 8px 25px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05) inset",
-                  animation: `fadeInUp 0.6s ease-out 2s both`,
+                  animation: `fadeInUp 0.4s ease-out 0.3s both`,
                   "@keyframes fadeInUp": {
                     "0%": {
                       opacity: 0,

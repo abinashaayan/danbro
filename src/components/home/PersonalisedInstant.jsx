@@ -166,7 +166,7 @@ export const PersonalisedInstant = () => {
                     zIndex: 2,
                     opacity: 0,
                     transform: { xs: "translateY(30px)", md: "translateX(50px)" },
-                    transition: "opacity 0.8s ease-out 2s, transform 0.8s ease-out 2s",
+                    transition: "opacity 0.4s ease-out 0.3s, transform 0.4s ease-out 0.3s",
                     width: { xs: "100%", md: "50%" },
                 }}
             >

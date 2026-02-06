@@ -281,7 +281,7 @@ export const AboutPreviewSection = () => {
                       transition: "all 0.4s ease",
                       opacity: isVisible ? 1 : 0,
                       transform: isVisible ? "translateY(0)" : "translateY(30px)",
-                      animation: isVisible ? `fadeInUp 0.6s ease-out 2s both` : "none",
+                      animation: isVisible ? `fadeInUp 0.4s ease-out 0.3s both` : "none",
                       "@keyframes fadeInUp": {
                         "0%": {
                           opacity: 0,

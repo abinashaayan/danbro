@@ -170,7 +170,7 @@ export const ServicesSection = () => {
                   overflow: "hidden",
                   opacity: visibleItems[index] ? 1 : 0,
                   transform: visibleItems[index] ? "translateY(0)" : "translateY(50px)",
-                  animation: visibleItems[index] ? `fadeInUp 0.6s ease-out 2s both` : "none",
+                  animation: visibleItems[index] ? `fadeInUp 0.4s ease-out 0.3s both` : "none",
                   "@keyframes fadeInUp": {
                     "0%": {
                       opacity: 0,

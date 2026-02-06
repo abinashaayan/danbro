@@ -208,7 +208,7 @@ export const ProductSectionCarousel = memo(({
         borderRadius: { xs: 0, md: 3 },
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(50px)",
-        transition: "opacity 0.8s ease 2s, transform 0.8s ease 2s",
+        transition: "opacity 0.4s ease 0.25s, transform 0.4s ease 0.25s",
         "&::before": {
           content: '""',
           position: "absolute",
@@ -272,7 +272,7 @@ export const ProductSectionCarousel = memo(({
               height: "4px",
               background: "linear-gradient(90deg, transparent, #FF9472, transparent)",
               borderRadius: "2px",
-              transition: "width 0.8s ease 0.3s",
+              transition: "width 0.4s ease 0.15s",
             },
           }}
         >
@@ -356,7 +356,7 @@ export const ProductSectionCarousel = memo(({
                   position: "relative",
                   boxShadow: "none",
                   border: "none",
-                  transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                  transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
                   "&::before": {
                     content: '""',
                     position: "absolute",
@@ -371,7 +371,7 @@ export const ProductSectionCarousel = memo(({
                     )`
                         : "transparent",
                     opacity: hoveredIndex === index ? 1 : 0,
-                    transition: "opacity 0.5s ease",
+                    transition: "opacity 0.3s ease",
                     zIndex: 1,
                     pointerEvents: "none",
                   },

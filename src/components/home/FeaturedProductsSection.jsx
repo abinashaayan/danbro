@@ -173,7 +173,7 @@ export const FeaturedProductsSection = () => {
                   transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                   opacity: visibleItems[index] ? 1 : 0,
                   transform: visibleItems[index] ? "translateY(0)" : "translateY(50px)",
-                  animation: visibleItems[index] ? `fadeInUp 0.6s ease-out 2s both` : "none",
+                  animation: visibleItems[index] ? `fadeInUp 0.4s ease-out 0.3s both` : "none",
                   "@keyframes fadeInUp": {
                     "0%": {
                       opacity: 0,

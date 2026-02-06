@@ -8,7 +8,6 @@ import { NewsletterSection } from "../components/home/NewsletterSection";
 import { YouTubeVideosSection } from "../components/home/YouTubeVideosSection";
 import { CategoryProductSection } from "../components/home/CategoryProductSection";
 import { BackgroundDecorations } from "../components/home/BackgroundDecorations";
-import { SocialMediaIcons } from "../components/comman/SocialMediaIcons";
 import { useHomeLayout, transformProduct } from "../hooks/useHomeLayout";
 import { useMemo } from "react";
 import CakeIcon from "@mui/icons-material/Cake";
@@ -78,9 +77,6 @@ const Home = () => {
     <Box sx={{ width: "100%", maxWidth: "100%", position: "relative" }}>
       {/* Background Decorations */}
       <BackgroundDecorations />
-      
-      {/* Fixed Social Media Icons */}
-      <SocialMediaIcons />
       
       {/* Hero Banner Carousel */}
       <Box sx={{ position: "relative", zIndex: 1, mt: "-54px" }}>

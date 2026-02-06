@@ -9,6 +9,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { Navbar } from "./components/comman/Navbar";
 import { TopHeader } from "./components/comman/TopHeader";
 import { DeliveryCheckDialog } from "./components/comman/DeliveryCheckDialog";
+import { SocialMediaIcons } from "./components/comman/SocialMediaIcons";
 import { getStoredLocation } from "./utils/location";
 
 const ScrollToTop = () => {
@@ -102,6 +103,7 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
+      <SocialMediaIcons />
       <DeliveryCheckDialog
         open={showDeliveryDialog}
         onClose={handleCloseDeliveryDialog}

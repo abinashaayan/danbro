@@ -215,7 +215,7 @@ export const ProductList = () => {
     setIsVisible(false);
     const timer = setTimeout(() => {
       setIsVisible(true);
-    }, 100);
+    }, 50);
     return () => clearTimeout(timer);
   }, [selectedCategory, debouncedSearchQuery]);
 
@@ -432,7 +432,7 @@ export const ProductList = () => {
             mb: { xs: 4, md: 6 },
             position: "relative",
             overflow: "hidden",
-            animation: "fadeInScale 0.5s ease-out",
+            animation: "fadeInScale 0.35s ease-out",
             "@keyframes fadeInScale": {
               "0%": {
                 opacity: 0,

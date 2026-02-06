@@ -88,7 +88,7 @@ export const TestimonialsSection = () => {
             cardRef.current.style.transform = "scale(0.9)";
             setTimeout(() => {
                 if (cardRef.current) {
-                    cardRef.current.style.transition = "all 0.5s ease 2s";
+                    cardRef.current.style.transition = "all 0.4s ease 0.3s";
                     cardRef.current.style.opacity = "1";
                     cardRef.current.style.transform = "scale(1)";
                 }

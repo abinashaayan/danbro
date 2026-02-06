@@ -222,7 +222,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
         justifyContent: { xs: "center", sm: "flex-start" },
         gap: { xs: 1.5, sm: 2, md: 3, lg: 2.5 },
         opacity: isVisible ? 1 : 0,
-        transition: "opacity 0.6s ease-in-out",
+        transition: "opacity 0.3s ease-in-out",
       }}
     >
       {products?.length > 0 ? (
@@ -238,7 +238,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
               },
               display: "flex",
               animation: isVisible
-                ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
+                ? `fadeInUp 0.35s ease-out ${index * 0.04}s both`
                 : "none",
               "@keyframes fadeInUp": {
                 "0%": {
@@ -263,7 +263,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 borderRadius: 2,
                 overflow: "hidden",
                 cursor: "pointer",
-                transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
                 position: "relative",
                 flex: 1,
                 minHeight: 0,
@@ -277,7 +277,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 },
                 "& .hover-icons": {
                   opacity: 0,
-                  transition: "opacity 0.4s ease",
+                  transition: "opacity 0.25s ease",
                 },
                 "&:hover .hover-icons": {
                   opacity: 1,
@@ -596,7 +596,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
             alignItems: "center",
             justifyContent: "center",
             gap: 3,
-            animation: "fadeInUp 0.8s ease-out",
+            animation: "fadeInUp 0.4s ease-out",
             "@keyframes fadeInUp": {
               "0%": { opacity: 0, transform: "translateY(30px)" },
               "100%": { opacity: 1, transform: "translateY(0)" },
@@ -623,7 +623,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 height: { xs: 120, md: 150 },
                 borderRadius: "50%",
                 background: "linear-gradient(135deg, rgba(255,148,114,0.1) 0%, rgba(242,112,156,0.1) 100%)",
-                animation: "ripple 2s ease-out infinite",
+                animation: "ripple 1.2s ease-out infinite",
                 "@keyframes ripple": {
                   "0%": { transform: "scale(0.8)", opacity: 1 },
                   "100%": { transform: "scale(1.5)", opacity: 0 },
@@ -637,7 +637,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 height: { xs: 100, md: 130 },
                 borderRadius: "50%",
                 background: "linear-gradient(135deg, rgba(255,148,114,0.15) 0%, rgba(242,112,156,0.15) 100%)",
-                animation: "ripple 2s ease-out infinite 0.5s",
+                animation: "ripple 1.2s ease-out infinite 0.3s",
               }}
             />
             <Box

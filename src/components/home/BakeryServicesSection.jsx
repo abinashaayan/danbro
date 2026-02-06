@@ -154,7 +154,7 @@ export const BakeryServicesSection = () => {
                   transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0) scale(1)" : "translateY(50px) scale(0.9)",
-                  animation: visible ? `cardFadeIn 0.8s ease-out 2s both` : "none",
+                  animation: visible ? `cardFadeIn 0.5s ease-out 0.3s both` : "none",
                   "@keyframes cardFadeIn": {
                     "0%": {
                       opacity: 0,

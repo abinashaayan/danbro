@@ -99,7 +99,7 @@ export const SpecialOffersSection = () => {
                   transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
                   opacity: visible ? 1 : 0,
                   transform: visible ? "translateY(0)" : "translateY(50px)",
-                  animation: visible ? `fadeInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s both` : "none",
+                  animation: visible ? `fadeInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both` : "none",
                   "@keyframes fadeInUp": {
                     "0%": { opacity: 0, transform: "translateY(50px)" },
                     "100%": { opacity: 1, transform: "translateY(0)" },

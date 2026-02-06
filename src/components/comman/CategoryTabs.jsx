@@ -90,7 +90,7 @@ export const CategoryTabs = ({ categories = [], selectedCategory, onChange }) =>
             key={index}
             label={category}
             sx={{
-              animation: `slideIn 0.3s ease-out ${Math.min(index * 0.05, 1)}s both`,
+              animation: `slideIn 0.25s ease-out ${Math.min(index * 0.03, 0.6)}s both`,
               "@keyframes slideIn": {
                 "0%": {
                   opacity: 0,
