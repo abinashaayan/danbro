@@ -75,18 +75,29 @@ export const OrderSummary = ({
   return (
     <>
       {/* Offers Card */}
-      <Card sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", mb: 2 }}>
-        <CardContent sx={{ py: 1.5, px: 2, "&:last-child": { pb: 1.5 } }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <LocalOfferIcon sx={{ fontSize: 20, color: "var(--themeColor)" }} />
-              <CustomText sx={{ fontSize: 15, fontWeight: 600, color: "#2c2c2c" }}>Offers</CustomText>
+      <Card
+        sx={{
+          borderRadius: 2,
+          boxShadow: "0 2px 12px rgba(93, 64, 55, 0.15)",
+          mb: 2,
+          border: "2px solid #5D4037",
+          overflow: "hidden",
+          bgcolor: "rgba(93, 64, 55, 0.03)",
+        }}
+      >
+        <CardContent sx={{ py: 2, px: 2.5, "&:last-child": { pb: 2 } }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1.5 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+              <Box sx={{ p: 0.75, borderRadius: 1.5, bgcolor: "rgba(93, 64, 55, 0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <LocalOfferIcon sx={{ fontSize: 22, color: "#5D4037" }} />
+              </Box>
+              <CustomText sx={{ fontSize: 16, fontWeight: 600, color: "#2c2c2c" }}>Offers</CustomText>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: 1, justifyContent: "flex-end", minWidth: 0 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, flex: 1, justifyContent: "flex-end", minWidth: 0 }}>
               {couponsLoading ? (
-                <CircularProgress size={16} />
+                <CircularProgress size={18} sx={{ color: "#5D4037" }} />
               ) : appliedCoupon?.code ? (
-                <CustomText sx={{ fontSize: 13, color: "#666", mr: 0.5 }}>{appliedCoupon.code}</CustomText>
+                <CustomText sx={{ fontSize: 14, color: "#5D4037", fontWeight: 600, mr: 0.5 }}>{appliedCoupon.code}</CustomText>
               ) : (
                 <CustomText sx={{ fontSize: 13, color: "#999" }}>No coupon selected</CustomText>
               )}
@@ -95,12 +106,15 @@ export const OrderSummary = ({
                 type="button"
                 onClick={() => (coupons.length > 0 ? setCouponDialogOpen(true) : null)}
                 sx={{
-                  color: "var(--themeColor)",
+                  color: "#5D4037",
                   fontWeight: 600,
-                  fontSize: 13,
+                  fontSize: 14,
                   cursor: coupons.length > 0 ? "pointer" : "default",
                   textDecoration: "none",
-                  "&:hover": { textDecoration: "underline" },
+                  px: 1,
+                  py: 0.5,
+                  borderRadius: 1,
+                  "&:hover": { textDecoration: "none", bgcolor: "rgba(93, 64, 55, 0.08)" },
                 }}
               >
                 {appliedCoupon?.code ? "Change" : "Select"}
@@ -108,15 +122,30 @@ export const OrderSummary = ({
             </Box>
           </Box>
           {couponError && (
-            <CustomText sx={{ fontSize: 12, color: "#d32f2f", mt: 0.5, display: "block" }}>{couponError}</CustomText>
+            <CustomText sx={{ fontSize: 12, color: "#d32f2f", mt: 1, display: "block" }}>{couponError}</CustomText>
           )}
         </CardContent>
       </Card>
 
       {/* Coupon selection dialog */}
-      <Dialog open={couponDialogOpen} onClose={() => setCouponDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Select a coupon</DialogTitle>
-        <DialogContent>
+      <Dialog
+        open={couponDialogOpen}
+        onClose={() => setCouponDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+        disableScrollLock
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+            overflow: "hidden",
+          },
+        }}
+      >
+        <DialogTitle sx={{ backgroundColor: "#3E2723", color: "#fff", fontSize: 18, fontWeight: 600, py: 2, px: 2.5, borderBottom: "none", }}>
+          Select a coupon
+        </DialogTitle>
+        <DialogContent sx={{ my: 2, px: 2.5, pb: 2.5, bgcolor: "#fafafa" }}>
           {coupons.map((coupon) => (
             <Box
               key={coupon.id}
@@ -125,22 +154,36 @@ export const OrderSummary = ({
                 setCouponDialogOpen(false);
               }}
               sx={{
-                p: 1.5,
-                mb: 1,
-                borderRadius: 1,
+                p: 2,
+                mb: 1.5,
+                borderRadius: 1.5,
                 border: "1px solid",
-                borderColor: selectedCoupon === coupon.id ? "var(--themeColor)" : "#eee",
-                bgcolor: selectedCoupon === coupon.id ? "rgba(230,120,80,0.06)" : "#fafafa",
+                borderColor: selectedCoupon === coupon.id ? "#5D4037" : "#e0e0e0",
+                bgcolor: selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.08)" : "#fff",
                 cursor: "pointer",
-                "&:hover": { bgcolor: "rgba(230,120,80,0.08)" },
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  bgcolor: selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.12)" : "rgba(93, 64, 55, 0.04)",
+                  borderColor: "#5D4037",
+                },
               }}
             >
-              <CustomText sx={{ fontWeight: 600, fontSize: 14 }}>{coupon.code}</CustomText>
-              <CustomText sx={{ fontSize: 12, color: "#666", display: "block" }}>{coupon.description}</CustomText>
+              <CustomText sx={{ fontWeight: 600, fontSize: 15, color: "#3E2723" }}>{coupon.code}</CustomText>
+              <CustomText sx={{ fontSize: 13, color: "#666", display: "block", mt: 0.25 }}>{coupon.description}</CustomText>
             </Box>
           ))}
           {appliedCoupon?.code && (
-            <Button size="small" onClick={() => { handleRemoveCoupon(); setCouponDialogOpen(false); }} sx={{ mt: 1, textTransform: "none" }}>
+            <Button
+              size="small"
+              onClick={() => { handleRemoveCoupon(); setCouponDialogOpen(false); }}
+              sx={{
+                mt: 1.5,
+                textTransform: "none",
+                color: "#fff",
+                bgcolor: "red",
+                fontWeight: 600,
+              }}
+            >
               Remove coupon
             </Button>
           )}

@@ -47,7 +47,8 @@ export const CartItem = ({
   const itemKey = getItemKey(productId, item.rawWeight ?? item.weight);
   const isUpdatingIncrease = updatingItems.has(itemKey) && updatingAction[itemKey] === "increase";
   const isUpdatingDecrease = updatingItems.has(itemKey) && updatingAction[itemKey] === "decrease";
-  const isUpdating = isUpdatingIncrease || isUpdatingDecrease;
+  const isUpdatingRemove = updatingItems.has(itemKey) && updatingAction[itemKey] === "remove";
+  const isUpdating = isUpdatingIncrease || isUpdatingDecrease || isUpdatingRemove;
 
   if (compact) {
     return (
@@ -105,6 +106,15 @@ export const CartItem = ({
         <CustomText sx={{ fontSize: { xs: 14, md: 15 }, fontWeight: 600, color: "#2c2c2c", minWidth: { xs: 70, md: 80 }, textAlign: "right" }}>
           INR {getItemPrice(item)}
         </CustomText>
+        <IconButton
+          size="small"
+          onClick={() => removeItem(productId, item.rawWeight ?? item.weight)}
+          disabled={isUpdating}
+          sx={{ color: "#d32f2f", "&:hover": { backgroundColor: "rgba(211, 47, 47, 0.1)" }, "&:disabled": { opacity: 0.5 } }}
+          aria-label="Remove item"
+        >
+          <DeleteOutlineIcon sx={{ fontSize: 20 }} />
+        </IconButton>
       </Box>
     );
   }

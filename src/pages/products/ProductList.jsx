@@ -219,7 +219,8 @@ export const ProductList = () => {
     return () => clearTimeout(timer);
   }, [selectedCategory, debouncedSearchQuery]);
 
-  if (categoriesLoading || productsLoading) {
+  // Show full-page loader only until categories are ready – then show layout so categories appear fast
+  if (categoriesLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
         <CircularProgress sx={{ color: "var(--themeColor)" }} />
@@ -227,55 +228,17 @@ export const ProductList = () => {
     );
   }
 
-  if (categoriesError || productsError) {
+  if (categoriesError) {
     return (
       <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: 4 }}>
         <Alert severity="error" sx={{ borderRadius: 2 }}>
-          {categoriesError || productsError}
+          {categoriesError}
         </Alert>
       </Box>
     );
   }
 
-  const recommendedProducts = [
-    {
-      id: 1,
-      name: "Blueberry Cake",
-      description: "Sweet blueberry delight",
-      image: blankImage,
-    },
-    {
-      id: 2,
-      name: "Cinnamon Roll",
-      description: "Warm cinnamon spice",
-      image: blankImage,
-    },
-    {
-      id: 3,
-      name: "Lemon Tart",
-      description: "Tangy lemon filling",
-      image: blankImage,
-    },
-    {
-      id: 4,
-      name: "Lemon Tart",
-      description: "Tangy lemon filling",
-      image: blankImage,
-    },
-    {
-      id: 5,
-      name: "Lemon Tart",
-      description: "Tangy lemon filling",
-      image: blankImage,
-    },
-    {
-      id: 5,
-      name: "Lemon Tart",
-      description: "Tangy lemon filling",
-      image: blankImage,
-    },
-  ];
-
+  const recommendedProducts = [];
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 0 }, pb: { xs: 8, md: 0 }, p: { xs: 1.25, md: 0 } }}>
@@ -289,7 +252,7 @@ export const ProductList = () => {
             alignItems: "center",
             flexWrap: "wrap",
             gap: { xs: 1.5, md: 2 },
-            animation: "fadeInDown 0.8s ease-out",
+            animation: "fadeInDown 0.35s ease-out",
             "@keyframes fadeInDown": {
               "0%": {
                 opacity: 0,
@@ -395,8 +358,19 @@ export const ProductList = () => {
           </Box>
         </Box>
         <CategoryTabs categories={categories} selectedCategory={selectedCategory} onChange={handleCategoryChange} />
+        {productsError && (
+          <Box sx={{ px: { xs: 2, md: 3, lg: 2 }, mb: 2 }}>
+            <Alert severity="error" sx={{ borderRadius: 2 }}>{productsError}</Alert>
+          </Box>
+        )}
         <Box ref={productRef} sx={{ px: { xs: 2, md: 3, lg: 2 } }}>
-          <ProductGrid products={products} isVisible={isVisible} />
+          {productsLoading && currentPage === 1 ? (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: 200, py: 4 }}>
+              <CircularProgress sx={{ color: "var(--themeColor)" }} />
+            </Box>
+          ) : (
+            <ProductGrid products={products} isVisible={isVisible} />
+          )}
 
           {/* Load More Button */}
           {products?.length > 0 && hasMore && !productsLoading && (
@@ -458,7 +432,7 @@ export const ProductList = () => {
             mb: { xs: 4, md: 6 },
             position: "relative",
             overflow: "hidden",
-            animation: "fadeInScale 1s ease-out",
+            animation: "fadeInScale 0.5s ease-out",
             "@keyframes fadeInScale": {
               "0%": {
                 opacity: 0,
@@ -538,8 +512,40 @@ export const ProductList = () => {
           </Box>
         </Box>
       </Container>
-      {recommendedProducts && recommendedProducts.length > 0 && (
+      {recommendedProducts && recommendedProducts.length > 0 ? (
         <RecommendedProducts recommendedProducts={recommendedProducts} />
+      ) : (
+        <Container maxWidth="false" sx={{ py: 4, mb: 4, px: { xs: 2, md: 3, lg: 2 } }}>
+          <Box
+            sx={{
+              textAlign: "center",
+              py: 6,
+              px: 2,
+              borderRadius: 2,
+              backgroundColor: "#f9f9f9",
+              border: "1px dashed #e0e0e0",
+            }}
+          >
+            <CustomText
+              sx={{
+                fontSize: { xs: 16, md: 18 },
+                color: "#666",
+                fontWeight: 500,
+                mb: 0.5,
+              }}
+            >
+              No recommended products right now
+            </CustomText>
+            <CustomText
+              sx={{
+                fontSize: { xs: 14, md: 15 },
+                color: "#999",
+              }}
+            >
+              Check back later for personalized recommendations.
+            </CustomText>
+          </Box>
+        </Container>
       )}
     </Box>
   );

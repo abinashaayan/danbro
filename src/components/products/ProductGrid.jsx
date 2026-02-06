@@ -139,17 +139,8 @@ export const ProductGrid = memo(({ products, isVisible }) => {
     }
   };
 
-  const handleShare = (e, product) => {
-    e.stopPropagation();
-    const url = `${window.location.origin}/products/${product?.productId || ""}`;
-    const text = `${product?.name || "Product"} ${url}`;
-    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-  };
-
   const isProductInCart = (product) => {
     const productId = product?.productId || product?.id || product?._id;
-    // Use isCart from product data first (faster), then check cartProductIds
     return product?.isCart === true || (productId && cartProductIds.has(String(productId)));
   };
 
@@ -474,9 +465,6 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                       )}
                     </IconButton>
                   </Tooltip>
-                  <IconButton size="small" onClick={(e) => handleShare(e, product)}>
-                    <ShareOutlined sx={{ fontSize: 18 }} />
-                  </IconButton>
                   <IconButton
                     size="small"
                     onClick={(e) => handleWishlistToggle(e, product?.productId)}
@@ -551,14 +539,14 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   {product?.name}
                 </CustomText>
 
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 0.5 }}>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {product?.weight && String(product.weight).trim() && (
-                    <CustomText sx={{ fontSize: 11, color: "#666", fontFamily: "'Inter', sans-serif" }}>
+                    <CustomText sx={{ fontSize: 11, color: "#000", fontFamily: "'Inter', sans-serif" }}>
                       Weight: {product.weight}
                     </CustomText>
                   )}
                   {product?.subcategory && String(product.subcategory).trim() && (
-                    <CustomText sx={{ fontSize: 11, color: "#666", fontFamily: "'Inter', sans-serif" }}>
+                    <CustomText sx={{ fontSize: 11, color: "#000", fontFamily: "'Inter', sans-serif" }}>
                       Subcategory: {product.subcategory}
                     </CustomText>
                   )}
@@ -578,6 +566,11 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   {product?.subcategory}
                 </ProductDescription>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 0.25 }}>
+                  {product?.rate != null && (
+                    <CustomText autoTitleCase={false} sx={{ fontWeight: 800, color: "#d32f2f", textTransform: "none" }}>
+                      Rate: ₹{Math.round(product.rate)}
+                    </CustomText>
+                  )}
                   {product?.mrp != null && (
                     <CustomText sx={{ fontSize: 12, color: "#444", fontWeight: 600, textTransform: "none" }}>
                       MRP: <Box component="span" sx={{ textDecoration: product?.rate != null && product.mrp > product.rate ? "line-through" : "none", color: product?.rate != null && product.mrp > product.rate ? "#2c2c2c" : "#444" }}>₹{Math.round(product.mrp)}</Box>
@@ -585,11 +578,6 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   )}
                   {product?.mrp == null && product?.rate == null && (
                     <CustomText sx={{ fontSize: 11, color: "#999", fontFamily: "'Inter', sans-serif" }}>Price on request</CustomText>
-                  )}
-                  {product?.rate != null && (
-                    <CustomText autoTitleCase={false} sx={{ fontWeight: 800, color: "#d32f2f", textTransform: "none" }}>
-                      Rate: ₹{Math.round(product.rate)}
-                    </CustomText>
                   )}
                 </Box>
               </CardContent>

@@ -67,6 +67,12 @@ export const getCart = async () => {
   }
 };
 
+// Normalize weight for guest cart matching (null, '', 'N/A' all treated as same)
+const normalizeWeight = (w) => {
+  const s = (w == null ? '' : String(w)).trim();
+  return s === '' || s.toLowerCase() === 'n/a' ? '__empty__' : s;
+};
+
 /**
  * Increase item count in cart (guest: Redux; logged-in: API)
  * @param {string} productId - The product ID to increase quantity
@@ -79,9 +85,11 @@ export const increaseItemCount = async (productId, weight) => {
     const token = getAccessToken();
     if (!token) {
       const state = store.getState();
-      const item = (state.guest?.guestCart ?? []).find((i) => i.productId === productId && (i.weight || '') === (weight || ''));
+      const item = (state.guest?.guestCart ?? []).find(
+        (i) => i.productId === productId && normalizeWeight(i.weight) === normalizeWeight(weight)
+      );
       if (item) {
-        store.dispatch(updateGuestCartQuantity({ productId, weight, quantity: (item.quantity || 1) + 1 }));
+        store.dispatch(updateGuestCartQuantity({ productId, weight: item.weight, quantity: (item.quantity || 1) + 1 }));
         window.dispatchEvent(new CustomEvent('cartUpdated'));
       }
       return { success: true };
@@ -110,10 +118,12 @@ export const decreaseItemCount = async (productId, weight) => {
     const token = getAccessToken();
     if (!token) {
       const state = store.getState();
-      const item = (state.guest?.guestCart ?? []).find((i) => i.productId === productId && (i.weight || '') === (weight || ''));
+      const item = (state.guest?.guestCart ?? []).find(
+        (i) => i.productId === productId && normalizeWeight(i.weight) === normalizeWeight(weight)
+      );
       if (item) {
         const newQty = Math.max(0, (item.quantity || 1) - 1);
-        store.dispatch(updateGuestCartQuantity({ productId, weight, quantity: newQty }));
+        store.dispatch(updateGuestCartQuantity({ productId, weight: item.weight, quantity: newQty }));
         window.dispatchEvent(new CustomEvent('cartUpdated'));
       }
       return { success: true };
@@ -141,7 +151,13 @@ export const removeFromCart = async (productId, weight) => {
     if (!productId) throw new Error('ProductId is required');
     const token = getAccessToken();
     if (!token) {
-      store.dispatch(removeFromGuestCart({ productId, weight }));
+      const state = store.getState();
+      const item = (state.guest?.guestCart ?? []).find(
+        (i) => i.productId === productId && normalizeWeight(i.weight) === normalizeWeight(weight)
+      );
+      if (item) {
+        store.dispatch(removeFromGuestCart({ productId, weight: item.weight }));
+      }
       window.dispatchEvent(new CustomEvent('cartUpdated'));
       return { success: true };
     }

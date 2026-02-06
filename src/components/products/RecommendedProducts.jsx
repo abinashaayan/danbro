@@ -119,7 +119,7 @@ export const RecommendedProducts = ({ recommendedProducts = [] }) => {
               { breakpoint: 400, settings: { slidesToShow: 1, slidesToScroll: 1 } },
             ]}
           >
-            {/* {recommendedProducts?.map((product) => (
+            {recommendedProducts?.map((product) => (
               <Box key={product?.id} sx={{ px: { xs: 1, md: 1.5 } }}>
                 <Card
                   elevation={0}
@@ -144,7 +144,7 @@ export const RecommendedProducts = ({ recommendedProducts = [] }) => {
                   </CardContent>
                 </Card>
               </Box>
-            ))} */}
+            ))}
             <Box>Comming Soon..</Box>
             </CustomCarousel>
           {recommendedProducts.length > 5 && (
