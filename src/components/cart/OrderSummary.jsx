@@ -36,6 +36,7 @@ export const OrderSummary = ({
   couponError,
   applyingCoupon,
   handleRemoveCoupon,
+  onApplyCouponWithCode,
   coupons = [],
   couponsLoading,
   selectedCoupon,
