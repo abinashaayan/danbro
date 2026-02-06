@@ -28,13 +28,15 @@ export const AboutUs = () => {
   }
   if (hasDynamicContent) {
     return (
-      <StaticContentLayout
-        pageTitle={data?.title ?? "About Us"}
-        updatedAt={data?.updatedAt}
-        sections={data?.sections}
-        content={data?.content}
-        loading={false}
-      />
+      <Box sx={{ pt: { xs: 0, md: 13 } }}>
+        <StaticContentLayout
+          pageTitle={data?.title ?? "About Us"}
+          updatedAt={data?.updatedAt}
+          sections={data?.sections}
+          content={data?.content}
+          loading={false}
+        />
+      </Box>
     );
   }
 
@@ -95,7 +97,7 @@ export const AboutUs = () => {
 
 
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden", pb: { xs: 4, md: 0 }, p: { xs: 1.25, md: 0 } }}>
+    <Box sx={{ width: "100%", overflowX: "hidden", pb: { xs: 4, md: 0 }, p: { xs: 1.25, md: 0 }, pt: { xs: 0, md: 13 } }}>
       <Box
         ref={sectionRefs.header}
         sx={{

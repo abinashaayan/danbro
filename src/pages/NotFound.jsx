@@ -1,4 +1,4 @@
-import { Box,  Button, Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import { CustomText } from "../components/comman/CustomText";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -18,7 +18,6 @@ export const NotFound = () => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "linear-gradient(135deg, #f7f7f7 0%, #fef5f3 50%, #f7f7f7 100%)",
         py: { xs: 6, md: 10 },
         p: { xs: 1.25, md: 0 },
       }}
