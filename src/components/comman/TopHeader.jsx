@@ -397,7 +397,7 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                 </Box>
             </Box>
 
-            {/* Mobile Left Buttons - Compact (Menu + Location) */}
+            {/* Mobile Left Buttons - Compact (Menu + Location); on profile page: profile menu icon left of location */}
             <Box
                 sx={{
                     display: { xs: "flex", md: "none" },
@@ -409,7 +409,22 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                     alignItems: "center",
                 }}
             >
-                {onOpenMobileMenu && (
+                {isProfilePage && isProfileMobile ? (
+                    <IconButton
+                        size="small"
+                        onClick={() => window.dispatchEvent(new CustomEvent("openProfileMenu"))}
+                        sx={{
+                            color: "var(--themeColor)",
+                            padding: 0.5,
+                            width: 36,
+                            height: 36,
+                            "&:hover": { backgroundColor: "rgba(95,41,48,0.08)" },
+                        }}
+                        aria-label="Open profile menu"
+                    >
+                        <MenuIcon sx={{ fontSize: 24 }} />
+                    </IconButton>
+                ) : onOpenMobileMenu ? (
                     <IconButton
                         size="small"
                         onClick={onOpenMobileMenu}
@@ -424,7 +439,7 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                     >
                         <MenuIcon sx={{ fontSize: 24 }} />
                     </IconButton>
-                )}
+                ) : null}
                 <Tooltip
                     title={fullLocationLabel && fullLocationLabel !== "Location...?" ? fullLocationLabel : "Allow location to see delivery area"}
                     arrow
@@ -504,23 +519,6 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                     justifyContent: { md: "flex-end" },
                 }}
             >
-                {/* Profile page mobile: menu icon to open profile sidebar */}
-                {isProfilePage && isProfileMobile && (
-                    <IconButton
-                        size="small"
-                        onClick={() => window.dispatchEvent(new CustomEvent("openProfileMenu"))}
-                        sx={{
-                            color: "var(--themeColor)",
-                            padding: { xs: 0.5, md: 0.75 },
-                            width: { xs: 36, md: 40 },
-                            height: { xs: 36, md: 40 },
-                            "&:hover": { backgroundColor: "rgba(95,41,48,0.08)" },
-                        }}
-                        aria-label="Open profile menu"
-                    >
-                        <MenuIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
-                    </IconButton>
-                )}
                 {/* Desktop: search form; Mobile: search icon opens dialog */}
                 {!isMobile && (
                     <Box
@@ -594,34 +592,37 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                         <SearchIcon sx={{ fontSize: 22 }} />
                     </IconButton>
                 )}
-                <IconButton
-                    size="small"
-                    onClick={handleWishlistClick}
-                    disabled={wishlistIconLoading}
-                    sx={{
-                        color: "var(--themeColor)",
-                        padding: { xs: 0.5, md: 0.75 },
-                        width: { xs: 36, md: 40 },
-                        height: { xs: 36, md: 40 },
-                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                        position: "relative",
-                        "&:hover": {
-                            transform: "translateY(-3px) scale(1.1)",
-                            backgroundColor: "rgba(95,41,48,0.08)",
-                            color: "#f44336",
-                        },
-                    }}
-                >
-                    <Badge
-                        badgeContent={wishlistCount}
-                        color="error" >
-                        {wishlistIconLoading ? (
-                            <CircularProgress size={22} sx={{ color: "var(--themeColor)" }} />
-                        ) : (
-                            <Favorite sx={{ fontSize: { xs: 22, md: 24 } }} />
-                        )}
-                    </Badge>
-                </IconButton>
+                {/* Wishlist: hide on profile page mobile (already in profile menu) */}
+                {!(isProfilePage && isProfileMobile) && (
+                    <IconButton
+                        size="small"
+                        onClick={handleWishlistClick}
+                        disabled={wishlistIconLoading}
+                        sx={{
+                            color: "var(--themeColor)",
+                            padding: { xs: 0.5, md: 0.75 },
+                            width: { xs: 36, md: 40 },
+                            height: { xs: 36, md: 40 },
+                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                            position: "relative",
+                            "&:hover": {
+                                transform: "translateY(-3px) scale(1.1)",
+                                backgroundColor: "rgba(95,41,48,0.08)",
+                                color: "#f44336",
+                            },
+                        }}
+                    >
+                        <Badge
+                            badgeContent={wishlistCount}
+                            color="error" >
+                            {wishlistIconLoading ? (
+                                <CircularProgress size={22} sx={{ color: "var(--themeColor)" }} />
+                            ) : (
+                                <Favorite sx={{ fontSize: { xs: 22, md: 24 } }} />
+                            )}
+                        </Badge>
+                    </IconButton>
+                )}
 
                 {isLoggedIn && userProfile ? (
                     <PrefetchLink to="/profile" className="link-no-decoration">
@@ -680,35 +681,38 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                         <PersonOutlineIcon sx={{ fontSize: { xs: 22, md: 24 } }} />
                     </IconButton>
                 )}
-                <PrefetchLink to="/cart">
-                    <IconButton
-                        size="small"
-                        disabled={cartIconLoading}
-                        sx={{
-                            color: "var(--themeColor)",
-                            padding: { xs: 0.5, md: 0.75 },
-                            width: { xs: 36, md: 40 },
-                            height: { xs: 36, md: 40 },
-                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                            position: "relative",
-                            "&:hover": {
-                                transform: "translateY(-3px) scale(1.1)",
-                                backgroundColor: "rgba(95,41,48,0.08)",
+                {/* Cart: hide on profile page mobile (shown in profile menu) */}
+                {!(isProfilePage && isProfileMobile) && (
+                    <PrefetchLink to="/cart">
+                        <IconButton
+                            size="small"
+                            disabled={cartIconLoading}
+                            sx={{
                                 color: "var(--themeColor)",
-                            },
-                        }}
-                    >
-                        <Badge
-                            badgeContent={cartCount}
-                            color="error" >
-                            {cartIconLoading ? (
-                                <CircularProgress size={22} sx={{ color: "var(--themeColor)" }} />
-                            ) : (
-                                <ShoppingCart sx={{ fontSize: { xs: 22, md: 24 } }} />
-                            )}
-                        </Badge>
-                    </IconButton>
-                </PrefetchLink>
+                                padding: { xs: 0.5, md: 0.75 },
+                                width: { xs: 36, md: 40 },
+                                height: { xs: 36, md: 40 },
+                                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                                position: "relative",
+                                "&:hover": {
+                                    transform: "translateY(-3px) scale(1.1)",
+                                    backgroundColor: "rgba(95,41,48,0.08)",
+                                    color: "var(--themeColor)",
+                                },
+                            }}
+                        >
+                            <Badge
+                                badgeContent={cartCount}
+                                color="error" >
+                                {cartIconLoading ? (
+                                    <CircularProgress size={22} sx={{ color: "var(--themeColor)" }} />
+                                ) : (
+                                    <ShoppingCart sx={{ fontSize: { xs: 22, md: 24 } }} />
+                                )}
+                            </Badge>
+                        </IconButton>
+                    </PrefetchLink>
+                )}
             </Box>
             {/* Mobile search dialog / popup */}
             <Dialog

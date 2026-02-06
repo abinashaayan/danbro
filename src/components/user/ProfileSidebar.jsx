@@ -7,6 +7,7 @@ import {
   Person as PersonIcon,
   LocalOffer as LocalOfferIcon,
   Favorite as FavoriteIcon,
+  ShoppingCart as ShoppingCartIcon,
   Logout as LogoutIcon,
 } from "@mui/icons-material";
 import { CustomText } from "../comman/CustomText";
@@ -15,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CircularProgress } from "@mui/material";
 
-const menuItems = [
+const baseMenuItems = [
   { id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
   { id: "order-history", label: "Order History", icon: <HistoryIcon /> },
   // { id: "downloads", label: "Downloads", icon: <DownloadIcon /> },
@@ -37,6 +38,15 @@ export const ProfileSidebar = ({
 }) => {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  // On mobile only: add Cart in menu (before Logout)
+  const menuItems = isMobile
+    ? [
+        ...baseMenuItems.filter((i) => i.id !== "logout"),
+        { id: "cart", label: "Cart", icon: <ShoppingCartIcon />, isLink: true, path: "/cart" },
+        ...baseMenuItems.filter((i) => i.id === "logout"),
+      ]
+    : baseMenuItems;
 
   const handleLogout = async () => {
     try {
@@ -96,6 +106,9 @@ export const ProfileSidebar = ({
               onClick={() => {
                 if (item?.id === "logout") {
                   handleLogout();
+                } else if (item?.isLink && item?.path) {
+                  navigate(item.path);
+                  if (isMobile) setMobileDrawerOpen(false);
                 } else {
                   setActiveTab(item?.id);
                   if (isMobile) setMobileDrawerOpen(false);
