@@ -71,7 +71,7 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
         return categoryName || "Category";
     };
 
-    // Sticky header with hide/show on scroll
+    // Sticky header with hide/show on scroll + close dropdown on scroll
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
@@ -82,6 +82,9 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                 setIsVisible(true);
             }
             lastScrollY.current = currentScrollY;
+            // Close hover menu/dropdown when user scrolls
+            setHoveredItem(null);
+            setAnchorEl(null);
         };
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
