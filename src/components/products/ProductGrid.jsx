@@ -299,6 +299,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                 minHeight: 0,
                 display: "flex",
                 flexDirection: "column",
+                willChange: "transform",
                 "& .veg-badge": {
                   position: "absolute",
                   top: 8,
@@ -436,7 +437,8 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   sx={{
                     height: { xs: 160, sm: 180, md: 200 },
                     objectFit: "cover",
-                    transition: "transform 0.5s ease",
+                    transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                    willChange: "transform",
                     "&:hover": {
                       transform: "scale(1.1)",
                     },

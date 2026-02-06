@@ -116,26 +116,38 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                         display: { xs: "none", md: "flex" },
                         justifyContent: "center",
                         gap: { md: 3, lg: 4 },
-                        py: 1.5,
-                        backgroundColor: "#fbc7b5",
+                        py: 1,
+                        background: "linear-gradient(135deg, #fff5f0 0%, #ffe8e0 50%, #ffddd4 100%)",
                         position: "relative",
                         boxShadow: isScrolled 
-                            ? "0 4px 20px rgba(0,0,0,0.1)" 
-                            : "0 2px 10px rgba(0,0,0,0.05)",
-                        transition: "box-shadow 0.3s ease",
+                            ? "0 6px 30px rgba(95, 41, 48, 0.15), inset 0 1px 0 rgba(255,255,255,0.8)" 
+                            : "0 2px 15px rgba(95, 41, 48, 0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
+                        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                        borderTop: "1px solid rgba(255,148,114,0.2)",
+                        borderBottom: "1px solid rgba(255,148,114,0.15)",
                         "&::before": {
                             content: '""',
                             position: "absolute",
                             top: 0,
                             left: 0,
                             right: 0,
-                            height: "3px",
-                            background: "linear-gradient(90deg, transparent, var(--themeColor), transparent)",
-                            animation: "shimmer 3s ease-in-out infinite",
+                            height: "4px",
+                            background: "linear-gradient(90deg, transparent, #FF9472 20%, var(--themeColor) 50%, #FF9472 80%, transparent)",
+                            backgroundSize: "200% 100%",
+                            animation: "shimmer 4s ease-in-out infinite",
                             "@keyframes shimmer": {
-                                "0%": { transform: "translateX(-100%)" },
-                                "100%": { transform: "translateX(100%)" },
+                                "0%, 100%": { backgroundPosition: "-200% 0" },
+                                "50%": { backgroundPosition: "200% 0" },
                             },
+                        },
+                        "&::after": {
+                            content: '""',
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            height: "1px",
+                            background: "linear-gradient(90deg, transparent, rgba(255,148,114,0.3), transparent)",
                         },
                     }}
                 >
@@ -181,23 +193,33 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                                         fontWeight: 600,
                                         fontSize: { xs: 12, sm: 13, md: 14 },
                                         cursor: "pointer",
-                                        color: location.pathname === path || (path === "/products" && location.pathname.startsWith("/products")) ? "var(--themeColor)" : "var(--themeColor)",
+                                        color: location.pathname === path || (path === "/products" && location.pathname.startsWith("/products")) 
+                                            ? "var(--themeColor)" 
+                                            : "#7c341b",
                                         whiteSpace: "nowrap",
                                         position: "relative",
                                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                                        transform: hoveredItem === label ? "translateY(2px)" : "translateY(0)",
+                                        transform: hoveredItem === label ? "translateY(-2px)" : "translateY(0)",
+                                        px: 1.2,
+                                        py: 0.5,
+                                        borderRadius: 2,
+                                        backgroundColor: hoveredItem === label ? "rgba(255,148,114,0.15)" : "transparent",
                                         "&::after": {
                                             content: '""',
                                             position: "absolute",
-                                            bottom: "-5px",
+                                            bottom: "2px",
                                             left: "50%",
                                             transform: hoveredItem === label ? "translateX(-50%) scaleX(1)" : "translateX(-50%) scaleX(0)",
-                                            width: "80%",
-                                            height: "2px",
-                                            backgroundColor: "var(--themeColor)",
-                                            transition: "transform 0.3s ease",
+                                            width: "70%",
+                                            height: "3px",
+                                            background: "linear-gradient(90deg, transparent, var(--themeColor), transparent)",
+                                            borderRadius: "2px",
+                                            transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                         },
-                                        "&:hover": { opacity: 0.9 },
+                                        "&:hover": { 
+                                            color: "var(--themeColor)",
+                                            backgroundColor: "rgba(255,148,114,0.12)",
+                                        },
                                     }}
                                 >
                                     {label}
@@ -228,10 +250,12 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                         display: { xs: "flex", md: "none" },
                         justifyContent: "space-between",
                         alignItems: "center",
-                        py: 1.5,
+                        py: 1,
                         px: 2,
-                        backgroundColor: "#fbc7b5",
-                        boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+                        background: "linear-gradient(135deg, #fff5f0 0%, #ffe8e0 50%, #ffddd4 100%)",
+                        boxShadow: "0 2px 15px rgba(95, 41, 48, 0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
+                        borderTop: "1px solid rgba(255,148,114,0.2)",
+                        borderBottom: "1px solid rgba(255,148,114,0.15)",
                     }}
                 >
                     <IconButton
@@ -258,9 +282,10 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                     display: { xs: "block", md: "none" },
                     "& .MuiDrawer-paper": {
                         width: { xs: "280px", sm: "320px" },
-                        backgroundColor: "#fbc7b5",
+                        background: "linear-gradient(180deg, #fff5f0 0%, #ffe8e0 50%, #ffddd4 100%)",
                         pt: 3,
-                        boxShadow: "-4px 0 20px rgba(0,0,0,0.15)",
+                        boxShadow: "-4px 0 30px rgba(95, 41, 48, 0.2)",
+                        borderRight: "1px solid rgba(255,148,114,0.2)",
                     },
                 }}
             >
@@ -336,16 +361,21 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                                         autoTitleCase={true}
                                         sx={{
                                             fontWeight: 600,
-                                            fontSize: 14,
-                                            color: "var(--themeColor)",
-                                            transition: "all 0.3s ease",
+                                            fontSize: 15,
+                                            color: "#7c341b",
+                                            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                                             animation: `slideIn 0.3s ease ${index * 0.1}s both`,
+                                            px: 1.5,
+                                            py: 0.8,
+                                            borderRadius: 2,
+                                            backgroundColor: "transparent",
                                             "@keyframes slideIn": {
                                                 "0%": { opacity: 0, transform: "translateX(20px)" },
                                                 "100%": { opacity: 1, transform: "translateX(0)" },
                                             },
                                             "&:hover": {
-                                                opacity: 0.8,
+                                                color: "var(--themeColor)",
+                                                backgroundColor: "rgba(255,148,114,0.12)",
                                                 transform: "translateX(5px)",
                                             },
                                         }}

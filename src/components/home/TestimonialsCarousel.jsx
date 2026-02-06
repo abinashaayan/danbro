@@ -123,6 +123,7 @@ export const TestimonialsCarousel = () => {
               borderRadius: "50%",
               boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
               transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              willChange: "transform",
               "&:hover": {
                 backgroundColor: "var(--themeColor)",
                 borderColor: "var(--themeColor)",
@@ -153,6 +154,7 @@ export const TestimonialsCarousel = () => {
               borderRadius: "50%",
               boxShadow: "0 8px 32px rgba(0,0,0,0.1)",
               transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+              willChange: "transform",
               "&:hover": {
                 backgroundColor: "var(--themeColor)",
                 borderColor: "var(--themeColor)",
@@ -203,6 +205,7 @@ export const TestimonialsCarousel = () => {
                       opacity: visible ? 1 : 0,
                       transform: visible ? "scale(1)" : "scale(0.95)",
                       transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+                      willChange: visible ? "auto" : "transform, opacity",
                       "&::before": {
                         content: '""',
                         position: "absolute",
@@ -255,7 +258,8 @@ export const TestimonialsCarousel = () => {
                             height: { xs: 100, md: 120 },
                             border: "4px solid rgba(255,148,114,0.2)",
                             boxShadow: "0 8px 30px rgba(255,148,114,0.25)",
-                            transition: "all 0.5s ease",
+                            transition: "all 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
+                            willChange: "transform",
                             "&:hover": {
                               transform: "scale(1.05)",
                               boxShadow: "0 12px 40px rgba(255,148,114,0.35)",

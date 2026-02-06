@@ -386,6 +386,7 @@ export const ProductSectionCarousel = memo(({
                   boxShadow: "none",
                   border: "none",
                   transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                  willChange: "transform",
                   "&::before": {
                     content: '""',
                     position: "absolute",

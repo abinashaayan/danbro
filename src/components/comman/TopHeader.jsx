@@ -39,6 +39,10 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
     const [cartIconLoading, setCartIconLoading] = useState(false);
     const [wishlistIconLoading, setWishlistIconLoading] = useState(false);
     const [headerSearchQuery, setHeaderSearchQuery] = useState("");
+    const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const placeholderText = "Search products...";
+    const typingTimeoutRef = useRef(null);
     const guestCart = useAppSelector(getGuestCart);
     const guestWishlist = useAppSelector(getGuestWishlist);
 
@@ -55,6 +59,44 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
             setHeaderSearchQuery("");
         }
     }, [location.pathname, searchQFromUrl]);
+
+    // Typing animation for placeholder
+    useEffect(() => {
+        if (headerSearchQuery || isTyping) {
+            setAnimatedPlaceholder("");
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+            return;
+        }
+
+        let currentIndex = 0;
+        const typingSpeed = 100; // milliseconds per character
+
+        const typeNextChar = () => {
+            if (currentIndex < placeholderText.length) {
+                setAnimatedPlaceholder(placeholderText.slice(0, currentIndex + 1));
+                currentIndex++;
+                typingTimeoutRef.current = setTimeout(typeNextChar, typingSpeed);
+            } else {
+                // After typing complete, wait and restart
+                typingTimeoutRef.current = setTimeout(() => {
+                    setAnimatedPlaceholder("");
+                    currentIndex = 0;
+                    typingTimeoutRef.current = setTimeout(typeNextChar, 1000);
+                }, 2000);
+            }
+        };
+
+        // Start typing animation after a delay
+        typingTimeoutRef.current = setTimeout(typeNextChar, 500);
+
+        return () => {
+            if (typingTimeoutRef.current) {
+                clearTimeout(typingTimeoutRef.current);
+            }
+        };
+    }, [headerSearchQuery, isTyping, placeholderText]);
 
     // Check if user is logged in and fetch profile - optimized to prevent unnecessary calls
     useEffect(() => {
@@ -246,12 +288,19 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
 
     // Handle scroll detection for sticky header
     useEffect(() => {
+        let ticking = false;
         const handleScroll = () => {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            setIsScrolled(scrollTop > 10);
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    setIsScrolled(scrollTop > 10);
+                    ticking = false;
+                });
+                ticking = true;
+            }
         };
 
-        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll, { passive: true });
         return () => {
             window.removeEventListener('scroll', handleScroll);
         };
@@ -555,9 +604,19 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                     >
                         <TextField
                             size="small"
-                            placeholder="Search products..."
+                            placeholder={animatedPlaceholder || placeholderText}
                             value={headerSearchQuery}
-                            onChange={(e) => setHeaderSearchQuery(e.target.value)}
+                            onChange={(e) => {
+                                setHeaderSearchQuery(e.target.value);
+                                setIsTyping(true);
+                                setTimeout(() => setIsTyping(false), 2000);
+                            }}
+                            onFocus={() => setIsTyping(true)}
+                            onBlur={() => {
+                                if (!headerSearchQuery) {
+                                    setIsTyping(false);
+                                }
+                            }}
                             onKeyDown={(e) => {
                                 if (e.key === "Enter") handleHeaderSearch(e);
                             }}

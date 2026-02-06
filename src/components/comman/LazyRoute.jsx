@@ -1,5 +1,6 @@
-import { lazy, Suspense, ComponentType } from "react";
+import { lazy, Suspense, ComponentType, useEffect, useRef } from "react";
 import { Box, CircularProgress } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 /**
  * Loading fallback - full height, soft so transition feels smooth
@@ -32,6 +33,24 @@ export const LazyRoute = ({
   component: Component, 
   fallback = <LoadingFallback /> 
 }) => {
+  const { pathname } = useLocation();
+  const hasDispatchedRef = useRef(false);
+
+  useEffect(() => {
+    // Only dispatch appReady once, and only if not home page (home page handles it itself)
+    if (!hasDispatchedRef.current && !window.__appReadyDispatched) {
+      const isHomePage = pathname === "/" || pathname === "/home";
+      
+      // For non-home pages, dispatch immediately on mount
+      // Home page will dispatch when data loads
+      if (!isHomePage) {
+        window.__appReadyDispatched = true;
+        hasDispatchedRef.current = true;
+        window.dispatchEvent(new CustomEvent('appReady'));
+      }
+    }
+  }, [pathname]);
+
   return (
     <Suspense fallback={fallback}>
       <Component />

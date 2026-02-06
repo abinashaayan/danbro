@@ -9,7 +9,7 @@ import { YouTubeVideosSection } from "../components/home/YouTubeVideosSection";
 import { CategoryProductSection } from "../components/home/CategoryProductSection";
 import { BackgroundDecorations } from "../components/home/BackgroundDecorations";
 import { useHomeLayout, transformProduct } from "../hooks/useHomeLayout";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import CakeIcon from "@mui/icons-material/Cake";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
@@ -34,6 +34,15 @@ const getCategoryProducts = (products, categoryName) => {
 const Home = () => {
   // Fetch home layout data from new API (cached)
   const { products: productsData, categories, loading, error } = useHomeLayout();
+
+  // Signal app is ready when data finishes loading (only on first load)
+  useEffect(() => {
+    if (!loading && !window.__appReadyDispatched) {
+      // Dispatch event to remove root loader (only once)
+      window.__appReadyDispatched = true;
+      window.dispatchEvent(new CustomEvent('appReady'));
+    }
+  }, [loading]);
 
   // Memoize products for each section - prevent unnecessary recalculations
   const cakesProducts = useMemo(() => {
