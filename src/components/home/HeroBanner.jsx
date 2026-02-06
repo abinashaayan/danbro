@@ -1,19 +1,28 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import "./HeroBanner.css";
 import { bannerSlides } from "../../utils/bannerSlides";
+
+const AUTO_SLIDE_INTERVAL_MS = 2000;
 
 export const HeroBanner = () => {
   const slideRef = useRef(null);
 
   const nextSlide = () => {
+    if (!slideRef.current) return;
     const items = slideRef.current.querySelectorAll(".item");
-    slideRef.current.appendChild(items[0]);
+    if (items.length) slideRef.current.appendChild(items[0]);
   };
 
   const prevSlide = () => {
+    if (!slideRef.current) return;
     const items = slideRef.current.querySelectorAll(".item");
-    slideRef.current.prepend(items[items.length - 1]);
+    if (items.length) slideRef.current.prepend(items[items.length - 1]);
   };
+
+  useEffect(() => {
+    const interval = setInterval(nextSlide, AUTO_SLIDE_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
