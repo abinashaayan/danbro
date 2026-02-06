@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getCart, addToCart, increaseItemCount, decreaseItemCount, removeFromCart, clearCart } from '../utils/cart';
 import { getAccessToken } from '../utils/cookies';
-import { fetchProductById } from '../utils/apiService';
 
 /**
  * Async thunk for loading cart items
@@ -21,6 +20,7 @@ export const loadCartItems = createAsyncThunk(
           let name, images, price, lineTotal, displayWeight = it.weight ?? it.productSnapshot?.weight ?? "N/A";
           const qty = Number(it.quantity) || 1;
           const itemWeight = it.weight ?? it.productSnapshot?.weight ?? null;
+          // Guest cart: use only productSnapshot from localStorage – no product API calls
           if (it.productSnapshot && (it.productSnapshot.name != null || it.productSnapshot.price != null)) {
             const p = it.productSnapshot;
             if (displayWeight === "N/A" && p.weight) displayWeight = p.weight;
@@ -38,27 +38,11 @@ export const loadCartItems = createAsyncThunk(
             price = firstPrice ? { rate: Number(firstPrice.rate) || Number(firstPrice.mrp) || 0, mrp: Number(firstPrice.mrp) || Number(firstPrice.rate) || 0 } : { rate, mrp: rate };
             lineTotal = rate * qty;
           } else {
-            try {
-              const res = await fetchProductById(it.productId);
-              const p = res?.data?.product ?? res?.data ?? res?.product ?? res ?? {};
-              if (displayWeight === "N/A" && p?.weight) displayWeight = p.weight;
-              const priceArr = Array.isArray(p?.price) ? p.price : [];
-              const matchWeight = (pw) => (pw || "").toString().trim().toLowerCase();
-              const matchedPrice = itemWeight && priceArr.length > 0
-                ? priceArr.find((pr) => matchWeight(pr.weight) === matchWeight(itemWeight))
-                : null;
-              const firstPrice = matchedPrice || priceArr[0] || null;
-              const rate = firstPrice != null ? (Number(firstPrice.rate) || Number(firstPrice.mrp) || 0) : 0;
-              name = p?.name || "Product";
-              images = Array.isArray(p?.images) ? p.images : [];
-              price = firstPrice ? { rate: Number(firstPrice.rate) || Number(firstPrice.mrp) || 0, mrp: Number(firstPrice.mrp) || Number(firstPrice.rate) || 0 } : { rate: 0, mrp: 0 };
-              lineTotal = rate * qty;
-            } catch {
-              name = "Product";
-              images = [];
-              price = { rate: 0, mrp: 0 };
-              lineTotal = 0;
-            }
+            // No productSnapshot: use fallback only (no API call in guest mode)
+            name = "Product";
+            images = [];
+            price = { rate: 0, mrp: 0 };
+            lineTotal = 0;
           }
           displayItems.push({
             productId: it.productId,

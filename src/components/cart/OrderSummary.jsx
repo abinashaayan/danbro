@@ -74,7 +74,6 @@ export const OrderSummary = ({
 
   return (
     <>
-      {/* Offers Card */}
       <Card
         sx={{
           borderRadius: 2,
