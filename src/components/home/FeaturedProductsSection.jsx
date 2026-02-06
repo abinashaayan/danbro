@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Button } from "@mui/material";
+import { Box, Container, Grid, Button, Rating } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -279,16 +279,21 @@ export const FeaturedProductsSection = () => {
 
                 {/* Product Info */}
                 <Box sx={{ p: { xs: 2.5, md: 3 }, position: "relative", zIndex: 2 }}>
-                  {/* Rating */}
+                  {/* Rating - 5 stars, dynamic */}
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                      <StarIcon sx={{ fontSize: 18, color: "#FFD700" }} />
-                      <CustomText sx={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
-                        {product?.rating}
-                      </CustomText>
-                    </Box>
+                    <Rating
+                      value={Math.min(5, Math.max(0, Number(product?.avgRating ?? product?.rating) || 0))}
+                      readOnly
+                      precision={0.1}
+                      size="small"
+                      max={5}
+                      sx={{ color: "#FFB400", "& .MuiRating-iconFilled": { color: "#FFB400" }, "& .MuiRating-iconEmpty": { color: "rgba(255, 180, 0, 0.55)" } }}
+                    />
+                    <CustomText sx={{ fontSize: 14, fontWeight: 600, color: "#333" }}>
+                      {(Number(product?.avgRating ?? product?.rating) || 0).toFixed(1)}
+                    </CustomText>
                     <CustomText sx={{ fontSize: 12, color: "#999" }}>
-                      ({product?.reviews} reviews)
+                      ({Number(product?.totalReviews ?? product?.reviews) || 0} reviews)
                     </CustomText>
                   </Box>
 

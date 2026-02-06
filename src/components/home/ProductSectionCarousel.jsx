@@ -1,11 +1,10 @@
-import { Box, IconButton, CircularProgress } from "@mui/material";
+import { Box, IconButton, CircularProgress, Rating } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useRef, useEffect, useState, memo, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import StarIcon from "@mui/icons-material/Star";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -538,18 +537,24 @@ export const ProductSectionCarousel = memo(({
 
                 {/* Product Info */}
                 <Box sx={{ p: { xs: 1, md: 1.5 }, position: "relative", zIndex: 2 }}>
-                  {/* Rating */}
-                  {product?.rating && (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
-                      <StarIcon sx={{ fontSize: 14, color: "#FFD700" }} />
-                      <CustomText
-                        autoTitleCase={false}
-                        sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "none" }}
-                      >
-                        {product?.rating} {product?.reviews && `(${product?.reviews})`}
-                      </CustomText>
-                    </Box>
-                  )}
+                  {/* Rating - 5 stars, dynamic from API */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.8 }}>
+                    <Rating
+                      value={Math.min(5, Math.max(0, Number(product?.avgRating ?? product?.rating) || 0))}
+                      readOnly
+                      precision={0.1}
+                      size="small"
+                      max={5}
+                      sx={{ color: "#FFB400", "& .MuiRating-iconFilled": { color: "#FFB400" }, "& .MuiRating-iconEmpty": { color: "rgba(255, 180, 0, 0.55)" } }}
+                    />
+                    <CustomText
+                      autoTitleCase={false}
+                      sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "none" }}
+                    >
+                      {(Number(product?.avgRating ?? product?.rating) || 0).toFixed(1)}
+                      {(Number(product?.totalReviews ?? product?.reviews) || 0) > 0 && ` (${Number(product?.totalReviews ?? product?.reviews)} reviews)`}
+                    </CustomText>
+                  </Box>
 
                   {/* Title */}
                   <CustomText

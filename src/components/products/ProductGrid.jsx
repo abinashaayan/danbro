@@ -1,5 +1,5 @@
 import { memo, useState, useEffect } from "react";
-import { Box, Card, CardContent, CardMedia, IconButton, CircularProgress, Tooltip } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, IconButton, CircularProgress, Tooltip, Rating } from "@mui/material";
 import { ShoppingCart, ShareOutlined, FavoriteBorder, Favorite, SearchOff, CheckCircle } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { CustomText } from "../comman/CustomText";
@@ -539,6 +539,21 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   {product?.name}
                 </CustomText>
 
+                <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, flexWrap: "wrap", mb: 0.5 }}>
+                  <Rating
+                    value={Math.min(5, Math.max(0, Number(product?.avgRating ?? product?.rating) || 0))}
+                    readOnly
+                    precision={0.1}
+                    size="small"
+                    max={5}
+                    sx={{ color: "#FFB400", "& .MuiRating-iconFilled": { color: "#FFB400" }, "& .MuiRating-iconEmpty": { color: "rgba(255, 180, 0, 0.55)" } }}
+                  />
+                  <CustomText sx={{ fontSize: 11, color: "#666" }}>
+                    {(Number(product?.avgRating ?? product?.rating) || 0).toFixed(1)}
+                    {(Number(product?.totalReviews ?? product?.reviews) || 0) > 0 && ` (${Number(product?.totalReviews ?? product?.reviews)})`}
+                  </CustomText>
+                </Box>
+
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {product?.weight && String(product.weight).trim() && (
                     <CustomText sx={{ fontSize: 11, color: "#000", fontFamily: "'Inter', sans-serif" }}>
@@ -547,7 +562,7 @@ export const ProductGrid = memo(({ products, isVisible }) => {
                   )}
                   {product?.subcategory && String(product.subcategory).trim() && (
                     <CustomText sx={{ fontSize: 11, color: "#000", fontFamily: "'Inter', sans-serif" }}>
-                      Subcategory: {product.subcategory}
+                      {product.subcategory}
                     </CustomText>
                   )}
                 </Box>

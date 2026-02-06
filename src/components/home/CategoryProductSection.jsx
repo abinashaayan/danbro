@@ -105,8 +105,10 @@ export const CategoryProductSection = memo(({
               originalPrice: originalPrice > displayPrice ? `₹${originalPrice}` : null,
               image: productImage,
               discount: discount,
-              rating: product?.rating || 4.5,
-              reviews: product?.reviews || 75, // Fixed value instead of random to prevent re-renders
+              rating: Number(product?.avgRating ?? product?.rating) || 0,
+              avgRating: Number(product?.avgRating ?? product?.rating) || 0,
+              totalReviews: Number(product?.totalReviews ?? product?.reviews) || 0,
+              reviews: Number(product?.totalReviews ?? product?.reviews) || 0,
               sku: product?.prdcode,
               badge: product?.badge || "New",
               badgeColor: product?.badgeColor || "#FF9472",

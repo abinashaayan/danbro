@@ -87,9 +87,20 @@ export const ProductDetailsInfo = ({
       </Box>
     </Box>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1, flexWrap: "wrap" }}>
-      <Rating value={4.5} precision={0.5} readOnly size="small" sx={{ color: "#FF643A" }} />
-      <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#333" }}>4.5</CustomText>
-      <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#777" }}>(245 Reviews)</CustomText>
+      <Rating
+        value={Math.min(5, Math.max(0, Number(product?.avgRating ?? productData?.avgRating) || 0))}
+        precision={0.1}
+        readOnly
+        size="small"
+        max={5}
+        sx={{ color: "#FF643A", "& .MuiRating-iconFilled": { color: "#FF643A" }, "& .MuiRating-iconEmpty": { color: "rgba(255, 100, 58, 0.5)" } }}
+      />
+      <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#333" }}>
+        {(Number(product?.avgRating ?? productData?.avgRating) || 0).toFixed(1)}
+      </CustomText>
+      <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#777" }}>
+        ({Number(product?.totalReviews ?? productData?.totalReviews) || 0} Review{(Number(product?.totalReviews ?? productData?.totalReviews) || 0) !== 1 ? "s" : ""})
+      </CustomText>
     </Box>
     <CustomText
       variant="body1"

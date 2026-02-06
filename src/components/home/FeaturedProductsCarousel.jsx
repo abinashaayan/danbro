@@ -1,4 +1,4 @@
-import { Box, IconButton, Button, CircularProgress } from "@mui/material";
+import { Box, IconButton, Button, CircularProgress, Rating } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -409,11 +409,18 @@ export const FeaturedProductsCarousel = () => {
 
                   {/* Product Info */}
                   <Box sx={{ p: 2.5 }}>
-                    {/* Rating */}
+                    {/* Rating - 5 stars, dynamic */}
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                      <StarIcon sx={{ fontSize: 16, color: "#FFD700" }} />
+                      <Rating
+                        value={Math.min(5, Math.max(0, Number(product?.avgRating ?? product?.rating) || 0))}
+                        readOnly
+                        precision={0.1}
+                        size="small"
+                        max={5}
+                        sx={{ color: "#FFB400", "& .MuiRating-iconFilled": { color: "#FFB400" }, "& .MuiRating-iconEmpty": { color: "rgba(255, 180, 0, 0.55)" } }}
+                      />
                       <CustomText sx={{ fontSize: 13, fontWeight: 600 }}>
-                        {product.rating} ({product.reviews})
+                        {(Number(product?.avgRating ?? product?.rating) || 0).toFixed(1)} ({Number(product?.totalReviews ?? product?.reviews) || 0} reviews)
                       </CustomText>
                     </Box>
 

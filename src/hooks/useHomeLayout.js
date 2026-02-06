@@ -167,6 +167,9 @@ export const transformProduct = (apiProduct, categoryId) => {
     discount = `${discountPercent}% OFF`;
   }
 
+  const avgRating = Number(apiProduct.avgRating) ?? 0;
+  const totalReviews = Number(apiProduct.totalReviews) ?? 0;
+
   return {
     id: apiProduct.productId,
     productId: apiProduct.productId,
@@ -177,8 +180,10 @@ export const transformProduct = (apiProduct, categoryId) => {
     originalPrice: originalPrice > displayPrice ? `₹${originalPrice}` : null,
     image: productImage,
     discount: discount,
-    rating: 4.5,
-    reviews: 75,
+    rating: avgRating,
+    avgRating,
+    totalReviews,
+    reviews: totalReviews,
     sku: apiProduct.productId,
     badge: apiProduct.badge ?? null,
     badgeColor: apiProduct.badgeColor ?? null,

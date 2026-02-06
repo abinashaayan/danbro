@@ -105,6 +105,8 @@ export const SearchPage = () => {
         veg: product?.veg ?? "N",
         subcategory: product?.subcategory || null,
         image: productImage,
+        avgRating: Number(product?.avgRating) ?? 0,
+        totalReviews: Number(product?.totalReviews) ?? 0,
       };
     });
 
