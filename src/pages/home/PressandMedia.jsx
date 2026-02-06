@@ -45,7 +45,7 @@ export const PressandMedia = () => {
   }, []);
 
   return (
-    <Box>
+    <Box sx={{ paddingTop: { md: "0px !important" } }}>
       <Box
         ref={sectionRefs.header}
         sx={{

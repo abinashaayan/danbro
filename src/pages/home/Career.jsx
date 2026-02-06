@@ -160,6 +160,8 @@ export const Career = () => {
                 <Grid size={12} key={index}>
                   <Box
                     sx={{
+                      border: "2px solid #FFE5E5",
+                      borderRadius: "10px",
                       animation: visibleSections.openings
                         ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
                         : "none",
@@ -197,27 +199,6 @@ export const Career = () => {
                           </CustomText>
                         </Box>
                       </Box>
-                      <Button
-                        variant="contained"
-                        sx={{
-                          backgroundColor: "#1877F2",
-                          color: "#fff",
-                          textTransform: "none",
-                          borderRadius: 2,
-                          px: { xs: 3, sm: 4, md: 4, lg: 5 },
-                          py: { xs: 1, sm: 1.2, md: 1.1, lg: 1.2 },
-                          fontSize: { xs: 13, sm: 14, md: 15, lg: 16 },
-                          fontWeight: 600,
-                          width: { xs: "100%", sm: "auto" },
-                          "&:hover": {
-                            backgroundColor: "#1565C0",
-                            transform: "scale(1.05)",
-                          },
-                          transition: "all 0.3s ease",
-                        }}
-                      >
-                        Apply Now
-                      </Button>
                     </Box>
                   </Box>
                 </Grid>
@@ -228,7 +209,7 @@ export const Career = () => {
       </Container>
 
       {/* How to Apply Section */}
-      <Container sx={{ py: { xs: 4, sm: 4, md: 4, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 4 }, mb: 5 }} ref={sectionRefs.apply}>
+      <Container sx={{ py: { xs: 4, sm: 4, md: 4, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 4 }, mb: 5, mt: 2 }} ref={sectionRefs.apply}>
         <Box
           sx={{
             opacity: visibleSections.apply ? 1 : 0,
