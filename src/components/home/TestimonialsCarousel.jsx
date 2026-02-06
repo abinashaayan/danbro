@@ -36,6 +36,7 @@ export const TestimonialsCarousel = () => {
           .map(mapReviewToTestimonial)
           .filter((t) => t.comment?.trim());
         setTestimonials(list);
+        if (list.length > 0) setVisible(true);
       })
       .catch(() => setTestimonials([]));
     return () => { cancelled = true; };
@@ -61,7 +62,7 @@ export const TestimonialsCarousel = () => {
     setCurrentSlide(next);
   };
 
-  if (testimonials.length === 0) return null;
+  const hasTestimonials = testimonials?.length > 0;
 
   return (
     <Box
@@ -165,8 +166,14 @@ export const TestimonialsCarousel = () => {
             <ArrowForwardIosIcon sx={{ fontSize: { xs: 22, md: 26 } }} />
           </CustomCarouselArrow>
 
-          {/* Carousel Slider */}
+          {/* Carousel Slider - key forces remount when testimonials load so slides render */}
+          {!hasTestimonials ? (
+            <Box sx={{ minHeight: 320, display: "flex", alignItems: "center", justifyContent: "center", color: "#999" }}>
+              <CustomText>Loading testimonials...</CustomText>
+            </Box>
+          ) : (
           <CustomCarousel
+            key={`testimonials-${testimonials.length}`}
             ref={sliderRef}
             slidesToShow={1}
             slidesToScroll={1}
@@ -181,7 +188,7 @@ export const TestimonialsCarousel = () => {
             cssEase="cubic-bezier(0.4, 0, 0.2, 1)"
             beforeChange={handleBeforeChange}
           >
-            {testimonials?.map((testimonial, index) => {
+            {testimonials.map((testimonial, index) => {
               const isActive = currentSlide === index;
               return (
                 <Box key={testimonial?.id} sx={{ px: { xs: 1, md: 2 } }}>
@@ -341,11 +348,12 @@ export const TestimonialsCarousel = () => {
               );
             })}
           </CustomCarousel>
+          )}
 
           {/* Custom Dots */}
           <Box
             sx={{
-              display: "flex",
+              display: hasTestimonials ? "flex" : "none",
               justifyContent: "center",
               gap: 1.5,
               mt: 5,

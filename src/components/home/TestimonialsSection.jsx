@@ -98,15 +98,7 @@ export const TestimonialsSection = () => {
         }
     }, [safeActive]);
 
-    if (loading) {
-        return (
-            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
-                <CircularProgress sx={{ color: "var(--themeColor)" }} />
-            </Box>
-        );
-    }
-
-    if (listLength === 0) return null;
+    if (listLength === 0 && !loading) return null;
 
     return (
         <Box
@@ -121,8 +113,8 @@ export const TestimonialsSection = () => {
                 position: "relative",
                 textAlign: "center",
                 overflow: "hidden",
-                opacity: 0,
-                transform: "translateY(30px)",
+                opacity: 1,
+                transform: "translateY(0)",
                 transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
                 "&::before": {
                     content: '""',
@@ -321,7 +313,7 @@ export const TestimonialsSection = () => {
                             px: { xs: 1, md: 2 },
                         }}
                     >
-                        {testimonialsList[safeActive].message}
+                        {testimonialsList[safeActive]?.message}
                     </CustomText>
                 </Box>
             </Box>
@@ -405,7 +397,7 @@ export const TestimonialsSection = () => {
                     color: "var(--themeColor)",
                 }}
             >
-                {testimonialsList[safeActive].name}
+                {testimonialsList[safeActive]?.name}
             </CustomText>
         </Box >
     );

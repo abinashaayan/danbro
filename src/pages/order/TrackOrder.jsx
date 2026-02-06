@@ -96,7 +96,7 @@ export const TrackOrder = () => {
   };
 
   return (
-    <Box sx={{ backgroundColor: "#f8f9fa", py: 4, mb: 3 }}>
+    <Box sx={{ py: 4, mb: 3 }}>
       <Container maxWidth="md">
         {/* Header */}
         <Box sx={{ textAlign: "center", mb: 4 }}>
