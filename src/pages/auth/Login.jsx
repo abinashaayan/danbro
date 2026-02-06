@@ -217,18 +217,6 @@ export const Login = () => {
       return;
     }
 
-    // Subscribe to newsletter if checked
-    if (formData.newsletter) {
-      try {
-        await api.post('/newsletter/subscribe', {
-          email: formData.username,
-        });
-      } catch (error) {
-        // Newsletter subscription is optional, don't block login if it fails
-        console.error("Newsletter subscription error:", error);
-      }
-    }
-
     const loginPayload = {
       email: formData.username,
       password: formData.password,
@@ -247,16 +235,18 @@ export const Login = () => {
     }
     const result = await dispatch(loginUser(loginPayload));
 
-    // Check if login was rejected due to OTP verification
+    // Redirect to verify-otp only when backend requires OTP (isVerified === false). Do not redirect for "Domain not allowed" or other 403.
     if (loginUser.rejected.match(result)) {
       const errorPayload = result.payload;
-      if (errorPayload?.status === 403 || errorPayload?.isVerified === false) {
-        localStorage.setItem('pendingLoginEmail', formData.username);
-        localStorage.setItem('pendingLoginPassword', formData.password);
+      const isOtpRequired = errorPayload?.isVerified === false;
+      const isDomainOrForbidden = /domain not allowed|forbidden/i.test(errorPayload?.message || "");
+      if (isOtpRequired && !isDomainOrForbidden) {
+        localStorage.setItem('pendingLoginEmail', formData?.username);
+        localStorage.setItem('pendingLoginPassword', formData?.password);
         navigate("/verify-otp", {
           state: {
-            email: formData.username,
-            password: formData.password,
+            email: formData?.username,
+            password: formData?.password,
             message: errorPayload?.message || "OTP has been sent to your email. Please check your inbox."
           }
         });
