@@ -1,13 +1,10 @@
-import { Box,  IconButton } from "@mui/material";
+import { Box, IconButton, CircularProgress } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useState, useEffect, useRef } from "react";
+import { getAllReviews } from "../../utils/apiService";
 import user1 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
-import user2 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
-import user3 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
-import user4 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
-import user5 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
 
 // ⭐ Decorative Images
 import topLeftIcon from "../../assets/arrowtopbottom.png";
@@ -15,52 +12,57 @@ import bottomRightIcon from "../../assets/arrowtopbottom.png";
 import cardTopRightDots from "../../assets/Ornament1.png";
 import cardBottomLeftDots from "../../assets/Ornament1.png";
 
-const testimonialsList = [
-    {
-        name: "Tom",
-        title: "It was a very good experience",
-        message:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cursus nibh mauris, nec turpis orci lectus maecenas. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. Faucibus venenatis felis id augue sit cursus pellentesque enim arcu. Elementum felis magna pretium in tincidunt. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. urpis orci lectus maecenas. Suspendisse sed magna eget nibh in turpis. Consequat duis diam lacus arcu. Faucibus venenatis felis id augue sit cursus pellentesque enim arcu",
-        img: user1,
-    },
-    {
-        name: "Sarah",
-        title: "Amazing service, super fast delivery!",
-        message: "Suspendisse sed magna eget nibh in turpis.",
-        img: user2,
-    },
-    {
-        name: "Daniel",
-        title: "Loved the packaging & taste!",
-        message: "Faucibus venenatis felis id augue sit cursus pellentesque.",
-        img: user3,
-    },
-    {
-        name: "Emily",
-        title: "Best bakery experience ever!",
-        message: "Nunc elementum felis magna pretium.",
-        img: user4,
-    },
-    {
-        name: "Andrew",
-        title: "Highly recommended!",
-        message: "Suspendisse sed magna eget nibh in turpis.",
-        img: user5,
-    },
+const fallbackTestimonials = [
+    { name: "Our Customer", title: "Great experience", message: "We love hearing from you. Share your experience with Danbro products!", img: user1 },
 ];
 
+const mapReviewToTestimonial = (r) => ({
+    name: r?.user?.name ?? "Customer",
+    title: r?.product?.name ?? "Product",
+    message: r?.review ?? "",
+    img: user1,
+    rating: r?.rating ?? 5,
+});
+
 export const TestimonialsSection = () => {
+    const [testimonialsList, setTestimonialsList] = useState(fallbackTestimonials);
+    const [loading, setLoading] = useState(true);
     const [active, setActive] = useState(0);
     const cardRef = useRef(null);
     const sectionRef = useRef(null);
 
-    const nextTestimonial = () =>
-        setActive((prev) => (prev + 1) % testimonialsList.length);
+    useEffect(() => {
+        let cancelled = false;
+        const fetchReviews = async () => {
+            try {
+                setLoading(true);
+                const data = await getAllReviews();
+                if (cancelled) return;
+                const approved = (Array.isArray(data) ? data : [])
+                    .filter((r) => (r?.status || "").toLowerCase() === "approved")
+                    .map(mapReviewToTestimonial)
+                    .filter((t) => t.message?.trim());
+                if (approved.length > 0) setTestimonialsList(approved);
+            } catch (_) {
+                if (!cancelled) setTestimonialsList(fallbackTestimonials);
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        };
+        fetchReviews();
+        return () => { cancelled = true; };
+    }, []);
 
+    const listLength = testimonialsList.length;
+    const safeActive = listLength ? Math.min(active, listLength - 1) : 0;
+    const nextTestimonial = () =>
+        setActive((prev) => (listLength ? (prev + 1) % listLength : 0));
     const prevTestimonial = () =>
-        setActive((prev) =>
-            prev === 0 ? testimonialsList.length - 1 : prev - 1
-        );
+        setActive((prev) => (listLength ? (prev === 0 ? listLength - 1 : prev - 1) : 0));
+
+    useEffect(() => {
+        setActive((prev) => (listLength ? Math.min(prev, listLength - 1) : 0));
+    }, [listLength]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -94,7 +96,17 @@ export const TestimonialsSection = () => {
                 }
             }, 2000);
         }
-    }, [active]);
+    }, [safeActive]);
+
+    if (loading) {
+        return (
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 8 }}>
+                <CircularProgress sx={{ color: "var(--themeColor)" }} />
+            </Box>
+        );
+    }
+
+    if (listLength === 0) return null;
 
     return (
         <Box
@@ -298,7 +310,7 @@ export const TestimonialsSection = () => {
                             color: "var(--themeColor)",
                         }}
                     >
-                        {testimonialsList[active].title}
+                        {testimonialsList[safeActive].title}
                     </CustomText>
 
                     <CustomText
@@ -309,7 +321,7 @@ export const TestimonialsSection = () => {
                             px: { xs: 1, md: 2 },
                         }}
                     >
-                        {testimonialsList[active].message}
+                        {testimonialsList[safeActive].message}
                     </CustomText>
                 </Box>
             </Box>
@@ -348,22 +360,22 @@ export const TestimonialsSection = () => {
                         onClick={() => setActive(i)}
                         sx={{
                             cursor: "pointer",
-                            transform: active === i ? "scale(1.2)" : "scale(1)",
+                            transform: safeActive === i ? "scale(1.2)" : "scale(1)",
                             transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                            opacity: active === i ? 1 : 0.5,
+                            opacity: safeActive === i ? 1 : 0.5,
                             border:
-                                active === i
+                                safeActive === i
                                     ? "4px solid var(--themeColor)"
                                     : "4px solid transparent",
                             borderRadius: "50%",
                             padding: "4px",
                             boxShadow:
-                                active === i
+                                safeActive === i
                                     ? "0 4px 15px rgba(95,41,48,0.3)"
                                     : "0 2px 8px rgba(0,0,0,0.1)",
                             "&:hover": {
-                                opacity: active === i ? 1 : 0.8,
-                                transform: active === i ? "scale(1.25)" : "scale(1.1)",
+                                opacity: safeActive === i ? 1 : 0.8,
+                                transform: safeActive === i ? "scale(1.25)" : "scale(1.1)",
                             },
                         }}
                     >
@@ -393,7 +405,7 @@ export const TestimonialsSection = () => {
                     color: "var(--themeColor)",
                 }}
             >
-                {testimonialsList[active].name}
+                {testimonialsList[safeActive].name}
             </CustomText>
         </Box >
     );

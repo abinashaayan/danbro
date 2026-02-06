@@ -1601,6 +1601,23 @@ export const getAllFAQs = async () => {
 };
 
 /**
+ * GET /api/reviews/getAll – fetch all reviews (e.g. for testimonials)
+ * @returns {Promise<Array>} List of reviews (response.data?.data ?? response.data)
+ */
+export const getAllReviews = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/reviews/getAll`, {
+      timeout: 15000,
+    });
+    const data = response?.data?.data ?? response?.data ?? response;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching all reviews:', error);
+    throw error;
+  }
+};
+
+/**
  * Get reviews by product ID
  * GET /api/reviews/product/:productId
  * @param {string} productId - Product ID

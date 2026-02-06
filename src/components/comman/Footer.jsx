@@ -1,7 +1,7 @@
 import { Box, Container, Grid, IconButton } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { styled } from "@mui/material/styles";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import FacebookIcon from "@mui/icons-material/Facebook";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -10,6 +10,7 @@ import makeinindia from "../../assets/makeinindia.png";
 import Maskgroup from "../../assets/Maskgroup.png";
 import logo from "../../assets/logo.png";
 import postImg from "../../assets/cakeimg.png";
+import { getAllBlogs } from "../../utils/apiService";
 import visaLogo from "../../assets/visa-logo.svg";
 import mastercardLogo from "../../assets/mastercard-logo.svg";
 import paypalLogo from "../../assets/paypal-logo.svg";
@@ -33,10 +34,35 @@ const FooterContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
+const formatBlogDate = (dateStr) => {
+  if (!dateStr) return "";
+  try {
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? "" : d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+  } catch (_) {
+    return "";
+  }
+};
+
 export const Footer = () => {
   const bannerRef = useRef(null);
   const footerRef = useRef(null);
   const navigate = useNavigate();
+  const [recentBlogs, setRecentBlogs] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAllBlogs()
+      .then((data) => {
+        if (cancelled) return;
+        const list = Array.isArray(data) ? data.slice(0, 2) : [];
+        setRecentBlogs(list);
+      })
+      .catch(() => {
+        if (!cancelled) setRecentBlogs([]);
+      });
+    return () => { cancelled = true; };
+  }, []);
 
   const handleLinkClick = (e, path) => {
     e.preventDefault();
@@ -462,60 +488,72 @@ export const Footer = () => {
                 RECENT POSTS
               </CustomText>
 
-              {[1, 2].map((i, index) => (
-                <Box
-                  key={i}
-                  sx={{
-                    display: "flex",
-                    gap: { xs: 1.5, sm: 1.5, md: 2 },
-                    mb: 2,
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    "&:hover": {
-                      transform: "translateX(5px)",
-                    },
-                    animation: `fadeInRight 0.6s ease-out ${index * 0.2}s both`,
-                    "@keyframes fadeInRight": {
-                      "0%": { opacity: 0, transform: "translateX(-20px)" },
-                      "100%": { opacity: 1, transform: "translateX(0)" },
-                    },
-                  }}
-                >
+              {recentBlogs?.map((blog, index) => {
+                const id = blog?._id ?? blog?.id;
+                const title = blog?.title ?? "";
+                const image = blog?.image ?? blog?.thumbnail ?? blog?.featuredImage ?? postImg;
+                const date = formatBlogDate(blog?.createdAt ?? blog?.date ?? blog?.updatedAt);
+                return (
                   <Box
-                    component="img"
-                    src={postImg}
+                    key={id ?? index}
+                    onClick={() => id && navigate(`/blog-details/${id}`)}
                     sx={{
-                      width: { xs: 60, sm: 65, md: 55, lg: 70 },
-                      height: { xs: 60, sm: 65, md: 55, lg: 70 },
-                      borderRadius: 2,
-                      objectFit: "cover",
-                      flexShrink: 0,
+                      display: "flex",
+                      gap: { xs: 1.5, sm: 1.5, md: 2 },
+                      mb: 2,
+                      cursor: "pointer",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        transform: "translateX(5px)",
+                      },
+                      animation: `fadeInRight 0.6s ease-out ${index * 0.2}s both`,
+                      "@keyframes fadeInRight": {
+                        "0%": { opacity: 0, transform: "translateX(-20px)" },
+                        "100%": { opacity: 1, transform: "translateX(0)" },
+                      },
                     }}
-                  />
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <CustomText
-                      sx={{
-                        fontSize: { xs: 12, sm: 12, md: 11.5, lg: 14 },
-                        fontWeight: 600,
-                        mb: 0.5,
-                        wordBreak: "break-word",
-                        lineHeight: 1.4,
+                  >
+                    <Box
+                      component="img"
+                      src={typeof image === "string" ? image : postImg}
+                      alt=""
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = postImg;
                       }}
-                    >
-                      Handmade with Love – Danbro Cookies
-                    </CustomText>
+                      sx={{
+                        width: { xs: 60, sm: 65, md: 55, lg: 70 },
+                        height: { xs: 60, sm: 65, md: 55, lg: 70 },
+                        borderRadius: 2,
+                        objectFit: "cover",
+                        flexShrink: 0,
+                      }}
+                    />
+                    <Box sx={{ flex: 1, minWidth: 0 }}>
+                      <CustomText
+                        sx={{
+                          fontSize: { xs: 12, sm: 12, md: 11.5, lg: 14 },
+                          fontWeight: 600,
+                          mb: 0.5,
+                          wordBreak: "break-word",
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {title.length > 45 ? title.slice(0, 45) + "…" : title || "Blog post"}
+                      </CustomText>
 
-                    <CustomText
-                      sx={{
-                        fontSize: { xs: 11, sm: 11, md: 10, lg: 12 },
-                        color: "#777",
-                      }}
-                    >
-                      May 3, 2025 — No Comments
-                    </CustomText>
+                      <CustomText
+                        sx={{
+                          fontSize: { xs: 11, sm: 11, md: 10, lg: 12 },
+                          color: "#777",
+                        }}
+                      >
+                        {date || "—"}
+                      </CustomText>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                );
+              })}
             </Grid>
           </Grid>
 

@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Avatar, Chip, Stack } from "@mui/material";
+import { Box, Container, IconButton, Avatar, Stack } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -8,63 +8,38 @@ import StarIcon from "@mui/icons-material/Star";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import user1 from "../../assets/174fadede8628f65c914092552741f716b9b8039.jpg";
+import { getAllReviews } from "../../utils/apiService";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Priya Sharma",
-    role: "Regular Customer",
-    rating: 5,
-    comment: "The best bakery in town! Their cakes are absolutely delicious and the service is outstanding. I've been ordering from Danbro for years and they never disappoint.",
-    image: user1,
-  },
-  {
-    id: 2,
-    name: "Rahul Kapoor",
-    role: "Event Organizer",
-    rating: 5,
-    comment: "We ordered a custom cake for our company event and it was perfect! The design was exactly as requested and tasted amazing. Highly recommended!",
-    image: user1,
-  },
-  {
-    id: 3,
-    name: "Anjali Patel",
-    role: "Happy Customer",
-    rating: 5,
-    comment: "The red velvet cake is to die for! Fresh ingredients, perfect texture, and beautiful presentation. Danbro has become our go-to bakery for all celebrations.",
-    image: user1,
-  },
-  {
-    id: 4,
-    name: "Vikram Singh",
-    role: "Food Blogger",
-    rating: 5,
-    comment: "As a food blogger, I've tried many bakeries, but Danbro stands out. Their attention to detail and quality is unmatched. The pastries are simply divine!",
-    image: user1,
-  },
-  {
-    id: 5,
-    name: "Meera Desai",
-    role: "Wedding Planner",
-    rating: 5,
-    comment: "Danbro created the most beautiful wedding cake for our client. The taste was exceptional and the presentation was flawless. Truly professional!",
-    image: user1,
-  },
-  {
-    id: 6,
-    name: "Arjun Mehta",
-    role: "Corporate Client",
-    rating: 5,
-    comment: "We order from Danbro for all our corporate events. Consistent quality, timely delivery, and excellent customer service. They never fail to impress!",
-    image: user1,
-  },
-];
+const mapReviewToTestimonial = (r) => ({
+  id: r?._id,
+  name: r?.user?.name ?? "Customer",
+  role: r?.product?.name ?? "Customer",
+  rating: typeof r?.rating === "number" ? Math.min(5, Math.max(1, r.rating)) : 5,
+  comment: r?.review ?? "",
+  image: user1,
+});
 
 export const TestimonialsCarousel = () => {
   const sliderRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
   const sectionRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAllReviews()
+      .then((data) => {
+        if (cancelled) return;
+        const list = (Array.isArray(data) ? data : [])
+          .filter((r) => (r?.status || "").toLowerCase() === "approved")
+          .map(mapReviewToTestimonial)
+          .filter((t) => t.comment?.trim());
+        setTestimonials(list);
+      })
+      .catch(() => setTestimonials([]));
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,6 +60,8 @@ export const TestimonialsCarousel = () => {
   const handleBeforeChange = (current, next) => {
     setCurrentSlide(next);
   };
+
+  if (testimonials.length === 0) return null;
 
   return (
     <Box
