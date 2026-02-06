@@ -440,7 +440,7 @@ export const ProductDetails = () => {
         expanded={expanded}
         onExpandedChange={setExpanded}
       />
-      <ProductDetailsReviews />
+      <ProductDetailsReviews productId={productIdForCart || id} />
     </Box>
   );
 };

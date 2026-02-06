@@ -276,7 +276,7 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
           </Box>
         </Box>
 
-        {/* Search Input with Autocomplete - portal so dropdown is not clipped by modal */}
+        {/* Search Input with Autocomplete - Popper z-index above backdrop so dropdown is visible */}
         <Autocomplete
           ref={autocompleteRef}
           freeSolo
@@ -295,6 +295,12 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
             }
           }}
           loading={loading}
+          slotProps={{
+            popper: {
+              sx: { zIndex: 10001 },
+              disablePortal: false,
+            },
+          }}
           ListboxProps={{
             sx: {
               maxHeight: 280,

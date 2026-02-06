@@ -1,71 +1,466 @@
-import { Box, Container, Avatar, Rating } from "@mui/material";
-import { ThumbUpOffAlt, ThumbDownOffAlt } from "@mui/icons-material";
-import { CustomText } from "../../../components/comman/CustomText";
+import { useState, useEffect, useCallback } from "react";
+import {
+  Box,
+  Container,
+  Rating,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
+import StarIcon from "@mui/icons-material/Star";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
+import { getReviewsByProduct, addReview } from "../../../utils/apiService";
+import { getAccessToken } from "../../../utils/cookies";
 
-const MOCK_REVIEWS = [
-  { name: "Sophia Carter", time: "2 weeks ago", text: "These chocolate muffins are absolutely divine! Perfect balance of sweetness and rich chocolate flavor." },
-  { name: "Ethan Bennett", time: "1 month ago", text: "Good taste, a little too sweet for me. Texture is soft and moist overall decent treat." },
-];
+function getTimeAgo(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return "";
+  const now = new Date();
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / (24 * 60 * 60 * 1000));
+  const diffWeeks = Math.floor(diffDays / 7);
+  const diffMonths = Math.floor(diffDays / 30);
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "1 day ago";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffWeeks === 1) return "1 week ago";
+  if (diffWeeks < 4) return `${diffWeeks} weeks ago`;
+  if (diffMonths === 1) return "1 month ago";
+  if (diffMonths < 12) return `${diffMonths} months ago`;
+  return `${Math.floor(diffMonths / 12)} year(s) ago`;
+}
 
-export const ProductDetailsReviews = () => (
-  <Container maxWidth="lg" sx={{ py: { xs: 0, sm: 0 }, px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%" }}>
-    <Box sx={{ mt: { xs: 3, md: 5 }, mb: { xs: 3, md: 4 } }}>
-      <CustomText sx={{ fontSize: { xs: 22, sm: 26, md: 28 }, fontWeight: 600, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", mb: 0.5 }}>
-        4.5 ⭐
-      </CustomText>
-      <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666", mb: 3 }}>
-        120 reviews
-      </CustomText>
-      {[5, 4, 3, 2, 1].map((r, i) => (
-        <Box key={i} sx={{ display: "flex", alignItems: "center", gap: { xs: 1, sm: 2 }, mb: 1.5, minWidth: 0 }}>
-          <CustomText sx={{ width: 20, flexShrink: 0, fontSize: { xs: 13, sm: 14 }, fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#2c2c2c" }}>{r}</CustomText>
-          <Box sx={{ flex: 1, height: 8, backgroundColor: "#f0f0f0", borderRadius: 1, overflow: "hidden" }}>
-            <Box sx={{ height: "100%", width: `${[40, 20, 19, 10, 7][i]}%`, backgroundColor: "#FF6F61" }} />
-          </Box>
-          <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666", width: 40, flexShrink: 0, textAlign: "right" }}>
-            {[40, 20, 19, 10, 7][i]}%
-          </CustomText>
+function computeSummary(reviews) {
+  const list = Array.isArray(reviews) ? reviews : [];
+  const total = list.length;
+  if (total === 0) {
+    return {
+      averageRating: 0,
+      totalReviews: 0,
+      distribution: [0, 0, 0, 0, 0],
+      distributionPct: [0, 0, 0, 0, 0],
+    };
+  }
+  let sum = 0;
+  const counts = [0, 0, 0, 0, 0];
+  list.forEach((r) => {
+    const rating = Math.min(5, Math.max(1, Number(r.rating) || 0));
+    sum += rating;
+    const idx = rating - 1;
+    if (idx >= 0 && idx < 5) counts[idx] += 1;
+  });
+  const averageRating = total ? Math.round((sum / total) * 10) / 10 : 0;
+  const distributionPct = counts.map((c) => (total ? Math.round((c / total) * 100) : 0));
+  return {
+    averageRating,
+    totalReviews: total,
+    distribution: counts,
+    distributionPct,
+  };
+}
+
+export const ProductDetailsReviews = ({ productId }) => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [submitRating, setSubmitRating] = useState(5);
+  const [submitText, setSubmitText] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const isLoggedIn = !!getAccessToken();
+
+  const loadReviews = useCallback(async () => {
+    if (!productId) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await getReviewsByProduct(productId);
+      const data = res?.data ?? res;
+      const list = Array.isArray(data?.reviews) ? data.reviews : [];
+      setReviews(list);
+    } catch (err) {
+      setError(err.message || "Failed to load reviews.");
+      setReviews([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    loadReviews();
+  }, [loadReviews]);
+
+  const handleSubmitReview = async () => {
+    if (!productId || !submitText.trim()) return;
+    setSubmitting(true);
+    setSubmitError(null);
+    setSubmitSuccess(false);
+    try {
+      await addReview({
+        productId,
+        rating: submitRating,
+        review: submitText.trim(),
+      });
+      setSubmitSuccess(true);
+      setSubmitText("");
+      setSubmitRating(5);
+      loadReviews();
+    } catch (err) {
+      setSubmitError(err.message || "Failed to submit review.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const summary = computeSummary(reviews);
+
+  if (!productId) return null;
+
+  const sectionTitleSx = {
+    fontSize: { xs: "1.1rem", sm: "1.25rem" },
+    fontWeight: 700,
+    color: "#3d2914",
+    fontFamily: "'Inter', sans-serif",
+    mb: 2,
+  };
+
+  const cardSx = {
+    p: { xs: 2, sm: 2.5 },
+    borderRadius: 2,
+    backgroundColor: "#faf8f5",
+    boxShadow: "0 1px 8px rgba(0,0,0,0.06)",
+    border: "1px solid #ebe6df",
+  };
+
+  return (
+    <Container
+      maxWidth="lg"
+      sx={{
+        py: { xs: 3, md: 5 },
+        px: { xs: 2, sm: 3, md: 4 },
+        maxWidth: "100%",
+      }}
+    >
+      <Typography sx={{ ...sectionTitleSx, mb: 3 }}>Ratings & Reviews</Typography>
+
+      {loading ? (
+        <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+          <CircularProgress sx={{ color: "#8b6914" }} />
         </Box>
-      ))}
-    </Box>
-    <Box sx={{ mt: { xs: 3, md: 4 }, mb: { xs: 4, md: 5 } }}>
-      {MOCK_REVIEWS.map((review, i) => (
-        <Box
-          key={i}
-          sx={{
-            p: { xs: 2, md: 3 },
-            borderRadius: 1,
-            backgroundColor: "#fafafa",
-            border: "1px solid #e0e0e0",
-            mt: 2,
-            minWidth: 0,
-          }}
-        >
-          <Box sx={{ display: "flex", gap: { xs: 1.5, sm: 2 }, alignItems: "center", mb: 1.5, flexWrap: "wrap" }}>
-            <Avatar alt={review.name} sx={{ width: { xs: 36, sm: 40 }, height: { xs: 36, sm: 40 }, backgroundColor: "#FF9472" }}>
-              {review.name.charAt(0)}
-            </Avatar>
-            <Box sx={{ minWidth: 0 }}>
-              <CustomText sx={{ fontWeight: 600, fontFamily: "'Inter', sans-serif", fontSize: { xs: 14, sm: 15 }, color: "#2c2c2c" }}>{review.name}</CustomText>
-              <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666" }}>{review.time}</CustomText>
+      ) : (
+        <>
+          {/* Summary: average + distribution */}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              gap: 3,
+              mb: 4,
+            }}
+          >
+            <Box
+              sx={{
+                ...cardSx,
+                minWidth: { sm: 220 },
+                textAlign: "center",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "2.5rem",
+                  fontWeight: 700,
+                  color: "#3d2914",
+                  fontFamily: "'Inter', sans-serif",
+                  lineHeight: 1.2,
+                }}
+              >
+                {summary.averageRating > 0 ? summary.averageRating.toFixed(1) : "0.0"}
+              </Typography>
+              <Rating
+                value={summary.averageRating}
+                readOnly
+                precision={0.1}
+                size="medium"
+                emptyIcon={<StarIcon fontSize="inherit" />}
+                sx={{ color: "#c9a227", my: 0.5 }}
+              />
+              <Typography
+                sx={{
+                  fontSize: "0.875rem",
+                  color: "#5c4a32",
+                  fontFamily: "'Inter', sans-serif",
+                }}
+              >
+                Based on {summary.totalReviews} review{summary.totalReviews !== 1 ? "s" : ""}
+              </Typography>
+            </Box>
+
+            <Box sx={{ ...cardSx, flex: 1 }}>
+              {[5, 4, 3, 2, 1].map((star) => {
+                const pct = summary.distributionPct[star - 1] ?? 0;
+                return (
+                  <Box
+                    key={star}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 1.5,
+                      mb: 1.5,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", width: 100, flexShrink: 0 }}>
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <StarIcon
+                          key={s}
+                          sx={{
+                            fontSize: 18,
+                            color: s <= star ? "#c9a227" : "#e0d5c7",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                    <Box
+                      sx={{
+                        flex: 1,
+                        height: 10,
+                        backgroundColor: "#ebe6df",
+                        borderRadius: 1,
+                        overflow: "hidden",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: `${pct}%`,
+                          backgroundColor: "#8b6914",
+                          borderRadius: 1,
+                          minWidth: pct > 0 ? 4 : 0,
+                        }}
+                      />
+                    </Box>
+                    <Typography
+                      sx={{
+                        width: 36,
+                        textAlign: "right",
+                        fontSize: "0.875rem",
+                        color: "#3d2914",
+                        fontFamily: "'Inter', sans-serif",
+                      }}
+                    >
+                      {pct}%
+                    </Typography>
+                  </Box>
+                );
+              })}
             </Box>
           </Box>
-          <Rating value={5 - i} readOnly size="small" sx={{ mb: 1.5, color: "#FF643A" }} />
-          <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 400, fontFamily: "'Inter', sans-serif", color: "#666", lineHeight: 1.7, mb: 2, wordBreak: "break-word" }}>
-            {review.text}
-          </CustomText>
-          <Box sx={{ display: "flex", gap: 3, color: "#707070" }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, cursor: "pointer" }}>
-              <ThumbUpOffAlt sx={{ fontSize: 18 }} />
-              <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Inter', sans-serif" }}>12</CustomText>
+
+          <Box sx={{ borderBottom: "1px solid #e8e4de", mb: 3 }} />
+
+          <Typography sx={{ ...sectionTitleSx }}>Customer Reviews</Typography>
+
+          {/* Write review (logged in) */}
+          {isLoggedIn && (
+            <Box sx={{ ...cardSx, mb: 3 }}>
+              <Typography
+                sx={{
+                  fontSize: "0.95rem",
+                  fontWeight: 600,
+                  color: "#3d2914",
+                  fontFamily: "'Inter', sans-serif",
+                  mb: 1.5,
+                }}
+              >
+                Write a review
+              </Typography>
+              <Box sx={{ mb: 2 }}>
+                <Typography
+                  component="span"
+                  sx={{ fontSize: "0.875rem", color: "#5c4a32", mr: 1 }}
+                >
+                  Rating
+                </Typography>
+                <Rating
+                  value={submitRating}
+                  onChange={(_, v) => setSubmitRating(v ?? 5)}
+                  size="medium"
+                  sx={{ color: "#c9a227" }}
+                />
+              </Box>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                placeholder="Share your experience with this product..."
+                value={submitText}
+                onChange={(e) => setSubmitText(e.target.value)}
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    backgroundColor: "#fff",
+                    "& fieldset": { borderColor: "#d4cfc4" },
+                  },
+                }}
+              />
+              {submitError && (
+                <Typography sx={{ color: "#c62828", fontSize: "0.875rem", mt: 1 }}>
+                  {submitError}
+                </Typography>
+              )}
+              {submitSuccess && (
+                <Typography sx={{ color: "#2e7d32", fontSize: "0.875rem", mt: 1 }}>
+                  Thank you! Your review has been submitted.
+                </Typography>
+              )}
+              <Button
+                variant="contained"
+                onClick={handleSubmitReview}
+                disabled={submitting || !submitText.trim()}
+                sx={{
+                  mt: 2,
+                  backgroundColor: "#8b6914",
+                  "&:hover": { backgroundColor: "#6d5210" },
+                  textTransform: "none",
+                  fontWeight: 600,
+                }}
+              >
+                {submitting ? "Submitting..." : "Submit review"}
+              </Button>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, cursor: "pointer" }}>
-              <ThumbDownOffAlt sx={{ fontSize: 18 }} />
-              <CustomText sx={{ fontSize: 13, fontWeight: 400, fontFamily: "'Inter', sans-serif" }}>3</CustomText>
+          )}
+
+          {error && (
+            <Typography sx={{ color: "#c62828", mb: 2 }}>{error}</Typography>
+          )}
+
+          {reviews.length === 0 && !loading && (
+            <Box sx={{ ...cardSx, py: 4, textAlign: "center" }}>
+              <Typography sx={{ color: "#5c4a32", fontFamily: "'Inter', sans-serif" }}>
+                No reviews yet. Be the first to review!
+              </Typography>
             </Box>
-          </Box>
-        </Box>
-      ))}
-    </Box>
-  </Container>
-);
+          )}
+
+          {reviews.length > 0 &&
+            reviews.map((rev, i) => {
+              const name =
+                rev.user?.name ||
+                rev.userName ||
+                rev.name ||
+                "Customer";
+              const time = getTimeAgo(rev.createdAt || rev.date || rev.updatedAt);
+              const rating = Math.min(5, Math.max(1, Number(rev.rating) || 0));
+              const text = rev.review || rev.text || "";
+              const verified = rev.verifiedPurchase ?? rev.verified ?? true;
+              const helpful = rev.helpfulCount ?? rev.helpful ?? 0;
+
+              return (
+                <Box key={rev._id || rev.id || i} sx={{ ...cardSx, mb: 2 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      flexWrap: "wrap",
+                      gap: 1,
+                      mb: 1,
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        fontSize: "1rem",
+                        color: "#3d2914",
+                        fontFamily: "'Inter', sans-serif",
+                      }}
+                    >
+                      {name}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontSize: "0.8rem",
+                        color: "#8a7a6a",
+                        fontFamily: "'Inter', sans-serif",
+                      }}
+                    >
+                      {time}
+                    </Typography>
+                  </Box>
+                  <Rating
+                    value={rating}
+                    readOnly
+                    size="small"
+                    sx={{ color: "#c9a227", mb: 1 }}
+                  />
+                  <Typography
+                    sx={{
+                      fontSize: "0.9375rem",
+                      color: "#3d2914",
+                      lineHeight: 1.6,
+                      fontFamily: "'Inter', sans-serif",
+                      mb: 1.5,
+                      whiteSpace: "pre-wrap",
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {text}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 2,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    {verified && (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 0.5,
+                          color: "#2e7d32",
+                        }}
+                      >
+                        <CheckCircleIcon sx={{ fontSize: 18 }} />
+                        <Typography
+                          component="span"
+                          sx={{ fontSize: "0.8rem", fontWeight: 500 }}
+                        >
+                          Verified Purchase
+                        </Typography>
+                      </Box>
+                    )}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 0.5,
+                        color: "#a67c52",
+                      }}
+                    >
+                      <ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />
+                      <Typography component="span" sx={{ fontSize: "0.8rem" }}>
+                        Helpful ({helpful})
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
+        </>
+      )}
+    </Container>
+  );
+};

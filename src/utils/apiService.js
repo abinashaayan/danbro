@@ -1533,3 +1533,77 @@ export const getAllFAQs = async () => {
     );
   }
 };
+
+/**
+ * Get reviews by product ID
+ * GET /api/reviews/product/:productId
+ * @param {string} productId - Product ID
+ * @returns {Promise<Object>} Response with reviews list (and optional summary)
+ */
+export const getReviewsByProduct = async (productId) => {
+  try {
+    const location = getStoredLocation();
+    const token = getAccessToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'lat': location.lat.toString(),
+      'long': location.long.toString(),
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const response = await axios.get(
+      `${API_BASE_URL}/reviews/product/${productId}`,
+      { headers, withCredentials: false, timeout: 15000 }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    if (error.response?.status === 404) {
+      return { success: true, data: { reviews: [], averageRating: 0, totalReviews: 0 } };
+    }
+    throw new Error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'Failed to load reviews.'
+    );
+  }
+};
+
+/**
+ * Add a review for a product (requires auth)
+ * POST /api/reviews/add
+ * @param {Object} payload - { productId: string, rating: number, review: string }
+ * @returns {Promise<Object>} Response
+ */
+export const addReview = async (payload) => {
+  try {
+    const token = getAccessToken();
+    if (!token) {
+      throw new Error('Please login to submit a review.');
+    }
+    const headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+
+    const response = await axios.post(
+      `${API_BASE_URL}/reviews/add`,
+      {
+        productId: payload.productId,
+        rating: Number(payload.rating) || 5,
+        review: String(payload.review || '').trim(),
+      },
+      { headers, withCredentials: false, timeout: 15000 }
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error adding review:', error);
+    throw new Error(
+      error.response?.data?.message ||
+      error.response?.data?.error ||
+      'Failed to submit review.'
+    );
+  }
+};
