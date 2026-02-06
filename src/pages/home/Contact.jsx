@@ -115,7 +115,7 @@ export const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Validation
     if (!formData.firstName.trim() || !formData.lastName.trim()) {
       setToast({
@@ -206,198 +206,284 @@ export const Contact = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden" }}>
+    <Box sx={{ width: "100%", overflowX: "hidden", p: { xs: "10px", sm: 0 }, pt: { xs: "35px", sm: 0 } }}>
 
       {/* HERO */}
       <Box
         ref={sectionRefs.header}
         sx={{
-          height: { xs: 240, sm: 300, md: 350, lg: 420 },
+          height: { xs: 220, sm: 280, md: 350, lg: 420 },
           backgroundImage: `url(${blogHero})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          px: { xs: 2, sm: 3, md: 4, lg: 6 },
+          px: { xs: 0, sm: 3, md: 4, lg: 6 },
           opacity: visibleSections.header ? 1 : 0,
           transform: visibleSections.header ? "translateY(0)" : "translateY(20px)",
           transition: "0.7s ease",
         }}
       >
-        <CustomText sx={{ fontSize: { xs: 28, sm: 38, md: 42, lg: 56 }, fontWeight: 700, color: "#fff" }}>
+        <CustomText sx={{ fontSize: { xs: 24, sm: 38, md: 42, lg: 56 }, fontWeight: 700, color: "#fff" }}>
           CONTACT US
         </CustomText>
-        <CustomText sx={{ color: "#fff", fontSize: { xs: 12, sm: 13, md: 13, lg: 14 }, mt: 1 }}>
+        <CustomText sx={{ color: "#fff", fontSize: { xs: 11, sm: 13, md: 13, lg: 14 }, mt: 1 }}>
           Home • Contact Us
         </CustomText>
       </Box>
 
       {/* CONTACT DETAILS — modern, with social */}
-      <Container sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
-        <CustomText align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 3, sm: 4 }, fontSize: { xs: 22, sm: 24, md: 26, lg: 28 }, px: { xs: 0, sm: 0, md: 2, lg: 0 } }}>
-          SOMETHING ABOUT US
+      <Container sx={{ py: { xs: 3, sm: 4 }, px: { xs: 0, sm: 2, md: 3, lg: 2 }, maxWidth: "100%" }}>
+        <CustomText align="center" sx={{ fontWeight: 700, color: "#FF9472", mb: { xs: 3, sm: 4 }, fontSize: { xs: 20, sm: 24, md: 26, lg: 28 }, px: { xs: 0, sm: 0, md: 2, lg: 0 } }}>
+          CONTACT DETAILS
         </CustomText>
-
-        <Box
-          sx={{
-            maxWidth: 720,
-            mx: "auto",
-            p: { xs: 3, sm: 4, md: 5 },
-            borderRadius: 4,
-            background: "linear-gradient(145deg, #fff9f7 0%, #fff5f2 50%, #ffefe9 100%)",
-            boxShadow: "0 12px 40px rgba(255, 148, 114, 0.12), 0 4px 16px rgba(0,0,0,0.06)",
-            border: "1px solid rgba(255, 181, 161, 0.5)",
-          }}
-        >
-          <CustomText align="center" sx={{ fontSize: { xs: 20, sm: 22, md: 24 }, fontWeight: 700, color: "#2c2c2c", mb: 3 }}>
-            CONTACT DETAILS
-          </CustomText>
-
-          <Grid container spacing={3} sx={{ mb: 4 }}>
-            <Grid item xs={12} sm={4}>
-              <Box
+        <Grid container spacing={{ xs: 2, sm: 2 }}>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                   textAlign: "center",
-                  p: 2,
+                  p: { xs: 1.5, sm: 2 },
                   borderRadius: 2,
                   bgcolor: "rgba(255,255,255,0.7)",
                   border: "1px solid rgba(255,181,161,0.4)",
+                  width: "100%",
                   height: "100%",
+                  minHeight: { xs: 180, sm: 220 },
                   transition: "all 0.25s ease",
-                  "&:hover": { boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)", borderColor: "#FFB5A1" },
+                  "&:hover": {
+                    boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)",
+                    borderColor: "#FFB5A1",
+                  },
                 }}
               >
-                <Box sx={{ width: 48, height: 48, borderRadius: "50%", bgcolor: "#FF9472", display: "flex", alignItems: "center", justifyContent: "center", mb: 1.5 }}>
-                  <PhoneIcon sx={{ color: "#fff", fontSize: 24 }} />
-                </Box>
-                <CustomText sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase", letterSpacing: 0.8, mb: 0.5 }}>Phone</CustomText>
-                <Link href="tel:+917309032618" sx={{ fontSize: 14, fontWeight: 600, color: "#2c2c2c", textDecoration: "none", "&:hover": { color: "#FF643A", textDecoration: "underline" }}}>+91 7309032618</Link>
-                <Link href="tel:05224113205" sx={{ fontSize: 14, fontWeight: 600, color: "#2c2c2c", textDecoration: "none", display: "block", "&:hover": { color: "#FF643A", textDecoration: "underline" }}}>0522-4113205</Link>
+                <Box
+                  sx={{
+                    width: { xs: 40, sm: 48 },
+                    height: { xs: 40, sm: 48 },
+                    borderRadius: "50%",
+                    bgcolor: "#FF9472",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 1.5,
+                  }}
+                >
+                <PhoneIcon sx={{ color: "#fff", fontSize: { xs: 20, sm: 24 } }} />
               </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  textAlign: "center",
-                  p: 2,
-                  borderRadius: 2,
-                  bgcolor: "rgba(255,255,255,0.7)",
-                  border: "1px solid rgba(255,181,161,0.4)",
-                  height: "100%",
-                  transition: "all 0.25s ease",
-                  "&:hover": { boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)", borderColor: "#FFB5A1" },
-                }}
-              >
-                <Box sx={{ width: 48, height: 48, borderRadius: "50%", bgcolor: "#FF9472", display: "flex", alignItems: "center", justifyContent: "center", mb: 1.5 }}>
-                  <EmailIcon sx={{ color: "#fff", fontSize: 24 }} />
-                </Box>
-                <CustomText sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase", letterSpacing: 0.8, mb: 0.5 }}>Email</CustomText>
-                <Link href="mailto:Info@Mrbrownbakery.Com" sx={{ fontSize: 14, fontWeight: 600, color: "#2c2c2c", textDecoration: "none", wordBreak: "break-all", "&:hover": { color: "#FF643A", textDecoration: "underline" }}}>Info@Mrbrownbakery.Com</Link>
+
+              <Box sx={{ flexGrow: 1 }}>
+                <CustomText
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#666",
+                    textTransform: "uppercase",
+                    letterSpacing: 0.8,
+                    mb: 0.5,
+                  }}
+                >
+                  Phone
+                </CustomText>
+
+                <Link
+                  href="tel:+917309032618"
+                  sx={{
+                    fontSize: { xs: 13, sm: 14 },
+                    fontWeight: 600,
+                    color: "#2c2c2c",
+                    textDecoration: "none",
+                    display: "block",
+                    "&:hover": {
+                      color: "#FF643A",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  +91 7309032618
+                </Link>
+
+                <Link
+                  href="tel:05224113205"
+                  sx={{
+                    fontSize: { xs: 13, sm: 14 },
+                    fontWeight: 600,
+                    color: "#2c2c2c",
+                    textDecoration: "none",
+                    display: "block",
+                    "&:hover": {
+                      color: "#FF643A",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  0522-4113205
+                </Link>
               </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "rgba(255,255,255,0.7)",
+                border: "1px solid rgba(255,181,161,0.4)",
+                width: "100%",
+                height: "100%",
+                minHeight: 220,
+                transition: "all 0.25s ease",
+                "&:hover": {
+                  boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)",
+                  borderColor: "#FFB5A1",
+                },
+              }}
+            >
               <Box
                 sx={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  bgcolor: "#FF9472",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
-                  textAlign: "center",
-                  p: 2,
-                  borderRadius: 2,
-                  bgcolor: "rgba(255,255,255,0.7)",
-                  border: "1px solid rgba(255,181,161,0.4)",
-                  height: "100%",
-                  transition: "all 0.25s ease",
-                  "&:hover": { boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)", borderColor: "#FFB5A1" },
+                  justifyContent: "center",
+                  mb: 1.5,
                 }}
               >
-                <Box sx={{ width: 48, height: 48, borderRadius: "50%", bgcolor: "#FF9472", display: "flex", alignItems: "center", justifyContent: "center", mb: 1.5 }}>
-                  <LocationOnIcon sx={{ color: "#fff", fontSize: 24 }} />
-                </Box>
-                <CustomText sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase", letterSpacing: 0.8, mb: 0.5 }}>Address</CustomText>
+                <EmailIcon sx={{ color: "#fff", fontSize: 24 }} />
+              </Box>
+
+              <Box sx={{ flexGrow: 1 }}>
+                <CustomText
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#666",
+                    textTransform: "uppercase",
+                    letterSpacing: 0.8,
+                    mb: 0.5,
+                  }}
+                >
+                  Email
+                </CustomText>
+
+                <Link
+                  href="mailto:Info@Mrbrownbakery.Com"
+                  sx={{
+                    fontSize: { xs: 13, sm: 14 },
+                    fontWeight: 600,
+                    color: "#2c2c2c",
+                    textDecoration: "none",
+                    wordBreak: "break-all",
+                    "&:hover": {
+                      color: "#FF643A",
+                      textDecoration: "underline",
+                    },
+                  }}
+                >
+                  Info@Mrbrownbakery.Com
+                </Link>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, sm: 4 }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                p: 2,
+                borderRadius: 2,
+                bgcolor: "rgba(255,255,255,0.7)",
+                border: "1px solid rgba(255,181,161,0.4)",
+                width: "100%",
+                height: "100%",
+                minHeight: 220,
+                transition: "all 0.25s ease",
+                "&:hover": {
+                  boxShadow: "0 8px 24px rgba(255, 148, 114, 0.15)",
+                  borderColor: "#FFB5A1",
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "50%",
+                  bgcolor: "#FF9472",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  mb: 1.5,
+                }}
+              >
+                <LocationOnIcon sx={{ color: "#fff", fontSize: 24 }} />
+              </Box>
+
+              <Box sx={{ flexGrow: 1 }}>
+                <CustomText
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: "#666",
+                    textTransform: "uppercase",
+                    letterSpacing: 0.8,
+                    mb: 0.5,
+                  }}
+                >
+                  Address
+                </CustomText>
+
                 <Link
                   href="https://www.google.com/maps/search/?api=1&query=B-35,+Sector-P,+Aliganj,+Lucknow,+UP+220024"
                   target="_blank"
                   rel="noopener noreferrer"
-                  sx={{ fontSize: 14, fontWeight: 600, color: "#2c2c2c", textDecoration: "none", "&:hover": { color: "#FF643A", textDecoration: "underline" } }}
+                  sx={{
+                    fontSize: { xs: 13, sm: 14 },
+                    fontWeight: 600,
+                    color: "#2c2c2c",
+                    textDecoration: "none",
+                    wordBreak: "break-word",
+                    "&:hover": {
+                      color: "#FF643A",
+                      textDecoration: "underline",
+                    },
+                  }}
                 >
                   B-35, Sector-P, Aliganj, Lucknow, UP 220024
                 </Link>
               </Box>
-            </Grid>
-          </Grid>
-
-          <Box sx={{ textAlign: "center", pt: 2, borderTop: "1px solid rgba(255,181,161,0.4)" }}>
-            <CustomText sx={{ fontSize: 12, fontWeight: 600, color: "#666", textTransform: "uppercase", letterSpacing: 1, mb: 2 }}>Follow us</CustomText>
-            <Box sx={{ display: "flex", justifyContent: "center", gap: 1.5, flexWrap: "wrap" }}>
-              <IconButton
-                component="a"
-                href="https://www.facebook.com/mrbrownbakery"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ bgcolor: "#1877F2", color: "#fff", "&:hover": { bgcolor: "#166FE5", transform: "scale(1.08)" }, transition: "all 0.2s ease" }}
-                aria-label="Facebook"
-              >
-                <FacebookIcon />
-              </IconButton>
-              <IconButton
-                component="a"
-                href="https://www.instagram.com/danbrobymrbrown/"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ bgcolor: "#E4405F", color: "#fff", "&:hover": { bgcolor: "#d62d4a", transform: "scale(1.08)" }, transition: "all 0.2s ease" }}
-                aria-label="Instagram"
-              >
-                <InstagramIcon />
-              </IconButton>
-              <IconButton
-                component="a"
-                href="https://www.twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ bgcolor: "#1DA1F2", color: "#fff", "&:hover": { bgcolor: "#0d8bd9", transform: "scale(1.08)" }, transition: "all 0.2s ease" }}
-                aria-label="Twitter"
-              >
-                <TwitterIcon />
-              </IconButton>
-              <IconButton
-                component="a"
-                href="https://www.youtube.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                sx={{ bgcolor: "#FF0000", color: "#fff", "&:hover": { bgcolor: "#cc0000", transform: "scale(1.08)" }, transition: "all 0.2s ease" }}
-                aria-label="YouTube"
-              >
-                <YouTubeIcon />
-              </IconButton>
             </Box>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       </Container>
 
       {/* GET IN TOUCH */}
-      <Box sx={{ textAlign: "center", mb: 3, px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
-        <CustomText sx={{ fontSize: { xs: 32, sm: 40, md: 48, lg: 60 }, fontWeight: 700, opacity: .15 }}>Get in touch</CustomText>
-        <CustomText sx={{ fontSize: { xs: 14, sm: 16, md: 17, lg: 18 }, maxWidth: { xs: "100%", sm: "90%", md: 600 }, mx: "auto", mt: -3, color: "#555" }}>
+      <Box sx={{ textAlign: "center", mb: 3, px: { xs: 0, sm: 3, md: 4, lg: 4 } }}>
+        <CustomText sx={{ fontSize: { xs: 28, sm: 40, md: 48, lg: 60 }, fontWeight: 700, opacity: .15 }}>Get in touch</CustomText>
+        <CustomText sx={{ fontSize: { xs: 13, sm: 16, md: 17, lg: 18 }, maxWidth: { xs: "100%", sm: "90%", md: 600 }, mx: "auto", mt: -3, color: "#555" }}>
           Reach out, and let's create a universe of possibilities together!
         </CustomText>
       </Box>
 
-      <Container  sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 } }}>
+      <Container sx={{ py: { xs: 3, sm: 4 }, px: { xs: 0, sm: 2, md: 3, lg: 2 }, maxWidth: "100%" }}>
         <Box sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           background: "linear-gradient(90deg,#FF9472,#FF8F6B)",
-          borderRadius: 4,
-          p: { xs: 3, sm: 3.5, md: 4, lg: 5 },
-          gap: { xs: 4, sm: 4, md: 3.5, lg: 4 }
+          borderRadius: { xs: 2, sm: 4 },
+          p: { xs: 2, sm: 3.5, md: 4, lg: 5 },
+          gap: { xs: 3, sm: 4, md: 3.5, lg: 4 }
         }}>
 
           {/* FORM */}
@@ -408,7 +494,16 @@ export const Contact = () => {
             </CustomText>
 
             <Grid container spacing={2}>
-              
+              <Grid size={{ xs: 12, md: 6 }}>
+                <input
+                  name="firstName"
+                  placeholder="First Name"
+                  value={formData.firstName}
+                  onChange={handleInputChange}
+                  style={inputStyle}
+                  required
+                />
+              </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
                 <input
                   name="lastName"
@@ -483,8 +578,8 @@ export const Contact = () => {
       </Container>
 
       {/* FAQ */}
-      <Container sx={{ py: 4, px: { xs: 2, md: 3, lg: 2 }, mb: 5 }}>
-        <CustomText align="center" sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 26, md: 28, lg: 32 }, mb: { xs: 4, sm: 4, md: 4, lg: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
+      <Container sx={{ py: { xs: 3, sm: 4 }, px: { xs: 0, sm: 2, md: 3, lg: 2 }, mb: { xs: 4, sm: 5 }, maxWidth: "100%" }}>
+        <CustomText align="center" sx={{ fontWeight: 700, fontSize: { xs: 20, sm: 26, md: 28, lg: 32 }, mb: { xs: 3, sm: 4 }, px: { xs: 0, sm: 0, md: 1, lg: 0 } }}>
           Frequently Asked Questions
         </CustomText>
 
