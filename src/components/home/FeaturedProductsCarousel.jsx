@@ -163,7 +163,29 @@ export const FeaturedProductsCarousel = () => {
     setLoadingCart(prev => new Set(prev).add(productId));
 
     try {
-      await addToCart(productId, 1, effectiveRate != null ? { rate: effectiveRate } : {});
+      // Create product snapshot for guest mode
+      // Save price as object/array format, and also save rate/mrp directly for easy access
+      const priceObj = product?.price && typeof product.price === "object" && !Array.isArray(product.price) 
+        ? product.price 
+        : (Array.isArray(product?.price) ? product.price : null);
+      const productSnapshot = {
+        name: product?.name || product?.title,
+        image: product?.image,
+        price: priceObj, // Save original price object/array if available
+        weight: product?.weight || null,
+        mrp: product?.mrp != null ? Number(product.mrp) : (priceObj?.mrp != null ? Number(priceObj.mrp) : null),
+        rate: product?.rate != null ? Number(product.rate) : (effectiveRate != null ? Number(effectiveRate) : (priceObj?.rate != null ? Number(priceObj.rate) : null)),
+        veg: product?.veg,
+        courier: product?.courier,
+      };
+      await addToCart(productId, 1, effectiveRate != null ? { 
+        rate: effectiveRate,
+        weight: product?.weight || null,
+        productSnapshot: productSnapshot
+      } : {
+        weight: product?.weight || null,
+        productSnapshot: productSnapshot
+      });
       setToast({
         open: true,
         message: "Product added to cart successfully!",

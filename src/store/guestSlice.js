@@ -55,6 +55,10 @@ const guestSlice = createSlice({
       const existing = state.guestCart.find((i) => i.productId === productId && (i.weight || "") === (weight || ""));
       if (existing) {
         existing.quantity = (existing.quantity || 1) + (quantity || 1);
+        // Update productSnapshot if provided and existing one is null
+        if (productSnapshot && !existing.productSnapshot) {
+          existing.productSnapshot = productSnapshot;
+        }
       } else {
         state.guestCart.push({
           productId,

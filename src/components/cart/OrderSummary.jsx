@@ -186,32 +186,61 @@ export const OrderSummary = ({
               <CircularProgress size={32} />
             </Box>
           )}
-          {coupons.map((coupon) => (
-            <Box
-              key={coupon.id}
-              onClick={() => {
-                if (applyingCoupon) return;
-                handleCouponSelect(coupon.id);
-              }}
-              sx={{
-                p: 2,
-                mb: 1.5,
-                borderRadius: 1.5,
-                border: "1px solid",
-                borderColor: selectedCoupon === coupon.id ? "#5D4037" : "#e0e0e0",
-                bgcolor: selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.08)" : "#fff",
-                cursor: applyingCoupon ? "default" : "pointer",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  bgcolor: applyingCoupon ? undefined : selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.12)" : "rgba(93, 64, 55, 0.04)",
-                  borderColor: applyingCoupon ? undefined : "#5D4037",
-                },
-              }}
-            >
-              <CustomText sx={{ fontWeight: 600, fontSize: 15, color: "#3E2723" }}>{coupon.couponCode ?? coupon.code}</CustomText>
-              <CustomText sx={{ fontSize: 13, color: "#666", display: "block", mt: 0.25 }}>{coupon.description}</CustomText>
-            </Box>
-          ))}
+          {coupons.map((coupon) => {
+            // Calculate discount amount for guest mode
+            let discountAmount = 0;
+            let discountText = "";
+            if (isGuest && selectedCoupon === coupon.id && finalSubtotal > 0) {
+              if (coupon.discountType === "ITEM_DISCOUNT_PERCENTAGE" && coupon.discountPercentage) {
+                discountAmount = (finalSubtotal * coupon.discountPercentage) / 100;
+                discountText = `Save ₹${discountAmount.toFixed(2)}`;
+              } else if (coupon.discountType === "ITEM_DISCOUNT_AMOUNT" && coupon.discountAmount) {
+                discountAmount = Math.min(coupon.discountAmount, finalSubtotal);
+                discountText = `Save ₹${discountAmount.toFixed(2)}`;
+              }
+            }
+            
+            return (
+              <Box
+                key={coupon.id}
+                onClick={() => {
+                  if (applyingCoupon) return;
+                  handleCouponSelect(coupon.id);
+                }}
+                sx={{
+                  p: 2,
+                  mb: 1.5,
+                  borderRadius: 1.5,
+                  border: "1px solid",
+                  borderColor: selectedCoupon === coupon.id ? "#5D4037" : "#e0e0e0",
+                  bgcolor: selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.08)" : "#fff",
+                  cursor: applyingCoupon ? "default" : "pointer",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bgcolor: applyingCoupon ? undefined : selectedCoupon === coupon.id ? "rgba(93, 64, 55, 0.12)" : "rgba(93, 64, 55, 0.04)",
+                    borderColor: applyingCoupon ? undefined : "#5D4037",
+                  },
+                }}
+              >
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                  <Box sx={{ flex: 1 }}>
+                    <CustomText sx={{ fontWeight: 600, fontSize: 15, color: "#3E2723" }}>{coupon.couponCode ?? coupon.code}</CustomText>
+                    <CustomText sx={{ fontSize: 13, color: "#666", display: "block", mt: 0.25 }}>{coupon.description}</CustomText>
+                  </Box>
+                  {isGuest && selectedCoupon === coupon.id && discountText && (
+                    <Box sx={{ ml: 2, textAlign: "right" }}>
+                      <CustomText sx={{ fontSize: 14, fontWeight: 700, color: "#16a34a" }}>
+                        {discountText}
+                      </CustomText>
+                      <CustomText sx={{ fontSize: 12, color: "#666", mt: 0.25 }}>
+                        New Total: ₹{(finalSubtotal - discountAmount).toFixed(2)}
+                      </CustomText>
+                    </Box>
+                  )}
+                </Box>
+              </Box>
+            );
+          })}
           {couponError && (
             <CustomText sx={{ fontSize: 12, color: "#d32f2f", mt: 1, display: "block" }}>{couponError}</CustomText>
           )}
@@ -236,31 +265,38 @@ export const OrderSummary = ({
             onClick={() => setCouponDialogOpen(false)}
             sx={{ textTransform: "none", color: "#666" }}
           >
-            Cancel
+            {isGuest ? "Close" : "Cancel"}
           </Button>
-          <Button
-            variant="contained"
-            disabled={!selectedCoupon || applyingCoupon || !onApplyCouponWithCode}
-            onClick={async () => {
-              const selected = coupons.find((c) => c.id === selectedCoupon);
-              const code = selected ? (selected.couponCode ?? selected.code) : null;
-              if (!code) return;
-              try {
-                await onApplyCouponWithCode(code);
-                setCouponDialogOpen(false);
-              } catch (_) {
-                // couponError set in parent; dialog stays open
-              }
-            }}
-            sx={{
-              textTransform: "none",
-              bgcolor: "#5D4037",
-              fontWeight: 600,
-              "&:hover": { bgcolor: "#3E2723" },
-            }}
-          >
-            Apply
-          </Button>
+          {!isGuest && (
+            <Button
+              variant="contained"
+              disabled={!selectedCoupon || applyingCoupon || !onApplyCouponWithCode}
+              onClick={async () => {
+                const selected = coupons.find((c) => c.id === selectedCoupon);
+                const code = selected ? (selected.couponCode ?? selected.code) : null;
+                if (!code) return;
+                try {
+                  await onApplyCouponWithCode(code);
+                  setCouponDialogOpen(false);
+                } catch (_) {
+                  // couponError set in parent; dialog stays open
+                }
+              }}
+              sx={{
+                textTransform: "none",
+                bgcolor: "#5D4037",
+                fontWeight: 600,
+                "&:hover": { bgcolor: "#3E2723" },
+              }}
+            >
+              Apply
+            </Button>
+          )}
+          {isGuest && selectedCoupon && (
+            <CustomText sx={{ fontSize: 12, color: "#666", fontStyle: "italic" }}>
+              Login to apply coupon
+            </CustomText>
+          )}
         </DialogActions>
       </Dialog>
 
@@ -274,18 +310,22 @@ export const OrderSummary = ({
             <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666", flexShrink: 0 }}>Item(s) Subtotal:</CustomText>
             <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333", flexShrink: 0 }}>₹{Number(finalSubtotal).toFixed(2)}</CustomText>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Packing Charges:</CustomText>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(packingCharges).toFixed(2)}</CustomText>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Delivery Charges:</CustomText>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(shipping).toFixed(2)}</CustomText>
-          </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Taxes and Charges:</CustomText>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(taxTotal).toFixed(2)}</CustomText>
-          </Box>
+          {!isGuest && (
+            <>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Packing Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(packingCharges).toFixed(2)}</CustomText>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Delivery Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(shipping).toFixed(2)}</CustomText>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Taxes and Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(taxTotal).toFixed(2)}</CustomText>
+              </Box>
+            </>
+          )}
           <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
             <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Discount:</CustomText>
             <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#16a34a" }}>-₹{Number(discount).toFixed(2)}</CustomText>

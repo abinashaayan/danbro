@@ -31,7 +31,10 @@ const getItemImage = (item) =>
   blankImage;
 
 const getItemName = (item) => item?.name || item?.product?.name || "Product";
-const getItemUnit = (item) => item?.weight ?? item?.product?.weight ?? "N/A";
+const getItemUnit = (item) => {
+  const weight = item?.weight ?? item?.product?.weight;
+  return weight != null && weight !== "" ? weight : null;
+};
 
 export const CartItem = ({
   item,
@@ -79,9 +82,11 @@ export const CartItem = ({
             <CustomText sx={{ fontSize: { xs: 13, sm: 14, md: 15 }, fontWeight: 600, color: "#2c2c2c", display: "block", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {getItemName(item)}
             </CustomText>
-            <CustomText sx={{ fontSize: { xs: 11, sm: 12 }, color: "#666", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              ({getItemUnit(item)})
-            </CustomText>
+            {getItemUnit(item) && (
+              <CustomText sx={{ fontSize: { xs: 11, sm: 12 }, color: "#666", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                ({getItemUnit(item)})
+              </CustomText>
+            )}
           </Box>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, flexShrink: 0 }}>
@@ -142,9 +147,11 @@ export const CartItem = ({
                 <CustomText sx={{ fontSize: { xs: 16, md: 18 }, fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
                   {getItemName(item)}
                 </CustomText>
-                <CustomText sx={{ fontSize: { xs: 12, md: 14 }, color: "#666", mb: { xs: 1, md: 1.5 } }}>
-                  Weight: {getItemUnit(item)}
-                </CustomText>
+                {getItemUnit(item) && (
+                  <CustomText sx={{ fontSize: { xs: 12, md: 14 }, color: "#666", mb: { xs: 1, md: 1.5 } }}>
+                    Weight: {getItemUnit(item)}
+                  </CustomText>
+                )}
                 <CustomText sx={{ fontSize: { xs: 18, md: 20 }, fontWeight: 700, color: "var(--themeColor)" }}>
                   ₹{getItemPrice(item)}
                 </CustomText>

@@ -1,7 +1,27 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Grid, Card, CardContent, Button, IconButton, CircularProgress, Alert, Typography, useTheme, useMediaQuery } from "@mui/material";
-import { Favorite as FavoriteIcon } from "@mui/icons-material";
+import { 
+  Box, 
+  Grid, 
+  Card, 
+  CardContent, 
+  Button, 
+  IconButton, 
+  CircularProgress, 
+  Alert, 
+  Typography, 
+  useTheme, 
+  useMediaQuery,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Avatar,
+} from "@mui/material";
+import { Favorite as FavoriteIcon, Visibility as VisibilityIcon } from "@mui/icons-material";
 import { CustomCarousel, CustomCarouselArrow } from "../comman/CustomCarousel";
 import { CustomText } from "../comman/CustomText";
 import { getWishlist, removeFromWishlist } from "../../utils/wishlist";
@@ -125,7 +145,7 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
             fontSize: { xs: 20, md: 32 },
             fontWeight: 700,
             color: "var(--themeColor)",
-            mb: { xs: 2, md: 2 },
+            mb: { xs: 1, md: 1 },
             textTransform: "none",
           }}
         >
@@ -140,122 +160,122 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
 
   const renderCard = (item) => (
     <Card
-                sx={{
-                  borderRadius: { xs: 2, md: 2.5 },
-                  boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
-                  overflow: "hidden",
-                  transition: "all 0.3s ease",
-                  position: "relative",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  backgroundColor: "#fff",
-                  border: "1px solid #f0f0f0",
-                  maxWidth: { xs: "100%", sm: "280px", md: "260px" },
-                  mx: "auto",
-                  "&:hover": {
-                    transform: "translateY(-6px)",
-                    boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
-                    borderColor: "#e0e0e0",
-                    "& .product-image": {
-                      transform: "scale(1.05)",
-                    },
-                  },
-                }}
-              >
-                <Box sx={{ position: "relative", overflow: "hidden", backgroundColor: "#f8f8f8", }}>
-                  <Box className="product-image" component="img" src={item?.image} alt={item?.name} sx={{ width: "100%", height: { xs: 150, sm: 170, md: 190 }, objectFit: "cover", transition: "transform 0.4s ease", }} />
-                  <IconButton
-                    onClick={() => handleRemoveFromWishlist(item?.productId)}
-                    disabled={removingId === item?.productId}
-                    sx={{
-                      position: "absolute",
-                      top: { xs: 8, md: 10 },
-                      right: { xs: 8, md: 10 },
-                      backgroundColor: "rgba(255,255,255,0.95)",
-                      padding: { xs: 0.75, md: 0.875 },
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-                      transition: "all 0.3s ease",
-                      "&:hover": {
-                        backgroundColor: "#fff",
-                        transform: "scale(1.1)",
-                        boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
-                      },
-                      "&:disabled": {
-                        opacity: 0.6,
-                      },
-                    }}
-                  >
-                    {removingId === item?.productId ? (
-                      <CircularProgress size={18} sx={{ color: "#f44336" }} />
-                    ) : (
-                      <FavoriteIcon sx={{ color: "#f44336", fontSize: { xs: 18, md: 22 } }} />
-                    )}
-                  </IconButton>
-                </Box>
-                <CardContent sx={{ p: { xs: 1.75, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column", backgroundColor: "#fff", }}>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      fontWeight: 600,
-                      fontSize: { xs: 14, md: 15 },
-                      lineHeight: 1.4,
-                      color: "#2c2c2c",
-                      minHeight: { xs: "1.6em", md: "3em" },
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      textTransform: "none",
-                    }}
-                    style={{ textTransform: "none" }}
-                  >
-                    {item?.name}
-                  </Typography>
-                  {item?.weight && (
-                    <CustomText variant="body2" sx={{ color: "#666", mb: 1, fontSize: { xs: 12, md: 13 }, fontWeight: 400, textTransform: "capitalize", }}>
-                      {item?.weight}
-                    </CustomText>
-                  )}
-                  <Box >
-                    <CustomText variant="h6" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: 1.5, fontSize: { xs: 16, md: 18 }, textTransform: "none", }}>
-                      {item?.price}
-                    </CustomText>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      onClick={() => {
-                        const productId = item?.productId || item?.id;
-                        if (productId) {
-                          navigate(`/products/${productId}`);
-                        }
-                      }}
-                      sx={{
-                        backgroundColor: "#FFB5A1",
-                        color: "#000",
-                        textTransform: "none",
-                        borderRadius: 2,
-                        fontWeight: 600,
-                        fontSize: { xs: 13, md: 14 },
-                        py: 1,
-                        boxShadow: "0 2px 8px rgba(255,181,161,0.25)",
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                          backgroundColor: "#F2709C",
-                          transform: "translateY(-2px)",
-                          boxShadow: "0 4px 12px rgba(242,112,156,0.35)",
-                        },
-                      }}
-                    >
-                      View Product
-                    </Button>
-                  </Box>
-                </CardContent>
-              </Card>
+      sx={{
+        borderRadius: { xs: 2, md: 2.5 },
+        boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+        overflow: "hidden",
+        transition: "all 0.3s ease",
+        position: "relative",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#fff",
+        border: "1px solid #f0f0f0",
+        maxWidth: { xs: "100%", sm: "280px", md: "260px" },
+        mx: "auto",
+        "&:hover": {
+          transform: "translateY(-6px)",
+          boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+          borderColor: "#e0e0e0",
+          "& .product-image": {
+            transform: "scale(1.05)",
+          },
+        },
+      }}
+    >
+      <Box sx={{ position: "relative", overflow: "hidden", backgroundColor: "#f8f8f8", }}>
+        <Box className="product-image" component="img" src={item?.image} alt={item?.name} sx={{ width: "100%", height: { xs: 150, sm: 170, md: 190 }, objectFit: "cover", transition: "transform 0.4s ease", }} />
+        <IconButton
+          onClick={() => handleRemoveFromWishlist(item?.productId)}
+          disabled={removingId === item?.productId}
+          sx={{
+            position: "absolute",
+            top: { xs: 8, md: 10 },
+            right: { xs: 8, md: 10 },
+            backgroundColor: "rgba(255,255,255,0.95)",
+            padding: { xs: 0.75, md: 0.875 },
+            boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: "#fff",
+              transform: "scale(1.1)",
+              boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+            },
+            "&:disabled": {
+              opacity: 0.6,
+            },
+          }}
+        >
+          {removingId === item?.productId ? (
+            <CircularProgress size={18} sx={{ color: "#f44336" }} />
+          ) : (
+            <FavoriteIcon sx={{ color: "#f44336", fontSize: { xs: 18, md: 22 } }} />
+          )}
+        </IconButton>
+      </Box>
+      <CardContent sx={{ p: { xs: 1.75, md: 2 }, flexGrow: 1, display: "flex", flexDirection: "column", backgroundColor: "#fff", }}>
+        <Typography
+          variant="body1"
+          sx={{
+            fontWeight: 600,
+            fontSize: { xs: 14, md: 15 },
+            lineHeight: 1.4,
+            color: "#2c2c2c",
+            minHeight: { xs: "1.6em", md: "3em" },
+            display: "-webkit-box",
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+            textTransform: "none",
+          }}
+          style={{ textTransform: "none" }}
+        >
+          {item?.name}
+        </Typography>
+        {item?.weight && (
+          <CustomText variant="body2" sx={{ color: "#666", mb: 1, fontSize: { xs: 12, md: 13 }, fontWeight: 400, textTransform: "capitalize", }}>
+            {item?.weight}
+          </CustomText>
+        )}
+        <Box >
+          <CustomText variant="h6" sx={{ color: "var(--themeColor)", fontWeight: 700, mb: 1.5, fontSize: { xs: 16, md: 18 }, textTransform: "none", }}>
+            {item?.price}
+          </CustomText>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={() => {
+              const productId = item?.productId || item?.id;
+              if (productId) {
+                navigate(`/products/${productId}`);
+              }
+            }}
+            sx={{
+              backgroundColor: "#FFB5A1",
+              color: "#000",
+              textTransform: "none",
+              borderRadius: 2,
+              fontWeight: 600,
+              fontSize: { xs: 13, md: 14 },
+              py: 1,
+              boxShadow: "0 2px 8px rgba(255,181,161,0.25)",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#F2709C",
+                transform: "translateY(-2px)",
+                boxShadow: "0 4px 12px rgba(242,112,156,0.35)",
+              },
+            }}
+          >
+            View Product
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
   );
 
   return (
-    <Box sx={{ mb: 5, mt: responsivePadding, p: responsivePadding, pt: responsivePadding }}>
+    <Box sx={{ mb: 1, mt: responsivePadding, p: responsivePadding, pt: responsivePadding }}>
       <CustomText variant="h4" sx={{ fontSize: { xs: 20, md: 32 }, fontWeight: 700, color: "var(--themeColor)", mb: { xs: 2, md: 2 }, }}>
         My Wishlist
       </CustomText>
@@ -304,13 +324,151 @@ export const WishlistTab = ({ onRemoveFromWishlist }) => {
           </CustomCarousel>
         </Box>
       ) : (
-        <Grid container spacing={{ xs: 2, md: 3 }} sx={{ justifyContent: { xs: "flex-start", md: "center" } }}>
-          {wishlistItems?.map((item) => (
-            <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
-              {renderCard(item)}
-            </Grid>
-          ))}
-        </Grid>
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", overflowX: "auto" }}>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Product</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Price</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Weight</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {wishlistItems.map((item) => (
+                <TableRow
+                  key={item?.id}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#fafafa",
+                    },
+                    "&:last-child td, &:last-child th": {
+                      border: 0,
+                    },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <Avatar
+                        src={item?.image}
+                        alt={item?.name}
+                        variant="rounded"
+                        sx={{
+                          width: { xs: 60, md: 80 },
+                          height: { xs: 60, md: 80 },
+                          borderRadius: 1.5,
+                          cursor: "pointer",
+                          "&:hover": {
+                            opacity: 0.8,
+                          },
+                        }}
+                        onClick={() => {
+                          const productId = item?.productId || item?.id;
+                          if (productId) {
+                            navigate(`/products/${productId}`);
+                          }
+                        }}
+                      />
+                      <Box>
+                        <CustomText
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: { xs: 13, md: 14 },
+                            color: "#2c2c2c",
+                            cursor: "pointer",
+                            "&:hover": {
+                              color: "var(--themeColor)",
+                            },
+                            textTransform: "none",
+                          }}
+                          onClick={() => {
+                            const productId = item?.productId || item?.id;
+                            if (productId) {
+                              navigate(`/products/${productId}`);
+                            }
+                          }}
+                        >
+                          {item?.name}
+                        </CustomText>
+                        {item?.category && (
+                          <CustomText sx={{ fontSize: { xs: 11, md: 12 }, color: "#666", mt: 0.5, textTransform: "none" }}>
+                            {item.category}
+                          </CustomText>
+                        )}
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <CustomText sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 14, md: 16 }, textTransform: "none" }}>
+                      {item?.price}
+                    </CustomText>
+                    {item?.mrp && item?.rate && Number(item.mrp) > Number(item.rate) && (
+                      <CustomText
+                        sx={{
+                          fontSize: { xs: 11, md: 12 },
+                          color: "#999",
+                          textDecoration: "line-through",
+                          display: "block",
+                          textTransform: "none",
+                        }}
+                      >
+                        ₹{Number(item.mrp).toFixed(2)}
+                      </CustomText>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666", textTransform: "none" }}>
+                      {item?.weight || "—"}
+                    </CustomText>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 1 }}>
+                      <IconButton
+                        size="small"
+                        onClick={() => {
+                          const productId = item?.productId || item?.id;
+                          if (productId) {
+                            navigate(`/products/${productId}`);
+                          }
+                        }}
+                        sx={{
+                          color: "var(--themeColor)",
+                          "&:hover": {
+                            backgroundColor: "rgba(95, 41, 48, 0.1)",
+                          },
+                        }}
+                        title="View Product"
+                      >
+                        <VisibilityIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
+                      </IconButton>
+                      <IconButton
+                        size="small"
+                        onClick={() => handleRemoveFromWishlist(item?.productId)}
+                        disabled={removingId === item?.productId}
+                        sx={{
+                          color: "#f44336",
+                          "&:hover": {
+                            backgroundColor: "rgba(244, 67, 54, 0.1)",
+                          },
+                          "&:disabled": {
+                            opacity: 0.6,
+                          },
+                        }}
+                        title="Remove from Wishlist"
+                      >
+                        {removingId === item?.productId ? (
+                          <CircularProgress size={18} sx={{ color: "#f44336" }} />
+                        ) : (
+                          <FavoriteIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
+                        )}
+                      </IconButton>
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       )}
     </Box>
   );

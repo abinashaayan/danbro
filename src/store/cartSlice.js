@@ -17,25 +17,53 @@ export const loadCartItems = createAsyncThunk(
         const rawItems = response?.data && Array.isArray(response.data) ? response.data : [];
         const displayItems = [];
         for (const it of rawItems) {
-          let name, images, price, lineTotal, displayWeight = it.weight ?? it.productSnapshot?.weight ?? "N/A";
+          let name, images, price, lineTotal, displayWeight = it.weight ?? it.productSnapshot?.weight ?? null;
           const qty = Number(it.quantity) || 1;
           const itemWeight = it.weight ?? it.productSnapshot?.weight ?? null;
           // Guest cart: use only productSnapshot from localStorage – no product API calls
-          if (it.productSnapshot && (it.productSnapshot.name != null || it.productSnapshot.price != null)) {
+          if (it.productSnapshot && (it.productSnapshot.name != null || it.productSnapshot.price != null || it.productSnapshot.rate != null)) {
             const p = it.productSnapshot;
-            if (displayWeight === "N/A" && p.weight) displayWeight = p.weight;
-            const priceArr = Array.isArray(p.price) ? p.price : [];
-            const matchWeight = (pw) => (pw || "").toString().trim().toLowerCase();
-            const matchedPrice = itemWeight && priceArr.length > 0
-              ? priceArr.find((pr) => matchWeight(pr.weight) === matchWeight(itemWeight))
-              : null;
-            const firstPrice = matchedPrice || (priceArr[0] || null);
-            const rate = firstPrice != null
-              ? (Number(firstPrice.rate) || Number(firstPrice.mrp) || 0)
-              : (typeof p.price === "number" ? p.price : 0);
+            // Only set displayWeight if it's not null/empty
+            if (!displayWeight && p.weight != null && p.weight !== "") {
+              displayWeight = p.weight;
+            }
+            
+            // Handle different price formats
+            let rate = 0;
+            let mrp = 0;
+            
+            // Priority 1: Use rate and mrp directly from snapshot (most reliable)
+            if (p.rate != null || p.mrp != null) {
+              rate = Number(p.rate) || Number(p.mrp) || 0;
+              mrp = Number(p.mrp) || Number(p.rate) || 0;
+            }
+            // Priority 2: Use price array (for products with multiple weight options)
+            else if (Array.isArray(p.price) && p.price.length > 0) {
+              const priceArr = p.price;
+              const matchWeight = (pw) => (pw || "").toString().trim().toLowerCase();
+              const matchedPrice = itemWeight && priceArr.length > 0
+                ? priceArr.find((pr) => matchWeight(pr.weight) === matchWeight(itemWeight))
+                : null;
+              const firstPrice = matchedPrice || priceArr[0];
+              if (firstPrice) {
+                rate = Number(firstPrice.rate) || Number(firstPrice.mrp) || 0;
+                mrp = Number(firstPrice.mrp) || Number(firstPrice.rate) || 0;
+              }
+            }
+            // Priority 3: Use price object (single price object)
+            else if (p.price && typeof p.price === "object" && !Array.isArray(p.price)) {
+              rate = Number(p.price.rate) || Number(p.price.mrp) || 0;
+              mrp = Number(p.price.mrp) || Number(p.price.rate) || 0;
+            }
+            // Priority 4: Use price as number
+            else if (typeof p.price === "number") {
+              rate = p.price;
+              mrp = p.price;
+            }
+            
             name = p.name || "Product";
             images = Array.isArray(p.images) ? p.images : (p.image ? [{ url: p.image }] : []);
-            price = firstPrice ? { rate: Number(firstPrice.rate) || Number(firstPrice.mrp) || 0, mrp: Number(firstPrice.mrp) || Number(firstPrice.rate) || 0 } : { rate, mrp: rate };
+            price = { rate, mrp };
             lineTotal = rate * qty;
           } else {
             // No productSnapshot: use fallback only (no API call in guest mode)

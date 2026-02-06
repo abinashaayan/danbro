@@ -122,7 +122,8 @@ export const UserProfile = () => {
       try {
         const res = await getMyOrders(orderHistoryPage, orderHistoryLimit);
         const list = res?.data ?? res?.orders ?? res?.result ?? [];
-        const count = res?.count ?? res?.total ?? (Array.isArray(list) ? list.length : 0);
+        // Use pagination.total from API response, fallback to count or list length
+        const count = res?.pagination?.total ?? res?.count ?? res?.total ?? (Array.isArray(list) ? list.length : 0);
         setOrderHistoryList(Array.isArray(list) ? list : []);
         setOrderHistoryTotal(Number(count) || 0);
       } catch (e) {
@@ -417,8 +418,9 @@ export const UserProfile = () => {
                 position: "sticky",
                 top: { md: 96, lg: 110 },
                 alignSelf: "flex-start",
-                maxHeight: "calc(100vh - 120px)",
-                overflowY: "auto",
+                height: "calc(100vh - 120px)",
+                overflowY: "hidden",
+                overflowX: "hidden",
               }}
             >
               <ProfileSidebar
@@ -463,6 +465,9 @@ export const UserProfile = () => {
               width: { xs: "100%", md: "auto" },
               ml: { xs: 0, md: 2 },
               position: "relative",
+              maxHeight: { md: "calc(100vh - 120px)" },
+              overflowY: { md: "auto" },
+              overflowX: "hidden",
             }}
           >
             <Box sx={{ width: "100%" }}>

@@ -12,9 +12,17 @@ import {
   IconButton,
   Pagination,
   CircularProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import CloseIcon from "@mui/icons-material/Close";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const DEFAULT_LIMIT = 5;
 
@@ -57,7 +65,7 @@ export const OrderHistoryTab = ({
     return list.map((o) => {
       const id = o?.orderId || o?._id || o?.id || "—";
       const createdAt = o?.createdAt || o?.created_at || o?.date;
-      const itemsCount = Array.isArray(o?.items) ? o.items.length : (o?.itemsCount || 0);
+      const itemsCount = Array.isArray(o?.items) ? o?.items.length : (o?.itemsCount || 0);
       const total =
         o?.total_charges ??
         o?.totalAmount ??
@@ -123,101 +131,108 @@ export const OrderHistoryTab = ({
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
           <CircularProgress sx={{ color: "var(--themeColor)" }} />
         </Box>
+      ) : normalizedOrders.length === 0 ? (
+        <Box sx={{ textAlign: "center", py: 8 }}>
+          <CustomText sx={{ color: "#666", fontSize: 14 }}>
+            No orders found.
+          </CustomText>
+        </Box>
       ) : (
         <>
-      <Box sx={{ maxHeight: { xs: "70vh", md: "68vh" }, overflowY: "auto", pr: 1, }}>
-        <Grid container spacing={{ xs: 2, md: 3 }}>
-          {normalizedOrders.map((o, idx) => (
-            <Grid size={{ xs: 12 }} key={`${o.idLabel}-${idx}`}>
-              <Card sx={{ borderRadius: 3, boxShadow: "0 4px 20px rgba(0,0,0,0.08)", transition: "all 0.3s ease", "&:hover": { transform: "translateY(-3px)", boxShadow: "0 8px 30px rgba(0,0,0,0.12)", }, }}>
-                <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 2 }}>
-                    <Box>
-                      <CustomText variant="h6" sx={{ fontWeight: 700, color: "var(--themeColor)", mb: 1 }}>
-                        {o.idLabel}
+          <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", maxHeight: { xs: "62vh", md: "60vh" }, overflowY: "auto" }}>
+            <Table sx={{ minWidth: 650 }}>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                  <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Order ID</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Date</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Items</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Total</TableCell>
+                  <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Status</TableCell>
+                  <TableCell align="center" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {normalizedOrders.map((o, idx) => (
+                  <TableRow
+                    key={`${o?.idLabel}-${idx}`}
+                    sx={{
+                      "&:hover": {
+                        backgroundColor: "#fafafa",
+                      },
+                      "&:last-child td, &:last-child th": {
+                        border: 0,
+                      },
+                    }}
+                  >
+                    <TableCell>
+                      <CustomText sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 13, md: 14 } }}>
+                        {o?.idLabel}
                       </CustomText>
-                      <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
-                        Date: {o.dateLabel}
+                    </TableCell>
+                    <TableCell>
+                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                        {o?.dateLabel}
                       </CustomText>
-                      <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
-                        Items: {o.itemsCount}
+                    </TableCell>
+                    <TableCell>
+                      <CustomText sx={{ fontSize: { xs: 12, md: 13 }, color: "#666" }}>
+                        {o?.itemsCount || 0} item{o?.itemsCount !== 1 ? "s" : ""}
                       </CustomText>
-                      {o.subtotalLabel && (
-                        <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
-                          Subtotal: {o.subtotalLabel}
-                        </CustomText>
-                      )}
-                      {o.taxLabel && (
-                        <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
-                          Tax: {o.taxLabel}
-                        </CustomText>
-                      )}
-                      {o.discountLabel && (
-                        <CustomText variant="body2" sx={{ color: "#666", mb: 0.5 }}>
-                          Discount: {o.discountLabel}
-                        </CustomText>
-                      )}
-                      <CustomText variant="body2" sx={{ color: "#666", fontWeight: 600, mt: 1 }}>
-                        Total: {o.totalLabel}
+                    </TableCell>
+                    <TableCell>
+                      <CustomText sx={{ fontWeight: 600, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>
+                        {o?.totalLabel}
                       </CustomText>
-                    </Box>
-                    <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
+                    </TableCell>
+                    <TableCell>
                       <Box
                         sx={{
                           display: "inline-block",
-                          px: 2,
+                          px: 1.5,
                           py: 0.5,
                           borderRadius: 2,
-                          backgroundColor: o.statusColor,
+                          backgroundColor: o?.statusColor,
                           color: "#fff",
                           fontWeight: 600,
-                          fontSize: 12,
-                          mb: 2,
+                          fontSize: { xs: 11, md: 12 },
                         }}
                       >
-                        {o.statusLabel}
+                        {o?.statusLabel}
                       </Box>
-                      <Box>
-                        <Button
-                          onClick={() => handleOpen(o.raw)}
-                          variant="contained"
-                          size="small"
-                          sx={{
-                            backgroundColor: "#FFB5A1",
-                            color: "black",
-                            textTransform: "none",
-                            borderRadius: 2,
-                            fontWeight: 600,
-                            px: 3,
-                            "&:hover": {
-                              backgroundColor: "#F2709C",
-                            },
-                          }}
-                        >
-                          View Details
-                        </Button>
-                      </Box>
-                    </Box>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      {totalPages > 1 && (
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 3, pb: 2 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            color="primary"
-            sx={{
-              "& .MuiPaginationItem-root": { fontWeight: 600 },
-            }}
-          />
-        </Box>
-      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        size="small"
+                        onClick={() => handleOpen(o?.raw)}
+                        sx={{
+                          color: "var(--themeColor)",
+                          "&:hover": {
+                            backgroundColor: "rgba(95, 41, 48, 0.1)",
+                          },
+                        }}
+                        title="View Details"
+                      >
+                        <VisibilityIcon sx={{ fontSize: { xs: 18, md: 20 } }} />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          {totalPages > 1 && (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 3, pb: 2 }}>
+              <Pagination
+                count={totalPages}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+                sx={{
+                  "& .MuiPaginationItem-root": { fontWeight: 600 },
+                }}
+              />
+            </Box>
+          )}
         </>
       )}
 
