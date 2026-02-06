@@ -11,8 +11,16 @@ import {
   DialogContent,
   Divider,
   IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Avatar,
 } from "@mui/material";
-import { LocalShipping as LocalShippingIcon, LocalOffer as LocalOfferIcon } from "@mui/icons-material";
+import { LocalShipping as LocalShippingIcon } from "@mui/icons-material";
 import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 import { CustomText } from "../comman/CustomText";
@@ -106,177 +114,158 @@ export const DashboardTab = ({ favoriteItems, setActiveTab, isMobile, userProfil
         </CustomText>
       </Box>
 
-      <Grid container spacing={{ xs: 2, md: 3 }}>
-        <Grid size={{ xs: 12, sm: 6 }}>
-          <Card
+      <Box sx={{ width: "100%", mb: 3 }}>
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <LocalShippingIcon sx={{ fontSize: { xs: 28, md: 32 }, color: "var(--themeColor)", mr: 1.5 }} />
+            <Box>
+              <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
+                Recent Order
+              </CustomText>
+              {ordersLoading ? (
+                <CustomText variant="body2" sx={{ color: "#666", display: "flex", alignItems: "center", gap: 1 }}>
+                  <CircularProgress size={14} />
+                  Loading...
+                </CustomText>
+              ) : (
+                <CustomText variant="body2" sx={{ color: "#666" }}>
+                  Order ID: {recentOrder?.id || "—"}
+                </CustomText>
+              )}
+            </Box>
+          </Box>
+          <Button
+            onClick={() => setOrderDetailsOpen(true)}
+            disabled={!recentOrderRaw}
+            size="small"
+            variant="contained"
             sx={{
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                transform: "translateY(-5px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-              },
+              backgroundColor: "#FFB5A1",
+              color: "black",
+              textTransform: "none",
+              borderRadius: 2,
+              fontWeight: 'bold',
             }}
           >
-            <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
-                <LocalShippingIcon sx={{ fontSize: { xs: 28, md: 32 }, color: "var(--themeColor)", mr: 1.5 }} />
-                <Box>
-                  <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
-                    Recent Order
-                  </CustomText>
-                  {ordersLoading ? (
-                    <CustomText variant="body2" sx={{ color: "#666", display: "flex", alignItems: "center", gap: 1 }}>
-                      <CircularProgress size={14} />
-                      Loading...
-                    </CustomText>
-                  ) : (
-                    <CustomText variant="body2" sx={{ color: "#666" }}>
-                      Order ID: {recentOrder?.id || "—"}
-                    </CustomText>
-                  )}
-                </Box>
-              </Box>
-              <CustomText
-                variant="body2"
-                sx={{
-                  color: "#4caf50",
-                  fontWeight: 600,
-                  mb: 1,
-                }}
-              >
-                Order Status - {ordersLoading ? "Loading..." : (recentOrder?.status || "—")}
-              </CustomText>
-              <Button
-                onClick={() => setOrderDetailsOpen(true)}
-                disabled={!recentOrderRaw}
-                variant="contained"
-                sx={{
-                  backgroundColor: "#FFB5A1",
-                  color: "black",
-                  textTransform: "none",
-                  borderRadius: 2,
-                  fontWeight: 'bold',
-                  px: 3,
-                  "&:hover": {
-                    backgroundColor: "#F2709C",
-                  },
-                  "&:disabled": { backgroundColor: "#e0e0e0", color: "#999" },
-                }}
-              >
-                View Details
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
+            View Details
+          </Button>
+        </Box>
+        <CustomText variant="body2" sx={{ color: "#4caf50", fontWeight: 600, mb: 1, }}>
+          Order Status - {ordersLoading ? "Loading..." : (recentOrder?.status || "—")}
+        </CustomText>
+      </Box>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Card
-            sx={{
-              borderRadius: 3,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-              transition: "all 0.3s ease",
-              "&:hover": {
-                transform: "translateY(-5px)",
-                boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-              },
-            }}
-          >
-            <CardContent sx={{ p: { xs: 2, md: 3 } }}>
-              <Box sx={{ display: "flex", alignItems: "center"}}>
-                <LocalOfferIcon sx={{ fontSize: 32, color: "var(--themeColor)", mr: 1.5 }} />
-                <Box>
-                  <CustomText variant="h6" sx={{ fontWeight: 600, color: "#2c2c2c" }}>
-                    Available Coupons
-                  </CustomText>
-                  <CustomText variant="body2" sx={{ fontWeight: 700, color: "#2c2c2c" }}>
-                    3
-                  </CustomText>
-                </Box>
-              </Box>
-              <CustomText variant="body2" sx={{ color: "#666", mb: 1 }}>
-                Including a 20% off your next purchase.
-              </CustomText>
-              <Button
-                onClick={() => setActiveTab("coupons")}
-                variant="contained"
-                sx={{
-                  backgroundColor: "#FFB5A1",
-                  color: "black",
-                  textTransform: "none",
-                  borderRadius: 2,
-                  fontWeight: 'bold',
-                  px: 3,
-                  "&:hover": {
-                    backgroundColor: "#F2709C",
-                  },
-                }}
-              >
-                See Coupon
-              </Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 18, md: 24 } }}>
+      <CustomText variant="h5" sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 18, md: 24 }, mb: 2 }}>
         Your Recent Items
       </CustomText>
-      <Box sx={{ border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 0.5, sm: 1, md: 3 } }}>
-        <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
-          {Array.isArray(favoriteItems) && favoriteItems.length > 0 ? (
-            favoriteItems.map((item) => (
-              <Grid size={{ xs: 6, sm: 4, md: 3 }} key={item?.id}>
-                <Link to={item?.id ? `/products/${item.id}` : "/products"} style={{ textDecoration: "none" }}>
-                  <Box
-                    sx={{
-                      position: "relative",
-                      borderRadius: { xs: 1.5, md: 2 },
-                      overflow: "hidden",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
-                      boxShadow: "0 4px 15px rgba(0,0,0,0.1)",
-                      "&:hover": {
-                        transform: "translateY(-5px)",
-                        boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
-                      },
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={item?.image || blankImage}
-                      alt={item?.name || "Product"}
-                      onError={(e) => {
-                        e.target.src = blankImage;
-                      }}
-                      sx={{
-                        width: "100%",
-                        height: { xs: 140, sm: 160, md: 200 },
-                        objectFit: "cover",
-                      }}
-                    />
-                    <Box textAlign="center" sx={{ p: { xs: 1, md: 2 } }}>
-                      <CustomText variant="body2" sx={{ fontWeight: 600, mb: 0.5, fontSize: { xs: 12, md: 14 }, color: "#2c2c2c" }}>
-                        {item?.name}
-                      </CustomText>
-                      <CustomText variant="body2" sx={{ color: "var(--themeColor)", fontWeight: 700, fontSize: { xs: 13, md: 14 } }}>
-                        {item?.price}
-                      </CustomText>
+      {Array.isArray(favoriteItems) && favoriteItems.length > 0 ? (
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", overflowX: "auto" }}>
+          <Table sx={{ minWidth: 650 }}>
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
+                <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Product</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Price</TableCell>
+                <TableCell align="center" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 13, md: 14 } }}>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {favoriteItems.map((item) => (
+                <TableRow
+                  key={item?.id}
+                  sx={{
+                    "&:hover": {
+                      backgroundColor: "#fafafa",
+                    },
+                    "&:last-child td, &:last-child th": {
+                      border: 0,
+                    },
+                  }}
+                >
+                  <TableCell>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                      <Avatar
+                        src={item?.image || blankImage}
+                        alt={item?.name || "Product"}
+                        variant="rounded"
+                        onError={(e) => {
+                          e.target.src = blankImage;
+                        }}
+                        sx={{
+                          width: { xs: 60, md: 80 },
+                          height: { xs: 60, md: 80 },
+                          borderRadius: 1.5,
+                          cursor: "pointer",
+                          "&:hover": {
+                            opacity: 0.8,
+                          },
+                        }}
+                        onClick={() => {
+                          if (item?.id) {
+                            window.location.href = `/products/${item.id}`;
+                          }
+                        }}
+                      />
+                      <Box>
+                        <CustomText
+                          sx={{
+                            fontWeight: 600,
+                            fontSize: { xs: 13, md: 14 },
+                            color: "#2c2c2c",
+                            cursor: "pointer",
+                            "&:hover": {
+                              color: "var(--themeColor)",
+                            },
+                            textTransform: "none",
+                          }}
+                          onClick={() => {
+                            if (item?.id) {
+                              window.location.href = `/products/${item.id}`;
+                            }
+                          }}
+                        >
+                          {item?.name}
+                        </CustomText>
+                      </Box>
                     </Box>
-                  </Box>
-                </Link>
-              </Grid>
-            ))
-          ) : (
-            <Grid size={{ xs: 12 }}>
-              <CustomText sx={{ color: "#666", fontSize: 14, py: 2, textAlign: "center" }}>
-                No recently viewed items yet.
-              </CustomText>
-            </Grid>
-          )}
-        </Grid>
-      </Box>
+                  </TableCell>
+                  <TableCell>
+                    <CustomText sx={{ fontWeight: 700, color: "var(--themeColor)", fontSize: { xs: 14, md: 16 }, textTransform: "none" }}>
+                      {item?.price}
+                    </CustomText>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Button
+                      component={Link}
+                      to={item?.id ? `/products/${item.id}` : "/products"}
+                      variant="contained"
+                      size="small"
+                      sx={{
+                        backgroundColor: "#FFB5A1",
+                        color: "black",
+                        textTransform: "none",
+                        borderRadius: 2,
+                        fontWeight: 600,
+                        px: 2,
+                        "&:hover": {
+                          backgroundColor: "#F2709C",
+                        },
+                      }}
+                    >
+                      View
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <Box sx={{ border: '1px solid #BEBEBE', borderRadius: { xs: 3, md: 5 }, p: { xs: 0.5, sm: 1, md: 3 } }}>
+          <CustomText sx={{ color: "#666", fontSize: 14, py: 2, textAlign: "center" }}>
+            No recently viewed items yet.
+          </CustomText>
+        </Box>
+      )}
 
       <Dialog
         open={orderDetailsOpen}
