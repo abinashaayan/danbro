@@ -14,8 +14,8 @@ export default defineConfig({
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
             if (id.includes('react-dom') || id.includes('react/')) return 'react-vendor';
-            if (id.includes('@mui/material') || id.includes('@emotion')) return 'mui-vendor';
-            if (id.includes('@mui/icons-material')) return 'mui-icons';
+            // Keep all MUI + Emotion in one chunk to avoid "Cannot access before initialization" (circular/order issues)
+            if (id.includes('@mui/') || id.includes('@emotion')) return 'mui-vendor';
             if (id.includes('react-router')) return 'router';
             if (id.includes('@reduxjs/toolkit') || id.includes('redux')) return 'redux-vendor';
             if (id.includes('axios')) return 'axios';
