@@ -30,18 +30,39 @@
   border-radius: 16px;
   background-position: center;
   background-size: cover;
-  transition: all 0.5s;
+  transition: left 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    width 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    height 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 0.7s ease-out,
+    transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.7s ease-out;
 }
 
+/* Main slides: full width, center zoom-in animation + shadow */
 .slide .item:nth-child(1),
 .slide .item:nth-child(2) {
   top: 0;
   left: 0;
-  transform: translate(0, 0);
+  transform: translate(0, 0) scale(1);
   width: 100%;
   height: 100%;
   border-radius: 0;
-  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.15), 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2),
+    0 4px 20px rgba(0, 0, 0, 0.15),
+    0 12px 40px rgba(0, 0, 0, 0.12),
+    0 24px 80px rgba(0, 0, 0, 0.1);
+  animation: heroZoomIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes heroZoomIn {
+  from {
+    transform: translate(0, 0) scale(0.92);
+    opacity: 0.85;
+  }
+  to {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
 }
 
 /* Dark blur-type overlay on main image for better text contrast */
@@ -80,12 +101,25 @@
   pointer-events: none;
 }
 
-/* Small laptop: prevent small images from overlapping navbar */
+/* Small laptop / desktop: keep title & subtitle left of small images, allow wrap */
 @media (max-width: 1200px) {
   .container {
     padding-top: 72px;
     height: calc(90vh - 72px);
     min-height: calc(520px - 72px);
+  }
+
+  .item .content {
+    right: 590px;
+    max-width: min(480px, calc(100% - 690px));
+  }
+
+  .name {
+    font-size: 48px;
+  }
+
+  .des {
+    font-size: 20px;
   }
 }
 
@@ -93,12 +127,13 @@
   position: absolute;
   top: 50%;
   left: 100px;
+  right: 560px;
   color: #fff;
   transform: translateY(-50%);
   display: none;
   z-index: 1;
+  max-width: 520px;
 }
-
 
 .slide .item:nth-child(2) .content {
   display: block;
@@ -117,6 +152,10 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   opacity: 0;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .des {
@@ -124,7 +163,7 @@
   font-size: 24px;
   font-weight: 500;
   margin: 14px 0 0;
-  max-width: 420px;
+  max-width: 100%;
   color: #fff;
   letter-spacing: 0.02em;
   line-height: 1.55;
@@ -134,6 +173,9 @@
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   opacity: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 @keyframes animateIn {

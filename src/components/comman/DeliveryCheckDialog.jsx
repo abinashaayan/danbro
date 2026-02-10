@@ -1,5 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, TextField, Autocomplete, CircularProgress, Paper, IconButton } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Autocomplete,
+  CircularProgress,
+  Paper,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+} from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import SearchIcon from "@mui/icons-material/Search";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -160,123 +172,76 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
       window.location.reload();
     } catch (error) {
       console.error('Error getting current location:', error);
-      setServiceMessage({ success: false, message: 'Something went wrong. Please try again.' });
+      if (error?.message === 'PERMISSION_DENIED') {
+        setServiceMessage({
+          success: false,
+          message: 'Turn on Location Services to allow Danbro to determine your location by clicking the Location icon in the address bar, and then Always allow.',
+        });
+      } else {
+        setServiceMessage({ success: false, message: 'Something went wrong. Please try again.' });
+      }
     } finally {
       setGettingLocation(false);
       setCheckingAvailability(false);
     }
   };
 
-  if (!open) return null;
-
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        backdropFilter: "blur(4px)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 10000,
-        animation: "fadeIn 0.3s ease-out",
-        "@keyframes fadeIn": {
-          "0%": { opacity: 0 },
-          "100%": { opacity: 1 },
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      scroll="paper"
+      aria-labelledby="delivery-location-modal-label"
+      aria-hidden={!open}
+      PaperProps={{
+        sx: {
+          borderRadius: "16px",
+          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
+          maxWidth: { xs: "90vw", sm: 500, md: 560 },
+          margin: { xs: 1, sm: 2 },
         },
       }}
-      onWheel={(e) => {
-        // Prevent scroll on backdrop
-        e.preventDefault();
-        e.stopPropagation();
+      slotProps={{
+        backdrop: {
+          sx: { backdropFilter: "blur(4px)" },
+        },
       }}
-      onTouchMove={(e) => {
-        // Prevent touch scroll on backdrop
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-      onClick={(e) => e.stopPropagation()}
+      sx={{ zIndex: 10000 }}
     >
-      <Box
+      {/* modal-header */}
+      <DialogTitle
+        id="delivery-location-modal-label"
         sx={{
-          backgroundColor: "#fff",
-          borderRadius: "16px",
-          padding: { xs: 3, md: 4 },
-          width: { xs: "90%", sm: "500px", md: "600px" },
-          maxWidth: "90%",
-          boxShadow: "0 10px 40px rgba(0,0,0,0.2)",
-          position: "relative",
-          overflow: "hidden",
-          animation: "slideUp 0.3s ease-out",
-          "@keyframes slideUp": {
-            "0%": {
-              opacity: 0,
-              transform: "translateY(20px)",
-            },
-            "100%": {
-              opacity: 1,
-              transform: "translateY(0)",
-            },
-          },
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          px: { xs: 2, sm: 3 },
+          py: 2,
+          borderBottom: "1px solid rgba(211, 47, 47, 0.12)",
+          background: "linear-gradient(135deg, #fff5f3 0%, #ffe8e4 100%)",
+          "& .MuiDialogTitle-root": { flex: 1 },
         }}
-        onClick={(e) => e.stopPropagation()}
       >
-        {/* Header with title, location icons and close (when location is set) */}
-        <Box
+        <CustomText component="span" sx={{ fontSize: { xs: 18, md: 20 }, fontWeight: 700, color: "#333" }}>
+          Enter Delivery Location
+        </CustomText>
+        <IconButton
+          aria-label="Close"
+          onClick={onClose}
+          size="small"
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-            position: "relative",
-            mx: -3,
-            mt: -3,
-            px: 3,
-            pt: 3,
-            pb: 2,
-            background: "linear-gradient(135deg, #fff5f3 0%, #ffe8e4 100%)",
-            borderBottom: "1px solid rgba(211, 47, 47, 0.12)",
-            borderRadius: "16px 16px 0 0",
+            color: "#666",
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.06)", color: "#333" },
           }}
         >
-          <CustomText sx={{ fontSize: { xs: 20, md: 22 }, fontWeight: 700, color: "#333" }}>
-            Enter Delivery Location
-          </CustomText>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            {hasStoredLocation && (
-              <IconButton
-                aria-label="Close"
-                onClick={onClose}
-                size="small"
-                sx={{
-                  color: "#666",
-                  "&:hover": { backgroundColor: "rgba(0,0,0,0.06)", color: "#333" },
-                }}
-              >
-                <CloseIcon sx={{ fontSize: 22 }} />
-              </IconButton>
-            )}
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0.5, position: "relative", width: 40, height: 50 }}>
-              <LocationOnIcon sx={{ color: "#d32f2f", fontSize: 24, position: "absolute", top: 0, zIndex: 2 }} />
-              <Box
-                sx={{
-                  width: "2px",
-                  height: "24px",
-                  position: "absolute",
-                  top: 12,
-                  background: "repeating-linear-gradient(to bottom, #d32f2f 0px, #d32f2f 4px, transparent 4px, transparent 8px)",
-                  zIndex: 1,
-                }}
-              />
-            </Box>
-          </Box>
-        </Box>
+          <CloseIcon sx={{ fontSize: 22 }} />
+        </IconButton>
+      </DialogTitle>
 
-        {/* Search Input with Autocomplete - Popper z-index above backdrop so dropdown is visible */}
+      {/* modal-body */}
+      <DialogContent sx={{ px: { xs: 2, sm: 3 }, mt: 2.5, pb: 1 }}>
         <Autocomplete
           ref={autocompleteRef}
           freeSolo
@@ -458,8 +423,15 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
             Use my current location
           </CustomText>
         </Box>
-      </Box>
-    </Box>
+      </DialogContent>
+
+      {/* modal-footer */}
+      <DialogActions sx={{ px: { xs: 2, sm: 3 }, py: 2, borderTop: "1px solid #eee", gap: 1 }}>
+        <Button onClick={onClose} color="inherit" sx={{ textTransform: "none" }}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

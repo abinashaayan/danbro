@@ -17,6 +17,7 @@ import {
   Link,
 } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
+import "./OrderSummary.css";
 import IconButton from "@mui/material/IconButton";
 import {
   LocalOffer as LocalOfferIcon,
@@ -77,34 +78,34 @@ export const OrderSummary = ({
   const packingCharges = 0;
 
   return (
-    <>
+    <Box sx={{ width: "100%", maxWidth: "100%", minWidth: 0, boxSizing: "border-box" }}>
       <Card
         sx={{
-          borderRadius: 2,
+          borderRadius: { xs: 1.5, sm: 2 },
           boxShadow: "0 2px 12px rgba(93, 64, 55, 0.15)",
-          mb: 2,
-          border: "2px solid #5D4037",
+          mb: { xs: 1.5, sm: 2 },
+          border: { xs: "1px solid #5D4037", sm: "2px solid #5D4037" },
           overflow: "hidden",
           bgcolor: "rgba(93, 64, 55, 0.03)",
         }}
       >
-        <CardContent sx={{ py: { xs: 1.5, sm: 2 }, px: { xs: 1.5, sm: 2.5 }, "&:last-child": { pb: 2 } }}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: { xs: 1, sm: 1.5 } }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
-              <Box sx={{ p: { xs: 0.5, sm: 0.75 }, borderRadius: 1.5, bgcolor: "rgba(93, 64, 55, 0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <LocalOfferIcon sx={{ fontSize: { xs: 20, sm: 22 }, color: "#5D4037" }} />
+        <CardContent sx={{ py: { xs: 1.25, sm: 2 }, px: { xs: 1.25, sm: 2.5 }, "&:last-child": { pb: { xs: 1.5, sm: 2 } } }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: { xs: 0.75, sm: 1.5 } }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.75, sm: 1.25 }, minWidth: 0 }}>
+              <Box sx={{ p: { xs: 0.4, sm: 0.75 }, borderRadius: 1.5, bgcolor: "rgba(93, 64, 55, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <LocalOfferIcon sx={{ fontSize: { xs: 18, sm: 22 }, color: "#5D4037" }} />
               </Box>
-              <CustomText sx={{ fontSize: { xs: 14, sm: 16 }, fontWeight: 600, color: "#2c2c2c" }}>Offers</CustomText>
+              <CustomText sx={{ fontSize: { xs: 13, sm: 16 }, fontWeight: 600, color: "#2c2c2c" }}>Offers</CustomText>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, flex: 1, justifyContent: "flex-end", minWidth: 0 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1.25 }, flex: { xs: "1 1 auto", sm: 1 }, justifyContent: "flex-end", minWidth: 0 }}>
               {couponsLoading ? (
-                <CircularProgress size={18} sx={{ color: "#5D4037" }} />
+                <CircularProgress size={16} sx={{ color: "#5D4037" }} />
               ) : appliedCoupon?.couponCode || appliedCoupon?.code ? (
-                <CustomText sx={{ fontSize: 14, color: "#5D4037", fontWeight: 600, mr: 0.5 }}>
+                <CustomText sx={{ fontSize: { xs: 12, sm: 14 }, color: "#5D4037", fontWeight: 600, mr: 0.5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: { xs: "80px", sm: "none" } }}>
                   {appliedCoupon.couponCode || appliedCoupon.code}
                 </CustomText>
               ) : (
-                <CustomText sx={{ fontSize: 13, color: "#999" }}>No coupon selected</CustomText>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#999", flexShrink: 0 }}>No coupon</CustomText>
               )}
               <Link
                 component="button"
@@ -113,12 +114,13 @@ export const OrderSummary = ({
                 sx={{
                   color: "#5D4037",
                   fontWeight: 600,
-                  fontSize: 14,
+                  fontSize: { xs: 12, sm: 14 },
                   cursor: coupons.length > 0 ? "pointer" : "default",
                   textDecoration: "none",
-                  px: 1,
+                  px: { xs: 0.75, sm: 1 },
                   py: 0.5,
                   borderRadius: 1,
+                  flexShrink: 0,
                   "&:hover": { textDecoration: "none", bgcolor: "rgba(93, 64, 55, 0.08)" },
                 }}
               >
@@ -138,16 +140,24 @@ export const OrderSummary = ({
         onClose={() => setCouponDialogOpen(false)}
         maxWidth="sm"
         fullWidth
+        fullScreen={false}
         disableScrollLock
         PaperProps={{
           sx: {
-            borderRadius: 2,
+            borderRadius: { xs: 0, sm: 2 },
             boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
             overflow: "hidden",
+            mx: { xs: 0, sm: 2 },
+            maxHeight: { xs: "90vh", sm: "90vh" },
+          },
+        }}
+        slotProps={{
+          root: {
+            sx: { alignItems: { xs: "flex-end", sm: "center" } },
           },
         }}
       >
-        <DialogTitle sx={{ backgroundColor: "#3E2723", color: "#fff", fontSize: 18, fontWeight: 600, py: 2, px: 2.5, position: "relative", }}>
+        <DialogTitle sx={{ backgroundColor: "#3E2723", color: "#fff", fontSize: { xs: 16, sm: 18 }, fontWeight: 600, py: { xs: 1.5, sm: 2 }, px: { xs: 1.5, sm: 2.5 }, position: "relative" }}>
           Select a coupon
 
           <IconButton
@@ -166,7 +176,7 @@ export const OrderSummary = ({
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent sx={{ my: 2, px: 2.5, pb: 2.5, bgcolor: "#fafafa", position: "relative" }}>
+        <DialogContent sx={{ my: { xs: 1, sm: 2 }, px: { xs: 1.5, sm: 2.5 }, pb: 2.5, bgcolor: "#fafafa", position: "relative" }}>
           {applyingCoupon && (
             <Box
               sx={{
@@ -208,7 +218,7 @@ export const OrderSummary = ({
                   handleCouponSelect(coupon.id);
                 }}
                 sx={{
-                  p: 2,
+                  p: { xs: 1.25, sm: 2 },
                   mb: 1.5,
                   borderRadius: 1.5,
                   border: "1px solid",
@@ -222,13 +232,13 @@ export const OrderSummary = ({
                   },
                 }}
               >
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                  <Box sx={{ flex: 1 }}>
-                    <CustomText sx={{ fontWeight: 600, fontSize: 15, color: "#3E2723" }}>{coupon.couponCode ?? coupon.code}</CustomText>
-                    <CustomText sx={{ fontSize: 13, color: "#666", display: "block", mt: 0.25 }}>{coupon.description}</CustomText>
+                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 1, flexWrap: "wrap" }}>
+                  <Box sx={{ flex: "1 1 140px", minWidth: 0 }}>
+                    <CustomText sx={{ fontWeight: 600, fontSize: { xs: 14, sm: 15 }, color: "#3E2723" }}>{coupon.couponCode ?? coupon.code}</CustomText>
+                    <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666", display: "block", mt: 0.25 }}>{coupon.description}</CustomText>
                   </Box>
                   {isGuest && selectedCoupon === coupon.id && discountText && (
-                    <Box sx={{ ml: 2, textAlign: "right" }}>
+                    <Box sx={{ ml: { xs: 0, sm: 2 }, textAlign: "right", flexShrink: 0 }}>
                       <CustomText sx={{ fontSize: 14, fontWeight: 700, color: "#16a34a" }}>
                         {discountText}
                       </CustomText>
@@ -260,7 +270,7 @@ export const OrderSummary = ({
             </Button>
           )}
         </DialogContent>
-        <DialogActions sx={{ px: 2.5, py: 2, bgcolor: "#fafafa", borderTop: "1px solid #eee" }}>
+        <DialogActions sx={{ px: { xs: 1.5, sm: 2.5 }, py: { xs: 1.5, sm: 2 }, bgcolor: "#fafafa", borderTop: "1px solid #eee" }}>
           <Button
             onClick={() => setCouponDialogOpen(false)}
             sx={{ textTransform: "none", color: "#666" }}
@@ -301,64 +311,78 @@ export const OrderSummary = ({
       </Dialog>
 
       {/* Bill Details Card */}
-      <Card sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", mb: 2, overflow: "hidden" }}>
-        <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
-          <CustomText sx={{ fontSize: { xs: 15, sm: 16 }, fontWeight: 700, color: "#2c2c2c", mb: 1.5 }}>
+      <Card sx={{ borderRadius: { xs: 1.5, sm: 2 }, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", mb: { xs: 1.5, sm: 2 }, overflow: "hidden" }}>
+        <CardContent sx={{ p: { xs: 1.25, sm: 2 } }}>
+          <CustomText sx={{ fontSize: { xs: 14, sm: 16 }, fontWeight: 700, color: "#2c2c2c", mb: 1.25 }}>
             Bill details:
           </CustomText>
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666", flexShrink: 0 }}>Item(s) Subtotal:</CustomText>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333", flexShrink: 0 }}>₹{Number(finalSubtotal).toFixed(2)}</CustomText>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
+            <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", flex: "1 1 50%", minWidth: 0 }}>Item(s) Subtotal:</CustomText>
+            <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>₹{Number(finalSubtotal).toFixed(2)}</CustomText>
           </Box>
           {!isGuest && (
             <>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Packing Charges:</CustomText>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(packingCharges).toFixed(2)}</CustomText>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Packing Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>+₹{Number(packingCharges).toFixed(2)}</CustomText>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Delivery Charges:</CustomText>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(shipping).toFixed(2)}</CustomText>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Delivery Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>+₹{Number(shipping).toFixed(2)}</CustomText>
               </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Taxes and Charges:</CustomText>
-                <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>+₹{Number(taxTotal).toFixed(2)}</CustomText>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Taxes and Charges:</CustomText>
+                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>+₹{Number(taxTotal).toFixed(2)}</CustomText>
               </Box>
             </>
           )}
-          <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1, gap: 1 }}>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#666" }}>Discount:</CustomText>
-            <CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#16a34a" }}>-₹{Number(discount).toFixed(2)}</CustomText>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
+            <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Discount:</CustomText>
+            <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#16a34a", flexShrink: 0 }}>-₹{Number(discount).toFixed(2)}</CustomText>
           </Box>
-          <Box sx={{ borderTop: "1px solid #eee", pt: 1.5, mt: 1 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 1 }}>
-              <CustomText sx={{ fontSize: { xs: 15, sm: 16 }, fontWeight: 700, color: "#2c2c2c" }}>Grand Total:</CustomText>
-              <CustomText sx={{ fontSize: { xs: 15, sm: 16 }, fontWeight: 700, color: "var(--themeColor)" }}>₹{Number(total).toFixed(2)}</CustomText>
+          <Box sx={{ borderTop: "1px solid #eee", pt: 1.25, mt: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 16 }, fontWeight: 700, color: "#2c2c2c", minWidth: 0 }}>Grand Total:</CustomText>
+              <CustomText sx={{ fontSize: { xs: 14, sm: 16 }, fontWeight: 700, color: "var(--themeColor)", flexShrink: 0 }}>₹{Number(total).toFixed(2)}</CustomText>
             </Box>
           </Box>
-          <CustomText sx={{ fontSize: 12, color: "#0d8c2d", fontWeight: 500, mt: 1.5, display: "block" }}>
+          <CustomText sx={{ fontSize: { xs: 11, sm: 12 }, color: "#0d8c2d", fontWeight: 500, mt: 1.25, display: "block" }}>
             You will earn Danbro points for this transaction
           </CustomText>
         </CardContent>
       </Card>
 
-      {/* Payment Mode - hidden for guest */}
+      {/* Payment Mode - hidden for guest; column on mobile so first radio is not clipped */}
       {!isGuest && (
-        <Box sx={{ mb: 2 }}>
-          <CustomText sx={{ fontSize: 14, fontWeight: 600, color: "#2c2c2c", mb: 1 }}>
+        <Box className="order-summary-payment-mode" sx={{ mb: { xs: 1.5, sm: 2 }, overflow: "visible" }}>
+          <CustomText sx={{ fontSize: { xs: 13, sm: 14 }, fontWeight: 600, color: "#2c2c2c", mb: 0.75 }}>
             Payment Mode
           </CustomText>
-          <FormControl>
-            <RadioGroup row value={paymentMode} onChange={(e) => setPaymentMode(e.target.value)} sx={{ gap: 2 }}>
+          <FormControl sx={{ width: "100%", overflow: "visible" }}>
+            <RadioGroup
+              value={paymentMode}
+              onChange={(e) => setPaymentMode(e.target.value)}
+              sx={{
+                display: "flex",
+                flexDirection: { xs: "column", sm: "row" },
+                gap: { xs: 0.5, sm: 2 },
+                margin: 0,
+                width: "100%",
+                "& .MuiFormControlLabel-root": {
+                  marginLeft: 0,
+                  marginRight: 0,
+                },
+              }}
+            >
               <FormControlLabel
                 value="UPI"
-                control={<Radio size="small" sx={{ color: "#666", "&.Mui-checked": { color: "var(--themeColor)" } }} />}
-                label={<CustomText sx={{ fontSize: 13, color: "#333" }}>UPI</CustomText>}
+                control={<Radio size="small" sx={{ color: "#666", "&.Mui-checked": { color: "var(--themeColor)" }, padding: { xs: 0.5, sm: 1 } }} />}
+                label={<CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>UPI</CustomText>}
               />
               <FormControlLabel
                 value="COD"
-                control={<Radio size="small" sx={{ color: "#666", "&.Mui-checked": { color: "var(--themeColor)" } }} />}
-                label={<CustomText sx={{ fontSize: 13, color: "#333" }}>Cash on Delivery</CustomText>}
+                control={<Radio size="small" sx={{ color: "#666", "&.Mui-checked": { color: "var(--themeColor)" }, padding: { xs: 0.5, sm: 1 } }} />}
+                label={<CustomText sx={{ fontSize: { xs: 12, sm: 13 }, color: "#333" }}>Cash on Delivery</CustomText>}
               />
             </RadioGroup>
           </FormControl>
@@ -380,9 +404,10 @@ export const OrderSummary = ({
           backgroundColor: "var(--themeColor)",
           color: "#fff",
           textTransform: "none",
-          py: { xs: 1.25, sm: 1.5 },
-          fontSize: { xs: 14, sm: 15 },
+          py: { xs: 1.4, sm: 1.5 },
+          fontSize: { xs: 13, sm: 15 },
           fontWeight: 600,
+          minHeight: { xs: 44, sm: "auto" },
           "&:hover": { backgroundColor: "var(--specialColor)" },
           "&:disabled": { backgroundColor: "#ccc", color: "#666" },
         }}
@@ -401,10 +426,10 @@ export const OrderSummary = ({
         )}
       </Button>
 
-      <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mt: 1.5, pt: 1.5, borderTop: "1px solid #eee" }}>
-        <PaymentIcon sx={{ fontSize: 18, color: "#666" }} />
-        <CustomText sx={{ fontSize: 12, color: "#666" }}>Secure payment</CustomText>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 0.8, mt: { xs: 1.25, sm: 1.5 }, pt: { xs: 1.25, sm: 1.5 }, borderTop: "1px solid #eee" }}>
+        <PaymentIcon sx={{ fontSize: { xs: 16, sm: 18 }, color: "#666" }} />
+        <CustomText sx={{ fontSize: { xs: 11, sm: 12 }, color: "#666" }}>Secure payment</CustomText>
       </Box>
-    </>
+    </Box>
   );
 };

@@ -246,7 +246,6 @@ export const AddressSection = ({
         borderRadius: { xs: 2, md: 2.5 },
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         position: { md: "sticky" },
-        top: { md: 100 },
       }}
     >
       <CardHeader

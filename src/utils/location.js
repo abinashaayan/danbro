@@ -15,10 +15,13 @@ export const getCurrentLocation = () => {
         });
       },
       (error) => {
-        // User denied (1), unavailable (2), or timeout (3) — use default location silently
-        if (error?.code !== 1) {
-          console.warn('Location unavailable:', error?.message || error);
+        // 1 = PERMISSION_DENIED — reject so UI can show "Turn on Location Services..." message
+        if (error?.code === 1) {
+          reject(new Error('PERMISSION_DENIED'));
+          return;
         }
+        // Unavailable (2) or timeout (3) — use default location
+        console.warn('Location unavailable:', error?.message || error);
         resolve({
           lat: 26.86957,
           long: 81.00935,

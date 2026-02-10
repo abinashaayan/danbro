@@ -21,7 +21,6 @@ import { CartItem } from "../../components/cart/CartItem";
 import { OrderSummary } from "../../components/cart/OrderSummary";
 import { AddressSection } from "../../components/cart/AddressSection";
 import { EmptyCart } from "../../components/cart/EmptyCart";
-import { LocalShipping as LocalShippingIcon, Schedule as ScheduleIcon, Note as NoteIcon } from "@mui/icons-material";
 
 export const Cart = () => {
   const navigate = useNavigate();
@@ -470,51 +469,19 @@ export const Cart = () => {
             <Grid size={{ xs: 12, md: 8 }} sx={{ order: { xs: 1, md: 1 }, minWidth: 0, maxWidth: "100%" }}>
               <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 1.5, sm: 2 }, minWidth: 0, maxWidth: "100%", overflow: "hidden" }}>
                 {!isGuest && (
-                  <>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-start",
-                        gap: 1.5,
-                        p: 1,
-                        borderRadius: 2,
-                        backgroundColor: "rgba(230, 120, 80, 0.12)",
-                        border: "1px solid rgba(230, 120, 80, 0.25)",
-                      }}
-                    >
-                      <LocalShippingIcon sx={{ color: "var(--themeColor)", fontSize: 24 }} />
-                      <Box sx={{ flex: 1, minWidth: 0 }}>
-                        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                          <CustomText sx={{ fontSize: 15, fontWeight: 600, color: "#2c2c2c", mb: 0.5 }}>
-                            Delivery
-                          </CustomText>
-                          <Button
-                            size="small"
-                            onClick={() => setAddressDialogOpen(true)}
-                            sx={{ mt: 1, textTransform: "none", color: "var(--themeColor)", fontWeight: 600, p: 0, minWidth: 0 }}
-                          >
-                            Change
-                          </Button>
-                        </Box>
-                        <CustomText sx={{ fontSize: 13, color: "#555" }}>
-                          {getDisplayAddress() || "Select delivery address"}
-                        </CustomText>
-                      </Box>
-                    </Box>
-                    <AddressSection
-                      addresses={addresses}
-                      selectedAddress={selectedAddress}
-                      setSelectedAddress={setSelectedAddress}
-                      addressesLoading={addressesLoading}
-                      addressDialogOpen={addressDialogOpen}
-                      setAddressDialogOpen={setAddressDialogOpen}
-                      handleAddressSuccess={handleAddressSuccess}
-                      deliveryType={deliveryType}
-                      setDeliveryType={setDeliveryType}
-                      someoneElseData={someoneElseData}
-                      setSomeoneElseData={setSomeoneElseData}
-                    />
-                  </>
+                  <AddressSection
+                    addresses={addresses}
+                    selectedAddress={selectedAddress}
+                    setSelectedAddress={setSelectedAddress}
+                    addressesLoading={addressesLoading}
+                    addressDialogOpen={addressDialogOpen}
+                    setAddressDialogOpen={setAddressDialogOpen}
+                    handleAddressSuccess={handleAddressSuccess}
+                    deliveryType={deliveryType}
+                    setDeliveryType={setDeliveryType}
+                    someoneElseData={someoneElseData}
+                    setSomeoneElseData={setSomeoneElseData}
+                  />
                 )}
                 <Card sx={{ borderRadius: 2, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", overflow: "hidden", maxWidth: "100%" }}>
                   <CardContent sx={{ px: { xs: 1.5, sm: 2 }, pt: 1, pb: 1, "&:last-child": { pb: 2 }, maxWidth: "100%", boxSizing: "border-box" }}>
@@ -575,7 +542,7 @@ export const Cart = () => {
 
             {/* Right column: Offers + Bill details + Place order */}
             <Grid size={{ xs: 12, md: 4 }} sx={{ order: { xs: 2, md: 2 }, minWidth: 0, maxWidth: "100%" }}>
-              <Box sx={{ position: { md: "sticky" }, top: { md: 100 }, minWidth: 0, maxWidth: "100%" }}>
+              <Box sx={{ minWidth: 0, maxWidth: "100%" }}>
                 <OrderSummary
                   finalSubtotal={finalSubtotal}
                   taxTotal={taxTotal}
