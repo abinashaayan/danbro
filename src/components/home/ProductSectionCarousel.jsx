@@ -234,6 +234,7 @@ export const ProductSectionCarousel = memo(({
       sx={{
         position: "relative",
         background: bgColor,
+        mb:3,
         borderRadius: { xs: 0, md: 3 },
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(50px)",
