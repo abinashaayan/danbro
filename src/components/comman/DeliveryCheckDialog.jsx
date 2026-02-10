@@ -124,6 +124,13 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
   };
 
   const handleUseCurrentLocation = async () => {
+    // NOTE: Current-location functionality is temporarily disabled as requested.
+    // Users can still search and select their delivery area manually above.
+    // To restore this feature, remove the `return;` below and uncomment the
+    // original implementation.
+    return;
+
+    /*
     try {
       setGettingLocation(true);
       setServiceMessage(null);
@@ -177,7 +184,9 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
       if (error?.message === 'PERMISSION_DENIED') {
         setServiceMessage({
           success: false,
-          message: 'Turn on Location Services to allow Danbro to determine your location by clicking the Location icon in the address bar, and then Always allow.',
+          message:
+            'Location access was denied. To allow: (1) Click the lock or info icon in the address bar → Site settings → set Location to "Allow", then refresh. ' +
+            'Location works only on HTTPS or localhost. You can also type your area in the search box above to set delivery location.',
         });
       } else {
         setServiceMessage({ success: false, message: 'Something went wrong. Please try again.' });
@@ -186,6 +195,7 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
       setGettingLocation(false);
       setCheckingAvailability(false);
     }
+    */
   };
 
   return (
