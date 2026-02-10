@@ -24,6 +24,11 @@ export const ProductDetailsInfo = ({
   deliveryLocationLabel,
   quantity,
   onQuantityChange,
+  // Optional handlers to perform API-based quantity updates when product is already in cart
+  onIncreaseQuantity,
+  onDecreaseQuantity,
+  quantityUpdating = false,
+  quantityUpdatingAction = null,
   onAddToCart,
   addingToCart,
   product,
@@ -238,18 +243,94 @@ export const ProductDetailsInfo = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            borderRadius: 1,
-            border: "1px solid #ddd",
-            p: { xs: 0.75, sm: 1 },
-            backgroundColor: "#fff",
+            borderRadius: 999,
+            border: "1px solid #ffd3c4",
+            p: { xs: 0.4, sm: 0.5 },
+            backgroundColor: "#fff8f4",
+            minHeight: 40,
           }}
         >
-          <Box onClick={() => onQuantityChange(Math.max(1, quantity - 1))} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
-            <Remove sx={{ color: "#2c2c2c", fontSize: 20 }} />
+          {/* Decrease button */}
+          <Box
+            onClick={() => {
+              if (quantityUpdating && quantityUpdatingAction === "decrement") return;
+              if (typeof onDecreaseQuantity === "function") {
+                onDecreaseQuantity();
+              } else {
+                onQuantityChange(Math.max(1, quantity - 1));
+              }
+            }}
+            sx={{
+              cursor: quantityUpdating && quantityUpdatingAction === "decrement" ? "default" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 30,
+              height: 30,
+              borderRadius: "999px",
+              background: "linear-gradient(135deg, #fff0ea 0%, #ffe0d4 100%)",
+              boxShadow: "0 2px 4px rgba(220, 120, 80, 0.15)",
+              transition: "all 0.2s ease",
+              "&:hover": !(quantityUpdating && quantityUpdatingAction === "decrement") && {
+                transform: "translateY(-1px)",
+                boxShadow: "0 3px 6px rgba(220, 120, 80, 0.25)",
+              },
+            }}
+          >
+            {quantityUpdating && quantityUpdatingAction === "decrement" ? (
+              <CircularProgress size={16} sx={{ color: "#F31400" }} />
+            ) : (
+              <Remove sx={{ color: "#F31400", fontSize: 18 }} />
+            )}
           </Box>
-          <CustomText sx={{ fontWeight: 500, fontFamily: "'Inter', sans-serif", color: "#2c2c2c", fontSize: 14 }}>{quantity}</CustomText>
-          <Box onClick={() => onQuantityChange(quantity + 1)} sx={{ cursor: "pointer", display: "flex", alignItems: "center" }}>
-            <Add sx={{ color: "#2c2c2c", fontSize: 20 }} />
+
+          {/* Quantity display */}
+          <CustomText
+            sx={{
+              fontWeight: 600,
+              fontFamily: "'Inter', sans-serif",
+              color: "#3d2914",
+              fontSize: 14,
+              minWidth: 28,
+              textAlign: "center",
+              letterSpacing: 0.4,
+            }}
+          >
+            {quantity}
+          </CustomText>
+
+          {/* Increase button */}
+          <Box
+            onClick={() => {
+              if (quantityUpdating && quantityUpdatingAction === "increment") return;
+              if (typeof onIncreaseQuantity === "function") {
+                onIncreaseQuantity();
+              } else {
+                onQuantityChange(quantity + 1);
+              }
+            }}
+            sx={{
+              cursor: quantityUpdating && quantityUpdatingAction === "increment" ? "default" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 30,
+              height: 30,
+              borderRadius: "999px",
+              background: "linear-gradient(135deg, #ff9472 0%, #f2709c 100%)",
+              boxShadow: "0 2px 6px rgba(242, 112, 156, 0.35)",
+              transition: "all 0.2s ease",
+              "&:hover": !(quantityUpdating && quantityUpdatingAction === "increment") && {
+                transform: "translateY(-1px)",
+                boxShadow: "0 4px 10px rgba(242, 112, 156, 0.5)",
+              },
+            }}
+          >
+            {quantityUpdating && quantityUpdatingAction === "increment" ? (
+              <CircularProgress size={16} sx={{ color: "#fff" }} />
+            ) : (
+              <Add sx={{ color: "#fff", fontSize: 18 }} />
+            )}
           </Box>
         </Box>
       </Grid>

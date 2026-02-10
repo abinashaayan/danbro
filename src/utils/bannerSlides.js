@@ -1,8 +1,8 @@
 import slider5 from "../assets/slider-5.png";
-import bannerSlide2 from "../assets/banner-slide-2.jpg";
-import bannerSlide3 from "../assets/banner-slide-3.jpg";
+import bannerSlide2 from "../assets/banner-slide-2.webp";
+import bannerSlide3 from "../assets/banner-slide-3.webp";
 import bannerSlide4 from "../assets/banner-slide-4.jpg";
-import bannerSlide5 from "../assets/cookies.png";
+import bannerSlide5 from "../assets/cookies.webp";
 
 export const bannerSlides = [
   {

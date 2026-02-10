@@ -87,28 +87,98 @@ const CartItemComponent = ({
                 ({getItemUnit(item)})
               </CustomText>
             )}
+
+            {/* Quantity control – under product name */}
+            <Box
+              sx={{
+                mt: 0.5,
+                display: "inline-flex",
+                alignItems: "center",
+                borderRadius: 999,
+                border: "1px solid #ffd3c4",
+                px: 0.6,
+                py: 0.25,
+                backgroundColor: "#fff8f4",
+                boxShadow: "0 1px 3px rgba(220, 120, 80, 0.18)",
+                gap: 0.5,
+              }}
+            >
+              {/* Decrease */}
+              <Box
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (isUpdating && isUpdatingDecrease) return;
+                  updateQuantity(productId, -1, item.rawWeight ?? item.weight);
+                }}
+                sx={{
+                  cursor: isUpdating && isUpdatingDecrease ? "default" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 22,
+                  height: 22,
+                  borderRadius: "999px",
+                  background: "linear-gradient(135deg, #fff0ea 0%, #ffe0d4 100%)",
+                  boxShadow: "0 1px 3px rgba(220, 120, 80, 0.22)",
+                  "&:hover": !(isUpdating && isUpdatingDecrease) && {
+                    transform: "translateY(-1px)",
+                    boxShadow: "0 2px 5px rgba(220, 120, 80, 0.32)",
+                  },
+                }}
+              >
+                {isUpdatingDecrease ? (
+                  <CircularProgress size={12} sx={{ color: "#F31400" }} />
+                ) : (
+                  <RemoveIcon sx={{ fontSize: 14, color: "#F31400" }} />
+                )}
+              </Box>
+
+              <CustomText
+                sx={{
+                  minWidth: 20,
+                  textAlign: "center",
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "#3d2914",
+                  letterSpacing: 0.3,
+                }}
+              >
+                {item.quantity}
+              </CustomText>
+
+              {/* Increase */}
+              <Box
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (isUpdating && isUpdatingIncrease) return;
+                  updateQuantity(productId, 1, item.rawWeight ?? item.weight);
+                }}
+                sx={{
+                  cursor: isUpdating && isUpdatingIncrease ? "default" : "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 22,
+                  height: 22,
+                  borderRadius: "999px",
+                  background: "linear-gradient(135deg, #ff9472 0%, #f2709c 100%)",
+                  boxShadow: "0 1px 4px rgba(242, 112, 156, 0.45)",
+                  "&:hover": !(isUpdating && isUpdatingIncrease) && {
+                    transform: "translateY(-1px)",
+                    boxShadow: "0 2px 7px rgba(242, 112, 156, 0.6)",
+                  },
+                }}
+              >
+                {isUpdatingIncrease ? (
+                  <CircularProgress size={12} sx={{ color: "#fff" }} />
+                ) : (
+                  <AddIcon sx={{ fontSize: 14, color: "#fff" }} />
+                )}
+              </Box>
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 0.5, sm: 1 }, flexShrink: 0 }}>
-          <IconButton
-            size="small"
-            onClick={() => updateQuantity(productId, -1, item.rawWeight ?? item.weight)}
-            disabled={isUpdating}
-            sx={{ color: "#666", bgcolor: "#f0f0f0", p: { xs: 0.4, sm: 0.5 }, "&:hover": { bgcolor: "#e0e0e0" }, "&:disabled": { opacity: 0.5 } }}
-          >
-            {isUpdatingDecrease ? <CircularProgress size={14} /> : <RemoveIcon sx={{ fontSize: { xs: 16, sm: 18 } }} />}
-          </IconButton>
-          <CustomText sx={{ minWidth: 24, textAlign: "center", fontSize: { xs: 13, sm: 14 }, fontWeight: 600 }}>
-            {item.quantity}
-          </CustomText>
-          <IconButton
-            size="small"
-            onClick={() => updateQuantity(productId, 1, item.rawWeight ?? item.weight)}
-            disabled={isUpdating}
-            sx={{ color: "var(--themeColor)", bgcolor: "rgba(230,120,80,0.12)", p: { xs: 0.4, sm: 0.5 }, "&:hover": { bgcolor: "rgba(230,120,80,0.2)" }, "&:disabled": { opacity: 0.5 } }}
-          >
-            {isUpdatingIncrease ? <CircularProgress size={14} /> : <AddIcon sx={{ fontSize: { xs: 16, sm: 18 } }} />}
-          </IconButton>
         </Box>
         <CustomText sx={{ fontSize: { xs: 12, sm: 14, md: 15 }, fontWeight: 600, color: "#2c2c2c", minWidth: { xs: 56, sm: 70, md: 80 }, textAlign: "right", flexShrink: 0 }}>
           INR {getItemPrice(item)}

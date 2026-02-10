@@ -191,9 +191,10 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
         return [];
     };
 
-    // Fetch cart count = number of line items (guest: from Redux; logged-in: API)
+    // Fetch cart count = number of cart items (guest: from Redux; logged-in: API)
     useEffect(() => {
         if (!isLoggedIn) {
+            // Guest: cart count = number of distinct items
             setCartCount((guestCart ?? []).length);
             return;
         }
@@ -203,8 +204,8 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
                 const cartData = await getCart();
                 if (cancelled) return;
                 const items = getCartItemsFromResponse(cartData);
-                const count = items.reduce((sum, it) => sum + (Number(it?.quantity) || 1), 0);
-                setCartCount(count);
+                // Logged-in: cart count = number of distinct items
+                setCartCount(items.length);
             } catch (error) {
                 if (!cancelled) {
                     console.error("Error fetching cart count:", error);
@@ -242,15 +243,15 @@ export const TopHeader = ({ onOpenMobileMenu }) => {
             }
             if (!getAccessToken()) {
                 const guestCartItems = store.getState().guest?.guestCart ?? [];
-                const guestCount = guestCartItems.reduce((s, it) => s + (Number(it?.quantity) || 1), 0);
-                setCartCount(guestCount);
+                // Guest: cart count = number of distinct items
+                setCartCount(guestCartItems.length);
                 return;
             }
             try {
                 const cartData = await getCart();
                 const items = getCartItemsFromResponse(cartData);
-                const count = items.reduce((sum, it) => sum + (Number(it?.quantity) || 1), 0);
-                setCartCount(count);
+                // Logged-in: cart count = number of distinct items
+                setCartCount(items.length);
             } catch (error) {
                 console.error("Error fetching cart count:", error);
             }

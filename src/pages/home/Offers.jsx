@@ -1,7 +1,7 @@
 import { Box, Container,  Grid, Card, CardContent, Button, Chip } from "@mui/material";
 import { CustomText } from "../../components/comman/CustomText";
-import jointeams from "../../assets/jointeams.png";
-import ourculture from "../../assets/ourculture.png";
+import jointeams from "../../assets/jointeams.webp";
+import ourculture from "../../assets/ourculture.webp";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import LightbulbIcon from "@mui/icons-material/Lightbulb";
 import EnergySavingsLeafIcon from "@mui/icons-material/EnergySavingsLeaf";

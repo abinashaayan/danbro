@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Box, Button, Container, Alert, CircularProgress, InputLabel } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
-import banner from "../../assets/login.png";
+import banner from "../../assets/login.webp";
 import { CustomTextField } from "../../components/comman/CustomTextField";
 import { CustomButton } from "../../components/comman/CustomButton";
 import { CustomText } from "../../components/comman/CustomText";

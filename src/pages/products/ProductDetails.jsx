@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { addToRecentlyViewed, fetchProducts, fetchProductById } from "../../utils/apiService";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { useHomeLayout } from "../../hooks/useHomeLayout";
-import { addToCart, getCart } from "../../utils/cart";
+import { addToCart, getCart, increaseItemCount, decreaseItemCount } from "../../utils/cart";
 import { addToWishlist, removeFromWishlist, isInWishlist } from "../../utils/wishlist";
 import { getStoredLocation } from "../../utils/location";
 import blankImage from "../../assets/blankimage.png";
@@ -30,6 +30,7 @@ export const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [productWeight, setProductWeight] = useState("500g");
   const [addingToCart, setAddingToCart] = useState(false);
+  const [quantityUpdatingAction, setQuantityUpdatingAction] = useState(null); // 'increment' | 'decrement' | null
   const [cartMessage, setCartMessage] = useState(null);
   const [cakeMessage, setCakeMessage] = useState("");
   const [expanded, setExpanded] = useState(false);
@@ -120,6 +121,21 @@ export const ProductDetails = () => {
           if (response?.success && hasValidProduct) {
             setProduct(data);
             setProductWeight(data.weight || "500g");
+
+            // If API tells us cart status & quantity, reflect it in UI
+            if (data) {
+              let apiQty = null;
+              if (typeof data.quantity === "number") {
+                apiQty = data.quantity;
+              } else if (typeof data.quantity === "string") {
+                const parsed = parseInt(data.quantity, 10);
+                if (!Number.isNaN(parsed)) apiQty = parsed;
+              }
+              setQuantity(apiQty && apiQty > 0 ? apiQty : 1);
+            } else {
+              setQuantity(1);
+            }
+
             markRecentlyViewed();
             setLoading(false);
             return;
@@ -276,12 +292,77 @@ export const ProductDetails = () => {
 
   const productIdForCart = product?._id || product?.productId || product?.id || id;
   const isProductInCart = useMemo(() => {
+    // Prefer API flag when available
+    if (product?.isCart === true) return true;
     if (!productIdForCart || !Array.isArray(cartItems)) return false;
 
     return cartItems.some(
       (item) => String(item.productId || item._id || "") === String(productIdForCart)
     );
-  }, [cartItems, productIdForCart]);
+  }, [cartItems, productIdForCart, product?.isCart]);
+
+  const syncQuantityFromCart = async () => {
+    if (!productIdForCart) return;
+    try {
+      const res = await getCart();
+      const items = Array.isArray(res?.items) ? res.items : (Array.isArray(res?.data) ? res.data : []);
+      setCartItems(items);
+      const found = items.find(
+        (item) => String(item.productId || item._id || "") === String(productIdForCart)
+      );
+      if (found && found.quantity != null) {
+        const q = typeof found.quantity === "number"
+          ? found.quantity
+          : parseInt(found.quantity, 10);
+        setQuantity(!Number.isNaN(q) && q > 0 ? q : 1);
+      } else {
+        // Item no longer in cart – reset UI quantity
+        setQuantity(1);
+      }
+    } catch (err) {
+      console.error("Failed to sync quantity from cart:", err);
+    }
+  };
+
+  const handleIncreaseQuantityClick = async () => {
+    if (quantityUpdatingAction) return;
+    // If product already in cart, update via cart API
+    if (isProductInCart && productIdForCart) {
+      try {
+        setQuantityUpdatingAction("increment");
+        await increaseItemCount(productIdForCart);
+        await syncQuantityFromCart();
+        window.dispatchEvent(new CustomEvent("cartUpdated"));
+      } catch (err) {
+        console.error("Error increasing quantity from product page:", err);
+      } finally {
+        setQuantityUpdatingAction(null);
+      }
+      return;
+    }
+    // Not in cart yet – just adjust local quantity
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecreaseQuantityClick = async () => {
+    if (quantityUpdatingAction) return;
+    // If product already in cart, update via cart API
+    if (isProductInCart && productIdForCart) {
+      try {
+        setQuantityUpdatingAction("decrement");
+        await decreaseItemCount(productIdForCart);
+        await syncQuantityFromCart();
+        window.dispatchEvent(new CustomEvent("cartUpdated"));
+      } catch (err) {
+        console.error("Error decreasing quantity from product page:", err);
+      } finally {
+        setQuantityUpdatingAction(null);
+      }
+      return;
+    }
+    // Not in cart yet – keep minimum 1
+    setQuantity((prev) => Math.max(1, prev - 1));
+  };
 
   const handleWishlistToggle = async () => {
     if (!productIdForWishlist || wishlistLoading) return;
@@ -443,6 +524,10 @@ export const ProductDetails = () => {
               deliveryLocationLabel={deliveryLocationLabel}
               quantity={quantity}
               onQuantityChange={setQuantity}
+              quantityUpdating={!!quantityUpdatingAction}
+              quantityUpdatingAction={quantityUpdatingAction}
+              onIncreaseQuantity={handleIncreaseQuantityClick}
+              onDecreaseQuantity={handleDecreaseQuantityClick}
               onAddToCart={handleAddToCart}
               addingToCart={addingToCart}
               product={product}

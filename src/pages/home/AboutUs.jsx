@@ -3,7 +3,7 @@ import { CustomText } from "../../components/comman/CustomText";
 import logo from "../../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
 import blogHero from "../../assets/blog.png";
-import planning from "../../assets/2f1c127d9f6293a74bd052f2c516c77a6713fa7f.jpg";
+import planning from "../../assets/2f1c127d9f6293a74bd052f2c516c77a6713fa7f.webp";
 import { YouTubeVideosSection } from "../../components/home/YouTubeVideosSection";
 import BusinessIcon from "@mui/icons-material/Business";
 import PersonIcon from "@mui/icons-material/Person";

@@ -84,7 +84,14 @@ export const ProductDetailsReviews = ({ productId }) => {
     try {
       const res = await getReviewsByProduct(productId);
       const data = res?.data ?? res;
-      const list = Array.isArray(data?.reviews) ? data.reviews : [];
+      let list = [];
+      if (Array.isArray(data)) {
+        list = data;
+      } else if (Array.isArray(data?.reviews)) {
+        list = data.reviews;
+      } else if (Array.isArray(res?.data)) {
+        list = res.data;
+      }
       setReviews(list);
     } catch (err) {
       setError(err.message || "Failed to load reviews.");
@@ -129,7 +136,6 @@ export const ProductDetailsReviews = ({ productId }) => {
     fontWeight: 700,
     color: "#3d2914",
     fontFamily: "'Inter', sans-serif",
-    mb: 2,
   };
 
   const cardSx = {
@@ -138,14 +144,14 @@ export const ProductDetailsReviews = ({ productId }) => {
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 1, md: 3 }, px: { xs: 2, sm: 3, md: 4 }, maxWidth: "100%", }}>
-      <Typography sx={{ ...sectionTitleSx, mb: 3 }}>Ratings & Reviews</Typography>
+      <Typography sx={{ ...sectionTitleSx, mb: 1 }}>Ratings & Reviews</Typography>
 
       {loading ? (
         <ReviewsListSkeleton count={4} />
       ) : (
         <>
           {/* Summary: average + distribution */}
-          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 3, mb: 4, }}>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 3, mb: 1, }}>
             <Box
               sx={{
                 minWidth: { sm: 220 },
@@ -156,7 +162,7 @@ export const ProductDetailsReviews = ({ productId }) => {
                 justifyContent: "center",
               }}
             >
-              <Typography  sx={{    fontSize: "2.5rem",    fontWeight: 700,    color: "#3d2914",    fontFamily: "'Inter', sans-serif",    lineHeight: 1.2,  }}>
+              <Typography sx={{ fontSize: "2.5rem", fontWeight: 700, color: "#3d2914", fontFamily: "'Inter', sans-serif", lineHeight: 1.2, }}>
                 {summary.averageRating > 0 ? summary.averageRating.toFixed(1) : "0.0"}
               </Typography>
               <Rating
@@ -167,7 +173,7 @@ export const ProductDetailsReviews = ({ productId }) => {
                 emptyIcon={<StarIcon fontSize="inherit" />}
                 sx={{ color: "#c9a227", my: 0.5 }}
               />
-              <Typography  sx={{    fontSize: "0.875rem",    color: "#5c4a32",    fontFamily: "'Inter', sans-serif",  }}>
+              <Typography sx={{ fontSize: "0.875rem", color: "#5c4a32", fontFamily: "'Inter', sans-serif", }}>
                 Based on {summary.totalReviews} review{summary.totalReviews !== 1 ? "s" : ""}
               </Typography>
             </Box>
@@ -176,16 +182,16 @@ export const ProductDetailsReviews = ({ productId }) => {
               {[5, 4, 3, 2, 1].map((star) => {
                 const pct = summary.distributionPct[star - 1] ?? 0;
                 return (
-                  <Box  key={star}  sx={{    display: "flex",    alignItems: "center",    gap: 1.5,    mb: 1.5,  }}>
+                  <Box key={star} sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5, }}>
                     <Box sx={{ display: "flex", width: 100, flexShrink: 0 }}>
                       {[1, 2, 3, 4, 5].map((s) => (
-                        <StarIcon  key={s}  sx={{    fontSize: 18,    color: s <= star ? "#c9a227" : "#e0d5c7",  }}/>
+                        <StarIcon key={s} sx={{ fontSize: 18, color: s <= star ? "#c9a227" : "#e0d5c7", }} />
                       ))}
                     </Box>
-                    <Box  sx={{    flex: 1,    height: 10,    backgroundColor: "#ebe6df",    borderRadius: 1,    overflow: "hidden",  }}>
-                      <Box  sx={{    height: "100%",    width: `${pct}%`,    backgroundColor: "#8b6914",    borderRadius: 1,    minWidth: pct > 0 ? 4 : 0,  }}/>
+                    <Box sx={{ flex: 1, height: 10, backgroundColor: "#ebe6df", borderRadius: 1, overflow: "hidden", }}>
+                      <Box sx={{ height: "100%", width: `${pct}%`, backgroundColor: "#8b6914", borderRadius: 1, minWidth: pct > 0 ? 4 : 0, }} />
                     </Box>
-                    <Typography  sx={{    width: 36,    textAlign: "right",    fontSize: "0.875rem",    color: "#3d2914",    fontFamily: "'Inter', sans-serif",  }}>
+                    <Typography sx={{ width: 36, textAlign: "right", fontSize: "0.875rem", color: "#3d2914", fontFamily: "'Inter', sans-serif", }}>
                       {pct}%
                     </Typography>
                   </Box>
@@ -194,37 +200,66 @@ export const ProductDetailsReviews = ({ productId }) => {
             </Box>
           </Box>
 
-          <Box sx={{ borderBottom: "1px solid #e8e4de", mb: 3 }} />
-
           <Typography sx={{ ...sectionTitleSx }}>Customer Reviews</Typography>
+
+          {reviews?.length > 0 &&
+            reviews?.map((rev, i) => {
+              const name =
+                rev.user?.name ||
+                rev.userName ||
+                rev.name ||
+                "Customer";
+              const time = getTimeAgo(rev.createdAt || rev.date || rev.updatedAt);
+              const rating = Math.min(5, Math.max(1, Number(rev.rating) || 0));
+              const text = rev.review || rev.text || "";
+              const verified = rev.verifiedPurchase ?? rev.verified ?? true;
+              const helpful = rev.helpfulCount ?? rev.helpful ?? 0;
+
+              return (
+                <Box key={rev._id || rev.id || i} sx={{ ...cardSx, mb: 1 }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 1, mb: 1, }}>
+                    <Typography sx={{ fontWeight: 700, fontSize: "1rem", color: "#3d2914", fontFamily: "'Inter', sans-serif", }}>
+                      {name}
+                    </Typography>
+                    <Typography sx={{ fontSize: "0.8rem", color: "#8a7a6a", fontFamily: "'Inter', sans-serif", }}>
+                      {time}
+                    </Typography>
+                  </Box>
+                  <Rating value={rating} readOnly size="small" sx={{ color: "#c9a227", mb: 1 }} />
+                  <Typography sx={{ fontSize: "0.9375rem", color: "#3d2914", lineHeight: 1.6, fontFamily: "'Inter', sans-serif", mb: 1.5, whiteSpace: "pre-wrap", wordBreak: "break-word", }}>
+                    {text}
+                  </Typography>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap", }}>
+                    {verified && (
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "#2e7d32", }}>
+                        <CheckCircleIcon sx={{ fontSize: 18 }} />
+                        <Typography component="span" sx={{ fontSize: "0.8rem", fontWeight: 500 }}>
+                          Verified Purchase
+                        </Typography>
+                      </Box>
+                    )}
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, color: "#a67c52", }}>
+                      <ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />
+                      <Typography component="span" sx={{ fontSize: "0.8rem" }}>
+                        Helpful ({helpful})
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              );
+            })}
 
           {/* Write review (logged in) */}
           {isLoggedIn && (
             <Box sx={{ ...cardSx, mb: 3 }}>
-              <Typography
-                sx={{
-                  fontSize: "0.95rem",
-                  fontWeight: 600,
-                  color: "#3d2914",
-                  fontFamily: "'Inter', sans-serif",
-                  mb: 1.5,
-                }}
-              >
+              <Typography sx={{ fontSize: "0.95rem", fontWeight: 600, color: "#3d2914", fontFamily: "'Inter', sans-serif", mb: 1, }}>
                 Write a review
               </Typography>
-              <Box sx={{ mb: 2 }}>
-                <Typography
-                  component="span"
-                  sx={{ fontSize: "0.875rem", color: "#5c4a32", mr: 1 }}
-                >
+              <Box sx={{ mb: 1 }}>
+                <Typography component="span" sx={{ fontSize: "0.875rem", color: "#5c4a32", mr: 1 }}>
                   Rating
                 </Typography>
-                <Rating
-                  value={submitRating}
-                  onChange={(_, v) => setSubmitRating(v ?? 5)}
-                  size="medium"
-                  sx={{ color: "#c9a227" }}
-                />
+                <Rating value={submitRating} onChange={(_, v) => setSubmitRating(v ?? 5)} size="medium" sx={{ color: "#c9a227" }} />
               </Box>
               <TextField
                 fullWidth
@@ -271,121 +306,13 @@ export const ProductDetailsReviews = ({ productId }) => {
             <Typography sx={{ color: "#c62828", mb: 2 }}>{error}</Typography>
           )}
 
-          {reviews.length === 0 && !loading && (
+          {reviews?.length === 0 && !loading && (
             <Box sx={{ ...cardSx, py: 4, textAlign: "center" }}>
               <Typography sx={{ color: "#5c4a32", fontFamily: "'Inter', sans-serif" }}>
                 No reviews yet. Be the first to review!
               </Typography>
             </Box>
           )}
-
-          {reviews?.length > 0 &&
-            reviews?.map((rev, i) => {
-              const name =
-                rev.user?.name ||
-                rev.userName ||
-                rev.name ||
-                "Customer";
-              const time = getTimeAgo(rev.createdAt || rev.date || rev.updatedAt);
-              const rating = Math.min(5, Math.max(1, Number(rev.rating) || 0));
-              const text = rev.review || rev.text || "";
-              const verified = rev.verifiedPurchase ?? rev.verified ?? true;
-              const helpful = rev.helpfulCount ?? rev.helpful ?? 0;
-
-              return (
-                <Box key={rev._id || rev.id || i} sx={{ ...cardSx, mb: 2 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      flexWrap: "wrap",
-                      gap: 1,
-                      mb: 1,
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontWeight: 700,
-                        fontSize: "1rem",
-                        color: "#3d2914",
-                        fontFamily: "'Inter', sans-serif",
-                      }}
-                    >
-                      {name}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        fontSize: "0.8rem",
-                        color: "#8a7a6a",
-                        fontFamily: "'Inter', sans-serif",
-                      }}
-                    >
-                      {time}
-                    </Typography>
-                  </Box>
-                  <Rating
-                    value={rating}
-                    readOnly
-                    size="small"
-                    sx={{ color: "#c9a227", mb: 1 }}
-                  />
-                  <Typography
-                    sx={{
-                      fontSize: "0.9375rem",
-                      color: "#3d2914",
-                      lineHeight: 1.6,
-                      fontFamily: "'Inter', sans-serif",
-                      mb: 1.5,
-                      whiteSpace: "pre-wrap",
-                      wordBreak: "break-word",
-                    }}
-                  >
-                    {text}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {verified && (
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 0.5,
-                          color: "#2e7d32",
-                        }}
-                      >
-                        <CheckCircleIcon sx={{ fontSize: 18 }} />
-                        <Typography
-                          component="span"
-                          sx={{ fontSize: "0.8rem", fontWeight: 500 }}
-                        >
-                          Verified Purchase
-                        </Typography>
-                      </Box>
-                    )}
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 0.5,
-                        color: "#a67c52",
-                      }}
-                    >
-                      <ThumbUpOutlinedIcon sx={{ fontSize: 18 }} />
-                      <Typography component="span" sx={{ fontSize: "0.8rem" }}>
-                        Helpful ({helpful})
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Box>
-              );
-            })}
         </>
       )}
     </Container>

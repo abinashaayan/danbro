@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { loginUser, checkAuth } from "../../store/authSlice";
 import { store } from "../../store/store";
 import { getGuestCart, getGuestWishlist } from "../../store/guestSlice";
-import banner from "../../assets/login.png";
+import banner from "../../assets/login.webp";
 import { CustomTextField } from "../../components/comman/CustomTextField";
 import { CustomButton } from "../../components/comman/CustomButton";
 import { CustomText } from "../../components/comman/CustomText";

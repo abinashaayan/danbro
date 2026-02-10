@@ -6,6 +6,7 @@
   /* Heading font (for hero etc.) */
   --fontFamily: 'Inter', sans-serif;
 }
+
 /* Sansita Swashed */
 .sansita-swashed {
   font-family: "Sansita Swashed", system-ui;
@@ -47,7 +48,12 @@ body {
 }
 
 /* Global typography */
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 .MuiTypography-h1,
 .MuiTypography-h2,
 .MuiTypography-h3,
@@ -71,13 +77,16 @@ span,
   font-family: 'Inter', sans-serif;
   font-weight: 500;
 }
+
 .MuiContainer-root.MuiContainer-maxWidthFalse.css-935ve3-MuiContainer-root {
   padding-top: 20px;
 }
+
 .MuiBox-root.css-1x6uh2p {
   padding: 12px;
   padding-top: 30px;
 }
+
 /* .MuiBox-root.css-1q0h42n: only on mobile / Android view (not desktop) */
 @media (max-width: 599px) {
   .MuiBox-root.css-1q0h42n {
@@ -106,6 +115,7 @@ span,
   padding-left: 16px;
   padding-right: 16px;
 }
+
 .container-fluid {
   width: 100%;
   padding-left: 16px;
@@ -116,7 +126,7 @@ span,
   overflow: visible !important;
 }
 
-.slick-slide > div {
+.slick-slide>div {
   overflow: visible !important;
 }
 
@@ -128,7 +138,7 @@ span,
 }
 
 .MuiBox-root.css-njg9tb {
-    padding: 10px;
+  padding: 10px;
 }
 
 @media (min-width: 0px) {
@@ -136,22 +146,24 @@ span,
     padding: 10px;
   }
 }
+
 /* Mobile/Android view - padding 12px + padding-top for navbar */
 @media (max-width: 1199px) {
   .css-awq9fn {
-      padding: 12px !important;
-      padding-top: 111px !important;
+    padding: 12px !important;
+    padding-top: 111px !important;
   }
 }
 
 /* Desktop/Laptop/Small laptop - keep 111px so content does not go under fixed navbar */
 @media (min-width: 1200px) {
   .css-awq9fn {
-      padding-top: 80px !important;
+    padding-top: 80px !important;
   }
 }
 
 @media (min-width: 600px) {
+
   .css-1u606s6-MuiContainer-root,
   .MuiContainer-root {
     padding-left: 0 !important;
@@ -174,13 +186,13 @@ span,
   .css-1wc8q2d {
     margin-top: 0 !important;
   }
-  
+
   /* Fix Social Media Icons positioning at 900px breakpoint */
   .css-nipd8c {
     left: 20px !important;
     gap: 12px !important;
   }
-  
+
   /* Fix Social Media Icons positioning at 900px breakpoint */
   .css-1jtst5e {
     left: 10px !important;
@@ -209,10 +221,12 @@ img {
 }
 
 /* Smooth transitions for interactive elements */
-button, a, [role="button"] {
+button,
+a,
+[role="button"] {
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Below-the-fold sections: browser can skip rendering until near viewport (smoother scroll) */
@@ -223,6 +237,7 @@ button, a, [role="button"] {
 
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -236,9 +251,9 @@ button, a, [role="button"] {
 /* Scroll to top FAB - desktop position/size */
 @media (min-width: 900px) {
   .scroll-to-top-fab {
-    bottom: 90px !important;
-    right: 19px !important;
-    width: 58px !important;
-    height: 58px !important;
+    bottom: 100px !important;
+    right: 24px !important;
+    width: 65px !important;
+    height: 65px !important;
   }
 }

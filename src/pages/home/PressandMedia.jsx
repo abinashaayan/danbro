@@ -5,7 +5,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import cateringEvents from "../../assets/createevents.png";
 import offers from "../../assets/a3d911fa3a066482b613b012d6ec9a5c875d515c.jpg";
-import offers1 from "../../assets/b7a67b048af16c83e30c7f2f03dc8270f5a65c26.png";
+import offers1 from "../../assets/2f1c127d9f6293a74bd052f2c516c77a6713fa7f.webp";
 import offers2 from "../../assets/b99b1bd9963e106a73131dcda2ec226e89d0989e.png";
 import offers3 from "../../assets/bc84d9cc0eb41c63b819361b1b34b0cd8a96b431.jpg";
 import { useState, useEffect, useRef } from "react";

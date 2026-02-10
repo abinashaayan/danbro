@@ -15,7 +15,7 @@ import {
 import { CustomText } from "../../components/comman/CustomText";
 import { Search as SearchIcon, Clear as ClearIcon } from "@mui/icons-material";
 import { useSearchParams } from "react-router-dom";
-import Rectangle45 from "../../assets/Rectangle45.png";
+import Rectangle45 from "../../assets/Rectangle45.webp";
 import { useItemCategories } from "../../hooks/useItemCategories";
 import { useProducts } from "../../hooks/useProducts";
 import { CategoryTabs } from "../../components/comman/CategoryTabs";
