@@ -714,7 +714,7 @@ export const Login = () => {
                 },
               }}
             >
-              Welcome Back
+              Welcome
             </CustomText>
 
             <Box component="form" onSubmit={handleSubmit}>
