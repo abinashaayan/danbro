@@ -143,7 +143,7 @@ export const TestimonialsCarousel = () => {
             "&::before": {
               content: '""',
               position: "absolute",
-              left: { xs: "15%", md: "20%" },
+              left: { xs: "15%", md: "18%" },
               top: 22,
               width: { xs: 45, md: 141 },
               height: 2,
@@ -152,7 +152,7 @@ export const TestimonialsCarousel = () => {
             "&::after": {
               content: '""',
               position: "absolute",
-              right: { xs: "15%", md: "20%" },
+              right: { xs: "15%", md: "18%" },
               top: 22,
               width: { xs: 45, md: 141 },
               height: 2,
