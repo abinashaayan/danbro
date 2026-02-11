@@ -25,6 +25,7 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
     const [isVisible, setIsVisible] = useState(true);
     const lastScrollY = useRef(0);
     const navbarRef = useRef(null);
+    const navStripRef = useRef(null); // inner flex strip for nav items (desktop)
     const { menus } = useHomeLayout();
     
     // Transform menus to navbar items format - memoized to prevent re-renders
@@ -113,6 +114,7 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                 onMouseLeave={() => setHoveredItem(null)}
             >
                 <Box
+                    ref={navStripRef}
                     sx={{
                         display: { xs: "none", md: "flex" },
                         justifyContent: "center",
@@ -151,6 +153,70 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                             background: "linear-gradient(90deg, transparent, rgba(255,148,114,0.3), transparent)",
                         },
                     }}
+                    onMouseMove={(e) => {
+                        if (!hoveredItem || !navStripRef.current) return;
+                        const x = e.clientX;
+                        const y = e.clientY;
+                        const strip = navStripRef.current;
+                        const stripRect = strip.getBoundingClientRect();
+                        const under = document.elementFromPoint(x, y);
+                        const overNavItem = under?.closest?.("[data-nav-item]");
+                        if (overNavItem && strip.contains(overNavItem)) {
+                            const newLabel = overNavItem.getAttribute("data-nav-label");
+                            const item = navbarItems?.find((i) => i.label === newLabel);
+                            if (newLabel !== hoveredItem) {
+                                if (item?.hasProducts) {
+                                    setHoveredItem(newLabel);
+                                    setAnchorEl(overNavItem);
+                                } else {
+                                    setHoveredItem(null);
+                                    setAnchorEl(null);
+                                }
+                            }
+                            return;
+                        }
+                        const inDropdown = under?.closest?.("[data-navbar-dropdown]");
+                        if (inDropdown) {
+                            if (y >= stripRect.bottom) return;
+                            const navItems = strip.querySelectorAll("[data-nav-item]");
+                            for (const el of navItems || []) {
+                                const rect = el.getBoundingClientRect();
+                                if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                                    const newLabel = el.getAttribute("data-nav-label");
+                                    const item = navbarItems?.find((i) => i.label === newLabel);
+                                    if (newLabel !== hoveredItem) {
+                                        if (item?.hasProducts) {
+                                            setHoveredItem(newLabel);
+                                            setAnchorEl(el);
+                                        } else {
+                                            setHoveredItem(null);
+                                            setAnchorEl(null);
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            return;
+                        }
+                        const navItems = strip.querySelectorAll("[data-nav-item]");
+                        for (const el of navItems || []) {
+                            const rect = el.getBoundingClientRect();
+                            if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+                                const newLabel = el.getAttribute("data-nav-label");
+                                const item = navbarItems?.find((i) => i.label === newLabel);
+                                if (newLabel !== hoveredItem) {
+                                    if (item?.hasProducts) {
+                                        setHoveredItem(newLabel);
+                                        setAnchorEl(el);
+                                    } else {
+                                        setHoveredItem(null);
+                                        setAnchorEl(null);
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }}
                 >
                     {navbarItems?.map(({ label, categoryId, hasProducts, path: itemPath }) => {
                         const showDropdown = hasProducts;
@@ -181,11 +247,9 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                                         setAnchorEl(null);
                                         return;
                                     }
-                                    // Keep open only if cursor moved into THIS item's dropdown (same label)
+                                    // Close when cursor leaves label UNLESS it moved into THIS item's dropdown only
                                     const enteredThisDropdown = relatedTarget.closest("[data-navbar-dropdown]")?.getAttribute("data-dropdown-for") === label;
-                                    // If cursor moved to another nav title, don't close here – that item's onMouseEnter will set new hover
-                                    const enteredAnotherNavItem = relatedTarget.closest("[data-nav-item]");
-                                    if (!enteredThisDropdown && !enteredAnotherNavItem) {
+                                    if (!enteredThisDropdown) {
                                         setHoveredItem(null);
                                         setAnchorEl(null);
                                     }
