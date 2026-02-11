@@ -2,12 +2,12 @@ import { Box, Container, Grid, Button } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import PeopleIcon from "@mui/icons-material/People";
 import planning from "../../assets/09f1ee59e9d78cc206e6e867e1cda04c1887d8f8.webp";
 import logo from "../../assets/logo.webp";
+import GradientBg from "../../assets/Group_906.webp";
 
 const features = [
   {
@@ -38,7 +38,7 @@ export const AboutBakerySection = () => {
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     setIsReducedMotion(mediaQuery.matches);
-    
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -64,6 +64,7 @@ export const AboutBakerySection = () => {
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : "translateY(50px)",
         transition: "opacity 0.8s ease, transform 0.8s ease",
+        backgroundImage: `url(${GradientBg})`,
       }}
     >
       <Container maxWidth="lg" sx={{ px: { xs: 2, md: 3 } }}>
@@ -129,48 +130,18 @@ export const AboutBakerySection = () => {
             >
               {/* Logo & Badge */}
               <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
-                {/* <Box
-                  component="img"
-                  src={logo}
-                  alt="Danbro Logo"
-                  sx={{
-                    height: { xs: 40, md: 50 },
-                    width: "auto",
-                  }}
-                /> */}
-                <CustomText
-                  sx={{
-                    fontSize: { xs: 10, md: 12 },
-                    fontWeight: 'bold',
-                    color: "#FF9472",
-                    textTransform: "uppercase",
-                    letterSpacing: 2,
-                  }}
-                >
+                <CustomText sx={{ fontSize: { xs: 10, md: 12 }, fontWeight: 'bold', color: "#FF9472", textTransform: "uppercase", letterSpacing: 2, }}>
                   About Danbro
                 </CustomText>
               </Box>
 
               {/* Title */}
-              <CustomText
-                sx={{
-                  fontSize: { xs: 28, sm: 32, md: 42 },
-                  fontWeight: 800,
-                  color: "var(--themeColor)",
-                  lineHeight: 1.2,
-                }}
-              >
+              <CustomText sx={{ fontSize: { xs: 28, sm: 32, md: 42 }, fontWeight: 800, color: "var(--themeColor)", lineHeight: 1.2, }}>
                 Crafting Sweet Memories Since 2006
               </CustomText>
 
               {/* Description */}
-              <CustomText
-                sx={{
-                  fontSize: { xs: 15, md: 17 },
-                  color: "#666",
-                  mb: 1,
-                }}
-              >
+              <CustomText sx={{ fontSize: { xs: 15, md: 17 }, color: "#666", mb: 1, }}>
                 A gourmet family-owned pastry shop in Lucknow, now expanded to Kanpur & Delhi. We blend Asian traditions with modern flavors, creating premium desserts, mousse cakes, artisan tarts, and innovative baked mithai.
               </CustomText>
 
@@ -213,23 +184,10 @@ export const AboutBakerySection = () => {
                       {feature.icon}
                     </Box>
                     <Box>
-                      <CustomText
-                        sx={{
-                          fontSize: { xs: 18, md: 20 },
-                          fontWeight: 700,
-                          color: "var(--themeColor)",
-                          mb: 0.5,
-                        }}
-                      >
+                      <CustomText sx={{ fontSize: { xs: 18, md: 20 }, fontWeight: 700, color: "var(--themeColor)", mb: 0.5, }}>
                         {feature.title}
                       </CustomText>
-                      <CustomText
-                        sx={{
-                          fontSize: { xs: 14, md: 15 },
-                          color: "#666",
-                          lineHeight: 1.6,
-                        }}
-                      >
+                      <CustomText sx={{ fontSize: { xs: 14, md: 15 }, color: "#666", lineHeight: 1.6, }}>
                         {feature.description}
                       </CustomText>
                     </Box>

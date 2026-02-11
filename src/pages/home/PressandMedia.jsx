@@ -1,4 +1,4 @@
-import { Box, Container,  Grid, Card, CardContent, Button } from "@mui/material";
+import { Box, Container, Grid, Card, CardContent, Button } from "@mui/material";
 import { CustomText } from "../../components/comman/CustomText";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -10,6 +10,7 @@ import offers2 from "../../assets/b99b1bd9963e106a73131dcda2ec226e89d0989e.webp"
 import offers3 from "../../assets/bc84d9cc0eb41c63b819361b1b34b0cd8a96b431.webp";
 import { useState, useEffect, useRef } from "react";
 import { Redeem } from "@mui/icons-material";
+import { Link } from "react-router-dom";
 
 export const PressandMedia = () => {
   const [visibleSections, setVisibleSections] = useState({});
@@ -195,21 +196,22 @@ export const PressandMedia = () => {
             <CustomText sx={{ mt: 6, fontSize: { xs: 18, md: 22 }, fontWeight: 700, mb: 2 }}>
               For press inquiries, interviews, or collaborations, feel free to reach out.
             </CustomText>
-            <Button variant="outlined"
-              sx={{
-                background: "#FFB5A1",
-                textTransform: "none",
-                px: { xs: 3, md: 4 },
-                py: 1.2,
-                fontWeight: 600,
-                color: "#000",
-                border: "none",
-                "&:hover": { background: "#fff1e8" }
-              }}
-            >
-              Contact Us
-            </Button>
-
+            <Link to="/contact" style={{ textDecoration: "none" }}>
+              <Button variant="outlined"
+                sx={{
+                  background: "#FFB5A1",
+                  textTransform: "none",
+                  px: { xs: 3, md: 4 },
+                  py: 1.2,
+                  fontWeight: 600,
+                  color: "#000",
+                  border: "none",
+                  "&:hover": { background: "#fff1e8" }
+                }}
+              >
+                Contact Us
+              </Button>
+            </Link>
           </Box>
         </Container>
       </Box>

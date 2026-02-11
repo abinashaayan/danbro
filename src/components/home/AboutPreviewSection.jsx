@@ -2,16 +2,13 @@ import { Box, Container, Grid, Button } from "@mui/material";
 import { CustomText } from "../comman/CustomText";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import LocalDiningIcon from "@mui/icons-material/LocalDining";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import PeopleIcon from "@mui/icons-material/People";
+import { CircleCheck, UtensilsCrossed, Trophy, Users } from "lucide-react";
 import planning from "../../assets/09f1ee59e9d78cc206e6e867e1cda04c1887d8f8.webp";
 import logo from "../../assets/logo.webp";
 
 const features = [
   {
-    icon: <LocalDiningIcon sx={{ fontSize: 40 }} />,
+    icon: <UtensilsCrossed size={40} strokeWidth={1.5} />,
     title: "Fresh Ingredients",
     description: "We use only the finest, freshest ingredients in all our products",
   },
@@ -21,7 +18,7 @@ const features = [
     description: "Recognized for excellence in bakery and confectionery",
   },
   {
-    icon: <PeopleIcon sx={{ fontSize: 40 }} />,
+    icon: <Users size={40} strokeWidth={1.5} />,
     title: "Expert Bakers",
     description: "Our skilled bakers bring years of experience to every creation",
   },
