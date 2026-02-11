@@ -178,8 +178,7 @@ export const DeliveryCheckDialog = ({ open, onClose, initialLocationLabel = "" }
         setServiceMessage({
           success: false,
           message:
-            'Location access was denied. To allow: (1) Click the lock or info icon in the address bar → Site settings → set Location to "Allow", then refresh. ' +
-            'Location works only on HTTPS or localhost. You can also type your area in the search box above to set delivery location.',
+            'Location access is not supported on this domain.'
         });
       } else {
         setServiceMessage({ success: false, message: 'Something went wrong. Please try again.' });

@@ -159,6 +159,8 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                         return (
                             <Box
                                 key={categoryId || label}
+                                data-nav-item
+                                data-nav-label={label}
                                 sx={{
                                     position: "relative",
                                 }}
@@ -174,9 +176,16 @@ export const Navbar = ({ mobileMenuOpen, onMobileMenuClose }) => {
                                 onMouseLeave={(e) => {
                                     if (!showDropdown) return;
                                     const relatedTarget = e.relatedTarget;
-                                    // Only keep open if cursor moved into THIS item's dropdown (not another item or navbar area)
-                                    const enteredDropdown = relatedTarget && typeof relatedTarget.closest === "function" && relatedTarget.closest("[data-navbar-dropdown]");
-                                    if (!enteredDropdown) {
+                                    if (!relatedTarget || typeof relatedTarget.closest !== "function") {
+                                        setHoveredItem(null);
+                                        setAnchorEl(null);
+                                        return;
+                                    }
+                                    // Keep open only if cursor moved into THIS item's dropdown (same label)
+                                    const enteredThisDropdown = relatedTarget.closest("[data-navbar-dropdown]")?.getAttribute("data-dropdown-for") === label;
+                                    // If cursor moved to another nav title, don't close here – that item's onMouseEnter will set new hover
+                                    const enteredAnotherNavItem = relatedTarget.closest("[data-nav-item]");
+                                    if (!enteredThisDropdown && !enteredAnotherNavItem) {
                                         setHoveredItem(null);
                                         setAnchorEl(null);
                                     }

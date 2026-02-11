@@ -235,6 +235,21 @@ a,
   contain-intrinsic-size: auto 400px;
 }
 
+/* Navbar dropdown – TranslateX item animation (dropdown_menu-5) */
+@keyframes navbarDropdownTranslateX {
+  0% {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  80% {
+    transform: translateX(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
 

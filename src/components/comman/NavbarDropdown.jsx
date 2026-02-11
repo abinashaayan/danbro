@@ -2,7 +2,7 @@ import { Box, Popover } from "@mui/material";
 import { CustomText } from "./CustomText";
 import { useNavigate } from "react-router-dom";
 import { useHomeLayout } from "../../hooks/useHomeLayout";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 
 /**
  * NavbarDropdown Component
@@ -82,8 +82,6 @@ const getHomePageSections = (navbarLabel) => {
 export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl }) => {
   const navigate = useNavigate();
   const { menus } = useHomeLayout();
-  const [animatedItems, setAnimatedItems] = useState(new Set());
-
   // Get category columns with varieties from menus - use cached data immediately
   const dropdownData = useMemo(() => {
     if (!menus || menus.length === 0) {
@@ -129,48 +127,6 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
 
   // Show empty state if no data yet (but still render the popover)
   const hasData = dropdownData?.columns && dropdownData?.columns.length > 0;
-
-  // Get all menu items for animation - must be before early return
-  const allMenuItems = useMemo(() => {
-    if (!hasData || !dropdownData?.columns) return [];
-    const items = [];
-    dropdownData?.columns.forEach((column) => {
-      if (column.varieties) {
-        column.varieties.forEach((variety, index) => {
-          items.push({ variety, column, index });
-        });
-      }
-    });
-    return items;
-  }, [dropdownData, hasData]);
-
-  // Animate items sequentially when menu opens/closes - complete within 1 second
-  useEffect(() => {
-    if (isOpen && hasData && allMenuItems.length > 0) {
-      // Reset animation state first
-      setAnimatedItems(new Set());
-
-      // Calculate delay to complete all animations within 1 second (1000ms)
-      const totalTime = 1000; // 1 second total
-      const itemCount = allMenuItems.length;
-      const delayPerItem = itemCount > 1 ? totalTime / itemCount : 0;
-
-      // Animate items with calculated delay
-      allMenuItems.forEach((item, index) => {
-        const delay = Math.round(index * delayPerItem);
-        setTimeout(() => {
-          setAnimatedItems((prev) => {
-            const newSet = new Set(prev);
-            newSet.add(`${item.column.categoryId}-${item.index}`);
-            return newSet;
-          });
-        }, delay);
-      });
-    } else if (!isOpen) {
-      // Reset immediately when menu closes
-      setAnimatedItems(new Set());
-    }
-  }, [isOpen, hasData, allMenuItems]);
 
   if (!isOpen) {
     return null;
@@ -306,6 +262,7 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
     >
       <Box
         data-navbar-dropdown
+        data-dropdown-for={category}
         sx={{
           py: { xs: 1.5, md: 2 },
           px: { xs: 2, sm: 2.5, md: 3 },
@@ -367,64 +324,58 @@ export const NavbarDropdown = ({ category, categoryId, isOpen, onClose, anchorEl
                 </CustomText>
 
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5, pl: 0, mt: 0.5 }}>
-                  {column?.varieties?.map((variety, varietyIndex) => {
-                    const itemKey = `${column?.categoryId}-${varietyIndex}`;
-                    const isAnimated = animatedItems.has(itemKey);
-
-                    return (
-                      <CustomText
-                        key={varietyIndex}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleVarietyClick(variety, column?.categoryId);
-                        }}
-                        sx={{
-                          fontSize: { xs: 13, sm: 14, md: 14 },
-                          color: "#444",
-                          cursor: "pointer",
-                          py: 0.75, px: 1.25,
-                          borderRadius: 1.5,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          textTransform: "none",
-                          fontWeight: 500,
-                          position: "relative",
-                          opacity: isAnimated ? 1 : 0,
-                          visibility: isAnimated ? "visible" : "hidden",
-                          transform: isAnimated ? "scale(1) translateX(0)" : "scale(1.1) translateX(-5px)",
-                          transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                          background: isAnimated
-                            ? "linear-gradient(90deg, transparent 0%, rgba(255,148,114,0.05) 50%, transparent 100%)"
-                            : "transparent",
-                          borderLeft: `3px solid ${isAnimated ? column?.color : "transparent"}`,
-                          "&::before": {
-                            content: '""',
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            bottom: 0,
-                            width: "0%",
-                            background: `linear-gradient(90deg, ${column?.color}15, ${column?.color}08)`,
-                            transition: "width 0.3s ease",
-                            borderRadius: "0 4px 4px 0",
-                          },
-                          "&:hover": {
-                            color: column?.color,
-                            backgroundColor: `${column?.color}12`,
-                            transform: "translateX(8px) scale(1.02)",
-                            fontWeight: 600,
-                            boxShadow: `0 2px 8px ${column?.color}25`,
-                            "&::before": { width: "100%" },
-                          },
-                        }}
-                        title={variety?.name || variety}
-                      >
-                        {variety?.name || variety}
-                      </CustomText>
-                    );
-                  })}
+                  {column?.varieties?.map((variety, varietyIndex) => (
+                    <CustomText
+                      key={varietyIndex}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleVarietyClick(variety, column?.categoryId);
+                      }}
+                      sx={{
+                        fontSize: { xs: 13, sm: 14, md: 14 },
+                        color: "#444",
+                        cursor: "pointer",
+                        py: 0.75,
+                        px: 1.25,
+                        borderRadius: 1.5,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        textTransform: "none",
+                        fontWeight: 500,
+                        position: "relative",
+                        transformOrigin: "top center",
+                        animation: "navbarDropdownTranslateX 300ms ease-in-out forwards",
+                        animationDelay: `${varietyIndex * 60}ms`,
+                        background: "linear-gradient(90deg, transparent 0%, rgba(255,148,114,0.05) 50%, transparent 100%)",
+                        borderLeft: `3px solid ${column?.color}`,
+                        transition: "background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease",
+                        "&::before": {
+                          content: '""',
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          bottom: 0,
+                          width: "0%",
+                          background: `linear-gradient(90deg, ${column?.color}15, ${column?.color}08)`,
+                          transition: "width 0.3s ease",
+                          borderRadius: "0 4px 4px 0",
+                        },
+                        "&:hover": {
+                          color: column?.color,
+                          backgroundColor: `${column?.color}12`,
+                          transform: "translateX(8px) scale(1.02)",
+                          fontWeight: 600,
+                          boxShadow: `0 2px 8px ${column?.color}25`,
+                          "&::before": { width: "100%" },
+                        },
+                      }}
+                      title={variety?.name || variety}
+                    >
+                      {variety?.name || variety}
+                    </CustomText>
+                  ))}
                 </Box>
 
               </Box>
