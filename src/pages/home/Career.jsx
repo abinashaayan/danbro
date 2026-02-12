@@ -1,410 +1,399 @@
-import { Box, Container, Grid, Card, CardContent, Button } from "@mui/material";
-import { CustomText } from "../../components/comman/CustomText";
+import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { useState, useEffect } from "react";
+import CloseIcon from "@mui/icons-material/Close";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EmailIcon from "@mui/icons-material/Email";
+import WorkspacePremiumIcon from "@mui/icons-material/WorkspacePremium";
+import RestaurantIcon from "@mui/icons-material/Restaurant";
+import SchoolIcon from "@mui/icons-material/School";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import HealthAndSafetyIcon from "@mui/icons-material/HealthAndSafety";
+import ScheduleIcon from "@mui/icons-material/Schedule";
+import WorkIcon from "@mui/icons-material/Work";
+import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CardGiftcardIcon from "@mui/icons-material/CardGiftcard";
+import SpaIcon from "@mui/icons-material/Spa";
+import ChildCareIcon from "@mui/icons-material/ChildCare";
+import CommuteIcon from "@mui/icons-material/Commute";
+import EventIcon from "@mui/icons-material/Event";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import SendIcon from "@mui/icons-material/Send";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { useState, useEffect, useRef } from "react";
-import { whyWorkWithUs, currentOpenings } from "../../utils/careerData";
+import { getAllCareers, getCareerById } from "../../utils/apiService";
+import "./Career.css";
+
+const BRAND = "#5F2930";
+
+const BENEFITS = [
+  { icon: RestaurantIcon, title: "Free baked goods", description: "Take home fresh products daily. Your family will love it." },
+  { icon: SchoolIcon, title: "Learning stipend", description: "₹25,000/year for courses, workshops, and certifications." },
+  { icon: HealthAndSafetyIcon, title: "Health insurance", description: "Comprehensive coverage for you and your family." },
+  { icon: ScheduleIcon, title: "Flexible hours", description: "Early morning or evening shifts that fit your life." },
+];
+
+const PERKS = [
+  { icon: RestaurantIcon, title: "Free meals & coffee", description: "Breakfast, lunch, and unlimited espresso" },
+  { icon: SpaIcon, title: "Wellness Wednesdays", description: "Yoga, meditation, and mental health days" },
+  { icon: ChildCareIcon, title: "Parental leave", description: "6 months maternity, 2 months paternity" },
+  { icon: CommuteIcon, title: "Commute subsidy", description: "50% off on metro & cabs" },
+  { icon: EventIcon, title: "Flexi holidays", description: "Work on your schedule, 30 days PTO" },
+  { icon: EmojiEventsIcon, title: "Monthly awards", description: "₹10k bonus for employee of the month" },
+];
+
+const CULTURE_IMAGES = [
+  "https://images.pexels.com/photos/3817648/pexels-photo-3817648.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "https://images.pexels.com/photos/3992534/pexels-photo-3992534.jpeg?auto=compress&cs=tinysrgb&w=400",
+  "https://images.pexels.com/photos/5908222/pexels-photo-5908222.jpeg?auto=compress&cs=tinysrgb&w=400",
+];
+
+const FILTER_TABS = [
+  { key: "all", label: "All departments" },
+  { key: "bakery", label: "Bakery" },
+  { key: "operations", label: "Operations" },
+  { key: "management", label: "Management" },
+  { key: "marketing", label: "Marketing" },
+];
 
 export const Career = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [visibleSections, setVisibleSections] = useState({});
-  const sectionRefs = {
-    header: useRef(null),
-    whyWork: useRef(null),
-    openings: useRef(null),
-    apply: useRef(null),
-  };
+  const [careers, setCareers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filter, setFilter] = useState("all");
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [selectedCareerId, setSelectedCareerId] = useState(null);
+  const [careerDetail, setCareerDetail] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
   useEffect(() => {
-    const observers = Object.keys(sectionRefs).map((key) => {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setVisibleSections((prev) => ({ ...prev, [key]: true }));
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-      if (sectionRefs[key].current) {
-        observer.observe(sectionRefs[key].current);
-      }
-      return observer;
-    });
-
-    return () => {
-      observers.forEach((observer) => observer.disconnect());
-    };
+    let cancelled = false;
+    setLoading(true);
+    setError(null);
+    getAllCareers()
+      .then((data) => {
+        if (!cancelled && Array.isArray(data)) setCareers(data);
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err?.message || "Failed to load careers.");
+          setCareers([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
   }, []);
 
+  useEffect(() => {
+    if (!detailOpen || !selectedCareerId) {
+      setCareerDetail(null);
+      return;
+    }
+    let cancelled = false;
+    setDetailLoading(true);
+    getCareerById(selectedCareerId)
+      .then((data) => { if (!cancelled) setCareerDetail(data); })
+      .catch(() => { if (!cancelled) setCareerDetail(null); })
+      .finally(() => { if (!cancelled) setDetailLoading(false); });
+    return () => { cancelled = true; };
+  }, [detailOpen, selectedCareerId]);
+
+  const openDetail = (id) => {
+    setSelectedCareerId(id);
+    setDetailOpen(true);
+  };
+
+  const closeDetail = () => {
+    setDetailOpen(false);
+    setSelectedCareerId(null);
+    setCareerDetail(null);
+  };
+
+  const getJobTitle = (j) => j?.title ?? j?.jobTitle ?? j?.name ?? "Position";
+  const getJobDesc = (j) => j?.description ?? j?.jobDescription ?? j?.details ?? "";
+  const getJobLocation = (j) => j?.location ?? j?.city ?? "";
+  const getJobType = (j) => j?.jobType ?? j?.type ?? "Full time";
+  const getSalary = (j) => j?.salary ?? j?.salaryRange ?? "";
+  const getExperience = (j) => j?.experience ?? j?.experienceRequired ?? "";
+
   return (
-    <Box sx={{ width: "100%", overflowX: "hidden", backgroundColor: "#fff", pb: { xs: 12, sm: 8, md: 0 }, p: { xs: 1.25, sm: 1.5, md: 0 }, pt: { xs: 0, md: 6 }, mb: 5 }}>
-      <Container sx={{ py: { xs: 4, sm: 4, md: 4, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 4 } }}>
-        <Box
-          ref={sectionRefs.header}
-          sx={{
-            opacity: visibleSections.header ? 1 : 0,
-            transform: visibleSections.header ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-            px: { xs: 0, sm: 0, md: 1, lg: 0 },
-          }}
-        >
-          <CustomText variant="h4" sx={{ fontWeight: 700, color: "#2c2c2c", mb: 3, fontSize: { xs: 24, sm: 28, md: 30, lg: 32 }, }}>
-            Join the Danbro Bakery Team
-          </CustomText>
-          <CustomText variant="body1" sx={{ fontSize: { xs: 13, sm: 14, md: 15, lg: 16 }, color: "#666", lineHeight: 1.8, }}>
-            At Danbro Bakery, we're more than just a team; we're a family. We're passionate about crafting delicious baked goods and creating a positive work environment where everyone can thrive. If you're looking for a rewarding career in the baking industry, we invite you to explore opportunities with us.
-          </CustomText>
-        </Box>
-      </Container>
+    <Box className="career-page-wrap">
+      <Box className="career-container">
+        {/* Hero */}
+        <section className="career-hero">
+          <div className="hero-content">
+            <Box className="hero-badge" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <WorkspacePremiumIcon sx={{ fontSize: "1.1rem" }} />
+              JOIN THE DANBRO FAMILY
+            </Box>
+            <h1 className="hero-title">
+              Bake your <span className="highlight">career</span>
+              <br />
+              with passion
+            </h1>
+            <p className="hero-description">
+              Be part of a team that turns simple ingredients into moments of joy.
+              We're looking for bakers, creators, and dreamers to grow with us.
+            </p>
+            <div className="hero-stats">
+              <div className="stat-item">
+                <span className="stat-number">{loading ? "—" : careers.length}</span>
+                <span className="stat-label">open positions</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">150+</span>
+                <span className="stat-label">team members</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number">12</span>
+                <span className="stat-label">bakery locations</span>
+              </div>
+            </div>
+          </div>
+          <div className="hero-image">
+            <img
+              src="https://images.pexels.com/photos/205961/pexels-photo-205961.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Danbro Bakery team"
+            />
+          </div>
+        </section>
 
-      {/* Why Work With Us Section */}
-      <Container ref={sectionRefs.whyWork} sx={{ px: { xs: 2, sm: 3, md: 4, lg: 4 }, py: { xs: 2, sm: 3, md: 3, lg: 4 } }}>
-        <Box
-          sx={{
-            opacity: visibleSections.whyWork ? 1 : 0,
-            transform: visibleSections.whyWork ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-            px: { xs: 0, sm: 0, md: 1, lg: 0 },
-          }}
-        >
-          <CustomText
-            variant="h2"
-            sx={{
-              fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
-              fontWeight: 700,
-              color: "#2c2c2c",
-              mb: { xs: 3, sm: 3.5, md: 4, lg: 4 },
-            }}
-          >
-            Why Work With Us?
-          </CustomText>
-          <Grid container spacing={{ xs: 2, sm: 2, md: 2.5, lg: 3 }}>
-            {whyWorkWithUs?.map((item, index) => (
-              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-                <Card
-                  onClick={() => setActiveIndex(index)}
-                  sx={{
-                    height: "100%",
-                    borderRadius: 3,
-                    cursor: "pointer",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    transition: "all 0.3s ease",
-                    animation: visibleSections.whyWork
-                      ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
-                      : "none",
-                    "@keyframes fadeInUp": {
-                      "0%": { opacity: 0, transform: "translateY(20px)" },
-                      "100%": { opacity: 1, transform: "translateY(0)" },
-                    },
-                    "&:hover": {
-                      transform: "translateY(-5px)",
-                      boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
-                    },
-                    p: { xs: 2, md: 3 },
-                    backgroundColor: "#fff",
-                    border: "2px solid #e0e0e0",
-                    ...(activeIndex === index && {
-                      backgroundColor: "#FFE5E5",
-                      border: "2px solid #ff9800",
-                    }),
-                  }}
-                >
-                  <CardContent sx={{ p: 0 }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-                      <item.icon sx={{ fontSize: { xs: 36, md: 40 }, color: activeIndex === index ? "#ff9800" : "#2c2c2c", transition: "0.3s", }} />
-                    </Box>
-
-                    <CustomText variant="h6" sx={{ fontWeight: 700, mb: 1.5, color: "#2c2c2c", fontSize: { xs: 16, sm: 17, md: 17, lg: 18 }, textAlign: "center", }}>
-                      {item?.title}
-                    </CustomText>
-
-                    <CustomText variant="body2" sx={{ color: "#666", lineHeight: 1.7, fontSize: { xs: 13, sm: 13.5, md: 13.5, lg: 14 }, textAlign: "center", }}>
-                      {item?.description}
-                    </CustomText>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-      </Container>
-
-      {/* Current Openings Section */}
-      <Container sx={{ py: { xs: 4, sm: 4, md: 4, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 4 } }} ref={sectionRefs.openings}>
-        <Box
-          sx={{
-            opacity: visibleSections.openings ? 1 : 0,
-            transform: visibleSections.openings ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-            px: { xs: 0, sm: 0, md: 1, lg: 0 },
-          }}
-        >
-          <CustomText
-            variant="h2"
-            sx={{
-              fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
-              fontWeight: 700,
-              color: "#2c2c2c",
-              mb: { xs: 3, sm: 3.5, md: 4, lg: 4 },
-            }}
-          >
-            Current Openings
-          </CustomText>
-          <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 3 }}>
-            {currentOpenings?.map((job, index) => {
-              const IconComponent = job.icon;
+        {/* Why join us */}
+        <section className="why-join-section">
+          <div className="section-header">
+            <div className="section-title">
+              <Box className="section-title-icon" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <FavoriteIcon sx={{ fontSize: "inherit" }} />
+              </Box>
+              <h2>Why join us?</h2>
+            </div>
+            <span className="section-subtitle">More than just a job</span>
+          </div>
+          <div className="benefits-grid">
+            {BENEFITS.map((item) => {
+              const Icon = item.icon;
               return (
-                <Grid size={12} key={index}>
-                  <Box
-                    sx={{
-                      border: "2px solid #FFE5E5",
-                      borderRadius: "10px",
-                      animation: visibleSections.openings
-                        ? `fadeInUp 0.6s ease-out ${index * 0.1}s both`
-                        : "none",
-                      "@keyframes fadeInUp": {
-                        "0%": { opacity: 0, transform: "translateY(20px)" },
-                        "100%": { opacity: 1, transform: "translateY(0)" },
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: { xs: "column", sm: "row" },
-                        alignItems: { xs: "flex-start", sm: "center" },
-                        gap: { xs: 2, sm: 3 },
-                        p: 1,
-                        borderRadius: 3,
-                        transition: "all 0.3s ease",
-                        "&:hover": {
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                          transform: "translateY(-2px)",
-                        },
-                      }}
-                    >
-                      <Box sx={{ display: "flex", alignItems: "center", gap: { xs: 1.5, sm: 2 }, flex: 1, width: "100%", }}>
-                        <Box sx={{ p: { xs: 1.2, sm: 1.5 }, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "#FFE2DA", borderRadius: 2, flexShrink: 0, }}>
-                          <IconComponent sx={{ fontSize: { xs: 28, sm: 32, md: 36 }, color: "#171412", }} />
-                        </Box>
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <CustomText variant="h6" sx={{ fontWeight: 700, color: "#2c2c2c", fontSize: { xs: 16, sm: 18, md: 19, lg: 20 }, mb: 0.5, }}>
-                            {job?.title}
-                          </CustomText>
-                          <CustomText variant="body2" sx={{ color: "#666", fontSize: { xs: 12, sm: 13, md: 13.5, lg: 14 }, }}>
-                            {job?.description}
-                          </CustomText>
-                        </Box>
-                      </Box>
-                    </Box>
+                <div key={item.title} className="benefit-card">
+                  <Box className="benefit-icon">
+                    <Icon sx={{ fontSize: "2rem" }} />
                   </Box>
-                </Grid>
+                  <h3>{item.title}</h3>
+                  <p>{item.description}</p>
+                </div>
               );
             })}
-          </Grid>
-        </Box>
-      </Container>
+          </div>
+        </section>
 
-      {/* How to Apply Section */}
-      <Container sx={{ py: { xs: 4, sm: 4, md: 4, lg: 0 }, px: { xs: 2, sm: 3, md: 4, lg: 4 }, mb: 5, mt: 2 }} ref={sectionRefs.apply}>
-        <Box
-          sx={{
-            opacity: visibleSections.apply ? 1 : 0,
-            transform: visibleSections.apply ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease-out, transform 0.8s ease-out",
-            px: { xs: 0, sm: 0, md: 1, lg: 0 },
-          }}
-        >
-          <CustomText
-            variant="h2"
-            sx={{
-              fontSize: { xs: 22, sm: 26, md: 28, lg: 32 },
-              fontWeight: 700,
-              color: "#2c2c2c",
-              mb: { xs: 3, sm: 3.5, md: 4, lg: 4 },
-            }}
-          >
-            How to Apply
-          </CustomText>
-          <Grid container spacing={{ xs: 2, sm: 3, md: 3, lg: 4 }}>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: { xs: 1.5, sm: 2 },
-                  p: { xs: 2, sm: 2.5, md: 2.5, lg: 3 },
-                  borderRadius: 3,
-                  backgroundColor: "#f9f9f9",
-                  height: "100%",
-                  transition: "all 0.3s ease",
-                  animation: visibleSections.apply
-                    ? `fadeInUp 0.6s ease-out 0s both`
-                    : "none",
-                  "@keyframes fadeInUp": {
-                    "0%": { opacity: 0, transform: "translateY(20px)" },
-                    "100%": { opacity: 1, transform: "translateY(0)" },
-                  },
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                  },
-                }}
-              >
-                <LocationOnIcon
-                  sx={{
-                    fontSize: { xs: 28, sm: 32 },
-                    color: "#FF9472",
-                    mt: 0.5,
-                    flexShrink: 0,
-                  }}
-                />
-                <Box>
-                  <CustomText
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      color: "#2c2c2c",
-                      fontSize: { xs: 15, sm: 16, md: 17, lg: 18 },
-                      mb: 0.5,
-                    }}
-                  >
-                    Head Office
-                  </CustomText>
-                  <CustomText
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: { xs: 12, sm: 13, md: 13.5, lg: 14 },
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    B-35, Sector-P, Aliganj, Lucknow 226024
-                  </CustomText>
-                </Box>
+        {/* Open positions */}
+        <section className="positions-section">
+          <div className="section-header">
+            <div className="section-title">
+              <Box className="section-title-icon" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <BusinessCenterIcon sx={{ fontSize: "inherit" }} />
               </Box>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: { xs: 1.5, sm: 2 },
-                  p: { xs: 2, sm: 2.5, md: 2.5, lg: 3 },
-                  borderRadius: 3,
-                  backgroundColor: "#f9f9f9",
-                  height: "100%",
-                  transition: "all 0.3s ease",
-                  animation: visibleSections.apply
-                    ? `fadeInUp 0.6s ease-out 0.1s both`
-                    : "none",
-                  "@keyframes fadeInUp": {
-                    "0%": { opacity: 0, transform: "translateY(20px)" },
-                    "100%": { opacity: 1, transform: "translateY(0)" },
-                  },
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                  },
-                }}
+              <h2>Open positions</h2>
+            </div>
+            <span className="section-subtitle">{loading ? "—" : careers.length} roles available</span>
+          </div>
+
+          <div className="filter-tabs">
+            {FILTER_TABS.map((tab) => (
+              <button
+                key={tab.key}
+                type="button"
+                className={`filter-tab ${filter === tab.key ? "active" : ""}`}
+                onClick={() => setFilter(tab.key)}
               >
-                <EmailIcon
-                  sx={{
-                    fontSize: { xs: 28, sm: 32 },
-                    color: "#FF9472",
-                    mt: 0.5,
-                    flexShrink: 0,
-                  }}
-                />
-                <Box>
-                  <CustomText
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      color: "#2c2c2c",
-                      fontSize: { xs: 15, sm: 16, md: 17, lg: 18 },
-                      mb: 0.5,
-                    }}
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {loading ? (
+            <div className="jobs-loading">
+              <CircularProgress sx={{ color: BRAND }} />
+            </div>
+          ) : error ? (
+            <div className="jobs-error">{error}</div>
+          ) : careers.length === 0 ? (
+            <div className="jobs-empty">No openings at the moment. Check back later.</div>
+          ) : (
+            <div className="jobs-grid">
+              {careers.map((job) => {
+                const jobId = job?._id ?? job?.id;
+                const title = getJobTitle(job);
+                const description = getJobDesc(job);
+                const location = getJobLocation(job);
+                const jobType = getJobType(job);
+                const salary = getSalary(job);
+                const experience = getExperience(job);
+                return (
+                  <div
+                    key={jobId}
+                    role="button"
+                    tabIndex={0}
+                    className="job-card"
+                    onClick={() => jobId && openDetail(jobId)}
+                    onKeyDown={(e) => e.key === "Enter" && jobId && openDetail(jobId)}
                   >
-                    Email
-                  </CustomText>
-                  <CustomText
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: { xs: 12, sm: 13, md: 13.5, lg: 14 },
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    hr@mrbrownbakery.com
-                  </CustomText>
-                </Box>
+                    <span className="job-type">{jobType}</span>
+                    <h3 className="job-title">{title}</h3>
+                    {location ? (
+                      <div className="job-location">
+                        <LocationOnIcon sx={{ fontSize: "1rem", color: BRAND }} />
+                        {location}
+                      </div>
+                    ) : null}
+                    <p className="job-description">{description}</p>
+                    <div className="job-meta">
+                      {salary ? (
+                        <span className="job-salary">
+                          <AttachMoneyIcon sx={{ fontSize: "0.9rem" }} />
+                          {salary}
+                        </span>
+                      ) : null}
+                      {experience ? <span className="job-experience">{experience}</span> : null}
+                    </div>
+                    <button type="button" className="apply-btn" onClick={(e) => { e.stopPropagation(); jobId && openDetail(jobId); }}>
+                      Apply now <WorkIcon sx={{ fontSize: "1rem" }} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </section>
+
+        {/* Culture */}
+        <section className="culture-section">
+          <div className="culture-content">
+            <h2>More than a bakery. A family.</h2>
+            <p>
+              At Danbro, we believe the best bread is baked with love, laughter, and a little bit of flour on your apron.
+              Our team members aren't just employees—they're bakers, artists, and innovators who shape our brand every day.
+            </p>
+            <div className="culture-stats">
+              <div className="culture-stat">
+                <span className="value">92%</span>
+                <span className="label">employee satisfaction</span>
+              </div>
+              <div className="culture-stat">
+                <span className="value">4.9</span>
+                <span className="label">glassdoor rating</span>
+              </div>
+            </div>
+          </div>
+          <div className="culture-images">
+            {CULTURE_IMAGES.map((src, i) => (
+              <div key={i} className="culture-img">
+                <img src={src} alt="" />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Perks */}
+        <section className="perks-section">
+          <div className="section-header">
+            <div className="section-title">
+              <Box className="section-title-icon" sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <CardGiftcardIcon sx={{ fontSize: "inherit" }} />
               </Box>
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6, md: 4 }}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-start",
-                  gap: { xs: 1.5, sm: 2 },
-                  p: { xs: 2, sm: 2.5, md: 2.5, lg: 3 },
-                  borderRadius: 3,
-                  backgroundColor: "#f9f9f9",
-                  height: "100%",
-                  transition: "all 0.3s ease",
-                  animation: visibleSections.apply
-                    ? `fadeInUp 0.6s ease-out 0.2s both`
-                    : "none",
-                  "@keyframes fadeInUp": {
-                    "0%": { opacity: 0, transform: "translateY(20px)" },
-                    "100%": { opacity: 1, transform: "translateY(0)" },
-                  },
-                  "&:hover": {
-                    transform: "translateY(-5px)",
-                    boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-                  },
-                }}
-              >
-                <PhoneIcon
-                  sx={{
-                    fontSize: { xs: 28, sm: 32 },
-                    color: "#FF9472",
-                    mt: 0.5,
-                    flexShrink: 0,
-                  }}
-                />
-                <Box>
-                  <CustomText
-                    variant="h6"
-                    sx={{
-                      fontWeight: 700,
-                      color: "#2c2c2c",
-                      fontSize: { xs: 15, sm: 16, md: 17, lg: 18 },
-                      mb: 0.5,
-                    }}
-                  >
-                    Phone
-                  </CustomText>
-                  <CustomText
-                    variant="body2"
-                    sx={{
-                      color: "#666",
-                      fontSize: { xs: 12, sm: 13, md: 13.5, lg: 14 },
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    +91-7309010623
-                  </CustomText>
-                </Box>
+              <h2>Perks & benefits</h2>
+            </div>
+          </div>
+          <div className="perks-grid">
+            {PERKS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="perk-item">
+                  <Box className="perk-icon">
+                    <Icon sx={{ fontSize: "1.5rem" }} />
+                  </Box>
+                  <div className="perk-text">
+                    <h4>{item.title}</h4>
+                    <p>{item.description}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="career-cta">
+          <div className="cta-content">
+            <h3>Didn't find your role?</h3>
+            <p>We're always looking for passionate people. Send us your resume and we'll reach out when something matches.</p>
+          </div>
+          <a href="mailto:careers@danbro.com" className="cta-btn" style={{ textDecoration: "none" }}>
+            <SendIcon /> Send open application
+          </a>
+        </section>
+
+        {/* Footer */}
+        <div className="career-footer">
+          <Box component="span" sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            <WorkspacePremiumIcon sx={{ fontSize: "1rem", color: BRAND }} />
+            Danbro Bakery Careers
+          </Box>
+          <span>·</span>
+          <a href="mailto:careers@danbro.com">
+            <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
+              <EmailIcon sx={{ fontSize: "0.9rem" }} />
+              careers@danbro.com
+            </Box>
+          </a>
+          <span>·</span>
+          <a href="tel:+918067891234">
+            <Box component="span" sx={{ display: "inline-flex", alignItems: "center", gap: 0.5 }}>
+              <PhoneIcon sx={{ fontSize: "0.9rem" }} />
+              +91 80 6789 1234
+            </Box>
+          </a>
+        </div>
+      </Box>
+
+      {/* Job detail dialog */}
+      <Dialog open={detailOpen} onClose={closeDetail} maxWidth="sm" fullWidth PaperProps={{ sx: { borderRadius: 3 } }}>
+        <DialogTitle sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid #eee", py: 2 }}>
+          <Box component="span" sx={{ fontWeight: 700, color: "#2d1e1b", fontSize: "1.1rem" }}>
+            {careerDetail ? getJobTitle(careerDetail) : "Job Details"}
+          </Box>
+          <IconButton onClick={closeDetail} size="small" aria-label="Close">
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ py: 3 }}>
+          {detailLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+              <CircularProgress sx={{ color: BRAND }} />
+            </Box>
+          ) : careerDetail ? (
+            <Box>
+              <Box sx={{ color: "#5a4a45", lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
+                {careerDetail.description ?? careerDetail.jobDescription ?? careerDetail.details ?? getJobDesc(careerDetail)}
               </Box>
-            </Grid>
-          </Grid>
-        </Box>
-      </Container>
+              {getJobLocation(careerDetail) && (
+                <Box sx={{ mt: 2, display: "flex", alignItems: "center", gap: 1 }}>
+                  <LocationOnIcon sx={{ color: BRAND, fontSize: 20 }} />
+                  <span>{getJobLocation(careerDetail)}</span>
+                </Box>
+              )}
+              {(careerDetail.email ?? careerDetail.contactEmail) && (
+                <Box sx={{ mt: 1, display: "flex", alignItems: "center", gap: 1 }}>
+                  <EmailIcon sx={{ color: BRAND, fontSize: 20 }} />
+                  <span>{careerDetail.email ?? careerDetail.contactEmail}</span>
+                </Box>
+              )}
+            </Box>
+          ) : (
+            <Box sx={{ color: "#6a5650" }}>Unable to load details.</Box>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };
-

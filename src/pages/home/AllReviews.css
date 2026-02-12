@@ -1,0 +1,30 @@
+/* AllReviews page – custom styles (mobile-first) */
+
+/* Product context badge: extra padding on mobile for touch */
+@media (max-width: 599.95px) {
+  .all-reviews-container .product-context-badge {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .all-reviews-container .product-context-badge .total-count-pill {
+    margin-left: 0.5rem;
+    padding-left: 0.6rem;
+    padding-right: 0.6rem;
+  }
+}
+
+/* Filter chips: light padding on mobile */
+@media (max-width: 599.95px) {
+  .all-reviews-container .all-reviews-filter-chip {
+    padding: 0.5rem 1rem;
+    min-height: 36px;
+  }
+
+  .all-reviews-container .all-reviews-sort-option {
+    padding: 0.5rem 1rem;
+    min-height: 32px;
+  }
+}

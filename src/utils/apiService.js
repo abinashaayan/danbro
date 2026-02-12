@@ -1739,6 +1739,42 @@ export const getBlogById = async (id) => {
 };
 
 /**
+ * GET /api/careers/getAll – fetch all career openings
+ * @returns {Promise<Array>} List of career objects
+ */
+export const getAllCareers = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/careers/getAll`, {
+      timeout: 15000,
+    });
+    const data = response?.data?.data ?? response?.data ?? response;
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching careers:', error);
+    throw error;
+  }
+};
+
+/**
+ * GET /api/careers/getById/:id – fetch a single career by id
+ * @param {string} id - Career id
+ * @returns {Promise<Object>} Career object
+ */
+export const getCareerById = async (id) => {
+  try {
+    if (!id) throw new Error('Career id is required');
+    const response = await axios.get(`${API_BASE_URL}/careers/getById/${id}`, {
+      timeout: 15000,
+    });
+    const data = response?.data?.data ?? response?.data ?? response;
+    return data;
+  } catch (error) {
+    console.error('Error fetching career by id:', error);
+    throw error;
+  }
+};
+
+/**
  * POST /api/helpAndSupport/help – create help ticket (requires auth)
  * @param {Object} params
  * @param {string} [params.orderId] - Order ID (optional, sent as form field)
