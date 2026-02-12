@@ -75,8 +75,6 @@ export const OrderSummary = ({
     return true;
   };
 
-  const packingCharges = 0;
-
   return (
     <Box sx={{ width: "100%", maxWidth: "100%", minWidth: 0, boxSizing: "border-box" }}>
       <Card
@@ -322,10 +320,6 @@ export const OrderSummary = ({
           </Box>
           {!isGuest && (
             <>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
-                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Packing Charges:</CustomText>
-                <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>+₹{Number(packingCharges).toFixed(2)}</CustomText>
-              </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 1, gap: 1, flexWrap: "wrap" }}>
                 <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#666", minWidth: 0 }}>Delivery Charges:</CustomText>
                 <CustomText sx={{ fontSize: { xs: 11, sm: 13 }, color: "#333", flexShrink: 0 }}>+₹{Number(shipping).toFixed(2)}</CustomText>

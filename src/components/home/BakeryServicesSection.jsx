@@ -128,7 +128,7 @@ export const BakeryServicesSection = () => {
               >
                 <AutoAwesomeIcon sx={{ fontSize: { xs: "1.2rem", sm: "1.3rem", md: "1.4rem" } }} />
               </Box>
-              our premium services
+              Our premium services
             </Box>
             <Box
               className="services-header-badge"

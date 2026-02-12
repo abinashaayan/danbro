@@ -11,6 +11,7 @@ export const loadCartItems = createAsyncThunk(
     try {
       const token = getAccessToken();
       const response = await getCart();
+      // console.log(response.deliveryCharge, 'response.deliveryCharge')
 
       if (!token) {
         // Guest cart: response.data is array of { productId, quantity, weight, productSnapshot }
@@ -107,11 +108,16 @@ export const loadCartItems = createAsyncThunk(
         items = response;
       }
 
-      const apiSubtotal = response?.subtotal != null ? Number(response.subtotal) : null;
-      const apiTaxTotal = response?.taxTotal != null ? Number(response.taxTotal) : null;
-      const apiDiscount = response?.discount != null ? Number(response.discount) : null;
-      const apiFinalAmount = response?.finalAmount != null ? Number(response.finalAmount) : null;
-      const appliedCoupon = response?.appliedCoupon ?? response?.data?.appliedCoupon ?? null;
+      const data = response?.data ?? response;
+      const num = (v) => (v != null && v !== '' && !Number.isNaN(Number(v)) ? Number(v) : null);
+      const apiSubtotal = num(response?.subtotal) ?? num(data?.subtotal) ?? num(response?.data?.subtotal);
+      const apiTaxTotal = num(response?.taxTotal) ?? num(data?.taxTotal) ?? num(response?.tax_total) ?? num(data?.tax_total);
+      const apiDiscount = num(response?.discount) ?? num(data?.discount) ?? num(response?.data?.discount);
+      const apiFinalAmount = num(response?.finalAmount) ?? num(data?.finalAmount) ?? num(response?.final_amount) ?? num(data?.final_amount);
+      const summary = data?.summary ?? data?.totals ?? response?.summary ?? response?.totals ?? {};
+      const apiDeliveryCharge = num(response?.deliveryCharge) ?? num(data?.deliveryCharge) ?? num(response?.delivery_charge) ?? num(data?.delivery_charge) ?? num(response?.data?.deliveryCharge) ?? num(response?.data?.delivery_charge) ?? num(summary?.deliveryCharge) ?? num(summary?.delivery_charge);
+      console.log(apiDeliveryCharge, 'apiDeliveryCharge')
+      const appliedCoupon = response?.appliedCoupon ?? response?.data?.appliedCoupon ?? data?.appliedCoupon ?? null;
       if (apiFinalAmount != null && cartTotal === 0) cartTotal = apiFinalAmount;
       if (apiSubtotal != null && cartTotal === 0) cartTotal = apiSubtotal;
 
@@ -123,6 +129,7 @@ export const loadCartItems = createAsyncThunk(
         cartTaxTotal: apiTaxTotal,
         cartDiscount: apiDiscount,
         cartFinalAmount: apiFinalAmount,
+        cartDeliveryCharge: apiDeliveryCharge,
         appliedCoupon,
       };
     } catch (error) {
@@ -196,6 +203,7 @@ const initialState = {
   cartTaxTotal: null,
   cartDiscount: null,
   cartFinalAmount: null,
+  cartDeliveryCharge: null,
   appliedCoupon: null,
 };
 
@@ -235,7 +243,8 @@ const cartSlice = createSlice({
         state.cartTaxTotal = action.payload.cartTaxTotal ?? null;
         state.cartDiscount = action.payload.cartDiscount ?? null;
         state.cartFinalAmount = action.payload.cartFinalAmount ?? null;
-         state.appliedCoupon = action.payload.appliedCoupon ?? null;
+        state.cartDeliveryCharge = action.payload.cartDeliveryCharge ?? null;
+        state.appliedCoupon = action.payload.appliedCoupon ?? null;
         state.error = null;
       })
       .addCase(loadCartItems.rejected, (state, action) => {
@@ -247,6 +256,7 @@ const cartSlice = createSlice({
         state.cartTaxTotal = null;
         state.cartDiscount = null;
         state.cartFinalAmount = null;
+        state.cartDeliveryCharge = null;
         state.appliedCoupon = null;
       })
       // Update item quantity
@@ -304,6 +314,7 @@ const cartSlice = createSlice({
         state.cartTaxTotal = null;
         state.cartDiscount = null;
         state.cartFinalAmount = null;
+        state.cartDeliveryCharge = null;
         state.appliedCoupon = null;
         state.error = null;
       });

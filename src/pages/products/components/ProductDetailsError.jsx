@@ -8,7 +8,7 @@ export const ProductDetailsError = ({ error }) => {
   const displayMessage = error || "Product not found";
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: 6, display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
+    <Box sx={{ pt: { xs: 8, sm: 7 }, px: { xs: 2, sm: 3, md: 6 }, py: 6, display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
       <Box sx={{ textAlign: "center" }}>
         <ErrorOutline sx={{ fontSize: 48, color: "error.main", mb: 2, display: "block", mx: "auto" }} />
         <CustomText sx={{ fontSize: 18, fontWeight: 700, color: "#c62828", mb: 1.5, display: "block" }}>

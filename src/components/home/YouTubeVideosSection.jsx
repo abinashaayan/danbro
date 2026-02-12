@@ -461,17 +461,6 @@ export const YouTubeVideosSection = () => {
               <Box component="span" sx={{ color: "white", fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" }, fontWeight: 500 }}>subscribe</Box>
             </Box>
           </Box>
-
-          {/* Micro footer */}
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 2.5, gap: 2, flexWrap: "wrap" }}>
-            <Box component="span" sx={{ bgcolor: "rgba(255,255,255,0.02)", py: 0.5, px: 2, borderRadius: "60px", border: "1px solid rgba(252,211,77,0.2)", color: "rgba(255,255,255,0.8)", fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" }, display: "inline-flex", alignItems: "center", gap: 0.75 }}>
-              <PlayArrowIcon sx={{ color: GOLD_ACCENT, fontSize: { xs: "0.95rem", sm: "1rem", md: "1.1rem" } }} />
-              {youtubeVideos.length} cinematic stories
-            </Box>
-            <Box component="span" sx={{ bgcolor: "rgba(95, 41, 48, 0.3)", py: 0.5, px: 2, borderRadius: "60px", border: "1px solid rgba(252,211,77,0.25)", color: "#fff3e0", fontSize: { xs: "0.75rem", sm: "0.8rem", md: "0.85rem" } }}>
-              DANBRO BAKERY
-            </Box>
-          </Box>
         </Container>
       </Box>
 

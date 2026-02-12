@@ -485,7 +485,7 @@ export const ProductDetails = () => {
   if (error || !productData) return <ProductDetailsError error={error} />;
 
   return (
-    <Box sx={{ overflowX: "hidden", maxWidth: "100%", mb: 4 }}>
+    <Box sx={{ overflowX: "hidden", maxWidth: "100%", mb: 4, pt: { xs: 8, sm: 7 } }}>
       <Container 
         maxWidth="lg" 
         className="productDetailsContainer" 

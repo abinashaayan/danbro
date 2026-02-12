@@ -39,6 +39,7 @@ export const Cart = () => {
     cartTaxTotal,
     cartDiscount,
     cartFinalAmount,
+    cartDeliveryCharge,
     appliedCoupon: appliedCouponFromApi,
   } = useAppSelector((state) => state.cart);
   const guestWishlist = useAppSelector(getGuestWishlist);
@@ -431,11 +432,13 @@ export const Cart = () => {
     discount = cartDiscount;
   }
 
-  const shipping = finalSubtotal > 50 ? 0 : 5.0;
+  const shipping = hasApiSummary && (cartDeliveryCharge != null || cartDeliveryCharge === 0)
+    ? (Number(cartDeliveryCharge) || 0)
+    : (finalSubtotal > 50 ? 0 : 5.0);
   const total = hasApiSummary && cartFinalAmount != null ? cartFinalAmount : finalSubtotal - discount + shipping;
 
   return (
-    <Box sx={{ minHeight: "100vh", pb: { xs: 14, sm: 12, md: 6 }, boxSizing: "border-box", overflowX: "hidden", width: "100%", maxWidth: "100%" }}>
+    <Box sx={{ minHeight: "100vh", pt: { xs: 8, sm: 7 }, pb: { xs: 14, sm: 12, md: 6 }, boxSizing: "border-box", overflowX: "hidden", width: "100%", maxWidth: "100%" }}>
       <Container sx={{ px: { xs: 1.5, sm: 2, md: 3 }, maxWidth: "100%", width: "100%", boxSizing: "border-box" }}>
         <Box sx={{ mb: { xs: 1, md: 1.5 }, minWidth: 0 }}>
           <CustomText variant="h4" sx={{ fontSize: { xs: 20, sm: 22, md: 28 }, fontWeight: 700, color: "var(--themeColor)" }}>

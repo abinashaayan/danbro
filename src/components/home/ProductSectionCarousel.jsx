@@ -562,21 +562,20 @@ export const ProductSectionCarousel = memo(({
                       ID · {String(product.productId).slice(-12)}
                     </span>
                   )}
-                  {product?.courier != null && product?.courier !== "" && (
+                  {(product?.courier === "Y" || product?.courier === "y") && (
                     <Box
                       component="span"
                       sx={{
                         fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
-                        bgcolor: "#f2eae7",
+                        bgcolor: "#1f8b4c",
+                        color: "#fff",
                         px: 0.9,
                         py: 0.25,
                         borderRadius: "30px",
                         fontWeight: 600,
-                        color: "#5F2930",
-                        border: "1px solid rgba(95, 41, 48, 0.1)",
                       }}
                     >
-                      Courier {product?.courier === "Y" || product?.courier === "y" ? "Y" : "N"}
+                      Courier
                     </Box>
                   )}
                 </Box>
@@ -622,13 +621,9 @@ export const ProductSectionCarousel = memo(({
                       return text;
                     })()}
                   </CustomText>
-                  {isProductInCart(product) ? (
+                  {isProductInCart(product) && (
                     <Box component="span" sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" }, color: "#1f8b4c", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 0.5 }}>
                       <CheckCircleIcon sx={{ fontSize: { xs: "0.8rem", sm: "0.85rem", md: "0.9rem" } }} /> In cart
-                    </Box>
-                  ) : (
-                    <Box component="span" sx={{ fontSize: { xs: "0.65rem", sm: "0.7rem", md: "0.75rem" }, py: 0.35, px: 0.9, bgcolor: "#fee9e5", borderRadius: "30px", color: "#5F2930", fontWeight: 600, display: "inline-flex", alignItems: "center", gap: 0.5 }}>
-                      not in cart
                     </Box>
                   )}
                 </Box>

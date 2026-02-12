@@ -170,7 +170,7 @@ export const SearchPage = () => {
 
   if (productsError) {
     return (
-      <Box sx={{ px: { xs: 2, sm: 3, md: 6 }, py: 4 }}>
+      <Box sx={{ pt: { xs: 8, sm: 7 }, px: { xs: 2, sm: 3, md: 6 }, py: 4 }}>
         <Alert severity="error" sx={{ borderRadius: 2 }}>
           {productsError}
         </Alert>
@@ -179,7 +179,7 @@ export const SearchPage = () => {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", py: { xs: 3, md: 0 }, pb: { xs: 8, md: 0 }, p: { xs: 1.25, md: 0 }, mb: 4 }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "#fff", pt: { xs: 8, sm: 7 }, pb: { xs: 8, md: 0 }, px: { xs: 1.25, md: 0 }, mb: 4 }}>
       <Container maxWidth="false" sx={{ px: { xs: 2, md: 3, lg: 2 }, py: 2 }}>
         <Box
           sx={{
