@@ -328,26 +328,6 @@ export const ProductSectionCarousel = memo(({
           </Box>
         </Box>
         <Box className="product-badge-arrows-row" sx={{ display: "flex", gap: 1.2, alignItems: "center", justifyContent: "space-between", width: { xs: "100%", md: "auto" }, flexShrink: 0 }}>
-          <Box
-            component="span"
-            className="product-items-badge"
-            sx={{
-              background: BRAND_COLOR,
-              color: "white",
-              py: 0.5,
-              px: 1.2,
-              borderRadius: "60px",
-                fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.85rem" },
-                fontWeight: 600,
-                letterSpacing: "1px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.5,
-              }}
-            >
-              <CookieIcon sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem", md: "1rem" } }} />
-            {products?.length || 0} items
-          </Box>
           <Box className="section-nav-buttons" sx={{ display: "flex", gap: 1.2, flexShrink: 0 }}>
           <IconButton
             className="carousel-nav-btn"

@@ -74,7 +74,6 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
         width: "100%",
         margin: "0 auto",
         py: { xs: 2, md: 4 },
-        mb: { xs: 2, md: 4 },
         px: { xs: 1, md: 2 },
       }}
     >
@@ -108,30 +107,10 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
             }}
           >
             <CategoryIcon className="category-header-icon" sx={{ color: BRAND_COLOR, fontSize: { xs: "1.5rem", sm: "1.8rem", md: "2rem" }, opacity: 0.9 }} />
-            our sweet categories
+            Our sweet categories
           </Box>
         </Box>
         <Box className="category-badge-arrows-row" sx={{ display: "flex", gap: 1.2, alignItems: "center", flexShrink: 0 }}>
-            <Box
-              component="span"
-            className="category-collections-badge"
-              sx={{
-                background: BRAND_COLOR,
-                color: "white",
-                py: 0.5,
-                px: 1.2,
-                borderRadius: "60px",
-                fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.85rem" },
-                fontWeight: 600,
-                letterSpacing: "1px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.5,
-              }}
-            >
-              <CookieIcon sx={{ fontSize: { xs: "0.85rem", sm: "0.9rem", md: "1rem" } }} />
-            {items?.length} collections
-          </Box>
           <Box className="category-nav-buttons" sx={{ display: "flex", gap: 1.2, alignItems: "center" }}>
           <IconButton
             className="carousel-nav-btn"
@@ -355,48 +334,8 @@ export const CategoryCarousel = ({ categories: propCategories }) => {
                 transition: "width 0.3s",
               }}
             />
-
-            {/* Category ID pill */}
-            <Box
-              sx={{
-                fontSize: { xs: "0.6rem", sm: "0.65rem", md: "0.7rem" },
-                fontWeight: 500,
-                color: "#a7867c",
-                letterSpacing: "1.5px",
-                textTransform: "uppercase",
-                bgcolor: "#f6efec",
-                py: 0.35,
-                px: 1,
-                borderRadius: "60px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 0.75,
-                border: "1px solid #ead9d2",
-                mt: 0.5,
-              }}
-            >
-              <TagIcon sx={{ color: BRAND_COLOR, fontSize: "0.7rem" }} />
-              {item?.categoryId ? `${String(item.categoryId).slice(0, 12)}…` : "—"}
-            </Box>
           </Box>
         ))}
-      </Box>
-
-      {/* Footnote */}
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 1.2,
-          gap: 1.5,
-          fontSize: { xs: "0.7rem", sm: "0.75rem", md: "0.8rem" },
-          color: "#8c6e66",
-        }}
-      >
-        <Box component="span" sx={{ bgcolor: "#fff2ed", py: 0.3, px: 1.2, borderRadius: "40px", display: "inline-flex", alignItems: "center", gap: 0.5 }}>
-          <CategoryIcon sx={{ color: BRAND_COLOR, fontSize: { xs: "0.8rem", sm: "0.9rem", md: "1rem" } }} />
-          {items?.length} categories loaded
-        </Box>
       </Box>
     </Box>
   );
